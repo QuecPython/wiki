@@ -1,7 +1,7 @@
 site_name: QuecPython
 site_url: https://python.quectel.com/wiki
 repo_url: https://github.com/quecpython/wiki
-edit_uri: site/
+edit_uri: edit/main/docs/
 copyright: quectel
 
 nav:
