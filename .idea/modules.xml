@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/demo_qpy.iml" filepath="$PROJECT_DIR$/.idea/demo_qpy.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/wiki.iml" filepath="$PROJECT_DIR$/.idea/wiki.iml" />
     </modules>
   </component>
 </project>
