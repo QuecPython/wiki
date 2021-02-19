@@ -6,7 +6,8 @@
 
 目前开放共5个PWM，EVB引出2个PWM口连接位置如下表所示：
 
-<img src="media/ee3e5721dff49d3ba045fd33cadcdc0c.png" style="zoom: 67%;" />
+<!-- <img src="media/ee3e5721dff49d3ba045fd33cadcdc0c.png" style="zoom: 67%;" /> -->
+![](media/ee3e5721dff49d3ba045fd33cadcdc0c.png)
 
 PWM0 – 引脚号52 
 PWM1 – 引脚号53 
