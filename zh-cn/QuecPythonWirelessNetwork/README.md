@@ -11,7 +11,7 @@
 - **dataCall.setCallback**
 - **dataCall.getInfo(profileIdx, ipType)**
 
-具体的API 详解请参考[Quecpython-dataCall - 数据拨号](https://python.quectel.com/wiki/api/#datacall-)
+具体的API 详解请参考[Quecpython-dataCall - 数据拨号](https://python.quectel.com/wiki/#/zh-cn/api/QuecPythonClasslib?id=datacall-%e6%95%b0%e6%8d%ae%e6%8b%a8%e5%8f%b7)
 
 适用模块：
 
@@ -141,7 +141,7 @@ if __name__ == "__main__":
 
 [APN Configuration](https://prepaid-data-sim-card.fandom.com/wiki/APN_Configuration) 
 
-[Quecpython-dataCall - 数据拨号](https://python.quectel.com/wiki/api/#datacall-)
+[Quecpython-dataCall - 数据拨号](https://python.quectel.com/wiki/#/zh-cn/api/QuecPythonClasslib?id=datacall-%e6%95%b0%e6%8d%ae%e6%8b%a8%e5%8f%b7)
 
 ### 配套代码
 

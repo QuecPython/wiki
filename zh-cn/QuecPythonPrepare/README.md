@@ -94,15 +94,15 @@ EC600S_QuecPython_EVB_V1.1 开发板集成了 2 个自定义 KEY，开发者可�
 
 在提供的软件工具中，找到如下驱动安装包，进行解压，双击运行 setup.exe 直接安装即可，安装完成点击Finish 即可完成安装： 
 
-![](media/QuecPython 开发环境搭建1.png)
+![](media/QuecPython开发环境搭建1.png)
 
 驱动安装完成后，插上开发板，进入电脑的设备管理器，点击【端口(COM 和 LPT)】，将出现如下三个端口（实际显示的端口号可能与下图中不一致，但是括号前的名称是一致的）：
 
-![](media/QuecPython 开发环境搭建2.png)
+![](media/QuecPython开发环境搭建2.png)
 
 打开软件工具中的 QCOM 软件，通过发送一条 AT 指令，确认驱动是否安装成功，如下图所示，如果能正常发送 AT 指令并回复成功，那么驱动安装成功；注意端口号要选择与【Quectel USB AT Port】对应的端口号，波特率选择115200，停止位 1 位，无奇偶校验，8 位数据位，无硬件控制流。 
 
-![](media/QuecPython 开发环境搭建3.png)
+![](media/QuecPython开发环境搭建3.png)
 
 ### QPYcom串口工具
 

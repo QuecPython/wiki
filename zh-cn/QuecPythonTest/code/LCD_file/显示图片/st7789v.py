@@ -2,6 +2,23 @@
 
 import log
 from machine import LCD
+from usr import fonts
+
+XSTART_H = 0xf0
+XSTART_L = 0xf1
+YSTART_H = 0xf2
+YSTART_L = 0xf3
+XEND_H = 0xE0
+XEND_L = 0xE1
+YEND_H = 0xE2
+YEND_L = 0xE3
+
+
+XSTART = 0xD0
+XEND = 0xD1
+YSTART = 0xD2
+YEND = 0xD3
+
 
 class ST7789V():
     def __init__(self, width, hight):
@@ -95,39 +112,24 @@ class ST7789V():
 
             0, 0, 0x2c,
         )
-        ret = self.lcd.lcd_init(bytearray(self.st7789v_init_data), self.lcd_w, self.lcd_h, 13000, 1, 4, 0, self.lcd_set_display_area, self.lcd_display_on, self.lcd_display_off, None)
+
+        self.st7789v_invalid_data = (
+            0,4,0x2a,
+            1,1,XSTART_H,
+            1,1,XSTART_L,
+            1,1,XEND_H,
+            1,1,XEND_L,
+            0,4,0x2b,
+            1,1,YSTART_H,
+            1,1,YSTART_L,
+            1,1,YEND_H,
+            1,1,YEND_L,
+            0,0,0x2c,
+        )
+        ret = self.lcd.lcd_init(bytearray(self.st7789v_init_data), self.lcd_w, self.lcd_h, 13000, 1, 4, 0, bytearray(self.st7789v_invalid_data), None, None, None)
         self.lcdlog.info('lcd.lcd_init ret = {}'.format(ret))
         '''清屏，设置白色'''
         self.lcd.lcd_clear(0xFFFF)
-
-    def lcd_display_on(self):
-        pass
-
-    def lcd_display_off(self):
-        pass
-
-    def lcd_set_display_area(self, args):
-        xstart = args[0]
-        ystart = args[1]
-        xend = args[2]
-        yend = args[3]
-
-        # Row Start
-        self.lcd.lcd_write_cmd(0x2a, 1)
-        self.lcd.lcd_write_data((xstart >> 8) & 0xff, 1)
-        self.lcd.lcd_write_data((xstart & 0xff), 1)
-        self.lcd.lcd_write_data((xend >> 8) & 0xff, 1)
-        self.lcd.lcd_write_data((xend & 0xff), 1)
-
-        # Column Start
-        self.lcd.lcd_write_cmd(0x2b, 1)
-        self.lcd.lcd_write_data((ystart >> 8) & 0xff, 1)
-        self.lcd.lcd_write_data((ystart & 0xff), 1)
-        self.lcd.lcd_write_data((yend >> 8) & 0xff, 1)
-        self.lcd.lcd_write_data((yend & 0xff), 1)
-
-        self.lcd.lcd_write_cmd(0x2C, 1)
-        self.lcd.lcd_write_cmd(0xff, 1)
 
     '''
     单个字符显示，包括汉字和ASCII
@@ -148,11 +150,11 @@ class ST7789V():
         for i in range(0, len(ch_buf)):
             for j in range(0, 8):
                 if (ch_buf[i] << j) & 0x80 == 0x00:
-                    rgb_buf.append(bc >> 8)
                     rgb_buf.append(bc & 0xff)
+                    rgb_buf.append(bc >> 8)
                 else:
-                    rgb_buf.append(fc >> 8)
                     rgb_buf.append(fc & 0xff)
+                    rgb_buf.append(fc >> 8)
         self.lcd.lcd_write(bytearray(rgb_buf), x, y, x + xsize - 1, y + ysize - 1)
 
     '''
@@ -177,6 +179,27 @@ class ST7789V():
         for key in ascii_dict:
             if ch == key:
                 self.lcd_show_char(x, y, xsize, ysize, ascii_dict[key], fc, bc)
+
+    '''
+    显示字符串,目前支持8x16的字体大小，
+    如果需要其他字体大小需要自己增加对应大小的字库数据，并
+    在lcd_show_ascii函数中增加这个对应字库的字典。
+    x - x轴坐标
+    y - y轴坐标
+    xsize - 字体宽度
+    ysize - 字体高度
+    str - 待显示的 ASCII 字符串
+    fc - 字体颜色，RGB565
+    bc - 背景颜色，RGB565
+    '''
+    def lcd_show_ascii_str(self, x, y, xsize, ysize, str, fc, bc):
+        xs = x
+        ys = y
+        if (len(str) * xsize + x) > self.lcd_w:
+            raise Exception('Display out of range')
+        for ch in str:
+            self.lcd_show_ascii(xs, ys, xsize, ysize, ch, fc, bc)
+            xs += xsize
 
     '''
     汉字显示,目前支持16x16、16x24、24x24的字体大小，
@@ -204,7 +227,32 @@ class ST7789V():
                 self.lcd_show_char(x, y, xsize, ysize, hanzi_dict[key], fc, bc)
 
     '''
-    图片显示，只需要传入显示的起点坐标和图片的宽高（注意是图片宽高，不是终点坐标）
+    汉字字符串显示,目前支持16x16的字体大小，
+    如果需要其他字体大小需要自己增加对应大小的字库数据，并
+    在lcd_show_chinese函数中增加这个对应字库的字典。
+    x - x轴坐标
+    y - y轴坐标
+    xsize - 字体宽度
+    ysize - 字体高度
+    str - 待显示的多个汉字
+    fc - 字体颜色，RGB565
+    bc - 背景颜色，RGB565
+    '''
+    def lcd_show_chinese_str(self, x, y, xsize, ysize, str, fc, bc):
+        xs = x
+        ys = y
+        # print('chstrlen={}, w={}'.format(len(str), self.lcd_w))
+        if (len(str) / 3 * xsize + x) > self.lcd_w:
+            raise Exception('Display out of range')
+        for i in range(0, len(str), 3):
+            index = i + 3
+            ch = str[i:index]
+            self.lcd_show_chinese(xs, ys, xsize, ysize, ch, fc, bc)
+            xs += xsize
+
+    '''
+    图片显示
+    如果图片宽高小于80x80，可直接该函数一次性写入并显示
     image_data - 存放待显示图片的RGB数据
     x - x轴显示起点
     y - y轴显示起点
@@ -214,6 +262,56 @@ class ST7789V():
     def lcd_show_image(self, image_data, x, y, width, heigth):
         self.lcd.lcd_write(bytearray(image_data), x, y, x + width - 1, y + heigth - 1)
 
+    '''
+    图片显示
+    如果图片宽高大于80x80，用该函数来分段写入显示，分段写入原理如下：
+    以要显示图片的宽度为固定值，将待显示的图片分成若干宽高为 width * h 大小的图片，最后一块高度不足h的按实际高度计算，
+    h为分割后每个图片的高度，可由用户通过参数 h 指定，h的值应该满足关系： width * h * 2 < 4096
+    path - 存放图片数据的txt文件路径，包含文件名，如 '/usr/image.txt'
+    x - x轴显示起点
+    y - y轴显示起点
+    width - 图片宽度
+    heigth - 图片高度
+    h - 分割后每个图片的高度
+    '''
+    def lcd_show_image_file(self, path, x, y, width, heigth, h):
+        image_data = []
+        read_n = 0  # 已经读取的字节数
+        byte_n = 0  # 字节数
+        xs = x
+        ys = y
+        h_step = h  # 按高度h_step个像素点作为步长
+        h1 = heigth // h_step  # 当前图片按h_step大小分割，可以得到几个 width * h_step 大小的图片
+        h2 = heigth % h_step  # 最后剩下的一块 大小不足 width * h_step 的图片的实际高度
+        # print('h1 = {}, h2 = {}'.format(h1, h2))
+        with open(path, "r", encoding='utf-8') as fd:
+            # for line in fd.readlines():
+            end = ''
+            while not end:
+                line = fd.readline()
+                if line == '':
+                    end = 1
+                else:
+                    curline = line.strip('\r\n').strip(',').split(',')
+                    for i in curline:
+                        byte_n += 1
+                        read_n += 1
+                        image_data.append(int(i))
+                        if h1 > 0 and byte_n == width * h_step * 2:
+                            self.lcd_show_image(image_data, xs, ys, width, h_step)
+                            image_data = []
+                            ys = ys + h_step
+                            h1 -= 1
+                            byte_n = 0
+                            # print('image_data len = {}'.format(len(image_data)))
+                        elif h1 == 0 and read_n == width * heigth * 2:
+                            if h2 != 0:
+                                self.lcd_show_image(image_data, xs, ys, width, h2)
 
+    '''
+    将24位色转换位16位色
+    如红色的24位色为0xFF0000，则r=0xFF,g=0x00,b=0x00,
+    将r、g、b的值传入下面函数即可得到16位相同颜色数据
+    '''
     def get_rgb565_color(self, r, g, b):
-        return ((r & 0xF8) << 8) | ((g & 0xFC) << 3) | ((b & 0xF8) >> 3)
+        return ((r << 8) & 0xF800) | ((g << 3) & 0x07E0) | ((b >> 3) & 0x001F)

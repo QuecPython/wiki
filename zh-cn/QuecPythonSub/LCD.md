@@ -77,75 +77,119 @@ init = (
 init_data = bytearray(init) #将列表转换
 ```
 
-3.编写display_on 接口
-		由于每款LCD的亮屏命令不一样，故需要用户提供该接口。
-		此接口所需的命令根据具体的屏幕去驱动而定
+3.编写display_on 命令
+		由于每款LCD的亮屏命令不一样，故需要用户提供该配置参数。
+
+​		此参数根据具体的屏幕去驱动而定
 
 ```python
-def display_on(para):
-	print("display on")
-
-	lcd.lcd_write_cmd(0xXX, 1)
-	lcd.lcd_write_data(0xXXFF, 2)
+display_on = (
+	0,1,0xXX 	#命令，后接一个data, cmd值为0xXX
+1,2,0xXX,0xYY	#数据， 数据长度为2， data值为0xXXYY
+)
+display_on_data = bytearray(display_on)
 ```
 
-4.编写display_off 接口
-		由于每款LCD的息屏命令不一样，故需要用户提供该接口。
-		此接口所需的命令根据具体的屏幕去驱动而定
+4.编写display_off 命令
+		由于每款LCD的息屏命令不一样，故需要用户提供该配置参数。
+
+   	此参数根据具体的屏幕去驱动而定
 
 ```python
-def display_off(para):
-	print("display off")
-	lcd.lcd_write_cmd(0xXX, 1)
-    lcd.lcd_write_data(0xXXFF, 2)
+display_off = (
+	0,1,0xXX 	#命令，后接一个data, cmd值为0xXX
+	1,2,0xXX,0xYY	#数据， 数据长度为2， data值为0xXXYY
+)
+display_off_data = bytearray(display_off)
 ```
 
-5.编写设置显示区域的接口
-		不同的 lcd 屏有不同的设置区域方式，故放置python层实现。在底层实现
-		lcd_write时，会调用该函数。
-		此接口所需的命令根据具体的屏幕去驱动而定.
+5.编写设置显示区域的命令
+		不同的lcd屏有不同的设置区域方式。 (以ili9225和st7789v为例)
+
+​		一般屏幕设置有两种方式：
+
+​			一：分两次写：高八位和低八位此参数根据具体的屏幕去驱动而定(如st7789v)
+
+​			二：一次写一个short （如ili9225）
 
 ```python
-def lcd_invalid(para):
-#para[0]: start_x; para[1]:start_y para[2]:end_x;para[3]end_y
-	print("invalid:",para[0], para[1], para[2], para[3])
-	lcd.lcd_write_cmd(0xXX, 1)
-	lcd.lcd_write_data(0xXXFF, 2)
-	#...此处不同的屏有不同的设置区域方式，由屏决定
-	lcd.lcd_write_cmd(0xff, 1) #此0xff尤为重要，此值是配置区域完成的标志
+XSTART_H = 0xf0 	#代表X起始坐标 高八位 （以此值写入，底层会识别该位是x坐标的高八位）
+XSTART_L = 0xf1	#代表X起始坐标 低八位 （以此值写入，底层会识别该位是x坐标的低八位）
+YSTART_H = 0xf2	#代表Y起始坐标的高八位
+YSTART_L = 0xf3	#代表Y起始坐标的低八位
+XEND_H = 0xE0		#代表X结束坐标的高八位
+XEND_L = 0xE1		#代表X结束坐标的低八位
+YEND_H = 0xE2		#代表Y结束坐标的高八位
+YEND_L = 0xE3		#代表Y结束坐标的低八位
+
+XSTART = 0xD0		#代表X的起始坐标
+XEND = 0xD1		#代表X的结束坐标
+YSTART = 0xD2		#代表Y的起始坐标
+YEND = 0xD3		#代表Y的结束坐标
+
+ili9225_invalid = (
+0,1,0x36,
+1,2,XEND,
+0,1,0x37,
+1,2,XSTART,
+0,1,0x38,
+1,2,YEND,
+0,1,0x39,
+1,2,YSTART,
+0,1,0x20,
+1,2,XSTART,
+0,1,0x21,
+1,2,YSTART,
+0,1,0x22,
+)
+st7789_invalid = (
+0,4,0x2a,
+1,1,XSTART_H,
+1,1,XSTART_L,
+1,1,XEND_H,
+1,1,XEND_L,
+0,4,0x2b,
+1,1,YSTART_H,
+1,1,YSTART_L,
+1,1,YEND_H,
+1,1,YEND_L,
+0,0,0x2c,
+)
+invalid_data = bytearray(invalid)
+
 ```
 
-
-
-```
-#注意：最后0xff 命令必须要写。此值是配置区域完成的标志
-```
-6.编写屏幕背光接口
+6.编写屏幕背光命令
 		不同的lcd屏有不同的设置背光方式。有些屏通过控制寄存器调节背光，有些屏通过背光控制管脚控制背光。
-		当由背光控制管脚控制背光时，此处可以不需要，init中该部分填入None即可。
+
+​		当由背光控制管脚控制背光时，此处可以不需要，init中该部分填入None即可。
 
 ```python
-def display_light(para): #此处时背光设置。
-	print("display_light")
-	lcd.lcd_write_cmd(0xXX, 1)
-	lcd.lcd_write_data(0xXXXX, 2)
+LIGHT_VALUE = 0xFE		#代表背光设置位置
+light = (
+    0,1,0xXX 			#命令，后接一个data, cmd值为0xXX
+	1,1,LIGHT_VALUE，
+)
+light_data = bytearray(light)
 ```
 
 7.初始化配置
 		按lcd_init参数依次填入。
-		lcd.lcd_init(init_data,width,hight,clk,data_line,line_num,type,
-		lcd_invalid,display_on,display_off,display_light)
-		init_data:（ 1 ）中，配置的初始化参数
-		width：屏幕宽度
-		hight: 屏幕高度
-		data_line： 数据线
-		line_num： 线
 
-​		type： 0:rgb 1:fstn(黑白屏)
-​		lcd_invalid： 区域写屏，设置范围
-​		display_on： 亮屏
-​		display_off: 息屏
-​		display_light: 若为None:表示LCD亮度由IO口控制
+```
+lcd.lcd_init(init_data,width,hight,clk,data_line,line_num,type,invalid_data,display_on_data,display_off_data,light_data/None)
+
+init_data:（1）中，配置的初始化参数
+width：屏幕宽度
+hight: 屏幕高度
+data_line：  数据线
+line_num：  线
+type：     0:rgb 1:fstn(黑白屏)
+lcd_invalid： 区域写屏，设置范围
+display_on： 亮屏参数
+display_off:  息屏参数
+display_light:  亮屏参数，若为None:表示LCD亮度由IO口控制
+```
 
 8.清屏
 		lcd.lcd_clear(0xXXXX)
@@ -182,13 +226,13 @@ lcd.lcd_write(test_buf1,10,10,20,20)
 
 
 ```
-#注意：由于设计出错：该例子原意是显示0x001f(蓝色对应颜色)，目前是0x1f00。
+#注意：该接口采用低位在前
 ```
 ### 运行代码
 
 1.将创建的py文件拷贝到模块的usr目录下；
    利用工具qpycom将文件导入模块中。具体qpycom工具操作参考
-   https://python.quectel.com/wiki/study/zh-cn/study/QuecPythonMP/#qpycomexe
+   https://python.quectel.com/wiki/#/zh-cn/QuecPythonPrepare/?id=qpycom%e4%b8%b2%e5%8f%a3%e5%b7%a5%e5%85%b7
 
 2.进入模块的命令行模式
 
@@ -246,12 +290,7 @@ PCtoLCD2002 是一款字符取模软件，可以生成汉字、英文以及标�
 
 按照2.2.4节Image2Lcd使用指导生成图片对应的图片数组。（此处以ili 9225 为例）
 
-
-<!-- * [图片数组](code/image.py)  -->
- <a href="zh-cn/QuecPythonSub/code/image.py" target="_blank">图片数组</a>
- 
-<!-- * [show_image.py](code\show_image.py)  -->
- <a href="zh-cn/QuecPythonSub/code/show_image.py" target="_blank">show_image.py</a>
+详细代码参考LCD小实验
 
 
 将py文件导入模块的usr目录下。

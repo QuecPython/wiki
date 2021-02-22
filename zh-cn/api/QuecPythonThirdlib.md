@@ -410,6 +410,7 @@ if __name__ == '__main__':
 | decode  | bool   | （可选参数）True 将响应的内容解码返回str类型  False 关闭解码返回bytes类型 默认True(仅配合response.content使用) |
 | timeout | int    | （可选参数）请求的超时时间                                   |
 | sizeof  | int    | （可选参数）读取缓冲区的数据块大小 默认255 个字节 数值越大读取的速度越快（如果设置过大可能就会有丢失数据的可能性，建议255-4096） |
+| ssl_params | dict   | （可选参数）SSL双向认证 {"cert": certificate_content, "key": private_content} 传入证书的公钥密钥 |
 
 * 示例
 
@@ -462,14 +463,14 @@ if __name__ == '__main__':
 
 * 参数
 
-| 参数    | 类型   | 说明                                                         |
-| ------- | ------ | ------------------------------------------------------------ |
-| url     | string | 网址                                                         |
-| data    | json   | （可选参数）附加到请求的正文，json类型，默认为None           |
-| headers | dict   | （可选参数）请求头，默认为None                               |
-| decode  | bool   | （可选参数）True 将响应的内容解码返回str类型  False 关闭解码返回bytes类型 默认True(仅配合response.content使用) |
-| timeout | int    | （可选参数）请求的超时时间                                   |
-| sizeof  | int    | （可选参数）读取缓冲区的数据块大小 默认255 个字节 数值越大读取的速度越快（如果设置过大可能就会有丢失数据的可能性，建议255-4096） |
+| 参数    | 类型   | 说明                                                         |      |
+| ------- | ------ | ------------------------------------------------------------ | ---- |
+| url     | string | 网址                                                         |      |
+| data    | json   | （可选参数）附加到请求的正文，json类型，默认为None           |      |
+| headers | dict   | （可选参数）请求头，默认为None                               |      |
+| decode  | bool   | （可选参数）True 将响应的内容解码返回str类型  False 关闭解码返回bytes类型 默认True |      |
+| timeout | int    | （可选参数）请求的超时时间                                   |      |
+| sizeof  | int    | （可选参数）读取缓冲区的数据块大小 默认255 个字节 数值越大读取的速度越快（如果设置过大可能就会有丢失数据的可能性，建议255-4096） |      |
 
 * 示例
 
@@ -530,7 +531,7 @@ if __name__ == '__main__':
 | url     | string | 网址                                                         |
 | data    | json   | （可选参数）附加到请求的正文，json类型，默认为None           |
 | headers | dict   | （可选参数）请求头，默认为None                               |
-| decode  | bool   | （可选参数）True 将响应的内容解码返回str类型  False 关闭解码返回bytes类型 默认True(仅配合response.content使用) |
+| decode  | bool   | （可选参数）True 将响应的内容解码返回str类型  False 关闭解码返回bytes类型 默认True（注意: 只配合response.content使用） |
 | timeout | int    | （可选参数）请求的超时时间                                   |
 | sizeof  | int    | （可选参数）读取缓冲区的数据块大小 默认255 个字节 数值越大读取的速度越快（如果设置过大可能就会有丢失数据的可能性，建议255-4096） |
 
@@ -555,7 +556,7 @@ response = request.put(url)
 | url     | string | 网址                                                         |
 | data    | json   | （可选参数）附加到请求的正文，json类型，默认为None           |
 | headers | dict   | （可选参数）请求头，默认为None                               |
-| decode  | bool   | （可选参数）True 将响应的内容解码返回str类型  False 关闭解码返回bytes类型 默认True(仅配合response.content使用) |
+| decode  | bool   | （可选参数）True 将响应的内容解码返回str类型  False 关闭解码返回bytes类型 默认True |
 | timeout | int    | （可选参数）请求的超时时间                                   |
 | sizeof  | int    | （可选参数）读取缓冲区的数据块大小 默认255 个字节 数值越大读取的速度越快（如果设置过大可能就会有丢失数据的可能性，建议255-4096） |
 
@@ -572,12 +573,11 @@ print(response.headers)
 
 > **response =request.get(url)**
 
-| 方法             | 说明                                                         |
-| ---------------- | ------------------------------------------------------------ |
-| response.content | 返回响应内容的迭代器 (使用方法详见下面的使用示例)            |
-| response.text    | 返回文本方式响应内容的生成器对象(使用方法详见下面的使用示例) |
-| response.json()  | 返回响应的json编码内容并转为dict类型                         |
-| response.close() | 关闭socket                                                   |
+| 方法             | 说明                                                   |
+| ---------------- | ------------------------------------------------------ |
+| response.content | 返回响应内容的生成器对象（使用方法详见下面的使用示例） |
+| response.text    | 返回文本方式响应内容的生成器对象                       |
+| response.json()  | 返回响应的json编码内容并转为dict类型                   |
 
 
 
