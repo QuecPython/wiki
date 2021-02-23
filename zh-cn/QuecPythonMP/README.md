@@ -261,3 +261,6 @@ def Qlistdir():
 ## 下载配套代码
 
  <a href="zh-cn/QuecPythonMP/code/main.zip" target="_blank">下载配套代码模板</a>
+
+ <a href="zh-cn/QuecPythonMP/code/fota.zip" target="_blank">下载差分包生成教程和工具</a>
+

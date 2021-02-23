@@ -1,6 +1,6 @@
 # QuecPython 开发准备
 
-## QuecPython官网介绍及SDK包获取
+## QuecPython官网介绍及开发资源获取
 
 ### 官网介绍
 
@@ -12,9 +12,9 @@
 
 ![](media/2.png)
 
-### SDK包下载
+### 开发资源下载
 
-获取SDK包及开发下载工具地址：https://python.quectel.com/download.html
+获取开发资源下载地址：https://python.quectel.com/download
 
 ![](media/SDK.png)
 
@@ -113,7 +113,7 @@ EC600S_QuecPython_EVB_V1.1 开发板集成了 2 个自定义 KEY，开发者可�
 3. 用户python代码交互
 4. 用户产品量产文件打包
 
-从该地址https://python.quectel.com/download.html#qpyTools 下载最新的QPYcom工具，下载后解压，可参考工具docs目录下的《Quectel_QuecPython_QPYcom_用户指导》进行工具使用。
+从该地址https://python.quectel.com/download下载最新的QPYcom工具，下载后解压，可参考工具docs目录下的《Quectel_QuecPython_QPYcom_用户指导》进行工具使用。
 
 ### Python代码编辑工具
 
@@ -137,7 +137,7 @@ EC600S_QuecPython_EVB_V1.1 开发板集成了 2 个自定义 KEY，开发者可�
 - 从SDK包*tools*目录下获取串口驱动并安装该驱动。安装完成后在设备管理器串口中查看是否识别到了交互串口及AT串口;
 - 使用QPYcom工具下载SDK包中*firmware*目录中的固件包;
 - 安装代码编辑、调试工具Pycharm或者Notepad++；
-- 根据产品需求，细化到所需API，参考[Quectel_QuecPython 类库API说明](https://python.quectel.com/download.html#course)进行APP开发；
+- 根据产品需求，细化到所需API，参考[Quectel_QuecPython 类库API说明](https://python.quectel.com/wiki/#/zh-cn/api/)进行APP开发；
 - 通过QPYcom工具下载.py脚本文件到模块中运行、调试。
 
 
