@@ -17,7 +17,7 @@
 <!-- * [QuecPython 应用编程框架](/zh-cn/study/) -->
 <!-- * [QuecPython Solution方案开发](/zh-cn/study/) -->
 * [QuecPython 产品开发及量产](/zh-cn/QuecPythonMP/)
-* [QuecPython FAQ&DEBUG](https://python.quectel.com/wiki/zh-cn/QuecPythonFAQ&DEBUG/FAQ&Debug.pdf)
+* [QuecPython FAQ&DEBUG](zh-cn/QuecPythonFAQ&DEBUG)
 * [手把手教学](/zh-cn/sbs/)
 <!-- * [**资料下载**](//qpy.quectel.com/down.html) -->
 

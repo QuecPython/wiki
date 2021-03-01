@@ -1,10 +1,10 @@
-# 1 平台说明
+# 平台说明
 
 ​		本实验例程基于 EC600S_QuecPython_EVB_V1.1 开发板完成。
 
 
 
-## 1.1 开发板lcd接口说明
+## 开发板lcd接口说明
 
 ​		本实验所使用的ST7789V lcd引脚定义与开发板的LCD接口是完全匹配的，可以直接插到开发板的LCD接口使用。开发板LCD接口如下：
 
@@ -22,7 +22,7 @@
 
 
 
-## 1.2 ST7789V lcd 接口说明
+## ST7789V lcd 接口说明
 
 <img src="media\st7789v.png" alt="st7789v" style="zoom:75%;" />
 
@@ -38,9 +38,7 @@
 | DC      | 写寄存器/写数据控制信号        |
 | BLK     | 液晶屏背光控制信号             |
 
-
-
-# 2 接线方式
+# 接线方式
 
 ​		以下为1.14inch ST7789V液晶屏模块与 EC600S_QuecPython_EVB_V1.1 模块的接线对应关系。EC600S_QuecPython_EVB_V1.1 模块 LCD 接口定义请参考该开发板的模块原理图。
 
@@ -56,11 +54,11 @@
 
 
 
-# 3 软件说明
+# 软件说明
 
 ​		本示例中的接口是基于QuecPython 的machine.LCD库实现，具体可阅读示例程序的源码。
 
-## 3.1 文件说明
+## 文件说明
 
 | 文件                     | 描述                                                         |
 | ------------------------ | ------------------------------------------------------------ |
@@ -72,9 +70,9 @@
 
 
 
-## 3.2 ST7789V LCD 驱动方法使用说明
+## ST7789V LCD 驱动方法使用说明
 
-### 3.2.1 创建st7789v对象
+### 创建st7789v对象
 
 > **from usr import st7789v**
 >
@@ -104,7 +102,7 @@ lcd_st7789v = st7789v.ST7789V(240, 240)
 
 
 
-### 3.2.2 显示单个字符
+### 显示单个字符
 
 > **lcd_st7789v.lcd_show_char(x, y, xsize, ysize, ch_buf, fc, bc)**
 
@@ -130,7 +128,7 @@ lcd_st7789v = st7789v.ST7789V(240, 240)
 
 
 
-### 3.2.3 单个ASCII字符显示
+### 单个ASCII字符显示
 
 > **lcd_st7789v.lcd_show_ascii(x, y, xsize, ysize, ch, fc, bc)**
 
@@ -156,7 +154,7 @@ lcd_st7789v = st7789v.ST7789V(240, 240)
 
 
 
-### 3.2.4 ASCII字符串显示
+### ASCII字符串显示
 
 > **lcd_st7789v.lcd_show_ascii_str(x, y, xsize, ysize, str, fc, bc)**
 
@@ -184,7 +182,7 @@ lcd_st7789v = st7789v.ST7789V(240, 240)
 
 
 
-### 3.2.5 单个汉字显示
+### 单个汉字显示
 
 > **lcd_st7789v.lcd_show_chinese(x, y, xsize, ysize, ch, fc, bc)**
 
@@ -210,7 +208,7 @@ lcd_st7789v = st7789v.ST7789V(240, 240)
 
 
 
-### 3.2.6  汉字字符串显示
+### 汉字字符串显示
 
 > **lcd_st7789v.lcd_show_chinese_str(x, y, xsize, ysize, str, fc, bc)**
 
@@ -238,7 +236,7 @@ lcd_st7789v = st7789v.ST7789V(240, 240)
 
 
 
-### 3.2.7 显示小尺寸图片
+### 显示小尺寸图片
 
 > **lcd_st7789v.lcd_show_image(image_data, x, y, width, heigth)**
 
@@ -262,7 +260,7 @@ lcd_st7789v = st7789v.ST7789V(240, 240)
 
 
 
-### 3.2.8 显示大尺寸图片
+### 显示大尺寸图片
 
 > **lcd_st7789v.lcd_show_image_file(path, x, y, width, heigth, h)**
 
@@ -365,11 +363,11 @@ if __name__ == '__main__':
 
 
 
-# 4 实验操作
+# 实验操作
 
 
 
-## 4.1 显示图片
+## 显示图片
 
 ​		在实验例程的目录下，找到【显示图片】目录，进入该目录下，有如下几个源码文件：
 
@@ -382,7 +380,7 @@ if __name__ == '__main__':
 
 
 
-### 4.1.1 实验步骤
+### 实验步骤
 
 （1）将240*240的显示屏正确接到模块上；
 （2）将本目录的4个py文件（st7789v.py、image.py、fonts.py、example_display_image.py）拷贝到模块的usr目录下；
@@ -395,7 +393,7 @@ example.exec('usr/example_display_image.py')
 
 
 
-### 4.1.2 实验结果
+### 实验结果
 
 ![图片显示实验](media\图片显示实验.png)
 
@@ -403,7 +401,7 @@ example.exec('usr/example_display_image.py')
 
 
 
-## 4.2 显示字符
+## 显示字符
 
 ​		在实验例程的目录下，找到【显示字符】目录，进入该目录下，有如下几个源码文件：
 
@@ -413,7 +411,7 @@ example.exec('usr/example_display_image.py')
 | fonts.py                | 字库，提供常见ASCII字符的两种大小的字库，分别是8x16和16x24，同时包含了实验中用到汉字的几种不同大小的字库。用户可根据自己的需要制作字库，使用PCtoLCD2002软件，参照fonts.py中说明来制作。 |
 | example_display_char.py | 主程序，调用st7789v.py和fonts.py中接口及信息来实现ASCII字符的显示与汉字的显示。 |
 
-### 4.2.1 实验步骤
+### 实验步骤
 
 （1）将240*240的显示屏正确接到模块上；
 （2）将本目录的3个py文件（st7789v.py、fonts.py、example_display_char.py）拷贝到模块的usr目录下；
@@ -426,15 +424,15 @@ example.exec('usr/example_display_char.py')
 
 
 
-### 4.2.2 实验结果
+### 实验结果
 
 ![字符显示实验](media\字符显示实验.jpg)
 
 
 
-# 5 字符和图片取模工具使用
+# 字符和图片取模工具使用
 
-## 5.1 工具简介
+## 工具简介
 
 （1）Image2Lcd
 
@@ -446,7 +444,7 @@ PCtoLCD2002 是一款字符取模软件，可以生成汉字、英文以及标�
 
 
 
-## 5.2 如何对图片取模
+## 如何对图片取模
 
 （1）打开 Image2Lcd 软件，点击【打开】按钮，选择要显示的图片；
 
@@ -460,7 +458,7 @@ PCtoLCD2002 是一款字符取模软件，可以生成汉字、英文以及标�
 
 
 
-## 5.3 如何对字符取模
+## 如何对字符取模
 
 （1）打开 PCtoLCD2002 软件，依次点击【模式】-【字符模式(W)】；
 
@@ -473,3 +471,7 @@ PCtoLCD2002 是一款字符取模软件，可以生成汉字、英文以及标�
 ![字符取模2](media\字符取模2.png)
 
 （4）输入要取模的字符后，点击【生成字模】，即可得到对应的字模数据，按照示例 fonts.py 文件中的格式，将字模数据保存到字典中。
+
+# 配套代码
+
+ <a href="zh-cn/QuecPythonTest/code/LCD_file.zip" target="_blank">下载实验材料</a>

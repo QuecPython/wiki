@@ -13,12 +13,12 @@
 * [QuecPython 平台性接口](/zh-cn/QuecPythonInterface/)
 * [QuecPython 无线联网开发](/zh-cn/QuecPythonWirelessNetwork/)
 <!-- * [QuecPython 网络应用开发](/zh-cn/study/) -->
-<!-- * [QuecPython 云服务](/zh-cn/study/) -->
+* [QuecPython 云服务](/zh-cn/QuecPythonCloud/)
 * [QuecPython 小实验](/zh-cn/QuecPythonTest/)
 <!-- * [QuecPython 应用编程框架](/zh-cn/study/) -->
 <!-- * [QuecPython Solution方案开发](/zh-cn/study/) -->
 * [QuecPython 产品开发及量产](/zh-cn/QuecPythonMP/)
-* [QuecPython FAQ&DEBUG](https://python.quectel.com/wiki/zh-cn/QuecPythonFAQ&DEBUG/FAQ&Debug.pdf)
+* [QuecPython FAQ&DEBUG](/zh-cn/QuecPythonFAQ&DEBUG/)
 * 手把手教学
 	* 入门:
 		* [QuecPython 基础操作说明](/zh-cn/sbs/basic.md)
