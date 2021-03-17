@@ -1225,7 +1225,7 @@ if __name__ == '__main__':
 ```python
 import system
 
-sys.replSetEnable(1)  # 开启交互保护
+system.replSetEnable(1)  # 开启交互保护
 ```
 
 

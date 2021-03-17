@@ -1295,7 +1295,7 @@ LTE list：
 
 `cid` ：int类型id信息
 
-`act` ：注网制式
+`rat` ：注网制式
 
 `reject_cause` ：注册被拒绝的原因
 
@@ -1321,7 +1321,7 @@ LTE list：
 * 示例
 
 ```python
->>> getState()
+>>> net.getState()
 ([11, 26909, 232301323, 7, 0, 466], [0, 26909, 232301323, 7, 0, 0])
 ```
 
@@ -3697,7 +3697,7 @@ if __name__ == '__main__':
 
 ```python
 >>> extint = ExtInt(ExtInt.GPIO1, ExtInt.IRQ_FALLING, ExtInt.PULL_PU, fun)
->>> ext.line()
+>>> extint.line()
 32
 ```
 
