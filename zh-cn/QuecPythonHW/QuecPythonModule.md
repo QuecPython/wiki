@@ -1,7 +1,0 @@
-
-## QuecPython模块型号介绍
-
-ASR平台：EC100Y 、EC600S
-
-展锐平台：EC200U、EC600N、EC600U、EC700U
-

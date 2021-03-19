@@ -1311,6 +1311,29 @@ socket.setsockopt(usocket.SOL_SOCKET, usocket.SO_REUSEADDR, 1)
 
 
 
+> **socket.getsocketsta()**
+
+获取套接字的状态，状态值描述如下：
+
+| 状态值 | 状态        | 描述                                                         |
+| ------ | ----------- | ------------------------------------------------------------ |
+| 0      | CLOSED      | 套接字创建了，但没有使用这个套接字                           |
+| 1      | LISTEN      | 套接字正在监听连接                                           |
+| 2      | SYN_SENT    | 套接字正在试图主动建立连接，即发送SYN后还没有收到ACK         |
+| 3      | SYN_RCVD    | 套接字正在处于连接的初始同步状态，即收到对方的SYN，但还没收到自己发过去的SYN的ACK |
+| 4      | ESTABLISHED | 连接已建立                                                   |
+| 5      | FIN_WAIT_1  | 套接字已关闭，正在关闭连接，即发送FIN，没有收到ACK也没有收到FIN |
+| 6      | FIN_WAIT_2  | 套接字已关闭，正在等待远程套接字关闭，即在FIN_WAIT_1状态下收到发过去FIN对应的ACK |
+| 7      | CLOSE_WAIT  | 远程套接字已经关闭，正在等待关闭这个套接字，被动关闭的一方收到FIN |
+| 8      | CLOSING     | 套接字已关闭，远程套接字正在关闭，暂时挂起关闭确认，即在FIN_WAIT_1状态下收到被动方的FIN |
+| 9      | LAST_ACK    | 远程套接字已关闭，正在等待本地套接字的关闭确认，被动方在CLOSE_WAIT状态下发送FIN |
+| 10     | TIME_WAIT   | 套接字已经关闭，正在等待远程套接字的关闭，即FIN、ACK、FIN、ACK都完毕，经过2MSL时间后变为CLOSED状态 |
+
+注意：
+
+如果用户调用了 `socket.close()` 方法之后，再调用 `socket.getsocketsta()` 会返回-1，因为此时创建的对象资源等都已经被释放。
+
+
 **socket通信示例**：
 
 ```python
