@@ -209,6 +209,7 @@ b.若是异常重启类似硬件RESET，只是CPU RESET，PMIC不掉电。
 #### 开机原因获取
 
 *每次开机读取过power_down_reason之后，会将其标志清掉，power_up_reason不支持清除。*
+
 **1.powerkey**
 需满足power_up_reason==0x02，且power_down_reason!=0
 

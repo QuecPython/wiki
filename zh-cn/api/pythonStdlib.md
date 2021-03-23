@@ -1148,20 +1148,6 @@ socket = usocket.socket(usocket.AF_INET, usocket.SOCK_DGRAM)
 
 **socket类的方法**
 
-> **socket.bind(address)**
-
-绑定地址address。在此之前，socket必须没有绑定过。
-
-* `address` ：由地址端口号组成的列表或者元组
-
-示例：
-
-```
-addr = ('127.0.0.1', 6000)
-socket.bind(addr)
-```
-
-
 
 > **socket.listen(backlog)**
 
@@ -1299,7 +1285,7 @@ socket.setsockopt(usocket.SOL_SOCKET, usocket.SO_REUSEADDR, 1)
 
 > **socket.settimeout(value)**
 
-设置套接字的超时时间，单位秒。
+设置套接字的发送和接收超时时间，单位秒。
 
 * `value` ：可以是表示秒的非负浮点数，也可以是None。如果给出一个非零值，则[`OSError`](http://docs.micropython.org/en/latest/library/builtins.html#OSError)在该操作完成之前已超过超时时间值，则随后的套接字操作将引发异常。如果给定零，则将套接字置于非阻塞模式。如果未指定，则套接字将处于阻塞模式。
 
