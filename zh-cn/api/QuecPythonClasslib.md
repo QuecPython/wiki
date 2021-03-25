@@ -878,13 +878,13 @@ if __name__ == '__main__':
 
 > **sms.setCenterAddr(addr)**
 
-设置短信中心号码。该接口会在输入的短信中心号码前自动添加”+86”。若无特殊需求，不建议更改短信中心号码。
+设置短信中心号码。若无特殊需求，不建议更改短信中心号码。
 
 * 参数
 
-| 参数 | 参数类型 | 参数说明                                     |
-| ---- | -------- | -------------------------------------------- |
-| addr | string   | 需要设置的短信中心号码，最大长度不超过30字节 |
+| 参数 | 参数类型 | 参数说明                                       |
+| ---- | -------- | ---------------------------------------------- |
+| addr | string   | 需要设置的短信中心号码，最大长度不超过30字节。 |
 
 * 返回值
 
@@ -2041,11 +2041,39 @@ if __name__ == '__main__':
 >>> aud = audio.Audio(1)
 ```
 
+> **aud.set_pa(gpio)**
 
+设置输出的pa的gpio引脚，并开启pa功能目前支持AB类切D类，即两个上升沿的脉冲分别在1us<脉冲<12us
+
+* 参数
+
+| 参数 | 参数类型 | 参数说明                            |
+| ---- | -------- | ----------------------------------- |
+| gpio | int      | 设置输出的gpio，gpio可从Pin里面获取 |
+
+- 返回值
+
+设置成功返回整数1;
+
+设置失败返回整数0;
+
+- 示例
+
+```python
+>>> import audio
+>>> from machine import Pin
+>>> aud = audio.Audio(0)
+
+>>> aud.set_pa(Pin.GPIO15)
+1
+#设置成功tts 和 aud播报输出aud AB类切D类脉冲
+>>> aud.play(2, 1, 'U:/music.mp3')
+0
+```
 
 > **aud.play(priority, breakin, filename)**
 
-音频文件播放，支持mp3和amr文件播放。支持优先级0~4，数字越大优先级越高，每个优先级组可同时最多加入10个播放任务，与TTS播放共用同一个播放队列。
+音频文件播放，支持mp3、amr和wav格式文件播放。支持优先级0~4，数字越大优先级越高，每个优先级组可同时最多加入10个播放任务，与TTS播放共用同一个播放队列。
 
 * 参数
 
@@ -3697,7 +3725,7 @@ if __name__ == '__main__':
 
 ```python
 >>> extint = ExtInt(ExtInt.GPIO1, ExtInt.IRQ_FALLING, ExtInt.PULL_PU, fun)
->>> extint.line()
+>>> ext.line()
 32
 ```
 
@@ -4205,6 +4233,28 @@ lcd = LCD()   # 创建lcd对象
 
 
 
+> **lcd.lcd_show(file_name, start_x,start_y,width,hight)**
+
+采用读文件方式，显示图片。
+
+该文件是由Image2Lcd工具生成的bin文件。若勾选包含图像头文件，则width和hight无需填写
+
+- 参数
+
+| 参数      | 类型   | 说明                                           |
+| --------- | ------ | ---------------------------------------------- |
+| file_name | 文件名 | 需要显示的图片                                 |
+| start_x   | int    | 起始x坐标                                      |
+| start_y   | int    | 起始y坐标                                      |
+| width     | int    | 图片宽度（若图片文件包含的头信息，则该处不填） |
+| hight     | int    | 图片高度（若图片文件包含的头信息，则该处不填） |
+
+* 返回值
+
+成功返回0， 失败返回其他值。
+
+
+
 **使用示例**
 
 需要配合LCD屏使用，如下代码以 ili9225 为例！
@@ -4269,6 +4319,9 @@ Color_buffer = bytearray(Color_buffer)
 
 lcd.lcd_write(Color_buffer,10,10,20,20)
 lcd.lcd_clear(0xf800) # 红色
+
+lcd.show("lcd_test.bin",0,0)	#该lcd_test.bin 中包含图像头数据
+lcd.show("lcd_test1.bin",0,0,126,220) #该lcd_test1.bin 中没有包含图像头数据
 ```
 
 
@@ -4376,6 +4429,35 @@ if __name__ == '__main__':
 ```
 
 
+
+#### qrcode- 二维码显示
+
+模块功能：根据输入的内容，生成对应的二维码。
+
+> ​	qrcode.show(qrcode_str,magnification,start_x,start_y,Background_color,Foreground_color)
+
+创建wake_lock锁  +++还有放大
+
+- 参数
+
+| 参数             | 类型   | 说明                           |
+| :--------------- | :----- | ------------------------------ |
+| qrcode_str       | string | 二维码内容                     |
+| magnification    | int    | 放大倍数[1,6]                  |
+| start_x          | int    | 二维码显示起始x坐标            |
+| start_y          | int    | 二维码显示起始y坐标            |
+| Background_color | int    | 前景色（不设置即默认为0xffff） |
+| Foreground_color | int    | 背景色（不设置即默认为0x0000） |
+
+* 返回值
+
+0：成功
+
+-1：生成二维码失败
+
+-2：放大失败
+
+-3：显示失败
 
 
 

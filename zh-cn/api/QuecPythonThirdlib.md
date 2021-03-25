@@ -27,6 +27,18 @@
 
 设置MQTT数据通道的参数
 
+**需要注意的是，当进行阿里云的一型一密连接的时候，会在本地生成secret.json的文件用以保存设备的设备密钥，如果重刷固件或者删除，再进行连接的时候会因为没有secret.json而报错，所以重刷固件或者删除了secert.json文件，需要手动新建secret.json文件，下面secret.json文件的模板**
+
+```
+{
+  "Test01": "9facf9aba414ec9eea7c10d8a4cb69a0"
+}
+# Test01 : 设备名
+# "9facf9aba414ec9eea7c10d8a4cb69a0" 设备密钥
+```
+
+
+
 * 参数
 
 | 参数          | 类型   | 说明                                                         |
@@ -396,7 +408,7 @@ if __name__ == '__main__':
 
 模块功能：HTTP客户端的相关功能函数。
 
-> **request.get(url, data, headers,decode,timeout,sizeof)**
+> **request.get(url, data, headers,decode,sizeof,ssl_params)**
 
 发送GET请求。
 
@@ -408,7 +420,6 @@ if __name__ == '__main__':
 | data    | json   | （可选参数）附加到请求的正文，json类型，默认为None           |
 | headers | dict   | （可选参数）请求头，默认为None                               |
 | decode  | bool   | （可选参数）True 将响应的内容解码返回str类型  False 关闭解码返回bytes类型 默认True(仅配合response.content使用) |
-| timeout | int    | （可选参数）请求的超时时间                                   |
 | sizeof  | int    | （可选参数）读取缓冲区的数据块大小 默认255 个字节 数值越大读取的速度越快（如果设置过大可能就会有丢失数据的可能性，建议255-4096） |
 | ssl_params | dict   | （可选参数）SSL双向认证 {"cert": certificate_content, "key": private_content} 传入证书的公钥密钥 |
 
@@ -457,7 +468,7 @@ if __name__ == '__main__':
 
 
 
-> **request.post(url, data, headers,decode,timeout,sizeof)**
+> **request.post(url, data, headers,decode,sizeof)**
 
 发送POST请求。
 
@@ -469,7 +480,6 @@ if __name__ == '__main__':
 | data    | json   | （可选参数）附加到请求的正文，json类型，默认为None           |      |
 | headers | dict   | （可选参数）请求头，默认为None                               |      |
 | decode  | bool   | （可选参数）True 将响应的内容解码返回str类型  False 关闭解码返回bytes类型 默认True |      |
-| timeout | int    | （可选参数）请求的超时时间                                   |      |
 | sizeof  | int    | （可选参数）读取缓冲区的数据块大小 默认255 个字节 数值越大读取的速度越快（如果设置过大可能就会有丢失数据的可能性，建议255-4096） |      |
 
 * 示例
@@ -520,7 +530,7 @@ if __name__ == '__main__':
 
 
 
-> **request.put(url, data, headers,decode,timeout,sizeof)**
+> **request.put(url, data, headers,decode,sizeof)**
 
 发送PUT请求。
 
@@ -532,7 +542,6 @@ if __name__ == '__main__':
 | data    | json   | （可选参数）附加到请求的正文，json类型，默认为None           |
 | headers | dict   | （可选参数）请求头，默认为None                               |
 | decode  | bool   | （可选参数）True 将响应的内容解码返回str类型  False 关闭解码返回bytes类型 默认True（注意: 只配合response.content使用） |
-| timeout | int    | （可选参数）请求的超时时间                                   |
 | sizeof  | int    | （可选参数）读取缓冲区的数据块大小 默认255 个字节 数值越大读取的速度越快（如果设置过大可能就会有丢失数据的可能性，建议255-4096） |
 
 * 示例
@@ -545,7 +554,7 @@ response = request.put(url)
 
 
 
-> **request.head(url, data, headers,decode,timeout,sizeof)**
+> **request.head(url, data, headers,decode,sizeof)**
 
 发送HEAD请求。
 
@@ -557,7 +566,6 @@ response = request.put(url)
 | data    | json   | （可选参数）附加到请求的正文，json类型，默认为None           |
 | headers | dict   | （可选参数）请求头，默认为None                               |
 | decode  | bool   | （可选参数）True 将响应的内容解码返回str类型  False 关闭解码返回bytes类型 默认True |
-| timeout | int    | （可选参数）请求的超时时间                                   |
 | sizeof  | int    | （可选参数）读取缓冲区的数据块大小 默认255 个字节 数值越大读取的速度越快（如果设置过大可能就会有丢失数据的可能性，建议255-4096） |
 
 * 示例
