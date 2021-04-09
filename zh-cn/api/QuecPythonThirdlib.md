@@ -972,17 +972,18 @@ mqtt对象。
 
 
 
-> **MQTTClient.publish(topic,msg,qos)**
+> **MQTTClient.publish(topic,msg, retain=False, qos=0)**
 
 发布消息。
 
 * 参数
 
-| 参数  | 类型   | 说明                                                         |
-| :---- | :----- | ------------------------------------------------------------ |
-| topic | string | 消息主题                                                     |
-| msg   | string | 需要发送的数据                                               |
-| qos   | int    | MQTT消息服务质量（默认0，可选择0或1）0：发送者只发送一次消息，不进行重试  1：发送者最少发送一次消息，确保消息到达Broker |
+| 参数   | 类型   | 说明                                                         |
+| :----- | :----- | ------------------------------------------------------------ |
+| topic  | string | 消息主题                                                     |
+| msg    | string | 需要发送的数据                                               |
+| retain | bool   | 默认为False, 发布消息时把retain设置为true，即为保留信息。<br />MQTT服务器会将最近收到的一条RETAIN标志位为True的消息保存在服务器端, 每当MQTT客户端连接到MQTT服务器并订阅了某个topic，如果该topic下有Retained消息，那么MQTT服务器会立即向客户端推送该条Retained消息 <br />特别注意：MQTT服务器只会为每一个Topic保存最近收到的一条RETAIN标志位为True的消息！也就是说，如果MQTT服务器上已经为某个Topic保存了一条Retained消息，当客户端再次发布一条新的Retained消息，那么服务器上原来的那条消息会被覆盖！ |
+| qos    | int    | MQTT消息服务质量（默认0，可选择0或1）0：发送者只发送一次消息，不进行重试  1：发送者最少发送一次消息，确保消息到达Broker |
 
 * 返回值
 

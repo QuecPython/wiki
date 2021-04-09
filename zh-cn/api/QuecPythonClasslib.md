@@ -1472,6 +1472,194 @@ LTE list：
 
 
 
+#### checkNet - 等待网络就绪
+
+模块功能：checkNet模块主要用于【开机自动运行】的用户脚本程序，该模块提供API用来阻塞等待网络就绪，如果超时或者其他异常退出会返回错误码，所以如果用户的程序中有涉及网络相关的操作，那么在用户程序的开始应该调用 checkNet 模块中的方法以等待网络就绪。当然，用户也可以自己实现这个模块的功能。
+
+**创建checkNet对象**
+
+> **import checkNet**
+>
+> PROJECT_NAME = "QuecPython_Math_example"
+> PROJECT_VERSION = "1.0.0"
+> checknet = checkNet.CheckNetwork(PROJECT_NAME, PROJECT_VERSION)
+
+* 功能
+
+  创建checkNet对象。PROJECT_NAME 和 PROJECT_VERSION 是必须有的两个全局变量，用户可以根据自己的需要修改这两个变量的值。
+
+* 参数
+
+  | 参数            | 描述                       |
+  | --------------- | -------------------------- |
+  | PROJECT_NAME    | 用户项目名称，字符串类型   |
+  | PROJECT_VERSION | 用户项目版本号，字符串类型 |
+
+* 返回值
+
+  无。
+
+示例
+
+```python
+import checkNet
+
+PROJECT_NAME = "XXXXXXXX"
+PROJECT_VERSION = "XXXX"
+checknet = checkNet.CheckNetwork(PROJECT_NAME, PROJECT_VERSION)
+```
+
+
+
+> **checknet.poweron_print_once()**
+
+* 功能
+
+  开机时打印一些信息，主要用于提示用户。打印内容如下：
+
+  PROJECT_NAME     	  : 用户项目名称
+  PROJECT_VERSION 	 : 用户项目版本号
+  FIRMWARE_VERSION  : 固件版本号
+  POWERON_REASON   : 开机原因
+  SIM_CARD_STATUS     : SIM卡状态
+
+* 参数
+
+  无
+
+* 返回值
+
+  无。
+
+* 示例
+
+```python 
+import checkNet
+
+PROJECT_NAME = "QuecPython_Math_example"
+PROJECT_VERSION = "1.0.0"
+checknet = checkNet.CheckNetwork(PROJECT_NAME, PROJECT_VERSION)
+
+if __name__ == '__main__':
+    # 在用户程序运行前增加下面这一句
+    checknet.poweron_print_once()
+	......
+    
+# 当用户程序开始运行时，会打印下面信息
+==================================================
+PROJECT_NAME     : QuecPython_Math_example
+PROJECT_VERSION  : 1.0.0
+FIRMWARE_VERSION : EC600UCNLBR01A01M16_OCPU_V01
+POWERON_REASON   : 2
+SIM_CARD_STATUS  : 1
+==================================================
+```
+
+
+
+> **checknet.wait_network_connected(timeout)**
+
+* 功能
+
+  阻塞等待网络就绪。超时时间内，只要检测到拨号成功，则会立即返回，否则阻塞到超时时间到才会退出。
+
+* 参数
+
+| 参数    | 类型 | 说明                                              |
+| ------- | ---- | ------------------------------------------------- |
+| timeout | 整型 | 超时时间，单位秒，可设范围 [1, 3600]，默认值60s。 |
+
+* 返回值
+
+  返回值有2个，形式如下：
+
+  `stagecode, subcode`
+
+  各返回值说明如下：
+
+  | 返回值    | 类型 | 说明                                                         |
+  | --------- | ---- | ------------------------------------------------------------ |
+  | stagecode | 整型 | 阶段码，表示 checkNet 模块当前在哪个阶段。<br>1 - 程序在获取SIM卡状态阶段，因为超时或者SIM卡状态异常，退出时的值；<br>2 - 程序在获取注网状态阶段，因为超时退出时的值；<br>3 - 程序在获取拨号状态阶段，返回时的值；<br>用户使用时，stagecode 正常返回值应该是3，如果是前两个值，说明是不正常的。 |
+  | subcode   | 整型 | 子码，结合 stagecode 的值，来表示 checkNet 在不同阶段的具体状态。<br/>当 stagecode = 1 时：<br/>subcode 表示 SIM卡的状态，范围[0, 21]，每个值的详细说明，请参考：[https://python.quectel.com/wiki/#/zh-cn/api/QuecPythonClasslib?id=sim-sim%e5%8d%a1](https://python.quectel.com/wiki/#/zh-cn/api/QuecPythonClasslib?id=sim-sim卡) <br/>中 sim.getStatus() 接口的返回值说明。<br/><br/>当 stagecode = 2 时：<br/>subcode 表示注网状态，范围[0, 11]，每个值的详细说明，请参考：[https://python.quectel.com/wiki/#/zh-cn/api/QuecPythonClasslib?id=net-%e7%bd%91%e7%bb%9c%e7%9b%b8%e5%85%b3%e5%8a%9f%e8%83%bd](https://python.quectel.com/wiki/#/zh-cn/api/QuecPythonClasslib?id=net-网络相关功能)    中的 net.getState() 接口的返回值说明。<br/>subcode = -1，表示在超时时间内，获取注网状态失败；<br/>其他值参考上面链接中对应接口说明。<br/>如果在超时时间内，模块注网成功，就会进入 stagecode = 3 的阶段，不会在stagecode = 2 的阶段返回。<br/><br/>当 stagecode = 3 时：<br/>subcode = 0，表示在超时时间内，模块一直没有拨号成功；<br/>subcode = 1，表示在超时时间内，模块已经联网成功，即注网、拨号成功。 |
+
+* 示例
+
+```python
+import checkNet
+
+PROJECT_NAME = "QuecPython_Math_example"
+PROJECT_VERSION = "1.0.0"
+checknet = checkNet.CheckNetwork(PROJECT_NAME, PROJECT_VERSION)
+
+if __name__ == '__main__':
+    # 在用户程序运行前增加下面这一句
+    stagecode, subcode = checknet.wait_network_connected(30)
+    print('stagecode = {}, subcode = {}'.format(stagecode, subcode))
+	......
+    
+# 当用户程序开始运行时，如果网络已就绪，则返回值如下：
+stagecode = 3, subcode = 1
+# 如果用户没有插sim卡，则返回值如下：
+stagecode = 1, subcode = 0
+# 如果sim卡处于被锁的状态，则返回值如下：
+stagecode = 1, subcode = 2
+```
+
+
+
+**checkNet 异常返回处理**
+
+根据前面 `checknet.wait_network_connected(timeout)` 接口返回值描述，用户可参考如下处理方式来排查和解决问题：
+
+```python
+import checkNet
+
+PROJECT_NAME = "QuecPython_Math_example"
+PROJECT_VERSION = "1.0.0"
+checknet = checkNet.CheckNetwork(PROJECT_NAME, PROJECT_VERSION)
+
+if __name__ == '__main__':
+    # 在用户程序运行前增加下面这一句
+    stagecode, subcode = checknet.wait_network_connected(30)
+    print('stagecode = {}, subcode = {}'.format(stagecode, subcode))
+    
+    if stagecode == 1:
+        # 如果 subcode = 0，说明没插卡，或者卡槽松动，需要用户去检查确认；
+        # 如果是其他值，请参考官方wiki文档中关于sim卡状态值的描述，确认sim卡当前状态，然后做相应处理
+    elif stagecode == 2:
+        if subcode == -1:
+            # 这种情况说明在超时时间内，获取注网状态API一直执行失败，在确认SIM卡可正常使用且能正常被模块识
+            # 别的前提下，可联系我们的FAE反馈问题；
+        elif subcode == 0:
+            # 这种情况说明在超时时间内，模块一直没有注网成功，这时请按如下步骤排查问题：
+            # （1）首先确认SIM卡状态是正常的，通过 sim 模块的 sim.getState() 接口获取，为1说明正常；
+            # （2）如果SIM卡状态正常，确认当前信号强度，通过 net模块的 net.csqQueryPoll() 接口获取，
+            #     如果信号强度比较弱，那么可能是因为当前信号强度较弱导致短时间内注网不成功，可以增加超时
+            #	  时间或者换个信号比较好的位置再试试；
+            # （3）如果SIM卡状态正常，信号强度也较好，但就是注不上网，请联系我们的FAE反馈问题；最好将相应
+            #     SIM卡信息，比如哪个运营商的卡、什么类型的卡、卡的IMSI等信息也一并提供，必要时可以将
+            #     SIM卡寄给我们来排查问题。
+        else:
+            # 请参考官方Wiki文档中 net.getState() 接口的返回值说明，确认注网失败原因
+    elif stagecode == 3:
+        if subcode == 1:
+            # 这是正常返回情况，说明网络已就绪，即注网成功，拨号成功
+        else:
+            # 这种情况说明在超时时间内，拨号一直没有成功，请按如下步骤尝试：
+            # （1）通过 sim 模块的 sim.getState() 接口获取sim卡状态，为1表示正常；
+            # （2）通过 net 模块的 net.getState() 接口获取注网状态，为1表示正常；
+            # （3）手动调用拨号接口尝试拨号，看看能否拨号成功，可参考官方Wiki文档中的 dataCall 模块
+            #     的拨号接口和获取拨号结果接口；
+            # （4）如果手动拨号成功了，但是开机拨号失败，那么可能是默认的apn配置表中没有与当前SIM卡匹配
+            #     的apn，用户可通过 sim 模块的 sim.getImsi() 来获取 IMSI 码，确认IMSI的第四和第五			  #     位字符组成的数字是否在 01~13 的范围内，如果不在，说明当前默认apn配置表中无此类SIM卡对
+            #     应的apn 信息，这种情况下，用户如果希望开机拨号成功，可以使用 dataCall.setApn(...)
+            #     接口来设置保存用户自己的apn信息，然后开机重启，就会使用用户设置的apn来进行开机拨号；
+            # （5）如果手动拨号也失败，那么请联系我们的FAE反馈问题，最好将相应SIM卡信息，比如哪个运营商
+            #     的卡、什么类型的卡、卡的IMSI等信息也一并提供，必要时可以将SIM卡寄给我们来排查问题。
+```
+
+
+
 #### fota - 固件升级
 
 模块功能：固件升级。
@@ -3120,7 +3308,7 @@ PIN脚电平，0-低电平，1-高电平。
 
 > **Pin.write(value)**
 
-设置PIN脚电平。
+设置PIN脚电平,设置高低电平前需要保证引脚为输出模式。
 
 * 参数
 
@@ -4756,4 +4944,246 @@ $GNGSA,A,3,31,26,11,194,27,195,08,09,03,193,04,16,1.41,1.03,0.97,1*31
 r = ure.search("GNGGA(.+?)M", res)
 print(r.group(0))
 ```
+
+####  wifiScan
+
+**判断当前平台是否支持 wifiScan**
+
+> **wifiScan.support()**
+
+* 功能：
+
+  判断当前平台是否支持 wifiScan 功能。
+
+* 参数：
+
+  无
+
+* 返回值：
+
+  支持返回True，不支持返回False。
+
+* 示例：
+
+```python 
+>>> import wifiScan
+>>> wifiScan.support()
+True
+```
+
+
+
+**开启或者关闭 wifiScan 功能**
+
+> **wifiScan.control(option)**
+
+* 功能：
+
+  控制开启或者关闭 wifiScan 功能。
+
+* 参数：
+
+| 参数   | 类型 | 说明                                             |
+| ------ | ---- | ------------------------------------------------ |
+| option | 整型 | 0 - 关闭 wifiscan 功能<br>1 - 开启 wifiscan 功能 |
+
+* 返回值：
+
+  执行成功返回整型0，失败返回整型-1。
+
+* 示例：
+
+```python
+>>> wifiScan.control(1) # 开启 wifiScan 功能
+0
+>>> wifiScan.control(0) # 关闭 wifiScan 功能
+0
+```
+
+
+
+**获取 wifiScan 的当前状态**
+
+> **wifiScan.getState()**
+
+* 功能：
+
+  获取当前平台 wifiScan 的状态，是开启还是关闭。200U/600U 平台默认关闭，使用wifiscan功能之前应该使用`wifiScan.control(1)` 开启该功能。
+
+* 参数：
+
+  无
+
+* 返回值：
+
+  wifiScan 功能已开启返回 True，功能未开启返回 False。
+
+* 示例：
+
+```python
+>>> wifiScan.getState()
+True
+```
+
+
+
+**获取当前 wifiScan 功能配置**
+
+> **wifiScan.getConfig()**
+
+* 功能：
+
+  获取 wifiScan 功能配置参数。
+
+* 参数：
+
+  无
+
+* 返回值：
+
+  成功返回一个元组，失败返回整型 -1，返回元组形式如下：
+
+  `(timeout, round, max_bssid_num, scan_timeout, priority)`
+
+  | 返回值        | 类型 | 说明                                                         |
+  | ------------- | ---- | ------------------------------------------------------------ |
+  | timeout       | 整型 | 该超时时间参数是上层应用的超时，当触发超时会主动上报已扫描到的热点信息，若在超时前扫描到设置的热点个数或达到底层扫频超时时间会自动上报热点信息。该参数设置范围为4-255秒。 |
+  | round         | 整型 | 该参数是wifi扫描轮，达到扫描轮数后，会结束扫描并获取扫描结果。该参数设置范围为1-3轮次。 |
+  | max_bssid_num | 整型 | 该参数是wifi扫描热点最大个，若底层扫描热点个数达到设置的最大个数，会结束扫描并获取扫描结果。该参数设置范围为4-30个。 |
+  | scan_timeout  | 整型 | 该参数是底层wifi扫描热点超时时间，若底层扫描热点时间达到设置的超时时间，会结束扫描并获取扫描结果。该参数设置范围为1-255秒。 |
+  | priority      | 整型 | 该参数是wifi扫描业务优先级设置，0为ps优先，1为wifi优先。ps优先时，当有数据业务发起时会中断wifi扫描。Wifi优先时，当有数据业务发起时，不会建立RRC连接，保障wifi扫描正常执行，扫描结束后才会建立RRC连接。 |
+
+* 示例：
+
+```python
+>>> wifiScan.getConfig()
+(6, 1, 5, 1, 0)
+```
+
+
+
+**设置当前 wifiScan 功能配置**
+
+> **wifiScan.setConfig(timeout, round, max_bssid_num, scan_timeout, priority)**
+
+* 功能：
+
+  设置 wifiScan 功能配置参数。
+
+* 参数：
+
+  | 参数          | 类型 | 说明                                                         |
+  | ------------- | ---- | ------------------------------------------------------------ |
+  | timeout       | 整型 | 该超时时间参数是上层应用的超时，当触发超时会主动上报已扫描到的热点信息，若在超时前扫描到设置的热点个数或达到底层扫频超时时间会自动上报热点信息。该参数设置范围为4-255秒。 |
+  | round         | 整型 | 该参数是wifi扫描轮，达到扫描轮数后，会结束扫描并获取扫描结果。该参数设置范围为1-3轮次。 |
+  | max_bssid_num | 整型 | 该参数是wifi扫描热点最大个，若底层扫描热点个数达到设置的最大个数，会结束扫描并获取扫描结果。该参数设置范围为4-30个。 |
+  | scan_timeout  | 整型 | 该参数是底层wifi扫描热点超时时间，若底层扫描热点时间达到设置的超时时间，会结束扫描并获取扫描结果。该参数设置范围为1-255秒。 |
+  | priority      | 整型 | 该参数是wifi扫描业务优先级设置，0为ps优先，1为wifi优先。ps优先时，当有数据业务发起时会中断wifi扫描。Wifi优先时，当有数据业务发起时，不会建立RRC连接，保障wifi扫描正常执行，扫描结束后才会建立RRC连接。 |
+
+* 返回值：
+
+  成功返回整型0，失败返回整型-1。
+
+* 示例：
+
+```python
+>>> wifiScan.setConfig(5, 2, 6, 3, 0)
+0
+```
+
+
+
+**注册回调函数**
+
+> **wifiScan.setCallback(usrFun)**
+
+* 功能：
+
+  注册用户回调函数。当用户使用异步接口扫描时，需要注册回调函数，扫描结果通过回调函数返回给用户。
+
+* 参数：
+
+  | 参数   | 类型     | 说明         |
+  | ------ | -------- | ------------ |
+  | usrFun | function | 用户回调函数 |
+
+* 返回值：
+
+  注册成功返回整型0，失败返回整型-1。
+
+* 示例：
+
+```python
+def usr_cb(args):
+	print('wifi list:{}'.format(args))
+wifiScan.setCallback(usr_cb)
+```
+
+
+
+**启动 wifiScan 扫描-异步接口**
+
+> **wifiScan.asyncStart()**
+
+* 功能：
+
+  开始 wifiScan 扫描功能，扫描结果通过用户注册的回调函数返回。
+
+* 参数：
+
+  无
+
+* 返回值：
+
+  执行成功返回整型0，失败返回整型-1。
+
+* 示例：
+
+```python
+def usr_cb(args):
+	print('wifi list:{}'.format(args))
+wifiScan.setCallback(usr_cb)
+
+wifiScan.asyncStart()
+
+'''
+执行结果：
+wifi list:(2, [('F0:B4:29:86:95:C7': -79),('44:00:4D:D5:26:E0', -92)])
+'''
+```
+
+
+
+**启动 wifiScan 扫描-同步接口**
+
+> **wifiScan.start()**
+
+* 功能：
+
+  开始 wifiScan 扫描功能，扫描结束后直接返回扫描结果，由于是同步接口，所以扫描未结束时，程序会阻塞在该接口中，阻塞时间一般在0~2秒。
+
+* 参数：
+
+  无
+
+* 返回值：
+
+  成功返回扫描结果，失败或者错误返回整型-1。成功时返回值形式如下：
+
+  `（wifi_nums, [(mac, rssi), ... , (mac, rssi)]）`
+
+  | 参数      | 类型   | 说明                |
+  | --------- | ------ | ------------------- |
+  | wifi_nums | 整型   | 搜索到的 wifi 数量  |
+  | mac       | 字符串 | 无线接入点的MAC地址 |
+  | rssi      | 整型   | 信号强度            |
+
+* 示例：
+
+```python
+>>> wifiScan.start()
+(2, [('F0:B4:29:86:95:C7': -79),('44:00:4D:D5:26:E0', -92)])
+```
+
+
 
