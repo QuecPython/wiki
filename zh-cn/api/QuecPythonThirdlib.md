@@ -147,8 +147,7 @@ import checkNet
 from aLiYun import aLiYun
 
 '''
-下面两个全局变量是必须有的，用户可以根据自己的实际项目修改下面两个全局变量的值，
-在执行用户代码前，会先打印这两个变量的值。
+下面两个全局变量是必须有的，用户可以根据自己的实际项目修改下面两个全局变量的值
 '''
 PROJECT_NAME = "QuecPython_AliYin_example"
 PROJECT_VERSION = "1.0.0"
@@ -174,42 +173,34 @@ def sub_cb(topic, msg):
 
 
 if __name__ == '__main__':
-    '''
-    手动运行本例程时，可以去掉该延时，如果将例程文件名改为main.py，希望开机自动运行时，需要加上该延时,
-    否则无法从CDC口看到下面的 poweron_print_once() 中打印的信息
-    '''
-    utime.sleep(5)
-    checknet.poweron_print_once()
-    '''
-    如果用户程序包含网络相关代码，必须执行 wait_network_connected() 等待网络就绪（拨号成功）；
-    如果是网络无关代码，可以屏蔽 wait_network_connected()
-    【本例程必须保留下面这一行！】
-    '''
-    checknet.wait_network_connected()
+    stagecode, subcode = checknet.wait_network_connected(30)
+    if stagecode == 3 and subcode == 1:
+        aliYun_log.info('Network connection successful!')
+        # 创建aliyun连接对象
+        ali = aLiYun(productKey, productSecret, DeviceName, DeviceSecret)
 
-    # 创建aliyun连接对象
-    ali = aLiYun(productKey, productSecret, DeviceName, DeviceSecret)
+        # 设置mqtt连接属性
+        clientID = ""  # 自定义字符（不超过64）
+        ali.setMqtt(clientID, clean_session=False, keepAlive=300)
 
-    # 设置mqtt连接属性
-    clientID = ""  # 自定义字符（不超过64）
-    ali.setMqtt(clientID, clean_session=False, keepAlive=300)
+        # 设置回调函数
+        ali.setCallback(sub_cb)
+        topic = ""  # 云端自定义或自拥有的Topic
+        # 订阅主题
+        ali.subscribe(topic)
+        # 发布消息
+        ali.publish(topic, "hello world")
+        # 运行
+        ali.start()
 
-    # 设置回调函数
-    ali.setCallback(sub_cb)
-    topic = ""  # 云端自定义或自拥有的Topic
-    # 订阅主题
-    ali.subscribe(topic)
-    # 发布消息
-    ali.publish(topic, "hello world")
-    # 运行
-    ali.start()
-
-    while 1:
-        if state:
-            pass
-        else:
-            ali.disconnect()
-            break
+        while 1:
+            if state:
+                pass
+            else:
+                ali.disconnect()
+                break
+    else:
+        aliYun_log.info('Network connection failed! stagecode = {}, subcode = {}'.format(stagecode, subcode))
 
 ```
 
@@ -344,8 +335,7 @@ import checkNet
 
 
 '''
-下面两个全局变量是必须有的，用户可以根据自己的实际项目修改下面两个全局变量的值，
-在执行用户代码前，会先打印这两个变量的值。
+下面两个全局变量是必须有的，用户可以根据自己的实际项目修改下面两个全局变量的值
 '''
 PROJECT_NAME = "QuecPython_TencentYun_example"
 PROJECT_VERSION = "1.0.0"
@@ -374,32 +364,26 @@ def sub_cb(topic, msg):   # 云端消息响应回调函数
 
 
 if __name__ == '__main__':
-    '''
-    手动运行本例程时，可以去掉该延时，如果将例程文件名改为main.py，希望开机自动运行时，需要加上该延时,
-    否则无法从CDC口看到下面的 poweron_print_once() 中打印的信息
-    '''
-    utime.sleep(5)
-    checknet.poweron_print_once()
-    '''
-    如果用户程序包含网络相关代码，必须执行 wait_network_connected() 等待网络就绪（拨号成功）；
-    如果是网络无关代码，可以屏蔽 wait_network_connected()
-    【本例程必须保留下面这一行！】
-    '''
-    checknet.wait_network_connected()
+    stagecode, subcode = checknet.wait_network_connected(30)
+    if stagecode == 3 and subcode == 1:
+        txyun_log.info('Network connection successful!')
 
-    tenxun.setMqtt()  # 设置mqtt
-    tenxun.setCallback(sub_cb)   # 设置消息回调函数
-    topic = ""  # 输入自定义的Topic
-    tenxun.subscribe(topic)   # 订阅Topic
-    tenxun.start()
-    tenxun.publish(topic, "hello world")   # 发布消息
+        tenxun.setMqtt()  # 设置mqtt
+        tenxun.setCallback(sub_cb)   # 设置消息回调函数
+        topic = ""  # 输入自定义的Topic
+        tenxun.subscribe(topic)   # 订阅Topic
+        tenxun.start()
+        tenxun.publish(topic, "hello world")   # 发布消息
 
-    while 1:
-        if state:
-            pass
-        else:
-            tenxun.disconnect()
-            break
+        while 1:
+            if state:
+                pass
+            else:
+                tenxun.disconnect()
+                break
+    else:
+        txyun_log.info('Network connection failed! stagecode = {}, subcode = {}'.format(stagecode, subcode))
+
 ```
 
 
@@ -433,8 +417,7 @@ import checkNet
 
 
 '''
-下面两个全局变量是必须有的，用户可以根据自己的实际项目修改下面两个全局变量的值，
-在执行用户代码前，会先打印这两个变量的值。
+下面两个全局变量是必须有的，用户可以根据自己的实际项目修改下面两个全局变量的值
 '''
 PROJECT_NAME = "QuecPython_Requect_get_example"
 PROJECT_VERSION = "1.0.0"
@@ -448,22 +431,13 @@ http_log = log.getLogger("HTTP GET")
 url = "http://httpbin.org/get"
 
 if __name__ == '__main__':
-    '''
-    手动运行本例程时，可以去掉该延时，如果将例程文件名改为main.py，希望开机自动运行时，需要加上该延时,
-    否则无法从CDC口看到下面的 poweron_print_once() 中打印的信息
-    '''
-    utime.sleep(5)
-    checknet.poweron_print_once()
-    '''
-    如果用户程序包含网络相关代码，必须执行 wait_network_connected() 等待网络就绪（拨号成功）；
-    如果是网络无关代码，可以屏蔽 wait_network_connected()
-    【本例程必须保留下面这一行！】
-    '''
-    checknet.wait_network_connected()
-
-    response = request.get(url)   # 发起http GET请求
-    http_log.info(response.json())  # 以json方式读取返回
-
+    stagecode, subcode = checknet.wait_network_connected(30)
+    if stagecode == 3 and subcode == 1:
+        http_log.info('Network connection successful!')
+        response = request.get(url)   # 发起http GET请求
+        http_log.info(response.json())  # 以json方式读取返回
+    else:
+        http_log.info('Network connection failed! stagecode = {}, subcode = {}'.format(stagecode, subcode))
 ```
 
 
@@ -493,8 +467,7 @@ import checkNet
 
 
 '''
-下面两个全局变量是必须有的，用户可以根据自己的实际项目修改下面两个全局变量的值，
-在执行用户代码前，会先打印这两个变量的值。
+下面两个全局变量是必须有的，用户可以根据自己的实际项目修改下面两个全局变量的值
 '''
 PROJECT_NAME = "QuecPython_Requect_post_example"
 PROJECT_VERSION = "1.0.0"
@@ -509,23 +482,15 @@ url = "http://httpbin.org/post"
 data = {"key1": "value1", "key2": "value2", "key3": "value3"}
 
 if __name__ == '__main__':
-    '''
-    手动运行本例程时，可以去掉该延时，如果将例程文件名改为main.py，希望开机自动运行时，需要加上该延时,
-    否则无法从CDC口看到下面的 poweron_print_once() 中打印的信息
-    '''
-    utime.sleep(5)
-    checknet.poweron_print_once()
-    '''
-    如果用户程序包含网络相关代码，必须执行 wait_network_connected() 等待网络就绪（拨号成功）；
-    如果是网络无关代码，可以屏蔽 wait_network_connected()
-    【本例程必须保留下面这一行！】
-    '''
-    checknet.wait_network_connected()
+    stagecode, subcode = checknet.wait_network_connected(30)
+    if stagecode == 3 and subcode == 1:
+        http_log.info('Network connection successful!')
 
-    # POST请求
-    response = request.post(url, data=ujson.dumps(data))   # 发送HTTP POST请求
-    http_log.info(response.json())
-
+        # POST请求
+        response = request.post(url, data=ujson.dumps(data))   # 发送HTTP POST请求
+        http_log.info(response.json())
+    else:
+        http_log.info('Network connection failed! stagecode = {}, subcode = {}'.format(stagecode, subcode))
 ```
 
 
@@ -599,8 +564,7 @@ import checkNet
 
 
 '''
-下面两个全局变量是必须有的，用户可以根据自己的实际项目修改下面两个全局变量的值，
-在执行用户代码前，会先打印这两个变量的值。
+下面两个全局变量是必须有的，用户可以根据自己的实际项目修改下面两个全局变量的值
 '''
 PROJECT_NAME = "QuecPython_Requect_SSL_example"
 PROJECT_VERSION = "1.0.0"
@@ -614,23 +578,15 @@ http_log = log.getLogger("HTTP SSL")
 url = "https://myssl.com"
 
 if __name__ == '__main__':
-    '''
-    手动运行本例程时，可以去掉该延时，如果将例程文件名改为main.py，希望开机自动运行时，需要加上该延时,
-    否则无法从CDC口看到下面的 poweron_print_once() 中打印的信息
-    '''
-    utime.sleep(5)
-    checknet.poweron_print_once()
-    '''
-    如果用户程序包含网络相关代码，必须执行 wait_network_connected() 等待网络就绪（拨号成功）；
-    如果是网络无关代码，可以屏蔽 wait_network_connected()
-    【本例程必须保留下面这一行！】
-    '''
-    checknet.wait_network_connected()
+    stagecode, subcode = checknet.wait_network_connected(30)
+    if stagecode == 3 and subcode == 1:
+        http_log.info('Network connection successful!')
 
-    response = request.get(url)  # 支持ssl
-    for i in response.text:
-        print(i)
-
+        response = request.get(url)  # 支持ssl
+        for i in response.text:
+            print(i)
+    else:
+        http_log.info('Network connection failed! stagecode = {}, subcode = {}'.format(stagecode, subcode))
 ```
 
 
@@ -820,13 +776,10 @@ import checkNet
 
 
 '''
-下面两个全局变量是必须有的，用户可以根据自己的实际项目修改下面两个全局变量的值，
-在执行用户代码前，会先打印这两个变量的值。
+下面两个全局变量是必须有的，用户可以根据自己的实际项目修改下面两个全局变量的值
 '''
 PROJECT_NAME = "QuecPython_Log_example"
 PROJECT_VERSION = "1.0.0"
-
-checknet = checkNet.CheckNetwork(PROJECT_NAME, PROJECT_VERSION)
 
 # 设置日志输出级别
 log.basicConfig(level=log.ERROR)
@@ -834,19 +787,6 @@ log.basicConfig(level=log.ERROR)
 log = log.getLogger("error")
 
 if __name__ == '__main__':
-    '''
-    手动运行本例程时，可以去掉该延时，如果将例程文件名改为main.py，希望开机自动运行时，需要加上该延时,
-    否则无法从CDC口看到下面的 poweron_print_once() 中打印的信息
-    '''
-    utime.sleep(5)
-    checknet.poweron_print_once()
-    '''
-    如果用户程序包含网络相关代码，必须执行 wait_network_connected() 等待网络就绪（拨号成功）；
-    如果是网络无关代码，可以屏蔽 wait_network_connected()
-    【本例程可以屏蔽下面这一行！】
-    '''
-    # checknet.wait_network_connected()
-
     log.error("Test error message!!")
 	log.debug("Test debug message!!")
     log.critical("Test critical message!!")
@@ -1053,8 +993,7 @@ import checkNet
 
 
 '''
-下面两个全局变量是必须有的，用户可以根据自己的实际项目修改下面两个全局变量的值，
-在执行用户代码前，会先打印这两个变量的值。
+下面两个全局变量是必须有的，用户可以根据自己的实际项目修改下面两个全局变量的值
 '''
 PROJECT_NAME = "QuecPython_MQTT_example"
 PROJECT_VERSION = "1.0.0"
@@ -1066,7 +1005,6 @@ log.basicConfig(level=log.INFO)
 mqtt_log = log.getLogger("MQTT")
 
 
-
 state = 0
 
 def sub_cb(topic, msg):
@@ -1076,39 +1014,32 @@ def sub_cb(topic, msg):
 
 
 if __name__ == '__main__':
-    '''
-    手动运行本例程时，可以去掉该延时，如果将例程文件名改为main.py，希望开机自动运行时，需要加上该延时,
-    否则无法从CDC口看到下面的 poweron_print_once() 中打印的信息
-    '''
-    utime.sleep(5)
-    checknet.poweron_print_once()
-    '''
-    如果用户程序包含网络相关代码，必须执行 wait_network_connected() 等待网络就绪（拨号成功）；
-    如果是网络无关代码，可以屏蔽 wait_network_connected()
-    【本例程必须保留下面这一行！】
-    '''
-    checknet.wait_network_connected()
+    stagecode, subcode = checknet.wait_network_connected(30)
+    if stagecode == 3 and subcode == 1:
+        mqtt_log.info('Network connection successful!')
 
-    # 创建一个mqtt实例
-    c = MQTTClient("umqtt_client", "mq.tongxinmao.com", 18830)
-    # 设置消息回调
-    c.set_callback(sub_cb)
-    #建立连接
-    c.connect()
-    # 订阅主题
-    c.subscribe(b"/public/TEST/quecpython")
-    mqtt_log.info("Connected to mq.tongxinmao.com, subscribed to /public/TEST/quecpython topic" )
-    # 发布消息
-    c.publish(b"/public/TEST/quecpython", b"my name is Quecpython!")
-    mqtt_log.info("Publish topic: /public/TEST/quecpython, msg: my name is Quecpython")
+        # 创建一个mqtt实例
+        c = MQTTClient("umqtt_client", "mq.tongxinmao.com", 18830)
+        # 设置消息回调
+        c.set_callback(sub_cb)
+        #建立连接
+        c.connect()
+        # 订阅主题
+        c.subscribe(b"/public/TEST/quecpython")
+        mqtt_log.info("Connected to mq.tongxinmao.com, subscribed to /public/TEST/quecpython topic" )
+        # 发布消息
+        c.publish(b"/public/TEST/quecpython", b"my name is Quecpython!")
+        mqtt_log.info("Publish topic: /public/TEST/quecpython, msg: my name is Quecpython")
 
-    while True:
-        c.wait_msg()  # 阻塞函数，监听消息
-        if state == 1:
-            break
+        while True:
+            c.wait_msg()  # 阻塞函数，监听消息
+            if state == 1:
+                break
+        # 关闭连接
+        c.disconnect()
+    else:
+        mqtt_log.info('Network connection failed! stagecode = {}, subcode = {}'.format(stagecode, subcode))
 
-    # 关闭连接
-    c.disconnect()
 ```
 
 
@@ -1170,8 +1101,7 @@ import checkNet
 
 
 '''
-下面两个全局变量是必须有的，用户可以根据自己的实际项目修改下面两个全局变量的值，
-在执行用户代码前，会先打印这两个变量的值。
+下面两个全局变量是必须有的，用户可以根据自己的实际项目修改下面两个全局变量的值
 '''
 PROJECT_NAME = "QuecPython_NTP_example"
 PROJECT_VERSION = "1.0.0"
@@ -1183,26 +1113,19 @@ log.basicConfig(level=log.INFO)
 ntp_log = log.getLogger("NtpTime")
 
 if __name__ == '__main__':
-    '''
-    手动运行本例程时，可以去掉该延时，如果将例程文件名改为main.py，希望开机自动运行时，需要加上该延时,
-    否则无法从CDC口看到下面的 poweron_print_once() 中打印的信息
-    '''
-    utime.sleep(5)
-    checknet.poweron_print_once()
-    '''
-    如果用户程序包含网络相关代码，必须执行 wait_network_connected() 等待网络就绪（拨号成功）；
-    如果是网络无关代码，可以屏蔽 wait_network_connected()
-    【本例程必须保留下面这一行！】
-    '''
-    checknet.wait_network_connected()
+    stagecode, subcode = checknet.wait_network_connected(30)
+    if stagecode == 3 and subcode == 1:
+        ntp_log.info('Network connection successful!')
 
-    # 查看默认ntp服务
-    ntp_log.info(ntptime.host)
-    # 设置ntp服务
-    ntptime.sethost('pool.ntp.org')
+        # 查看默认ntp服务
+        ntp_log.info(ntptime.host)
+        # 设置ntp服务
+        ntptime.sethost('pool.ntp.org')
 
-    # 同步ntp服务时间
-    ntptime.settime()
+        # 同步ntp服务时间
+        ntptime.settime()
+    else:
+        ntp_log.info('Network connection failed! stagecode = {}, subcode = {}'.format(stagecode, subcode))
 ```
 
 

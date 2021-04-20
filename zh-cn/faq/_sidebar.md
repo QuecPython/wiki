@@ -8,4 +8,5 @@
 
 * [**Wiki 首页 Home**](/)
 * [**官方网站 Official Website**](//python.quectel.com)
+* [**文档中心 Community Document**](//python.quectel.com/doc/)
 * [**资料下载 Download**](//python.quectel.com/download)
