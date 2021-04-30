@@ -624,6 +624,135 @@ sim卡解锁。当多次错误输入 PIN/PIN2 码后，SIM 卡状态为请求 PU
 ```
 
 
+#### voiceCall - 电话功能
+
+模块功能：该模块提供电话功能相关接口。
+
+说明：4G only的版本必须打开volte才能正常使用电话功能。
+
+
+
+> **voiceCall.setAutoAnswer(seconds)**
+
+设置自动应答时间。
+
+* 参数 
+
+| 参数        | 参数类型 | 参数说明                                                     |
+| ----------- | -------- | ------------------------------------------------------------ |
+| seconds     | int      | 自动应答时间，单位/s 范围：0-255)                            |
+
+* 返回值
+
+成功返回整型0，失败返回整型-1。
+
+* 示例
+
+```python
+>>> import voiceCall
+>>> voiceCall.setAutoAnswer(5)
+0
+```
+
+
+
+> **voiceCall.callStart(phonenum)**
+
+拨打电话。
+
+* 参数 
+
+| 参数        | 参数类型 | 参数说明                                                     |
+| ----------- | -------- | ------------------------------------------------------------ |
+| phonenum    | string   | 接收方电话号码                                               |
+
+* 返回值
+
+成功返回整型0，失败返回整型-1。
+
+* 示例
+
+```python
+>>> voiceCall.callStart("13855169092")
+0
+```
+
+
+
+> **voiceCall.callAnswer()**
+
+接听电话。
+
+* 参数 
+
+无
+
+* 返回值
+
+成功返回整型0，失败返回整型-1。
+
+* 示例
+
+```python
+>>> voiceCall.callAnswer()
+0
+```
+
+
+
+> **voiceCall.callEnd()**
+
+挂断电话。
+
+* 参数 
+
+无
+
+* 返回值
+
+成功返回整型0，失败返回整型-1。
+
+* 示例
+
+```python
+>>> voiceCall.callEnd()
+0
+```
+
+
+> **voiceCall.setCallback(usrFun))**
+
+注册监听回调函数。在接听、挂断电话时会收到回调。
+
+* 参数 
+
+| 参数        | 参数类型 | 参数说明                                                     |
+| ----------- | -------- | ------------------------------------------------------------ |
+| usrFun      | function | 监听回调函数，                      |
+
+* 返回值
+
+成功返回整型0，失败返回整型-1。
+
+* 示例
+
+```python
+def voice_callback(args):
+     if args[0] == 4106:
+         print('voicecall is waiting')
+     elif args[0] == 4105:
+         print('voicecall disconnect')
+     elif args[0] == 4104:
+         print('voicecall connected, CallNO.: ', args[6])
+     elif args[0] == 4103:
+         print('voicecall incoming call, PhoneNO.: ', args[6])
+
+>>> voiceCall.setCallback(voice_callback)
+0
+>>> voiceCall.callStart('10086')
+0
+```
+
 
 #### sms - 短信功能
 
@@ -1743,9 +1872,9 @@ fota_log = log.getLogger("Fota")
 
 def run():
     fota_obj = fota()  # 创建Fota对象
-    file_size = uos.stat("FotaFile.bin")[6]  # 获取文件总字节数
+    file_size = uos.stat("/usr/FotaFile.bin")[6]  # 获取文件总字节数
     print(file_size)
-    with open("FotaFile.bin", "rb")as f:   # rb模式打开.bin文件(需要制作升级包文件)
+    with open("/usr/FotaFile.bin", "rb")as f:   # rb模式打开.bin文件(需要制作升级包文件)
         while 1:
             c = f.read(1024)   # read
             if not c:
@@ -1830,7 +1959,7 @@ fota = app_fota.new()
  - 示例
 
 ```python
-download_list = [{url: 'http://www.example.com/app.py', file_name: '/usr/app.py'}, {url: 'http://www.example.com/test.txt', file_name: '/usr/text.txt'}]
+download_list = [{'url': 'http://www.example.com/app.py', 'file_name': '/usr/app.py'}, {'url': 'http://www.example.com/test.txt', 'file_name': '/usr/text.txt'}]
 ```
 
 该示例中，假设`http://www.example.com/test.txt`下载失败，则该方法返回值为`[{url: 'http://www.example.com/test.txt', file_name: '/usr/text.txt'}]`
@@ -3088,7 +3217,7 @@ ADC功能初始化。
 
 | 参数 | 参数类型 | 参数说明                                                     |
 | ---- | -------- | ------------------------------------------------------------ |
-| ADCn | int      | ADC通道<br/>EC100Y平台支持ADC0，ADC1，对应引脚如下<br/>ADC0 – 引脚号39<br/>ADC1 – 引脚号81<br/>EC600S平台支持ADC0，对应引脚如下<br/>ADC0 – 引脚号19 |
+| ADCn | int      | ADC通道<br/>EC100Y平台支持ADC0，ADC1，对应引脚如下<br/>ADC0 – 引脚号39<br/>ADC1 – 引脚号81<br/>EC600S平台支持ADC0，对应引脚如下<br/>ADC0 – 引脚号19<br/>ADC1 – 引脚号20 |
 
 * 返回值
 
@@ -3239,32 +3368,42 @@ ADC功能初始化。
 
 **常量说明**
 
-| 常量             | 适配平台        | 说明     |
-| ---------------- | --------------- | -------- |
-| Pin.GPIO1        | EC600S / EC100Y | GPIO1    |
-| Pin.GPIO2        | EC600S / EC100Y | GPIO2    |
-| Pin.GPIO3        | EC600S / EC100Y | GPIO3    |
-| Pin.GPIO4        | EC600S / EC100Y | GPIO4    |
-| Pin.GPIO5        | EC600S / EC100Y | GPIO5    |
-| Pin.GPIO6        | EC600S / EC100Y | GPIO6    |
-| Pin.GPIO7        | EC600S / EC100Y | GPIO7    |
-| Pin.GPIO8        | EC600S / EC100Y | GPIO8    |
-| Pin.GPIO9        | EC600S / EC100Y | GPIO9    |
-| Pin.GPIO10       | EC600S / EC100Y | GPIO10   |
-| Pin.GPIO11       | EC600S / EC100Y | GPIO11   |
-| Pin.GPIO12       | EC600S / EC100Y | GPIO12   |
-| Pin.GPIO13       | EC600S / EC100Y | GPIO13   |
-| Pin.GPIO14       | EC600S / EC100Y | GPIO14   |
-| Pin.GPIO15       | EC100Y          | GPIO15   |
-| Pin.GPIO16       | EC100Y          | GPIO16   |
-| Pin.GPIO17       | EC100Y          | GPIO17   |
-| Pin.GPIO18       | EC100Y          | GPIO18   |
-| Pin.GPIO19       | EC100Y          | GPIO19   |
-| Pin.IN           | --              | 输入模式 |
-| Pin.OUT          | --              | 输出模式 |
-| Pin.PULL_DISABLE | --              | 浮空模式 |
-| Pin.PULL_PU      | --              | 上拉模式 |
-| Pin.PULL_PD      | --              | 下拉模式 |
+| 常量             | 适配平台                   | 说明      |
+| ---------------- | ------------------------ | -------- |
+| Pin.GPIO1        | EC600S / EC600N / EC100Y | GPIO1    |
+| Pin.GPIO2        | EC600S / EC600N / EC100Y | GPIO2    |
+| Pin.GPIO3        | EC600S / EC600N / EC100Y | GPIO3    |
+| Pin.GPIO4        | EC600S / EC600N / EC100Y | GPIO4    |
+| Pin.GPIO5        | EC600S / EC600N / EC100Y | GPIO5    |
+| Pin.GPIO6        | EC600S / EC600N / EC100Y | GPIO6    |
+| Pin.GPIO7        | EC600S / EC600N / EC100Y | GPIO7    |
+| Pin.GPIO8        | EC600S / EC600N / EC100Y | GPIO8    |
+| Pin.GPIO9        | EC600S / EC600N / EC100Y | GPIO9    |
+| Pin.GPIO10       | EC600S / EC600N / EC100Y | GPIO10   |
+| Pin.GPIO11       | EC600S / EC600N / EC100Y | GPIO11   |
+| Pin.GPIO12       | EC600S / EC600N / EC100Y | GPIO12   |
+| Pin.GPIO13       | EC600S / EC600N / EC100Y | GPIO13   |
+| Pin.GPIO14       | EC600S / EC600N / EC100Y | GPIO14   |
+| Pin.GPIO15       | EC600S / EC600N / EC100Y | GPIO15   |
+| Pin.GPIO16       | EC600S / EC600N / EC100Y | GPIO16   |
+| Pin.GPIO17       | EC600S / EC600N / EC100Y | GPIO17   |
+| Pin.GPIO18       | EC600S / EC600N / EC100Y | GPIO18   |
+| Pin.GPIO19       | EC600S / EC600N / EC100Y | GPIO19   |
+| Pin.GPIO20       | EC600S / EC600N          | GPIO20   |
+| Pin.GPIO21       | EC600S / EC600N          | GPIO21   |
+| Pin.GPIO22       | EC600S / EC600N          | GPIO22   |
+| Pin.GPIO23       | EC600S / EC600N          | GPIO23   |
+| Pin.GPIO24       | EC600S / EC600N          | GPIO24   |
+| Pin.GPIO25       | EC600S / EC600N          | GPIO25   |
+| Pin.GPIO26       | EC600S / EC600N          | GPIO26   |
+| Pin.GPIO27       | EC600S / EC600N          | GPIO27   |
+| Pin.GPIO28       | EC600S / EC600N          | GPIO28   |
+| Pin.GPIO29       | EC600S / EC600N          | GPIO29   |
+| Pin.IN           | --                       | 输入模式 |
+| Pin.OUT          | --                       | 输出模式 |
+| Pin.PULL_DISABLE | --                       | 浮空模式 |
+| Pin.PULL_PU      | --                       | 上拉模式 |
+| Pin.PULL_PD      | --                       | 下拉模式 |
 
 **GPIO对应引脚号说明**
 
@@ -3278,7 +3417,7 @@ ADC功能初始化。
 
 | 参数      | 类型 | 说明                                                         |
 | :-------- | :--- | ------------------------------------------------------------ |
-| GPIOn     | int  | 引脚号<br />EC100YCN平台引脚对应关系如下（引脚号为外部引脚编号）：<br />GPIO1 – 引脚号22<br />GPIO2 – 引脚号23<br />GPIO3 – 引脚号38<br />GPIO4 – 引脚号53<br />GPIO5 – 引脚号54<br />GPIO6 – 引脚号104<br />GPIO7 – 引脚号105<br />GPIO8 – 引脚号106<br />GPIO9 – 引脚号107<br />GPIO10 – 引脚号178<br />GPIO11 – 引脚号195<br />GPIO12 – 引脚号196<br />GPIO13 – 引脚号197<br />GPIO14 – 引脚号198<br />GPIO15 – 引脚号199<br />GPIO16 – 引脚号203<br />GPIO17 – 引脚号204<br />GPIO18 – 引脚号214<br />GPIO19 – 引脚号215<br />EC600SCN平台引脚对应关系如下（引脚号为模块外部引脚编号）：<br />GPIO1 – 引脚号10<br />GPIO2 – 引脚号11<br />GPIO3 – 引脚号12<br />GPIO4 – 引脚号13<br />GPIO5 – 引脚号14<br />GPIO6 – 引脚号15<br />GPIO7 – 引脚号16<br />GPIO8 – 引脚号39<br />GPIO9 – 引脚号40<br />GPIO10 – 引脚号48<br />GPIO11 – 引脚号58<br />GPIO12 – 引脚号59<br />GPIO13 – 引脚号60<br />GPIO14 – 引脚号61 |
+| GPIOn     | int  | 引脚号<br />EC100YCN平台引脚对应关系如下（引脚号为外部引脚编号）：<br />GPIO1 – 引脚号22<br />GPIO2 – 引脚号23<br />GPIO3 – 引脚号38<br />GPIO4 – 引脚号53<br />GPIO5 – 引脚号54<br />GPIO6 – 引脚号104<br />GPIO7 – 引脚号105<br />GPIO8 – 引脚号106<br />GPIO9 – 引脚号107<br />GPIO10 – 引脚号178<br />GPIO11 – 引脚号195<br />GPIO12 – 引脚号196<br />GPIO13 – 引脚号197<br />GPIO14 – 引脚号198<br />GPIO15 – 引脚号199<br />GPIO16 – 引脚号203<br />GPIO17 – 引脚号204<br />GPIO18 – 引脚号214<br />GPIO19 – 引脚号215<br />EC600SCN/EC600NCN平台引脚对应关系如下（引脚号为模块外部引脚编号）：<br />GPIO1 – 引脚号10<br />GPIO2 – 引脚号11<br />GPIO3 – 引脚号12<br />GPIO4 – 引脚号13<br />GPIO5 – 引脚号14<br />GPIO6 – 引脚号15<br />GPIO7 – 引脚号16<br />GPIO8 – 引脚号39<br />GPIO9 – 引脚号40<br />GPIO10 – 引脚号48<br />GPIO11 – 引脚号58<br />GPIO12 – 引脚号59<br />GPIO13 – 引脚号60<br />GPIO14 – 引脚号61<br />GPIO15 – 引脚号62<br/>GPIO16 – 引脚号63<br/>GPIO17 – 引脚号69<br/>GPIO18 – 引脚号70<br/>GPIO19 – 引脚号1<br/>GPIO20 – 引脚号3<br/>GPIO21 – 引脚号49<br/>GPIO22 – 引脚号50<br/>GPIO23 – 引脚号51<br/>GPIO24 – 引脚号52<br/>GPIO25 – 引脚号53<br/>GPIO26 – 引脚号54<br/>GPIO27 – 引脚号55<br/>GPIO28 – 引脚号56<br/>GPIO29 – 引脚号57 |
 | direction | int  | IN – 输入模式，OUT – 输出模式                                |
 | pullMode  | int  | PULL_DISABLE – 浮空模式<br />PULL_PU – 上拉模式<br />PULL_PD – 下拉模式 |
 | level     | int  | 0 - 设置引脚为低电平, 1- 设置引脚为高电平                    |
@@ -3373,7 +3512,7 @@ checknet = checkNet.CheckNetwork(PROJECT_NAME, PROJECT_VERSION)
         GPIO18 – 引脚号214
         GPIO19 – 引脚号215
 
-        EC600SCN平台引脚对应关系如下：
+        EC600SCN/EC600NCN平台引脚对应关系如下：
         GPIO1 – 引脚号10
         GPIO2 – 引脚号11
         GPIO3 – 引脚号12
@@ -3388,6 +3527,21 @@ checknet = checkNet.CheckNetwork(PROJECT_NAME, PROJECT_VERSION)
         GPIO12 – 引脚号59
         GPIO13 – 引脚号60
         GPIO14 – 引脚号61
+        GPIO15 – 引脚号62
+        GPIO16 – 引脚号63
+        GPIO17 – 引脚号69
+        GPIO18 – 引脚号70
+        GPIO19 – 引脚号1
+        GPIO20 – 引脚号3
+        GPIO21 – 引脚号49
+        GPIO22 – 引脚号50
+        GPIO23 – 引脚号51
+        GPIO24 – 引脚号52
+        GPIO25 – 引脚号53
+        GPIO26 – 引脚号54
+        GPIO27 – 引脚号55
+        GPIO28 – 引脚号56
+        GPIO29 – 引脚号57
 * 参数2：direction
         IN – 输入模式
         OUT – 输出模式

@@ -497,31 +497,16 @@ import utime
 import checkNet
 
 '''
-下面两个全局变量是必须有的，用户可以根据自己的实际项目修改下面两个全局变量的值，
-在执行用户代码前，会先打印这两个变量的值。
+下面两个全局变量是必须有的，用户可以根据自己的实际项目修改下面两个全局变量的值
 '''
 PROJECT_NAME = "QuecPython_Random_example"
 PROJECT_VERSION = "1.0.0"
-checknet = checkNet.CheckNetwork(PROJECT_NAME, PROJECT_VERSION)
 
 log.basicConfig(level=log.INFO)
 random_log = log.getLogger("random")
 
 
 if __name__ == '__main__':
-    '''
-    手动运行本例程时，可以去掉该延时，如果将例程文件名改为main.py，希望开机自动运行时，需要加上该延时,
-    否则无法从CDC口看到下面的 poweron_print_once() 中打印的信息
-    '''
-    utime.sleep(5)
-    checknet.poweron_print_once()
-    '''
-    如果用户程序包含网络相关代码，必须执行 wait_network_connected() 等待网络就绪（拨号成功）；
-    如果是网络无关代码，可以屏蔽 wait_network_connected()
-    【本例程可以屏蔽下面这一行！】
-    '''
-    # checknet.wait_network_connected()
-
     # urandom.randint(start, end)
     # 随机1 ~ 4之间
     num = random.randint(1, 4)
@@ -951,32 +936,16 @@ False
 import math
 import log
 import utime
-import checkNet
 
 
 '''
-下面两个全局变量是必须有的，用户可以根据自己的实际项目修改下面两个全局变量的值，
-在执行用户代码前，会先打印这两个变量的值。
+下面两个全局变量是必须有的，用户可以根据自己的实际项目修改下面两个全局变量的值
 '''
 PROJECT_NAME = "QuecPython_Math_example"
 PROJECT_VERSION = "1.0.0"
-checknet = checkNet.CheckNetwork(PROJECT_NAME, PROJECT_VERSION)
 
 
 if __name__ == '__main__':
-    '''
-    手动运行本例程时，可以去掉该延时，如果将例程文件名改为main.py，希望开机自动运行时，需要加上该延时,
-    否则无法从CDC口看到下面的 poweron_print_once() 中打印的信息
-    '''
-    utime.sleep(5)
-    checknet.poweron_print_once()
-    '''
-    如果用户程序包含网络相关代码，必须执行 wait_network_connected() 等待网络就绪（拨号成功）；
-    如果是网络无关代码，可以屏蔽 wait_network_connected()
-    【本例程可以屏蔽下面这一行！】
-    '''
-    # checknet.wait_network_connected()
-
     # 设置日志输出级别
     log.basicConfig(level=log.INFO)
     math_log = log.getLogger("Math")
@@ -1338,8 +1307,7 @@ import checkNet
 
 
 '''
-下面两个全局变量是必须有的，用户可以根据自己的实际项目修改下面两个全局变量的值，
-在执行用户代码前，会先打印这两个变量的值。
+下面两个全局变量是必须有的，用户可以根据自己的实际项目修改下面两个全局变量的值
 '''
 PROJECT_NAME = "QuecPython_Socket_example"
 PROJECT_VERSION = "1.0.0"
@@ -1351,18 +1319,9 @@ log.basicConfig(level=log.INFO)
 socket_log = log.getLogger("SOCKET")
 
 if __name__ == '__main__':
-    '''
-    手动运行本例程时，可以去掉该延时，如果将例程文件名改为main.py，希望开机自动运行时，需要加上该延时,
-    否则无法从CDC口看到下面的 poweron_print_once() 中打印的信息
-    '''
-    utime.sleep(5)
-    checknet.poweron_print_once()
-    '''
-    如果用户程序包含网络相关代码，必须执行 wait_network_connected() 等待网络就绪（拨号成功）；
-    如果是网络无关代码，可以屏蔽 wait_network_connected()
-    【本例程必须保留下面这一行！】
-    '''
-    checknet.wait_network_connected()
+    stagecode, subcode = checknet.wait_network_connected(30)
+    if stagecode == 3 and subcode == 1:
+        socket_log.info('Network connection successful!')
 
     # 创建一个socket实例
     sock = usocket.socket(usocket.AF_INET, usocket.SOCK_STREAM)
@@ -1380,6 +1339,8 @@ if __name__ == '__main__':
 
     # 关闭连接
     sock.close()
+    else:
+        socket_log.info('Network connection failed! stagecode = {}, subcode = {}'.format(stagecode, subcode))
 
 ```
 
@@ -1557,17 +1518,14 @@ ujson 模块实现在Python数据对象和JSON数据格式之间进行转换的�
 import ujson
 import log
 import utime
-import checkNet
 
 
 '''
-下面两个全局变量是必须有的，用户可以根据自己的实际项目修改下面两个全局变量的值，
-在执行用户代码前，会先打印这两个变量的值。
+下面两个全局变量是必须有的，用户可以根据自己的实际项目修改下面两个全局变量的值
 '''
 PROJECT_NAME = "QuecPython_Json_example"
 PROJECT_VERSION = "1.0.0"
 
-checknet = checkNet.CheckNetwork(PROJECT_NAME, PROJECT_VERSION)
 
 # 设置日志输出级别
 log.basicConfig(level=log.INFO)
@@ -1575,19 +1533,6 @@ ujson_log = log.getLogger("UJSON loads")
 
 
 if __name__ == '__main__':
-    '''
-    手动运行本例程时，可以去掉该延时，如果将例程文件名改为main.py，希望开机自动运行时，需要加上该延时,
-    否则无法从CDC口看到下面的 poweron_print_once() 中打印的信息
-    '''
-    utime.sleep(5)
-    checknet.poweron_print_once()
-    '''
-    如果用户程序包含网络相关代码，必须执行 wait_network_connected() 等待网络就绪（拨号成功）；
-    如果是网络无关代码，可以屏蔽 wait_network_connected()
-    【本例程可以屏蔽下面这一行！】
-    '''
-    # checknet.wait_network_connected()
-
     inp = {'bar': ('baz', None, 1, 2)}
     ujson_log.info(type(inp))
     # <class 'dict'>
@@ -1741,32 +1686,17 @@ import checkNet
 
 
 '''
-下面两个全局变量是必须有的，用户可以根据自己的实际项目修改下面两个全局变量的值，
-在执行用户代码前，会先打印这两个变量的值。
+下面两个全局变量是必须有的，用户可以根据自己的实际项目修改下面两个全局变量的值
 '''
 PROJECT_NAME = "QuecPython_localtime_example"
 PROJECT_VERSION = "1.0.0"
 
-checknet = checkNet.CheckNetwork(PROJECT_NAME, PROJECT_VERSION)
 
 # 设置日志输出级别
 log.basicConfig(level=log.INFO)
 time_log = log.getLogger("LocalTime")
 
 if __name__ == '__main__':
-    '''
-    手动运行本例程时，可以去掉该延时，如果将例程文件名改为main.py，希望开机自动运行时，需要加上该延时,
-    否则无法从CDC口看到下面的 poweron_print_once() 中打印的信息
-    '''
-    utime.sleep(5)
-    checknet.poweron_print_once()
-    '''
-    如果用户程序包含网络相关代码，必须执行 wait_network_connected() 等待网络就绪（拨号成功）；
-    如果是网络无关代码，可以屏蔽 wait_network_connected()
-    【本例程可以屏蔽下面这一行！】
-    '''
-    # checknet.wait_network_connected()
-
     # 获取本地时间，返回元组
     tupe_t = utime.localtime()
     time_log.info(tupe_t)
@@ -1894,7 +1824,7 @@ _thread 模块提供创建新线程的方法，并提供互斥锁。
 
 > **_thread.start_new_thread(function, args)**
 
-创建一个新线程，接收执行函数和被执行函数参数。
+创建一个新线程，接收执行函数和被执行函数参数，当 function 函数无参时传入空的元组。
 
 
 
@@ -1946,13 +1876,11 @@ import checkNet
 
 
 '''
-下面两个全局变量是必须有的，用户可以根据自己的实际项目修改下面两个全局变量的值，
-在执行用户代码前，会先打印这两个变量的值。
+下面两个全局变量是必须有的，用户可以根据自己的实际项目修改下面两个全局变量的值
 '''
 PROJECT_NAME = "QuecPython_Thread_example"
 PROJECT_VERSION = "1.0.0"
 
-checknet = checkNet.CheckNetwork(PROJECT_NAME, PROJECT_VERSION)
 
 # 设置日志输出级别
 log.basicConfig(level=log.INFO)
@@ -1980,19 +1908,6 @@ def th_func(delay, id):
 
 
 if __name__ == '__main__':
-	'''
-	手动运行本例程时，可以去掉该延时，如果将例程文件名改为main.py，希望开机自动运行时，需要加上该延时,
-	否则无法从CDC口看到下面的 poweron_print_once() 中打印的信息
-	'''
-	utime.sleep(5)
-	checknet.poweron_print_once()
-	'''
-	如果用户程序包含网络相关代码，必须执行 wait_network_connected() 等待网络就绪（拨号成功）；
-	如果是网络无关代码，可以屏蔽 wait_network_connected()
-	【本例程可以屏蔽下面这一行！】
-	'''
-	# checknet.wait_network_connected()
-
 	for i in range(2):
 		_thread.start_new_thread(th_func, (i + 1, i))   # 创建一个线程，当函数无参时传入空的元组
 
