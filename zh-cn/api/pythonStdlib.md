@@ -494,7 +494,6 @@ urandom 模块提供了生成随机数的工具。
 import urandom as random
 import log
 import utime
-import checkNet
 
 '''
 下面两个全局变量是必须有的，用户可以根据自己的实际项目修改下面两个全局变量的值
@@ -1323,22 +1322,22 @@ if __name__ == '__main__':
     if stagecode == 3 and subcode == 1:
         socket_log.info('Network connection successful!')
 
-    # 创建一个socket实例
-    sock = usocket.socket(usocket.AF_INET, usocket.SOCK_STREAM)
-    # 解析域名
-    sockaddr=usocket.getaddrinfo('www.tongxinmao.com', 80)[0][-1]
-    # 建立连接
-    sock.connect(sockaddr)
-    # 向服务端发送消息
-    ret=sock.send('GET /News HTTP/1.1\r\nHost: www.tongxinmao.com\r\nAccept-Encoding: deflate\r\nConnection: keep-alive\r\n\r\n')
-    socket_log.info('send %d bytes' % ret)
-    #接收服务端消息
-    data=sock.recv(256)
-    socket_log.info('recv %s bytes:' % len(data))
-    socket_log.info(data.decode())
+    	# 创建一个socket实例
+    	sock = usocket.socket(usocket.AF_INET, usocket.SOCK_STREAM)
+    	# 解析域名
+    	sockaddr=usocket.getaddrinfo('www.tongxinmao.com', 80)[0][-1]
+    	# 建立连接
+    	sock.connect(sockaddr)
+    	# 向服务端发送消息
+    	ret=sock.send('GET /News HTTP/1.1\r\nHost: www.tongxinmao.com\r\nAccept-Encoding: deflate\r\nConnection: keep-alive\r\n\r\n')
+    	socket_log.info('send %d bytes' % ret)
+    	#接收服务端消息
+    	data=sock.recv(256)
+    	socket_log.info('recv %s bytes:' % len(data))
+    	socket_log.info(data.decode())
 
-    # 关闭连接
-    sock.close()
+    	# 关闭连接
+    	sock.close()
     else:
         socket_log.info('Network connection failed! stagecode = {}, subcode = {}'.format(stagecode, subcode))
 
@@ -1682,7 +1681,6 @@ while pin.value() == 0:
 '''
 import utime
 import log
-import checkNet
 
 
 '''
@@ -1872,7 +1870,6 @@ lock = _thread.allocate_lock()
 import _thread
 import log
 import utime
-import checkNet
 
 
 '''

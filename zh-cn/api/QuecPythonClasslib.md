@@ -227,8 +227,7 @@ import utime
 import checkNet
 
 '''
-下面两个全局变量是必须有的，用户可以根据自己的实际项目修改下面两个全局变量的值，
-在执行用户代码前，会先打印这两个变量的值。
+下面两个全局变量是必须有的，用户可以根据自己的实际项目修改下面两个全局变量的值
 '''
 PROJECT_NAME = "QuecPython_DataCall_example"
 PROJECT_VERSION = "1.0.0"
@@ -253,34 +252,25 @@ def nw_cb(args):
 
 
 if __name__ == '__main__':
-    '''
-    手动运行本例程时，可以去掉该延时，如果将例程文件名改为main.py，希望开机自动运行时，需要加上该延时,
-    否则无法从CDC口看到下面的 poweron_print_once() 中打印的信息
-    '''
-    utime.sleep(5)
-    checknet.poweron_print_once()
-    '''
-    如果用户程序包含网络相关代码，必须执行 wait_network_connected() 等待网络就绪（拨号成功）；
-    如果是网络无关代码，可以屏蔽 wait_network_connected()
-    【本例程必须保留下面这一行！】
-    '''
-    checknet.wait_network_connected()
+    stagecode, subcode = checknet.wait_network_connected(30)
+    if stagecode == 3 and subcode == 1:
+    	checknet.poweron_print_once()
+   
+        # 注册回调函数
+        dataCall.setCallback(nw_cb)
 
-    # 注册回调函数
-    dataCall.setCallback(nw_cb)
+        # 进入飞行模式模拟触发
+        net.setModemFun(4)
+        utime.sleep(2)
 
-    # 进入飞行模式模拟触发
-    net.setModemFun(4)
-    utime.sleep(2)
+        # 退出飞行模式再次模拟触发回调
+        net.setModemFun(1)
 
-    # 退出飞行模式再次模拟触发回调
-    net.setModemFun(1)
-
-    while 1:
-        if state:
-            pass
-        else:
-            break
+        while 1:
+            if state:
+                pass
+            else:
+                break
 
 ```
 
@@ -1854,15 +1844,12 @@ import utime
 import log
 from misc import Power
 import uos
-import checkNet
 
 '''
-下面两个全局变量是必须有的，用户可以根据自己的实际项目修改下面两个全局变量的值，
-在执行用户代码前，会先打印这两个变量的值。
+下面两个全局变量是必须有的，用户可以根据自己的实际项目修改下面两个全局变量的值
 '''
 PROJECT_NAME = "QuecPython_Fota_example"
 PROJECT_VERSION = "1.0.0"
-checknet = checkNet.CheckNetwork(PROJECT_NAME, PROJECT_VERSION)
 
 # 设置日志输出级别
 log.basicConfig(level=log.INFO)
@@ -1892,19 +1879,6 @@ def run():
 
 
 if __name__ == '__main__':
-    '''
-    手动运行本例程时，可以去掉该延时，如果将例程文件名改为main.py，希望开机自动运行时，需要加上该延时,
-    否则无法从CDC口看到下面的 poweron_print_once() 中打印的信息
-    '''
-    utime.sleep(5)
-    checknet.poweron_print_once()
-    '''
-    如果用户程序包含网络相关代码，必须执行 wait_network_connected() 等待网络就绪（拨号成功）；
-    如果是网络无关代码，可以屏蔽 wait_network_connected()
-    【本例程可以屏蔽下面这一行！】
-    '''
-    # checknet.wait_network_connected()
-
     fota_log.info("run start...")
     run()
 
@@ -2289,17 +2263,13 @@ tts.play(1, 0, 2, 'QuecPython')
 import log
 from audio import TTS
 import utime
-import checkNet
 
 
 '''
-下面两个全局变量是必须有的，用户可以根据自己的实际项目修改下面两个全局变量的值，
-在执行用户代码前，会先打印这两个变量的值。
+下面两个全局变量是必须有的，用户可以根据自己的实际项目修改下面两个全局变量的值
 '''
 PROJECT_NAME = "QuecPython_TTS_example"
 PROJECT_VERSION = "1.0.0"
-
-checknet = checkNet.CheckNetwork(PROJECT_NAME, PROJECT_VERSION)
 
 # 设置日志输出级别
 log.basicConfig(level=log.INFO)
@@ -2307,19 +2277,6 @@ tts_Log = log.getLogger("TTS")
 
 
 if __name__ == '__main__':
-    '''
-    手动运行本例程时，可以去掉该延时，如果将例程文件名改为main.py，希望开机自动运行时，需要加上该延时,
-    否则无法从CDC口看到下面的 poweron_print_once() 中打印的信息
-    '''
-    utime.sleep(5)
-    checknet.poweron_print_once()
-    '''
-    如果用户程序包含网络相关代码，必须执行 wait_network_connected() 等待网络就绪（拨号成功）；
-    如果是网络无关代码，可以屏蔽 wait_network_connected()
-    【本例程可以屏蔽下面这一行！】
-    '''
-    # checknet.wait_network_connected()
-
     # 参数1：device （0：听筒，1：耳机，2：喇叭）
     tts = TTS(1)
     # 获取当前播放音量大小
@@ -3115,17 +3072,13 @@ int类型电压值。
 
 from misc import PWM
 import utime
-import checkNet
 
 
 '''
-下面两个全局变量是必须有的，用户可以根据自己的实际项目修改下面两个全局变量的值，
-在执行用户代码前，会先打印这两个变量的值。
+下面两个全局变量是必须有的，用户可以根据自己的实际项目修改下面两个全局变量的值
 '''
 PROJECT_NAME = "QuecPython_PWM_example"
 PROJECT_VERSION = "1.0.0"
-
-checknet = checkNet.CheckNetwork(PROJECT_NAME, PROJECT_VERSION)
 
 '''
 * 参数1：PWM号
@@ -3148,19 +3101,6 @@ checknet = checkNet.CheckNetwork(PROJECT_NAME, PROJECT_VERSION)
 # 需要配合外设或者使用杜邦线短接对应引脚测试
 
 if __name__ == '__main__':
-    '''
-    手动运行本例程时，可以去掉该延时，如果将例程文件名改为main.py，希望开机自动运行时，需要加上该延时,
-    否则无法从CDC口看到下面的 poweron_print_once() 中打印的信息
-    '''
-    utime.sleep(5)
-    checknet.poweron_print_once()
-    '''
-    如果用户程序包含网络相关代码，必须执行 wait_network_connected() 等待网络就绪（拨号成功）；
-    如果是网络无关代码，可以屏蔽 wait_network_connected()
-    【本例程可以屏蔽下面这一行！】
-    '''
-    # checknet.wait_network_connected()
-
     pwm = PWM(PWM.PWM0, PWM.ABOVE_MS, 100, 200)  # 初始化一个pwm对象
     pwm.open()  # 开启PWM输出
     utime.sleep(10)
@@ -3477,17 +3417,13 @@ PIN脚电平，0-低电平，1-高电平。
 
 from machine import Pin
 import utime
-import checkNet
 
 
 '''
-下面两个全局变量是必须有的，用户可以根据自己的实际项目修改下面两个全局变量的值，
-在执行用户代码前，会先打印这两个变量的值。
+下面两个全局变量是必须有的，用户可以根据自己的实际项目修改下面两个全局变量的值
 '''
 PROJECT_NAME = "QuecPython_Pin_example"
 PROJECT_VERSION = "1.0.0"
-
-checknet = checkNet.CheckNetwork(PROJECT_NAME, PROJECT_VERSION)
 
 '''
 * 参数1：引脚号
@@ -3556,19 +3492,6 @@ checknet = checkNet.CheckNetwork(PROJECT_NAME, PROJECT_VERSION)
 gpio1 = Pin(Pin.GPIO1, Pin.OUT, Pin.PULL_DISABLE, 0)
 
 if __name__ == '__main__':
-    '''
-    手动运行本例程时，可以去掉该延时，如果将例程文件名改为main.py，希望开机自动运行时，需要加上该延时,
-    否则无法从CDC口看到下面的 poweron_print_once() 中打印的信息
-    '''
-    utime.sleep(5)
-    checknet.poweron_print_once()
-    '''
-    如果用户程序包含网络相关代码，必须执行 wait_network_connected() 等待网络就绪（拨号成功）；
-    如果是网络无关代码，可以屏蔽 wait_network_connected()
-    【本例程可以屏蔽下面这一行！】
-    '''
-    # checknet.wait_network_connected()
-
     gpio1.write(1) # 设置 gpio1 输出高电平
     val = gpio1.read() # 获取 gpio1 的当前高低状态
     print('val = {}'.format(val))
@@ -3694,17 +3617,13 @@ import _thread
 import utime
 import log
 from machine import UART
-import checkNet
 
 
 '''
-下面两个全局变量是必须有的，用户可以根据自己的实际项目修改下面两个全局变量的值，
-在执行用户代码前，会先打印这两个变量的值。
+下面两个全局变量是必须有的，用户可以根据自己的实际项目修改下面两个全局变量的值
 '''
 PROJECT_NAME = "QuecPython_UART_example"
 PROJECT_VERSION = "1.0.0"
-
-checknet = checkNet.CheckNetwork(PROJECT_NAME, PROJECT_VERSION)
 
 '''
  * 参数1：端口
@@ -3769,19 +3688,6 @@ def run():
 
 
 if __name__ == "__main__":
-    '''
-    手动运行本例程时，可以去掉该延时，如果将例程文件名改为main.py，希望开机自动运行时，需要加上该延时,
-    否则无法从CDC口看到下面的 poweron_print_once() 中打印的信息
-    '''
-    utime.sleep(5)
-    checknet.poweron_print_once()
-    '''
-    如果用户程序包含网络相关代码，必须执行 wait_network_connected() 等待网络就绪（拨号成功）；
-    如果是网络无关代码，可以屏蔽 wait_network_connected()
-    【本例程可以屏蔽下面这一行！】
-    '''
-    # checknet.wait_network_connected()
-
     uartWrite()
     run()
     while 1:
@@ -3915,13 +3821,10 @@ import checkNet
 
 
 '''
-下面两个全局变量是必须有的，用户可以根据自己的实际项目修改下面两个全局变量的值，
-在执行用户代码前，会先打印这两个变量的值。
+下面两个全局变量是必须有的，用户可以根据自己的实际项目修改下面两个全局变量的值
 '''
 PROJECT_NAME = "QuecPython_Timer_example"
 PROJECT_VERSION = "1.0.0"
-
-checknet = checkNet.CheckNetwork(PROJECT_NAME, PROJECT_VERSION)
 
 # 设置日志输出级别
 log.basicConfig(level=log.INFO)
@@ -3945,19 +3848,6 @@ def timer_test(t):
 
 
 if __name__ == '__main__':
-	'''
-	手动运行本例程时，可以去掉该延时，如果将例程文件名改为main.py，希望开机自动运行时，需要加上该延时,
-	否则无法从CDC口看到下面的 poweron_print_once() 中打印的信息
-	'''
-	utime.sleep(5)
-	checknet.poweron_print_once()
-	'''
-	如果用户程序包含网络相关代码，必须执行 wait_network_connected() 等待网络就绪（拨号成功）；
-	如果是网络无关代码，可以屏蔽 wait_network_connected()
-	【本例程可以屏蔽下面这一行！】
-	'''
-	# checknet.wait_network_connected()
-
 	t.start(period=1000, mode=t.PERIODIC, callback=timer_test)   # 启动定时器
 
 	while state:
@@ -3972,32 +3862,42 @@ if __name__ == '__main__':
 
 **常量说明**
 
-| 常量             | 适配平台        | 说明     |
-| ---------------- | --------------- | -------- |
-| Pin.GPIO1        | EC600S / EC100Y | GPIO1    |
-| Pin.GPIO2        | EC600S / EC100Y | GPIO2    |
-| Pin.GPIO3        | EC600S / EC100Y | GPIO3    |
-| Pin.GPIO4        | EC600S / EC100Y | GPIO4    |
-| Pin.GPIO5        | EC600S / EC100Y | GPIO5    |
-| Pin.GPIO6        | EC600S / EC100Y | GPIO6    |
-| Pin.GPIO7        | EC600S / EC100Y | GPIO7    |
-| Pin.GPIO8        | EC600S / EC100Y | GPIO8    |
-| Pin.GPIO9        | EC600S / EC100Y | GPIO9    |
-| Pin.GPIO10       | EC600S / EC100Y | GPIO10   |
-| Pin.GPIO11       | EC600S / EC100Y | GPIO11   |
-| Pin.GPIO12       | EC600S / EC100Y | GPIO12   |
-| Pin.GPIO13       | EC600S / EC100Y | GPIO13   |
-| Pin.GPIO14       | EC600S / EC100Y | GPIO14   |
-| Pin.GPIO15       | EC100Y          | GPIO15   |
-| Pin.GPIO16       | EC100Y          | GPIO16   |
-| Pin.GPIO17       | EC100Y          | GPIO17   |
-| Pin.GPIO18       | EC100Y          | GPIO18   |
-| Pin.GPIO19       | EC100Y          | GPIO19   |
-| Pin.IN           | --              | 输入模式 |
-| Pin.OUT          | --              | 输出模式 |
-| Pin.PULL_DISABLE | --              | 浮空模式 |
-| Pin.PULL_PU      | --              | 上拉模式 |
-| Pin.PULL_PD      | --              | 下拉模式 |
+| 常量             | 适配平台                 | 说明     |
+| ---------------- | ------------------------ | -------- |
+| Pin.GPIO1        | EC600S / EC600N / EC100Y | GPIO1    |
+| Pin.GPIO2        | EC600S / EC600N / EC100Y | GPIO2    |
+| Pin.GPIO3        | EC600S / EC600N / EC100Y | GPIO3    |
+| Pin.GPIO4        | EC600S / EC600N / EC100Y | GPIO4    |
+| Pin.GPIO5        | EC600S / EC600N / EC100Y | GPIO5    |
+| Pin.GPIO6        | EC600S / EC600N / EC100Y | GPIO6    |
+| Pin.GPIO7        | EC600S / EC600N / EC100Y | GPIO7    |
+| Pin.GPIO8        | EC600S / EC600N / EC100Y | GPIO8    |
+| Pin.GPIO9        | EC600S / EC600N / EC100Y | GPIO9    |
+| Pin.GPIO10       | EC600S / EC600N / EC100Y | GPIO10   |
+| Pin.GPIO11       | EC600S / EC600N / EC100Y | GPIO11   |
+| Pin.GPIO12       | EC600S / EC600N / EC100Y | GPIO12   |
+| Pin.GPIO13       | EC600S / EC600N / EC100Y | GPIO13   |
+| Pin.GPIO14       | EC600S / EC600N / EC100Y | GPIO14   |
+| Pin.GPIO15       | EC600S / EC600N / EC100Y | GPIO15   |
+| Pin.GPIO16       | EC600S / EC600N / EC100Y | GPIO16   |
+| Pin.GPIO17       | EC600S / EC600N / EC100Y | GPIO17   |
+| Pin.GPIO18       | EC600S / EC600N / EC100Y | GPIO18   |
+| Pin.GPIO19       | EC600S / EC600N / EC100Y | GPIO19   |
+| Pin.GPIO20       | EC600S / EC600N          | GPIO20   |
+| Pin.GPIO21       | EC600S / EC600N          | GPIO21   |
+| Pin.GPIO22       | EC600S / EC600N          | GPIO22   |
+| Pin.GPIO23       | EC600S / EC600N          | GPIO23   |
+| Pin.GPIO24       | EC600S / EC600N          | GPIO24   |
+| Pin.GPIO25       | EC600S / EC600N          | GPIO25   |
+| Pin.GPIO26       | EC600S / EC600N          | GPIO26   |
+| Pin.GPIO27       | EC600S / EC600N          | GPIO27   |
+| Pin.GPIO28       | EC600S / EC600N          | GPIO28   |
+| Pin.GPIO29       | EC600S / EC600N          | GPIO29   |
+| Pin.IN           | --                       | 输入模式 |
+| Pin.OUT          | --                       | 输出模式 |
+| Pin.PULL_DISABLE | --                       | 浮空模式 |
+| Pin.PULL_PU      | --                       | 上拉模式 |
+| Pin.PULL_PD      | --                       | 下拉模式 |
 
 **创建ExtInt对象**
 
@@ -4007,7 +3907,7 @@ if __name__ == '__main__':
 
 | 参数     | 类型 | 说明                                                         |
 | :------- | :--- | ------------------------------------------------------------ |
-| GPIOn    | int  | 引脚号<br />EC100YCN平台引脚对应关系如下（引脚号为外部引脚编号）：<br />GPIO1 – 引脚号22<br />GPIO2 – 引脚号23<br />GPIO3 – 引脚号38<br />GPIO4 – 引脚号53<br />GPIO5 – 引脚号54<br />GPIO6 – 引脚号104<br />GPIO7 – 引脚号105<br />GPIO8 – 引脚号106<br />GPIO9 – 引脚号107<br />GPIO10 – 引脚号178<br />GPIO11 – 引脚号195<br />GPIO12 – 引脚号196<br />GPIO13 – 引脚号197<br />GPIO14 – 引脚号198<br />GPIO15 – 引脚号199<br />GPIO16 – 引脚号203<br />GPIO17 – 引脚号204<br />GPIO18 – 引脚号214<br />GPIO19 – 引脚号215<br />EC600SCN平台引脚对应关系如下（引脚号为模块外部引脚编号）：<br />GPIO1 – 引脚号10<br />GPIO2 – 引脚号11<br />GPIO3 – 引脚号12<br />GPIO4 – 引脚号13<br />GPIO5 – 引脚号14<br />GPIO6 – 引脚号15<br />GPIO7 – 引脚号16<br />GPIO8 – 引脚号39<br />GPIO9 – 引脚号40<br />GPIO10 – 引脚号48<br />GPIO11 – 引脚号58<br />GPIO12 – 引脚号59<br />GPIO13 – 引脚号60<br />GPIO14 – 引脚号61 |
+| GPIOn    | int  | 引脚号<br />EC100YCN平台引脚对应关系如下（引脚号为外部引脚编号）：<br />GPIO1 – 引脚号22<br />GPIO2 – 引脚号23<br />GPIO3 – 引脚号38<br />GPIO4 – 引脚号53<br />GPIO5 – 引脚号54<br />GPIO6 – 引脚号104<br />GPIO7 – 引脚号105<br />GPIO8 – 引脚号106<br />GPIO9 – 引脚号107<br />GPIO10 – 引脚号178<br />GPIO11 – 引脚号195<br />GPIO12 – 引脚号196<br />GPIO13 – 引脚号197<br />GPIO14 – 引脚号198<br />GPIO15 – 引脚号199<br />GPIO16 – 引脚号203<br />GPIO17 – 引脚号204<br />GPIO18 – 引脚号214<br />GPIO19 – 引脚号215<br />EC600SCN/EC600NCN平台引脚对应关系如下（引脚号为模块外部引脚编号）：<br />GPIO1 – 引脚号10<br />GPIO2 – 引脚号11<br />GPIO3 – 引脚号12<br />GPIO4 – 引脚号13<br />GPIO5 – 引脚号14<br />GPIO6 – 引脚号15<br />GPIO7 – 引脚号16<br />GPIO8 – 引脚号39<br />GPIO9 – 引脚号40<br />GPIO10 – 引脚号48<br />GPIO11 – 引脚号58<br />GPIO12 – 引脚号59<br />GPIO13 – 引脚号60<br />GPIO14 – 引脚号61<br />GPIO15 – 引脚号62<br/>GPIO16 – 引脚号63<br/>GPIO17 – 引脚号69<br/>GPIO18 – 引脚号70<br/>GPIO19 – 引脚号1<br/>GPIO20 – 引脚号3<br/>GPIO21 – 引脚号49<br/>GPIO22 – 引脚号50<br/>GPIO23 – 引脚号51<br/>GPIO24 – 引脚号52<br/>GPIO25 – 引脚号53<br/>GPIO26 – 引脚号54<br/>GPIO27 – 引脚号55<br/>GPIO28 – 引脚号56<br/>GPIO29 – 引脚号57 |
 | mode     | int  | 设置触发方式<br /> IRQ_RISING – 上升沿触发<br /> IRQ_FALLING – 下降沿触发<br /> IRQ_RISING_FALLING – 上升和下降沿触发 |
 | pull     | int  | PULL_DISABLE – 浮空模式<br />PULL_PU – 上拉模式 <br />PULL_PD  – 下拉模式 |
 | callback | int  | 中断触发回调函数                                             |
@@ -4100,7 +4000,6 @@ if __name__ == '__main__':
 | hour        | int  | 时，范围0~23                                                 |
 | minute      | int  | 分，范围0~59                                                 |
 | second      | int  | 秒，范围0~59                                                 |
-
 | microsecond | int  | 微秒，保留参数，暂未使用，设置时间时该参数写0即可            |
 
 * 返回值
@@ -4211,17 +4110,13 @@ i2c_obj = I2C(I2C.I2C0, I2C.STANDARD_MODE)  # 返回i2c对象
 import log
 from machine import I2C
 import utime
-import checkNet
 
 
 '''
-下面两个全局变量是必须有的，用户可以根据自己的实际项目修改下面两个全局变量的值，
-在执行用户代码前，会先打印这两个变量的值。
+下面两个全局变量是必须有的，用户可以根据自己的实际项目修改下面两个全局变量的值
 '''
 PROJECT_NAME = "QuecPython_I2C_example"
 PROJECT_VERSION = "1.0.0"
-
-checknet = checkNet.CheckNetwork(PROJECT_NAME, PROJECT_VERSION)
 
 '''
 I2C使用示例
@@ -4233,19 +4128,6 @@ i2c_log = log.getLogger("I2C")
 
 
 if __name__ == '__main__':
-    '''
-    手动运行本例程时，可以去掉该延时，如果将例程文件名改为main.py，希望开机自动运行时，需要加上该延时,
-    否则无法从CDC口看到下面的 poweron_print_once() 中打印的信息
-    '''
-    utime.sleep(5)
-    checknet.poweron_print_once()
-    '''
-    如果用户程序包含网络相关代码，必须执行 wait_network_connected() 等待网络就绪（拨号成功）；
-    如果是网络无关代码，可以屏蔽 wait_network_connected()
-    【本例程可以屏蔽下面这一行！】
-    '''
-    # checknet.wait_network_connected()
-
     I2C_SLAVE_ADDR = 0x1B  # i2c 设备地址
     WHO_AM_I = bytearray({0x02, 0})   # i2c 寄存器地址，以buff的方式传入，取第一个值，计算一个值的长度
 
@@ -4349,7 +4231,6 @@ spi_obj = SPI(1, 0, 1)  # 返回spi对象
 import log
 from machine import SPI
 import utime
-import checkNet
 
 '''
 SPI使用示例
@@ -4357,13 +4238,10 @@ SPI使用示例
 '''
 
 '''
-下面两个全局变量是必须有的，用户可以根据自己的实际项目修改下面两个全局变量的值，
-在执行用户代码前，会先打印这两个变量的值。
+下面两个全局变量是必须有的，用户可以根据自己的实际项目修改下面两个全局变量的值
 '''
 PROJECT_NAME = "QuecPython_SPI_example"
 PROJECT_VERSION = "1.0.0"
-
-checknet = checkNet.CheckNetwork(PROJECT_NAME, PROJECT_VERSION)
 
 spi_obj = SPI(0, 0, 1)
 
@@ -4373,19 +4251,6 @@ spi_log = log.getLogger("SPI")
 
 
 if __name__ == '__main__':
-    '''
-    手动运行本例程时，可以去掉该延时，如果将例程文件名改为main.py，希望开机自动运行时，需要加上该延时,
-    否则无法从CDC口看到下面的 poweron_print_once() 中打印的信息
-    '''
-    utime.sleep(5)
-    checknet.poweron_print_once()
-    '''
-    如果用户程序包含网络相关代码，必须执行 wait_network_connected() 等待网络就绪（拨号成功）；
-    如果是网络无关代码，可以屏蔽 wait_network_connected()
-    【本例程可以屏蔽下面这一行！】
-    '''
-    # checknet.wait_network_connected()
-
     r_data = bytearray(5)  # 创建接收数据的buff
     data = b"world"  # 写入测试数据
 
@@ -4404,7 +4269,7 @@ if __name__ == '__main__':
 
 **创建LCD对象**
 
-> **lcd = LCD() **
+> **lcd = LCD()**
 
 **参数说明**
 
@@ -4419,7 +4284,7 @@ lcd = LCD()   # 创建lcd对象
 
 
 
-> **lcd.lcd_init(lcd_init_data, lcd_width, lcd_hight, lcd_clk, data_line, line_num, lcd_type, lcd_invalid, lcd_display_on, lcd_display_off, lcd_set_brightness)  **
+> **lcd.lcd_init(lcd_init_data, lcd_width, lcd_hight, lcd_clk, data_line, line_num, lcd_type, lcd_invalid, lcd_display_on, lcd_display_off, lcd_set_brightness)**
 
 初始化LCD
 
@@ -4455,7 +4320,7 @@ lcd = LCD()   # 创建lcd对象
 
 
 
-> **lcd.lcd_clear(color) **
+> **lcd.lcd_clear(color)**
 
 清除屏幕。
 
@@ -4471,7 +4336,7 @@ lcd = LCD()   # 创建lcd对象
 
 
 
-> **lcd.lcd_write(color_buffer,start_x,start_y,end_x,end_y) **
+> **lcd.lcd_write(color_buffer,start_x,start_y,end_x,end_y)**
 
 区域写屏。 
 
@@ -4497,7 +4362,7 @@ lcd = LCD()   # 创建lcd对象
 
 
 
-> **lcd. lcd_brightness(level)  **
+> **lcd.lcd_brightness(level)**
 
 设置屏幕亮度等级。
 
@@ -4731,17 +4596,13 @@ lcd.show("lcd_test1.bin",0,0,126,220) #该lcd_test1.bin 中没有包含图像头
 from machine import WDT
 from machine import Timer
 import utime
-import checkNet
 
 
 '''
-下面两个全局变量是必须有的，用户可以根据自己的实际项目修改下面两个全局变量的值，
-在执行用户代码前，会先打印这两个变量的值。
+下面两个全局变量是必须有的，用户可以根据自己的实际项目修改下面两个全局变量的值
 '''
 PROJECT_NAME = "QuecPython_WDT_example"
 PROJECT_VERSION = "1.0.0"
-
-checknet = checkNet.CheckNetwork(PROJECT_NAME, PROJECT_VERSION)
 
 timer1 = Timer(Timer.Timer1)
 
@@ -4750,19 +4611,6 @@ def feed(t):
 
 
 if __name__ == '__main__':
-    '''
-    手动运行本例程时，可以去掉该延时，如果将例程文件名改为main.py，希望开机自动运行时，需要加上该延时,
-    否则无法从CDC口看到下面的 poweron_print_once() 中打印的信息
-    '''
-    utime.sleep(5)
-    checknet.poweron_print_once()
-    '''
-    如果用户程序包含网络相关代码，必须执行 wait_network_connected() 等待网络就绪（拨号成功）；
-    如果是网络无关代码，可以屏蔽 wait_network_connected()
-    【本例程可以屏蔽下面这一行！】
-    '''
-    # checknet.wait_network_connected()
-
     wdt = WDT(20)  # 启动看门狗，间隔时长
     timer1.start(period=15000, mode=timer1.PERIODIC, callback=feed)  # 使用定时器喂狗
 
@@ -5340,4 +5188,1066 @@ wifi list:(2, [('F0:B4:29:86:95:C7': -79),('44:00:4D:D5:26:E0', -92)])
 ```
 
 
+
+#### ble - 蓝牙低功耗
+
+模块功能：提供 BLE GATT Server 端功能。目前仅200U/600U模块支持。
+
+> **ble.serverInit(user_cb)**
+
+* 功能：
+
+初始化 BLE SERVER 并注册回调函数。
+
+* 参数：
+
+| 参数    | 类型     | 说明     |
+| ------- | -------- | -------- |
+| user_cb | function | 回调函数 |
+
+* 返回值：
+
+执行成功返回整型0，失败返回整型-1。
+
+说明：
+
+（1）回调函数的形式
+
+```python
+def ble_callback(args):
+	event_id = args[0]  # 第一个参数固定是 event_id
+	status = args[1] # 第二个参数固定是状态，表示某个操作的执行结果，比如ble开启成功还是失败
+	......
+```
+
+（2）回调函数参数说明
+
+​		args[0] 固定表示event_id，args[1] 固定表示状态，0表示成功，非0表示失败。回调函数的参数个数并不是固定2个，而是根据第一个参数args[0]来决定的，下表中列出了不同事件ID对应的参数个数及说明。
+
+| event_id | 参数个数 | 参数说明                                                     |
+| :------: | :------: | ------------------------------------------------------------ |
+|    0     |    2     | args[0] ：event_id，表示 BT/BLE start<br>args[1] ：status，表示操作的状态，0-成功，非0-失败 |
+|    1     |    2     | args[0] ：event_id，表示 BT/BLE stop<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败 |
+|    16    |    4     | args[0] ：event_id，表示 BLE connect<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败<br/>args[2] ：connect_id<br/>args[3] ：addr，BT/BLE address |
+|    17    |    4     | args[0] ：event_id，表示 BLE disconnect<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败<br/>args[2] ：connect_id，<br/>args[3] ：addr，BT/BLE address |
+|    18    |    7     | args[0] ：event_id，表示 BLE update connection parameter<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败<br/>args[2] ：connect_id<br/>args[3] ：max_interval，最大的间隔，间隔：1.25ms，取值范围：6-3200，时间范围：7.5ms~4s<br/>args[4] ：min_interval，最小的间隔，间隔：1.25ms，取值范围：6-3200，时间范围：7.5ms~4s<br/>args[5] ：latency，从机忽略连接状态事件的时间。需满足：（1+latecy)\*max_interval\*2\*1.25<timeout\*10<br/>args[6] ：timeout，没有交互，超时断开时间，间隔：10ms，取值范围：10-3200，时间范围：100ms~32s |
+|    20    |    4     | args[0] ：event_id，表示 BLE connection mtu<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败<br/>args[2] ：handle<br/>args[3] ：mtu值 |
+|    21    |    7     | args[0] ：event_id，表示 BLE server : when ble client write characteristic value or descriptor,server get the notice<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败<br/>args[2] ：data_len，获取数据的长度<br/>args[3] ：data，一个数组，存放获取的数据<br/>args[4] ：attr_handle，属性句柄，整型值<br/>args[5] ：short_uuid，整型值<br/>args[6] ：long_uuid，一个16字节数组，存放长UUID |
+|    22    |    7     | args[0] ：event_id，表示 server : when ble client read characteristic value or descriptor,server get the notice<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败<br/>args[2] ：data_len，获取数据的长度<br/>args[3] ：data，一个数组，存放获取的数据<br/>args[4] ：attr_handle，属性句柄，整型值<br/>args[5] ：short_uuid，整型值<br/>args[6] ：long_uuid，一个16字节数组，存放长UUID |
+|    25    |    2     | args[0] ：event_id，表示 server send notification,and recieve send end notice<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败 |
+
+* 示例：
+
+```python 
+def ble_callback(args):
+    event_id = args[0]
+    status = args[1]
+    print('[ble_callback]: event_id={}, status={}'.format(event_id, status))
+
+    if event_id == 0:  # ble start
+        if status == 0:
+            print('[callback] BLE start success.')
+        else:
+            print('[callback] BLE start failed.')
+    elif event_id == 1:  # ble stop
+        if status == 0:
+            print('[callback] ble stop successful.')
+        else:
+            print('[callback] ble stop failed.')
+    elif event_id == 16:  # ble connect
+        if status == 0:
+            print('[callback] ble connect successful.')
+            connect_id = args[2]
+            ble_addr = args[3]
+            print('[callback] connect_id = {}, addr = {}'.format(connect_id, ble_addr))
+        else:
+            print('[callback] ble connect failed.')
+    elif event_id == 17:  # ble disconnect
+        if status == 0:
+            print('[callback] ble disconnect successful.')
+            connect_id = args[2]
+            ble_addr = args[3]
+            print('[callback] connect_id = {}, addr = {}'.format(connect_id, ble_addr))
+        else:
+            print('[callback] ble disconnect failed.')
+            ble.gattStop()
+            return
+    elif event_id == 18:  # ble update connection parameter
+        if status == 0:
+            print('[callback] ble update parameter successful.')
+            connect_id = args[2]
+            max_interval = args[3]
+            min_interval = args[4]
+            latency = args[5]
+            timeout = args[6]
+            print('[callback] connect_id={},max_interval={},min_interval={},latency={},timeout={}'.format(connect_id, max_interval, min_interval, latency, timeout))
+        else:
+            print('[callback] ble update parameter failed.')
+            ble.gattStop()
+            return
+    elif event_id == 20:  # ble connection mtu
+        if status == 0:
+            print('[callback] ble connect mtu successful.')
+            handle = args[2]
+            ble_mtu = args[3]
+            print('[callback] handle = {}, ble_mtu = {}'.format(handle, ble_mtu))
+        else:
+            print('[callback] ble connect mtu failed.')
+            ble.gattStop()
+            return
+    elif event_id == 21:  # server:when ble client write characteristic value or descriptor,server get the notice
+        if status == 0:
+            print('[callback] ble recv successful.')
+            data_len = args[2]
+            data = args[3]  # 这是一个bytearray
+            attr_handle = args[4]
+            short_uuid = args[5]
+            long_uuid = args[6]  # 这是一个bytearray
+            print('len={}, data:{}'.format(data_len, data))
+            print('attr_handle = {}'.format(attr_handle))
+            print('short uuid = {}'.format(short_uuid))
+            print('long uuid = {}'.format(long_uuid))
+        else:
+            print('[callback] ble recv failed.')
+            ble.gattStop()
+            return
+    elif event_id == 22:  # server:when ble client read characteristic value or descriptor,server get the notice
+        if status == 0:
+            print('[callback] ble recv read successful.')
+            data_len = args[2]
+            data = args[3]  # 这是一个bytearray
+            attr_handle = args[4]
+            short_uuid = args[5]
+            long_uuid = args[6]  # 这是一个bytearray
+            print('len={}, data:{}'.format(data_len, data))
+            print('attr_handle = {}'.format(attr_handle))
+            print('short uuid = {}'.format(short_uuid))
+            print('long uuid = {}'.format(long_uuid))
+        else:
+            print('[callback] ble recv read failed.')
+            ble.gattStop()
+            return
+    elif event_id == 25:  # server send notification,and recieve send end notice
+        if status == 0:
+            print('[callback] ble send data successful.')
+        else:
+            print('[callback] ble send data failed.')
+    else:
+        print('unknown event id.')
+
+ble.serverInit(ble_callback)
+```
+
+
+
+> **ble.serverRelease()**
+
+* 功能：
+
+  BLE SERVER 资源释放。
+
+* 参数：
+
+  无
+
+* 返回值：
+
+  执行成功返回整型0，失败返回整型-1。
+
+* 示例：
+
+```python
+见最后的综合示例
+```
+
+
+
+> **ble.gattStart()**
+
+* 功能：
+
+  开启 BLE GATT 功能。
+
+* 参数：
+
+  无
+
+* 返回值：
+
+  执行成功返回整型0，失败返回整型-1。
+
+* 示例：
+
+```python
+见最后的综合示例
+```
+
+
+
+> **ble.gattStop()**
+
+* 功能：
+
+  关闭 BLE GATT 功能。
+
+* 参数：
+
+  无
+
+* 返回值：
+
+  执行成功返回整型0，失败返回整型-1。
+
+* 示例：
+
+```python
+见最后的综合示例
+```
+
+
+
+> **ble.setLocalName(code, name)**
+
+* 功能：
+
+  设置 BLE 名称。
+
+* 参数：
+
+  | 参数 | 类型   | 说明                               |
+  | ---- | ------ | ---------------------------------- |
+  | code | 整型   | 编码模式<br>0 - UTF8<br/>1 - GBK   |
+  | name | string | BLE 名称，名称最长不能超过29个字节 |
+
+* 返回值：
+
+  执行成功返回整型0，失败返回整型-1。
+
+* 示例：
+
+```python
+>>> ble.setLocalName(0, 'QuecPython-BLE')
+0
+```
+
+
+
+> **ble.setAdvParam(min_adv,max_adv,adv_type,addr_type,channel,filter_policy,discov_mode,no_br_edr,enable_adv)**
+
+* 功能：
+
+  设置广播参数。
+
+* 参数：
+
+  | 参数          | 类型       | 说明                                                         |
+  | ------------- | ---------- | ------------------------------------------------------------ |
+  | min_adv       | 无符号整型 | 最小广播间隔，范围0x0020-0x4000，计算如下：<br>时间间隔 = min_adv \* 0.625，单位ms |
+  | max_adv       | 无符号整型 | 最大广播间隔，范围0x0020-0x4000，计算如下：<br/>时间间隔 = max_adv \* 0.625，单位ms |
+  | adv_type      | 无符号整型 | 广播类型，取值范围如下：<br>0 - 可连接的非定向广播，默认选择<br>1 - 可连接高占空比的定向广播<br>2 - 可扫描的非定向广播<br>3 - 不可连接的非定向广播<br>4 - 可连接低占空比的定向广播 |
+  | addr_type     | 无符号整型 | 本地地址类型，取值范围如下：<br>0 - 公共地址<br>1 - 随机地址 |
+  | channel       | 无符号整型 | 广播通道，取值范围如下：<br>1 - 37信道<br>2 - 38信道<br>4 - 39信道<br>7 - 上述3个通道都选择，默认该选项 |
+  | filter_policy | 无符号整型 | 广播过滤策略，取值范围如下：<br>0 - 处理所有设备的扫描和连接请求<br/>1 - 处理所有设备的连接请求和只处理白名单设备的扫描请求<br/>2 - 处理所有设备的扫描请求和只处理白名单设备的连接请求<br/>3 - 只处理白名单设备的连接和扫描请求 |
+  | discov_mode   | 无符号整型 | 发现模式，GAP协议使用，默认为1(普通发现模式)                 |
+  | no_br_edr     | 无符号整型 | 不用BR/EDR，默认为1，如果用则为0                             |
+  | enable_adv    | 无符号整型 | 使能广播，默认为1，不使能则为0                               |
+
+* 返回值：
+
+  执行成功返回整型0，失败返回整型-1。
+
+* 示例：
+
+```python
+def ble_gatt_set_param():
+    min_adv = 0x300
+    max_adv = 0x320
+    adv_type = 0  # 可连接的非定向广播，默认选择
+    addr_type = 0  # 公共地址
+    channel = 0x07
+    filter_strategy = 0  # 处理所有设备的扫描和连接请求
+    discov_mode = 2
+    no_br_edr = 1
+    enable_adv = 1
+    ret = ble.setAdvParam(min_adv, max_adv, adv_type, addr_type, channel, filter_strategy, discov_mode, no_br_edr, enable_adv)
+    if ret != 0:
+        print('ble_gatt_set_param failed.')
+        return -1
+    print('ble_gatt_set_param success.')
+    return 0
+```
+
+
+
+> **ble.setAdvData(data)**
+
+* 功能：
+
+  设置广播数据内容。
+
+* 参数：
+
+  | 参数 | 类型 | 说明                                                         |
+  | ---- | ---- | ------------------------------------------------------------ |
+  | data | 数组 | 广播数据，广播数据最长不超过31个字节。注意该参数的类型，程序中组织好广播数据后，需要通过bytearray()来转换，然后才能传入接口，具体处理参考下面的示例。<br>关于广播数据的格式说明：<br>广播数据的内容，采用 length+type+data 的格式。一条广播数据中可以包含多个这种格式数据的组合，比如示例中就包含了两个，第一个是 "0x02, 0x01, 0x05"，0x02表示后面有两个数据，分别是0x01和0x05，0x01即type，0x05表示具体数据；第二个是ble名称长度加1（因为还要包含一个表示type的数据，所以长度需要加1）得到的长度、type 0x09以及name对应的具体编码值表示的data组成的。<br>关于type具体值代表的含义，请参考如下连接：<br/>https://www.bluetooth.com/specifications/assigned-numbers/generic-access-profile/ |
+
+* 返回值：
+
+  执行成功返回整型0，失败返回整型-1。
+
+* 示例：
+
+```python
+def ble_gatt_set_data():
+    adv_data = [0x02, 0x01, 0x05]
+    ble_name = "Quectel_ble"
+    length = len(ble_name) + 1
+    adv_data.append(length)
+    adv_data.append(0x09)
+    name_encode = ble_name.encode('UTF-8')
+    for i in range(0, len(name_encode)):
+        adv_data.append(name_encode[i])
+    print('set adv_data:{}'.format(adv_data))
+    data = bytearray(adv_data)
+    ret = ble.setAdvData(data)
+    if ret != 0:
+        print('ble_gatt_set_data failed.')
+        return -1
+    print('ble_gatt_set_data success.')
+    return 0
+```
+
+
+
+> **ble.setAdvRspData(data)**
+
+* 功能：
+
+  设置扫描回复数据。
+
+* 参数：
+
+  | 参数 | 类型 | 说明                                                         |
+  | ---- | ---- | ------------------------------------------------------------ |
+  | data | 数组 | 扫描回复数据，数据最长不超过31个字节，注意事项和上面设置广播数据内容接口描述一致。当client设备扫描方式为积极扫描时，设置扫描回复数据才有意义。 |
+
+* 返回值：
+
+  执行成功返回整型0，失败返回整型-1。
+
+* 示例：
+
+```python
+def ble_gatt_set_rsp_data():
+    adv_data = []
+    ble_name = "Quectel_ble"
+    length = len(ble_name) + 1
+    adv_data.append(length)
+    adv_data.append(0x09)
+    name_encode = ble_name.encode('UTF-8')
+    for i in range(0, len(name_encode)):
+        adv_data.append(name_encode[i])
+    print('set adv_rsp_data:{}'.format(adv_data))
+    data = bytearray(adv_data)
+    ret = ble.setAdvRspData(data)
+    if ret != 0:
+        print('ble_gatt_set_rsp_data failed.')
+        return -1
+    print('ble_gatt_set_rsp_data success.')
+    return 0
+```
+
+
+
+> **ble.addService(primary, server_id, uuid_type, uuid_s, uuid_l)**
+
+* 功能：
+
+  增加一个服务。
+
+* 参数：
+
+  | 参数      | 类型       | 说明                                                         |
+  | --------- | ---------- | ------------------------------------------------------------ |
+  | primary   | 无符号整型 | 服务类型，1为主要服务，其他为次要服务                        |
+  | server_id | 无符号整型 | 服务ID，用来确定某一个服务                                   |
+  | uuid_type | 无符号整型 | uuid类型<br>0 - 长UUID，128bit<br>1 - 短UUID，16bit          |
+  | uuid_s    | 无符号整型 | 短UUID，2个字节（16bit），当uuid_type为0时，该值给0          |
+  | uuid_l    | 数组       | 长UUID，16个字节（128bit），当uuid_type为1时，该值给 bytearray([0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]) |
+
+* 返回值：
+
+  执行成功返回整型0，失败返回整型-1。
+
+* 示例：
+
+```python
+def ble_gatt_add_service():
+    primary = 1
+    server_id = 0x01
+    uuid_type = 1  # 短UUID
+    uuid_s = 0x180F
+    uuid_l = bytearray([0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00])
+    ret = ble.addService(primary, server_id, uuid_type, uuid_s, uuid_l)
+    if ret != 0:
+        print('ble_gatt_add_service failed.')
+        return -1
+    print('ble_gatt_add_service success.')
+    return 0
+```
+
+
+
+> **ble.addChara(server_id, chara_id, chara_prop, uuid_type, uuid_s, uuid_l)**
+
+* 功能：
+
+  在服务里增加一个特征。
+
+* 参数：
+
+  | 参数       | 类型       | 说明                                                         |
+  | ---------- | ---------- | ------------------------------------------------------------ |
+  | server_id  | 无符号整型 | 服务ID，用来确定某一个服务                                   |
+  | chara_id   | 无符号整型 | 特征ID                                                       |
+  | chara_prop | 无符号整型 | 特征的属性，十六进制数，可通过“或运算”同时指定多个属性，描述如下：<br>0x01 - 广播<br/>0x02 - 可读<br/>0x04 - 可写且不需要链路层应答<br/>0x08 - 可写<br/>0x10 - 通知<br/>0x20 - 指示<br/>0x40 - 认证签名写<br/>0x80 - 扩展属性 |
+  | uuid_type  | 无符号整型 | uuid类型<br/>0 - 长UUID，128bit<br/>1 - 短UUID，16bit        |
+  | uuid_s     | 无符号整型 | 短UUID，2个字节（16bit）                                     |
+  | uuid_l     | 数组       | 长UUID，16个字节（128bit）                                   |
+
+* 返回值：
+
+  执行成功返回整型0，失败返回整型-1。
+
+* 示例：
+
+```python
+def ble_gatt_add_characteristic():
+    server_id = 0x01
+    chara_id = 0x01
+    chara_prop = 0x02 | 0x10 | 0x20  # 0x02-可读 0x10-通知 0x20-指示
+    uuid_type = 1  # 短UUID
+    uuid_s = 0x2A19
+    uuid_l = bytearray([0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00])
+    ret = ble.addChara(server_id, chara_id, chara_prop, uuid_type, uuid_s, uuid_l)
+    if ret != 0:
+        print('ble_gatt_add_characteristic failed.')
+        return -1
+    print('ble_gatt_add_characteristic success.')
+    return 0
+```
+
+
+
+> **ble.addCharaValue(server_id, chara_id, permission, uuid_type, uuid_s, uuid_l, value)**
+
+* 功能：
+
+  在特征里增加一个特征值。
+
+* 参数：
+
+  | 参数       | 类型       | 说明                                                         |
+  | ---------- | ---------- | ------------------------------------------------------------ |
+  | server_id  | 无符号整型 | 服务ID，用来确定某一个服务                                   |
+  | chara_id   | 无符号整型 | 特征ID                                                       |
+  | permission | 无符号整型 | 特征值的权限，2个字节，十六进制数，可通过“或运算”同时指定多个属性，描述如下：<br/>0x0001 - 可读权限<br/>0x0002 - 可写权限<br/>0x0004 - 读需要认证<br/>0x0008 - 读需要授权<br/>0x0010 - 读需要加密<br/>0x0020 - 读需要授权认证<br/>0x0040 - 写需要认证<br/>0x0080 - 写需要授权<br/>0x0100 - 写需要加密<br/>0x0200 - 写需要授权认证 |
+  | uuid_type  | 无符号整型 | uuid类型<br/>0 - 长UUID，128bit<br/>1 - 短UUID，16bit        |
+  | uuid_s     | 无符号整型 | 短UUID，2个字节（16bit）                                     |
+  | uuid_l     | 数组       | 长UUID，16个字节（128bit）                                   |
+  | value      | 数组       | 特征值数据                                                   |
+
+* 返回值：
+
+  执行成功返回整型0，失败返回整型-1。
+
+* 示例：
+
+```python
+def ble_gatt_add_characteristic_value():
+    data = []
+    server_id = 0x01
+    chara_id = 0x01
+    permission = 0x0001 | 0x0002
+    uuid_type = 1  # 短UUID
+    uuid_s = 0x2A19
+    uuid_l = bytearray([0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00])
+    for i in range(0, 244):
+        data.append(0x00)
+    value = bytearray(data)
+    ret = ble.addCharaValue(server_id, chara_id, permission, uuid_type, uuid_s, uuid_l, value)
+    if ret != 0:
+        print('ble_gatt_add_characteristic_value failed.')
+        return -1
+    print('ble_gatt_add_characteristic_value success.')
+    return 0
+```
+
+
+
+> **ble.addCharaDesc(server_id, chara_id, permission, uuid_type, uuid_s, uuid_l, value)**
+
+* 功能：
+
+  在特征里增加一个特征描述，注意特征描述和特征值同属与一个特征。
+
+* 参数：
+
+  | 参数       | 类型       | 说明                                                         |
+  | ---------- | ---------- | ------------------------------------------------------------ |
+  | server_id  | 无符号整型 | 服务ID，用来确定某一个服务                                   |
+  | chara_id   | 无符号整型 | 特征ID                                                       |
+  | permission | 无符号整型 | 特征值的权限，2个字节，十六进制数，可通过“或运算”同时指定多个属性：<br/>0x0001 - 可读权限<br/>0x0002 - 可写权限<br/>0x0004 - 读需要认证<br/>0x0008 - 读需要授权<br/>0x0010 - 读需要加密<br/>0x0020 - 读需要授权认证<br/>0x0040 - 写需要认证<br/>0x0080 - 写需要授权<br/>0x0100 - 写需要加密<br/>0x0200 - 写需要授权认证 |
+  | uuid_type  | 无符号整型 | uuid类型<br/>0 - 长UUID，128bit<br/>1 - 短UUID，16bit        |
+  | uuid_s     | 无符号整型 | 短UUID，2个字节（16bit）                                     |
+  | uuid_l     | 数组       | 长UUID，16个字节（128bit）                                   |
+  | value      | 数组       | 特征描述数据                                                 |
+
+* 返回值：
+
+  执行成功返回整型0，失败返回整型-1。
+
+* 示例：
+
+```python
+def ble_gatt_add_characteristic_desc():
+    data = [0x00, 0x00, 0x00, 0x00]
+    server_id = 0x01
+    chara_id = 0x01
+    permission = 0x0001 | 0x0002
+    uuid_type = 1  # 短UUID
+    uuid_s = 0x2902
+    uuid_l = bytearray([0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00])
+    value = bytearray(data)
+    ret = ble.addCharaDesc(server_id, chara_id, permission, uuid_type, uuid_s, uuid_l, value)
+    if ret != 0:
+        print('ble_gatt_add_characteristic_desc failed.')
+        return -1
+    print('ble_gatt_add_characteristic_desc success.')
+    return 0
+```
+
+
+
+> **ble.addOrClearService(option, mode)**
+
+* 功能：
+
+  增加服务完成，或者删除增加的服务。
+
+* 参数：
+
+  | 参数   | 类型       | 说明                                                         |
+  | ------ | ---------- | ------------------------------------------------------------ |
+  | option | 无符号整型 | 操作类型，取值范围如下：<br>0 - 删除服务<br/>1 - 增加服务完成 |
+  | mode   | 无符号整型 | 保留系统服务模式，取值范围如下：<br/>0 - 删除系统默认的GAP和GATT服务<br/>1 - 保留系统默认的GAP和GATT服务 |
+
+* 返回值：
+
+  执行成功返回整型0，失败返回整型-1。
+
+* 示例：
+
+```python
+见最后的综合示例
+```
+
+
+
+> **ble.sendNotification(connect_id, attr_handle, value)**
+
+* 功能：
+
+  发送通知。
+
+* 参数：
+
+  | 参数        | 类型       | 说明                                  |
+  | ----------- | ---------- | ------------------------------------- |
+  | connect_id  | 无符号整型 | 连接ID                                |
+  | attr_handle | 无符号整型 | 属性句柄                              |
+  | value       | 数组       | 要发送的数据，发送数据长度不要超过MTU |
+
+* 返回值：
+
+  执行成功返回整型0，失败返回整型-1。
+
+* 示例：
+
+```python
+参考最后的综合示例
+```
+
+
+
+> **ble.sendIndication(connect_id, attr_handle, value)**
+
+* 功能：
+
+  发送指示。
+
+* 参数：
+
+  | 参数        | 类型       | 说明                                  |
+  | ----------- | ---------- | ------------------------------------- |
+  | connect_id  | 无符号整型 | 连接ID                                |
+  | attr_handle | 无符号整型 | 属性句柄                              |
+  | value       | 数组       | 要发送的数据，发送数据长度不要超过MTU |
+
+* 返回值：
+
+  执行成功返回整型0，失败返回整型-1。
+
+* 示例：
+
+```python
+参考最后的综合示例
+```
+
+
+
+> **ble.advStart()**
+
+* 功能：
+
+  开启广播。
+
+* 参数：
+
+  无
+
+* 返回值：
+
+  执行成功返回整型0，失败返回整型-1。
+
+
+
+
+> **ble.advStop()**
+
+功能：
+
+停止广播。
+
+参数：
+
+无
+
+返回值：
+
+执行成功返回整型0，失败返回整型-1。
+
+综合示例
+
+```python
+# -*- coding: UTF-8 -*-
+
+import ble
+import utime
+
+
+BLE_GATT_SYS_SERVICE = 0  # 0-删除系统默认的GAP和GATT服务  1-保留系统默认的GAP和GATT服务
+BLE_SERVER_HANDLE = 0
+_BLE_NAME = "Quectel_ble_test"
+# _BLE_NAME = "蓝牙_ble"
+
+
+def ble_callback(args):
+    global BLE_GATT_SYS_SERVICE
+    global BLE_SERVER_HANDLE
+    event_id = args[0]
+    status = args[1]
+    print('[ble_callback]: event_id={}, status={}'.format(event_id, status))
+
+    if event_id == 0:  # ble start
+        if status == 0:
+            print('[callback] BLE start success.')
+            ret = ble_gatt_set_name()
+            if ret != 0:
+                ble_gatt_close()
+                return
+            ret = ble_gatt_set_param()
+            if ret != 0:
+                ble_gatt_close()
+                return
+            ret = ble_gatt_set_data()
+            if ret != 0:
+                ble_gatt_close()
+                return
+            ret = ble_gatt_set_rsp_data()
+            if ret != 0:
+                ble_gatt_close()
+                return
+            ret = ble_gatt_add_service()
+            if ret != 0:
+                ble_gatt_close()
+                return
+            ret = ble_gatt_add_characteristic()
+            if ret != 0:
+                ble_gatt_close()
+                return
+            ret = ble_gatt_add_characteristic_value()
+            if ret != 0:
+                ble_gatt_close()
+                return
+            ret = ble_gatt_add_characteristic_desc()
+            if ret != 0:
+                ble_gatt_close()
+                return
+            ret = ble_gatt_add_service_complete()
+            if ret != 0:
+                ble_gatt_close()
+                return
+            if BLE_GATT_SYS_SERVICE == 0:
+                BLE_SERVER_HANDLE = 1
+            else:
+                BLE_SERVER_HANDLE = 16
+            ret = ble_adv_start()
+            if ret != 0:
+                ble_gatt_close()
+                return
+        else:
+            print('[callback] BLE start failed.')
+    elif event_id == 1:  # ble stop
+        if status == 0:
+            print('[callback] ble stop successful.')
+        else:
+            print('[callback] ble stop failed.')
+    elif event_id == 16:  # ble connect
+        if status == 0:
+            print('[callback] ble connect successful.')
+            connect_id = args[2]
+            ble_addr = args[3]
+            print('[callback] connect_id = {}, addr = {}'.format(connect_id, ble_addr))
+
+            # utime.sleep(3)
+            ret = ble_gatt_send_notification()
+            if ret == 0:
+                print('[callback] ble_gatt_send_notification successful.')
+            else:
+                print('[callback] ble_gatt_send_notification failed.')
+                ble_gatt_close()
+                return
+        else:
+            print('[callback] ble connect failed.')
+    elif event_id == 17:  # ble disconnect
+        if status == 0:
+            print('[callback] ble disconnect successful.')
+            connect_id = args[2]
+            ble_addr = args[3]
+            print('[callback] connect_id = {}, addr = {}'.format(connect_id, ble_addr))
+        else:
+            print('[callback] ble disconnect failed.')
+            ble_gatt_close()
+            return
+    elif event_id == 18:  # ble update connection parameter
+        if status == 0:
+            print('[callback] ble update parameter successful.')
+            connect_id = args[2]
+            max_interval = args[3]
+            min_interval = args[4]
+            latency = args[5]
+            timeout = args[6]
+            print('[callback] connect_id={},max_interval={},min_interval={},latency={},timeout={}'.format(connect_id, max_interval, min_interval, latency, timeout))
+        else:
+            print('[callback] ble update parameter failed.')
+            ble_gatt_close()
+            return
+    elif event_id == 20:  # ble connection mtu
+        if status == 0:
+            print('[callback] ble connect mtu successful.')
+            handle = args[2]
+            ble_mtu = args[3]
+            print('[callback] handle = {}, ble_mtu = {}'.format(handle, ble_mtu))
+        else:
+            print('[callback] ble connect mtu failed.')
+            ble_gatt_close()
+            return
+    elif event_id == 21:  # server:when ble client write characteristic value or descriptor,server get the notice
+        if status == 0:
+            print('[callback] ble recv successful.')
+            data_len = args[2]
+            data = args[3]  # 这是一个bytearray
+            attr_handle = args[4]
+            short_uuid = args[5]
+            long_uuid = args[6]  # 这是一个bytearray
+            print('len={}, data:{}'.format(data_len, data))
+            print('attr_handle = {}'.format(attr_handle))
+            print('short uuid = {}'.format(short_uuid))
+            print('long uuid = {}'.format(long_uuid))
+        else:
+            print('[callback] ble recv failed.')
+            ble_gatt_close()
+            return
+    elif event_id == 22:  # server:when ble client read characteristic value or descriptor,server get the notice
+        if status == 0:
+            print('[callback] ble recv read successful.')
+            data_len = args[2]
+            data = args[3]  # 这是一个bytearray
+            attr_handle = args[4]
+            short_uuid = args[5]
+            long_uuid = args[6]  # 这是一个bytearray
+            print('len={}, data:{}'.format(data_len, data))
+            print('attr_handle = {}'.format(attr_handle))
+            print('short uuid = {}'.format(short_uuid))
+            print('long uuid = {}'.format(long_uuid))
+        else:
+            print('[callback] ble recv read failed.')
+            ble_gatt_close()
+            return
+    elif event_id == 25:  # server send notification,and recieve send end notice
+        if status == 0:
+            print('[callback] ble send data successful.')
+        else:
+            print('[callback] ble send data failed.')
+    else:
+        print('unknown event id.')
+
+
+def ble_gatt_server_init(cb):
+    ret = ble.serverInit(cb)
+    if ret != 0:
+        print('ble_gatt_server_init failed.')
+        return -1
+    print('ble_gatt_server_init success.')
+    return 0
+
+
+def ble_gatt_server_release():
+    ret = ble.serverRelease()
+    if ret != 0:
+        print('ble_gatt_server_release failed.')
+        return -1
+    print('ble_gatt_server_release success.')
+    return 0
+
+
+def ble_gatt_open():
+    ret = ble.gattStart()
+    if ret != 0:
+        print('ble_gatt_open failed.')
+        return -1
+    print('ble_gatt_open success.')
+    return 0
+
+
+def ble_gatt_close():
+    ret = ble.gattStop()
+    if ret != 0:
+        print('ble_gatt_close failed.')
+        return -1
+    print('ble_gatt_close success.')
+    return 0
+
+
+def ble_gatt_set_name():
+    code = 0  # utf8
+    name = _BLE_NAME
+    ret = ble.setLocalName(code, name)
+    if ret != 0:
+        print('ble_gatt_set_name failed.')
+        return -1
+    print('ble_gatt_set_name success.')
+    return 0
+
+
+def ble_gatt_set_param():
+    min_adv = 0x300
+    max_adv = 0x320
+    adv_type = 0  # 可连接的非定向广播，默认选择
+    addr_type = 0  # 公共地址
+    channel = 0x07
+    filter_strategy = 0  # 处理所有设备的扫描和连接请求
+    discov_mode = 2
+    no_br_edr = 1
+    enable_adv = 1
+    ret = ble.setAdvParam(min_adv, max_adv, adv_type, addr_type, channel, filter_strategy, discov_mode, no_br_edr, enable_adv)
+    if ret != 0:
+        print('ble_gatt_set_param failed.')
+        return -1
+    print('ble_gatt_set_param success.')
+    return 0
+
+
+def ble_gatt_set_data():
+    adv_data = [0x02, 0x01, 0x05]
+    ble_name = _BLE_NAME
+    length = len(ble_name) + 1
+    adv_data.append(length)
+    adv_data.append(0x09)
+    name_encode = ble_name.encode('UTF-8')
+    for i in range(0, len(name_encode)):
+        adv_data.append(name_encode[i])
+    print('set adv_data:{}'.format(adv_data))
+    data = bytearray(adv_data)
+    ret = ble.setAdvData(data)
+    if ret != 0:
+        print('ble_gatt_set_data failed.')
+        return -1
+    print('ble_gatt_set_data success.')
+    return 0
+
+
+def ble_gatt_set_rsp_data():
+    adv_data = []
+    ble_name = _BLE_NAME
+    length = len(ble_name) + 1
+    adv_data.append(length)
+    adv_data.append(0x09)
+    name_encode = ble_name.encode('UTF-8')
+    for i in range(0, len(name_encode)):
+        adv_data.append(name_encode[i])
+    print('set adv_rsp_data:{}'.format(adv_data))
+    data = bytearray(adv_data)
+    ret = ble.setAdvRspData(data)
+    if ret != 0:
+        print('ble_gatt_set_rsp_data failed.')
+        return -1
+    print('ble_gatt_set_rsp_data success.')
+    return 0
+
+
+def ble_gatt_add_service():
+    primary = 1
+    server_id = 0x01
+    uuid_type = 1  # 短UUID
+    uuid_s = 0x180F
+    uuid_l = bytearray([0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00])
+    ret = ble.addService(primary, server_id, uuid_type, uuid_s, uuid_l)
+    if ret != 0:
+        print('ble_gatt_add_service failed.')
+        return -1
+    print('ble_gatt_add_service success.')
+    return 0
+
+
+def ble_gatt_add_characteristic():
+    server_id = 0x01
+    chara_id = 0x01
+    chara_prop = 0x02 | 0x10 | 0x20  # 0x02-可读 0x10-通知 0x20-指示
+    uuid_type = 1  # 短UUID
+    uuid_s = 0x2A19
+    uuid_l = bytearray([0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00])
+    ret = ble.addChara(server_id, chara_id, chara_prop, uuid_type, uuid_s, uuid_l)
+    if ret != 0:
+        print('ble_gatt_add_characteristic failed.')
+        return -1
+    print('ble_gatt_add_characteristic success.')
+    return 0
+
+
+def ble_gatt_add_characteristic_value():
+    data = []
+    server_id = 0x01
+    chara_id = 0x01
+    permission = 0x0001 | 0x0002
+    uuid_type = 1  # 短UUID
+    uuid_s = 0x2A19
+    uuid_l = bytearray([0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00])
+    for i in range(0, 244):
+        data.append(0x00)
+    value = bytearray(data)
+    ret = ble.addCharaValue(server_id, chara_id, permission, uuid_type, uuid_s, uuid_l, value)
+    if ret != 0:
+        print('ble_gatt_add_characteristic_value failed.')
+        return -1
+    print('ble_gatt_add_characteristic_value success.')
+    return 0
+
+
+def ble_gatt_add_characteristic_desc():
+    data = [0x00, 0x00, 0x00, 0x00]
+    server_id = 0x01
+    chara_id = 0x01
+    permission = 0x0001 | 0x0002
+    uuid_type = 1  # 短UUID
+    uuid_s = 0x2902
+    uuid_l = bytearray([0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00])
+    value = bytearray(data)
+    ret = ble.addCharaDesc(server_id, chara_id, permission, uuid_type, uuid_s, uuid_l, value)
+    if ret != 0:
+        print('ble_gatt_add_characteristic_desc failed.')
+        return -1
+    print('ble_gatt_add_characteristic_desc success.')
+    return 0
+
+
+def ble_gatt_send_notification():
+    global BLE_SERVER_HANDLE
+    data = [0x39, 0x39, 0x39, 0x39, 0x39]  # 随便发点啥数据
+    conn_id = 0
+    attr_handle = BLE_SERVER_HANDLE + 2
+    value = bytearray(data)
+    ret = ble.sendNotification(conn_id, attr_handle, value)
+    if ret != 0:
+        print('ble_gatt_send_notification failed.')
+        return -1
+    print('ble_gatt_send_notification success.')
+    return 0
+
+
+def ble_gatt_add_service_complete():
+    global BLE_GATT_SYS_SERVICE
+    ret = ble.addOrClearService(1, BLE_GATT_SYS_SERVICE)
+    if ret != 0:
+        print('ble_gatt_add_service_complete failed.')
+        return -1
+    print('ble_gatt_add_service_complete success.')
+    return 0
+
+
+def ble_gatt_clear_service_complete():
+    global BLE_GATT_SYS_SERVICE
+    ret = ble.addOrClearService(0, BLE_GATT_SYS_SERVICE)
+    if ret != 0:
+        print('ble_gatt_clear_service_complete failed.')
+        return -1
+    print('ble_gatt_clear_service_complete success.')
+    return 0
+
+
+def ble_adv_start():
+    ret = ble.advStart()
+    if ret != 0:
+        print('ble_adv_start failed.')
+        return -1
+    print('ble_adv_start success.')
+    return 0
+
+
+def ble_adv_stop():
+    ret = ble.advStop()
+    if ret != 0:
+        print('ble_adv_stop failed.')
+        return -1
+    print('ble_adv_stop success.')
+    return 0
+
+
+def main():
+    ret = ble_gatt_server_init(ble_callback)
+    if ret == 0:
+        ret = ble_gatt_open()
+        if ret != 0:
+            return -1
+    else:
+        return -1
+    count = 0
+    while 1:
+        utime.sleep(1)
+        count += 1
+        if count % 5 == 0:
+            print('##### BLE running, count = {}......'.format(count))
+        if count > 120:
+            count = 0
+            print('!!!!! stop BLE now !!!!!')
+            ble_gatt_close()
+            ble_gatt_server_release()
+            break
+
+
+if __name__ == '__main__':
+    main()
+
+```
 
