@@ -1,6 +1,6 @@
-### 第三方库
-
 #### aLiYun - 阿里云服务
+
+##### 配置阿里云物联网套件的产品信息和设备信息。
 
 模块功能：阿里云物联网套件客户端功能,目前的产品节点类型仅支持“设备”，设备认证方式支持“一机一密和“一型一密”。
 
@@ -21,7 +21,7 @@
 
 返回aLiYun连接对象。
 
-
+##### 设置MQTT数据通道的参数
 
 > **aLiYun.setMqtt(clientID, clean_session, keepAlive)**
 
@@ -51,7 +51,7 @@
 
 成功返回整型值0，失败返回整型值-1。
 
-
+##### 注册回调函数
 
 > **aLiYun.setCallback(sub_cb)**
 
@@ -67,7 +67,7 @@
 
 无
 
-
+##### 订阅mqtt主题
 
 > **aLiYun.subscribe(topic,qos)**
 
@@ -84,7 +84,7 @@
 
 成功返回整型值0，失败返回整型值-1。
 
-
+##### 发布消息
 
 > **aLiYun.publish(topic,msg, qos=0)**
 
@@ -102,7 +102,7 @@
 
 成功返回整型值0，失败返回整型值-1。
 
-
+##### 运行连接
 
 > **aLiYun.start()**
 
@@ -116,7 +116,7 @@
 
 无
 
-
+##### 关闭连接
 
 > **aLiYun.disconnect()**
 
@@ -210,6 +210,8 @@ if __name__ == '__main__':
 
 模块功能：腾讯云物联网套件客户端功能,目前的产品节点类型仅支持“设备”，设备认证方式支持“一机一密和“动态注册认证”。
 
+##### 配置阿里云物联网套件的产品信息和设备信息
+
 > **TXyun(productID, devicename, devicePsk, ProductSecret)**
 
 配置阿里云物联网套件的产品信息和设备信息。
@@ -227,7 +229,7 @@ if __name__ == '__main__':
 
 返回TXyun连接对象。
 
-
+##### 设置MQTT数据通道的参数
 
 > **TXyun.setMqtt(clean_session, keepAlive)**
 
@@ -244,7 +246,7 @@ if __name__ == '__main__':
 
 成功返回整型值0，失败返回整型值-1。
 
-
+##### 注册回调函数
 
 > **TXyun.setCallback(sub_cb)**
 
@@ -260,7 +262,7 @@ if __name__ == '__main__':
 
 无
 
-
+##### 订阅mqtt主题
 
 > **TXyun.subscribe(topic,qos)**
 
@@ -277,7 +279,7 @@ if __name__ == '__main__':
 
 成功返回整型值0，失败返回整型值-1。
 
-
+##### 发布消息
 
 > **TXyun.publish(topic,msg, qos=0)**
 
@@ -295,7 +297,7 @@ if __name__ == '__main__':
 
 成功返回整型值0，失败返回整型值-1。
 
-
+##### 运行连接
 
 > **TXyun.start()**
 
@@ -309,7 +311,7 @@ if __name__ == '__main__':
 
 无
 
-
+##### 关闭连接
 
 > **TXyun.disconnect()**
 
@@ -392,6 +394,8 @@ if __name__ == '__main__':
 
 模块功能：HTTP客户端的相关功能函数。
 
+##### 发送GET请求
+
 > **request.get(url, data, headers,decode,sizeof,ssl_params)**
 
 发送GET请求。
@@ -440,7 +444,7 @@ if __name__ == '__main__':
         http_log.info('Network connection failed! stagecode = {}, subcode = {}'.format(stagecode, subcode))
 ```
 
-
+##### 发送POST请求
 
 > **request.post(url, data, headers,decode,sizeof)**
 
@@ -493,7 +497,7 @@ if __name__ == '__main__':
         http_log.info('Network connection failed! stagecode = {}, subcode = {}'.format(stagecode, subcode))
 ```
 
-
+##### 发送PUT请求
 
 > **request.put(url, data, headers,decode,sizeof)**
 
@@ -517,7 +521,7 @@ url = "http://httpbin.org/put"
 response = request.put(url)
 ```
 
-
+##### 发送HEAD请求
 
 > **request.head(url, data, headers,decode,sizeof)**
 
@@ -542,7 +546,7 @@ response = request.head(url)
 print(response.headers)
 ```
 
-**Response类方法说明**
+##### Response类方法说明
 
 > **response =request.get(url)**
 
@@ -595,6 +599,8 @@ if __name__ == '__main__':
 
 模块功能：系统日志记录,分级别日志工具。
 
+##### 设置日志输出级别
+
 > **log.basicConfig(level)**
 
 设置日志输出级别,  设置日志输出级别, 默认为log.INFO，系统只会输出 level 数值大于或等于该 level 的的日志结果。
@@ -617,7 +623,7 @@ import log
 log.basicConfig(level=log.INFO)
 ```
 
-
+##### 获取logger对象
 
 > **log.getLogger(name)**
 
@@ -640,7 +646,7 @@ import log
 Testlog = log.getLogger("TestLog")
 ```
 
-
+##### 输出debug级别的日志
 
 > **log.debug(tag, msg)**
 
@@ -665,7 +671,7 @@ Testlog = log.getLogger("TestLog")
 Testlog.debug("Test message: %d(%s)", 100, "foobar")
 ```
 
-
+##### 输出info级别的日志
 
 > **log.info(tag,msg)**
 
@@ -690,7 +696,7 @@ Testlog = log.getLogger("TestLog")
 Testlog.info("Test message: %d(%s)", 100, "foobar")
 ```
 
-
+##### 输出warning级别的日志
 
 > **log.warning(tag,msg)**
 
@@ -715,7 +721,7 @@ Testlog = log.getLogger("TestLog")
 Testlog.warning("Test message: %d(%s)", 100, "foobar")
 ```
 
-
+##### 输出error级别的日志
 
 > **log.error(tag,msg)**
 
@@ -740,7 +746,7 @@ Testlog = log.getLogger("TestLog")
 Testlog.error("Test message: %d(%s)", 100, "foobar")
 ```
 
-
+##### 输出critical级别的日志
 
 > **log.critical(tag,msg)**
 
@@ -808,7 +814,7 @@ QoS1 – 至少一次，是中间级别；发送者保证消息至少送达到�
 QoS2 – 有且仅有一次，是最高级别；保证消息送达且仅送达一次。
 ```
 
-
+##### 构建mqtt连接对象
 
 > **MQTTClient(client_id, server, port=0, user=None, password=None, keepalive=0, ssl=False, ssl_params={})**
 
@@ -831,7 +837,7 @@ QoS2 – 有且仅有一次，是最高级别；保证消息送达且仅送达�
 
 mqtt对象。
 
-
+##### 设置回调函数
 
 > **MQTTClient.set_callback(callback)**
 
@@ -847,7 +853,7 @@ mqtt对象。
 
 无
 
-
+##### 设置要发送给服务器的遗嘱
 
 > **MQTTClient.set_last_will(topic,msg,retain=False,qos=0)**
 
@@ -866,7 +872,7 @@ mqtt对象。
 
 无
 
-
+##### 与服务器建立连接
 
 > **MQTTClient.connect(clean_session=True)**
 
@@ -882,7 +888,7 @@ mqtt对象。
 
 无
 
-
+##### 与服务器断开连接
 
 > **MQTTClient.disconnect()**
 
@@ -896,7 +902,7 @@ mqtt对象。
 
 无
 
-
+##### 发送ping包
 
 > **MQTTClient.ping()**
 
@@ -910,7 +916,7 @@ mqtt对象。
 
 无
 
-
+##### 发布消息
 
 > **MQTTClient.publish(topic,msg, retain=False, qos=0)**
 
@@ -929,7 +935,7 @@ mqtt对象。
 
 无
 
-
+##### 订阅mqtt主题
 
 > **MQTTClient.subscribe(topic,qos)**
 
@@ -946,7 +952,7 @@ mqtt对象。
 
 无
 
-
+##### 检查服务器是否有待处理消息
 
 > **MQTTClient.check_msg()**
 
@@ -960,7 +966,7 @@ mqtt对象。
 
 无
 
-
+##### 阻塞等待服务器消息响应
 
 > **MQTTClient.wait_msg()**
 
@@ -974,7 +980,7 @@ mqtt对象。
 
 无
 
-
+##### 获取mqtt连接状态
 
 > **MQTTClient.get_mqttsta()**
 
@@ -1072,11 +1078,13 @@ if __name__ == '__main__':
 
 模块功能：该模块用于时间同步。
 
+##### 返回当前的ntp服务器
+
 > **ntptime.host**
 
 返回当前的ntp服务器，默认为"ntp.aliyun.com"。
 
-
+##### 设置ntp服务器
 
 > **ntptime.sethost(host)**
 
@@ -1092,7 +1100,7 @@ if __name__ == '__main__':
 
 成功返回整型值0，失败返回整型值-1。
 
-
+##### 同步ntp时间
 
 > **ntptime.settime()**
 

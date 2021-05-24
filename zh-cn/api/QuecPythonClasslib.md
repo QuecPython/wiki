@@ -1,5 +1,3 @@
-### QuecPython类库
-
 #### example - 执行python脚本
 
 模块功能：提供方法让用户可以在命令行或者代码中执行python脚本。
@@ -56,6 +54,8 @@ myprint()
 
 模块功能：提供数据拨号相关接口。
 
+##### 拨号
+
 > **dataCall.start(profileIdx, ipType, apn, username, password, authType)**
 
 启动拨号，进行数据链路激活。
@@ -85,6 +85,8 @@ myprint()
 
 
 
+##### 配置用户apn
+
 > **dataCall.setApn(profileIdx, ipType, apn, username, password, authType)**
 
 用户apn信息配置接口，用户调用该接口后，会在用户分区目录下创建user_apn.json文件，用于保存用户apn信息，并使用该apn信息启动拨号，进行数据链路激活。
@@ -113,6 +115,8 @@ myprint()
 ```
 
 
+
+##### 注册回调函数
 
 > **dataCall.setCallback(usrFun)**
 
@@ -153,6 +157,8 @@ myprint()
 ```
 
 
+
+##### 获取拨号信息
 
 > **dataCall.getInfo(profileIdx, ipType)**
 
@@ -218,7 +224,7 @@ ipType =2，返回值格式如下：
 
 注：返回值 `(1, 0, [0, 0, '0.0.0.0', '0.0.0.0', '0.0.0.0'])` 表示当前没有拨号或者拨号没有成功。
 
-**使用示例**
+##### 使用示例
 
 ```python
 import dataCall
@@ -280,6 +286,8 @@ if __name__ == '__main__':
 
 模块功能：提供基站定位接口，获取坐标信息。
 
+##### 获取坐标
+
 > **cellLocator.getLocation(serverAddr, port, token, timeout, profileID)**
 
 获取基站坐标信息。
@@ -327,6 +335,8 @@ if __name__ == '__main__':
 
 注意：能成功获取IMSI、ICCID、电话号码的前提是SIM卡状态为1，可通过sim.getStatus()查询。
 
+##### 获取IMSI
+
 > **sim.getImsi()**
 
 获取sim卡的imsi。
@@ -349,6 +359,8 @@ if __name__ == '__main__':
 
 
 
+##### 获取ICCID
+
 > **sim.getIccid()**
 
 获取sim卡的iccid。
@@ -370,6 +382,8 @@ if __name__ == '__main__':
 
 
 
+##### 获取电话号码
+
 > **sim.getPhoneNumber()**
 
 获取sim卡的电话号码。
@@ -390,6 +404,8 @@ if __name__ == '__main__':
 ```
 
 
+
+##### 获取SIM卡状态
 
 > **sim.getStatus()**
 
@@ -428,6 +444,8 @@ if __name__ == '__main__':
 
 
 
+##### 开启PIN码验证
+
 > **sim.enablePin(pin)**
 
 启用sim卡PIN码验证，开启后需要输入正确的PIN验证成功后，sim卡才能正常使用。只有3次输入PIN码机会，3次都错误，sim卡被锁定，需要PUK来解锁。
@@ -450,6 +468,8 @@ if __name__ == '__main__':
 ```
 
 
+
+##### 取消PIN码验证
 
 > **sim.disablePin(pin)**
 
@@ -474,6 +494,8 @@ if __name__ == '__main__':
 
 
 
+##### PIN码验证
+
 > **sim.verifyPin(pin)**
 
 sim卡PIN码验证。需要在调用sim.enablePin(pin)成功之后，才能进行验证，验证成功后，sim卡才能正常使用。
@@ -496,6 +518,8 @@ sim卡PIN码验证。需要在调用sim.enablePin(pin)成功之后，才能进�
 ```
 
 
+
+##### SIM卡解锁
 
 > **sim.unblockPin(puk, newPin)**
 
@@ -521,6 +545,8 @@ sim卡解锁。当多次错误输入 PIN/PIN2 码后，SIM 卡状态为请求 PU
 
 
 
+##### 更改SIM卡PIN码
+
 > **sim.changePin(oldPin, newPin)**
 
 更改sim卡PIN码。
@@ -544,6 +570,8 @@ sim卡解锁。当多次错误输入 PIN/PIN2 码后，SIM 卡状态为请求 PU
 ```
 
 
+
+##### 读电话簿
 
 > **sim.readPhonebook(storage, start, end, username)**
 
@@ -589,6 +617,8 @@ sim卡解锁。当多次错误输入 PIN/PIN2 码后，SIM 卡状态为请求 PU
 
 
 
+##### 写电话簿
+
 > **sim. writePhonebook(storage, index, username, number)**
 
 写入一条电话号码记录。
@@ -614,13 +644,14 @@ sim卡解锁。当多次错误输入 PIN/PIN2 码后，SIM 卡状态为请求 PU
 ```
 
 
+
 #### voiceCall - 电话功能
 
 模块功能：该模块提供电话功能相关接口。
 
 说明：4G only的版本必须打开volte才能正常使用电话功能。
 
-
+##### 设置自动应答时间
 
 > **voiceCall.setAutoAnswer(seconds)**
 
@@ -646,6 +677,8 @@ sim卡解锁。当多次错误输入 PIN/PIN2 码后，SIM 卡状态为请求 PU
 
 
 
+##### 拨打电话
+
 > **voiceCall.callStart(phonenum)**
 
 拨打电话。
@@ -669,6 +702,8 @@ sim卡解锁。当多次错误输入 PIN/PIN2 码后，SIM 卡状态为请求 PU
 
 
 
+##### 接听电话
+
 > **voiceCall.callAnswer()**
 
 接听电话。
@@ -690,6 +725,8 @@ sim卡解锁。当多次错误输入 PIN/PIN2 码后，SIM 卡状态为请求 PU
 
 
 
+##### 挂断电话
+
 > **voiceCall.callEnd()**
 
 挂断电话。
@@ -709,6 +746,9 @@ sim卡解锁。当多次错误输入 PIN/PIN2 码后，SIM 卡状态为请求 PU
 0
 ```
 
+
+
+##### 注册监听回调函数
 
 > **voiceCall.setCallback(usrFun))**
 
@@ -744,13 +784,14 @@ def voice_callback(args):
 ```
 
 
+
 #### sms - 短信功能
 
 模块功能：该模块提供短信功能相关接口。
 
 说明：当前QuecPython底层为非volte版本，暂不支持电信发送短信。
 
-
+##### 发送TEXT类型消息
 
 > **sms.sendTextMsg(phoneNumber, msg, codeMode)**
 
@@ -780,6 +821,8 @@ sms.sendTextMsg('18158626517', '这是一条夹杂中文与英文的测试短信
 ```
 
 
+
+##### 发送PDU类型消息
 
 > **sms.sendPduMsg(phoneNumber, msg, codeMode)**
 
@@ -811,6 +854,8 @@ if __name__ == '__main__':
 
 
 
+##### 删除消息
+
 > **sms.deleteMsg(index)**
 
 删除指定索引的消息。
@@ -834,6 +879,8 @@ if __name__ == '__main__':
 ```
 
 
+
+##### 设置短信存储位置
 
 > **sms.setSaveLoc(mem1, mem2, mem3)**
 
@@ -860,6 +907,8 @@ if __name__ == '__main__':
 ```
 
 
+
+##### 获取短信存储信息
 
 > **sms.getSaveLoc()**
 
@@ -900,6 +949,8 @@ if __name__ == '__main__':
 
 
 
+##### 获取短信数量
+
 > **sms.getMsgNums()**
 
 获取短信的数量。
@@ -922,6 +973,8 @@ if __name__ == '__main__':
 
 
 
+##### PDU方式读取短信
+
 > **sms.searchPduMsg(index)**
 
 以PDU方式获取短信内容。
@@ -937,6 +990,8 @@ if __name__ == '__main__':
 成功返回PDU类型的短信内容，string类型，失败返回整型-1。
 
 
+
+##### TEXT方式读取短信
 
 > **sms.searchTextMsg(index)**
 
@@ -973,6 +1028,8 @@ if __name__ == '__main__':
 
 
 
+##### 获取短信中心号码
+
 > **sms.getCenterAddr()**
 
 获取短信中心号码。
@@ -995,6 +1052,8 @@ if __name__ == '__main__':
 
 
 
+##### 设置短信中心号码
+
 > **sms.setCenterAddr(addr)**
 
 设置短信中心号码。若无特殊需求，不建议更改短信中心号码。
@@ -1014,6 +1073,8 @@ if __name__ == '__main__':
 无
 
 
+
+##### 获取PDU短信长度
 
 > **sms.getPduLength(pduMsg)**
 
@@ -1041,9 +1102,11 @@ if __name__ == '__main__':
 
 
 
+##### 注册监听回调函数
+
 > **sms.setCallback(usrFun)**
 
-注册监听回调函数。在发送和接收短信时，会触发该回调函数。
+注册监听回调函数。在接收短信时，会触发该回调函数。
 
 * 参数
 
@@ -1061,39 +1124,20 @@ if __name__ == '__main__':
 import sms
 
 def cb(args):
-    flag = args[0]
-    if flag == 0x1001:   # args[0]为0x1001时，有效参数及意义如下
-        print('### msglen={},msg={}'.format(args[2], args[1]))
-    elif flag == 0x1002: # args[0]为0x1002时，有效参数及意义如下
-        print('$$$ numtype={:0>3d},numplan={:0>4d},len={},digits={}'.format(args[1],args[2],args[3],args[4]))
-    elif flag == 0x1003: # args[0]为0x1003时，有效参数及意义如下
-        print('type={}, storage={}, index={}'.format(args[1],args[2],args[3]))
+    index = args[1]
+    storage = args[2]
+    print('New message! storage:{},index:{}'.format(storage, index))
     
 sms.setCallback(cb)
 ```
-
-回调函数中，当flag为0x1002时，参数意义说明：
-
-| 参数名  | 描述                                                         |
-| ------- | ------------------------------------------------------------ |
-| numtype | TON(type-of-number)<br/>000—未知<br/>001—国际<br/>010—国内<br/>111—留作扩展 |
-| numplan | NPI(numbering-plan-identification)，号码鉴别<br/>0000—未知<br/>0001—ISDN/电话号码(E.164/E.163)<br/>1111—留作扩展<br/>一般默认为0001(国际格式)，表示电话号码类型 |
-| len     | 短信服务中心号码长度                                         |
-| digits  | 短信服务中心号码                                             |
-
-回调函数中，当flag为0x1003时，参数意义说明：
-
-| 参数名  | 描述                                                         |
-| ------- | ------------------------------------------------------------ |
-| type    | 接收短信的类型<br>0 - SMS-DELIVER PDU<br>1 - SMS-DELIVER-REPORT PDU<br>2 - SMS-SUBMIT PDU<br>3 - SMS-SUBMIT-REPORT PDU<br>4 - SMS-STATUS-REPORT PDU<br>5 - SMS-COMMAND PDU<br>6 - CBS PDU<br>7 - LTE CBS PDU |
-| storage | 短信存储位置<br>0 - BM，Broadcast message storage (in volatile memory)<br>1 - ME，ME message storage<br>2 - MT，Any of the storage locations associated with ME<br>3 - SM，SIM message storage<br>4 - SR，Status report storage |
-| index   | 短信存储位置索引，从0开始                                    |
 
 
 
 #### net - 网络相关功能
 
 模块功能：该模块提供配置和查询网络模式信息等接口。
+
+##### 获取csq信号强度
 
 > **net.csqQueryPoll()**
 
@@ -1118,6 +1162,8 @@ sms.setCallback(cb)
 ```
 
 
+
+##### 获取小区信息
 
 > **net.getCellInfo()**
 
@@ -1182,6 +1228,8 @@ LTE网络系统返回值说明
 
 
 
+##### 获取网络制式及漫游配置
+
 > **net.getConfig()**
 
 获取当前网络模式、漫游配置。
@@ -1227,6 +1275,8 @@ LTE网络系统返回值说明
 
 
 
+##### 设置网络制式及漫游配置
+
 > **net.setConfig(mode, roaming)**
 
 设置网络模式、漫游配置。
@@ -1243,6 +1293,8 @@ LTE网络系统返回值说明
 设置成功返回整型值0，设置失败返回整型值-1。
 
 
+
+##### 获取网络配置模式
 
 > **net.getNetMode()**
 
@@ -1286,6 +1338,8 @@ ACT模式
 ```
 
 
+
+##### 获取详细信号强度信息
 
 > **net.getSignal()**
 
@@ -1332,6 +1386,8 @@ LTE list：
 
 
 
+##### 获取当前基站时间
+
 > **net.nitzTime()**
 
 获取当前基站时间。
@@ -1360,6 +1416,8 @@ LTE list：
 ```
 
 
+
+##### 获取运营商信息
 
 > **net.operatorName()**
 
@@ -1391,6 +1449,8 @@ LTE list：
 ```
 
 
+
+##### 获取网络注册信息
 
 > **net.getState()**
 
@@ -1446,6 +1506,8 @@ LTE list：
 
 
 
+##### 获取附近小区ID
+
 > **net.getCi()**
 
 获取附近小区ID。
@@ -1468,6 +1530,8 @@ LTE list：
 ```
 
 
+
+##### 获取附近小区的mnc
 
 > **net.getMnc()**
 
@@ -1492,6 +1556,8 @@ LTE list：
 
 
 
+##### 获取附近小区的mcc
+
 > **net.getMcc()**
 
 获取附近小区的mcc。
@@ -1514,6 +1580,8 @@ LTE list：
 ```
 
 
+
+##### 获取附近小区的lac
 
 > **net.getLac()**
 
@@ -1538,9 +1606,11 @@ LTE list：
 
 
 
+##### 获取当前工作模式
+
 > **net.getModemFun()**
 
-获取当前工作模式模式。
+获取当前工作模式。
 
 * 参数
 
@@ -1566,6 +1636,8 @@ LTE list：
 ```
 
 
+
+##### 设置当前工作模式
 
 > **net.setModemFun(function, rst)**
 
@@ -1595,7 +1667,7 @@ LTE list：
 
 模块功能：checkNet模块主要用于【开机自动运行】的用户脚本程序，该模块提供API用来阻塞等待网络就绪，如果超时或者其他异常退出会返回错误码，所以如果用户的程序中有涉及网络相关的操作，那么在用户程序的开始应该调用 checkNet 模块中的方法以等待网络就绪。当然，用户也可以自己实现这个模块的功能。
 
-**创建checkNet对象**
+##### 创建checkNet对象
 
 > **import checkNet**
 >
@@ -1629,6 +1701,8 @@ checknet = checkNet.CheckNetwork(PROJECT_NAME, PROJECT_VERSION)
 ```
 
 
+
+##### 开机打印信息
 
 > **checknet.poweron_print_once()**
 
@@ -1675,6 +1749,8 @@ SIM_CARD_STATUS  : 1
 ```
 
 
+
+##### 等待网络就绪
 
 > **checknet.wait_network_connected(timeout)**
 
@@ -1726,7 +1802,7 @@ stagecode = 1, subcode = 2
 
 
 
-**checkNet 异常返回处理**
+##### checkNet 异常返回处理
 
 根据前面 `checknet.wait_network_connected(timeout)` 接口返回值描述，用户可参考如下处理方式来排查和解决问题：
 
@@ -1783,13 +1859,15 @@ if __name__ == '__main__':
 
 模块功能：固件升级。
 
-**创建fota对象**
+##### 创建fota对象
 
 > **import fota**
 >
 > **fota_obj = fota()**
 
 
+
+##### 写入升级包数据流
 
 > **fota_obj.write(bytesData, file_size)**
 
@@ -1807,6 +1885,8 @@ if __name__ == '__main__':
 写入成功返回整型值0，写入失败返回值整型值-1。
 
 
+
+##### 数据校验
 
 > **fota_obj.verify()**
 
@@ -1827,7 +1907,9 @@ if __name__ == '__main__':
 0
 ```
 
-**使用示例**
+
+
+##### 使用示例
 
 ```python
 '''
@@ -1890,7 +1972,7 @@ if __name__ == '__main__':
 
 模块功能：用户文件升级
 
-**创建app_fota对象**
+##### 创建app_fota对象
 
 1. 导入app_fota模块
 2. 调用`new`方法创建app_fota对象
@@ -1900,7 +1982,9 @@ import app_fota
 fota = app_fota.new()
 ```
 
-**下载单个文件**
+
+
+##### 下载单个文件
 
 > **fota.download(url, file_name)**
 
@@ -1916,7 +2000,9 @@ fota = app_fota.new()
 
 成功返回0，否则返回-1。
 
-**下载批量文件**
+
+
+##### 下载批量文件
 
 > **fota.bulk_download(info=[])**
 
@@ -1938,7 +2024,9 @@ download_list = [{'url': 'http://www.example.com/app.py', 'file_name': '/usr/app
 
 该示例中，假设`http://www.example.com/test.txt`下载失败，则该方法返回值为`[{url: 'http://www.example.com/test.txt', file_name: '/usr/text.txt'}]`
 
-**设置升级标志**
+
+
+##### 设置升级标志
 
 > **fota.set_update_flag()**
 
@@ -1961,7 +2049,7 @@ download_list = [{'url': 'http://www.example.com/app.py', 'file_name': '/usr/app
 
 ##### TTS 
 
-**创建TTS对象**
+###### 创建TTS对象
 
 > **import audio**
 > **tts = audio.TTS(device)**
@@ -1979,6 +2067,8 @@ download_list = [{'url': 'http://www.example.com/app.py', 'file_name': '/usr/app
 
 
 
+###### 关闭TTS功能
+
 > **tts.close()**
 
 关闭TTS功能。
@@ -1992,6 +2082,8 @@ download_list = [{'url': 'http://www.example.com/app.py', 'file_name': '/usr/app
 成功返回整型0，失败返回整型-1。
 
 
+
+###### 开始TTS播放
 
 > **tts.play(priority, breakin, mode, str)**
 
@@ -2083,6 +2175,24 @@ tts.play(4, 0, 2, str1)
 
 
 
+###### 停止TTS播放
+
+> **tts.stop()**
+
+停止TTS播放。
+
+* 参数
+
+无
+
+* 返回值
+
+成功返回整型0，失败返回整型-1。
+
+
+
+###### 注册回调函数
+
 > **tts.setCallback(usrFun)**
 
 注册用户的回调函数，用于通知用户TTS播放状态。注意，该回调函数中不要进行耗时以及阻塞性的操作，建议只进行简单、耗时短的操作。
@@ -2123,6 +2233,8 @@ tts.play(1, 0, 2, 'QuecPython')
 
 
 
+###### 获取TTS音量大小
+
 > **tts.getVolume()**
 
 获取当前播放音量大小，音量值为0~9，0表示静音，默认值4。
@@ -2144,6 +2256,8 @@ tts.play(1, 0, 2, 'QuecPython')
 
 
 
+###### 设置TTS音量大小
+
 > **tts.setVolume(vol)**
 
 设置播放音量大小。
@@ -2156,7 +2270,7 @@ tts.play(1, 0, 2, 'QuecPython')
 
 * 返回值
 
-成功返回整型音量值，失败返回整型-1。
+成功返回0，失败返回整型-1。
 
 * 示例
 
@@ -2166,6 +2280,8 @@ tts.play(1, 0, 2, 'QuecPython')
 ```
 
 
+
+###### 获取播放速度
 
 > **tts.getSpeed()**
 
@@ -2187,6 +2303,8 @@ tts.play(1, 0, 2, 'QuecPython')
 ```
 
 
+
+###### 设置播放速度
 
 > **tts.setSpeed(speed)**
 
@@ -2210,6 +2328,8 @@ tts.play(1, 0, 2, 'QuecPython')
 ```
 
 
+
+###### 获取tts状态
 
 > **tts.getState()**
 
@@ -2239,19 +2359,7 @@ tts.play(1, 0, 2, 'QuecPython')
 
 
 
-> **tts.stop()**
-
-停止TTS播放。
-
-* 参数
-
-无
-
-* 返回值
-
-成功返回整型0，失败返回整型-1。
-
-**使用示例**
+###### 使用示例
 
 ```python
 '''
@@ -2298,7 +2406,7 @@ if __name__ == '__main__':
 
 ##### Audio
 
-**创建一个对象**
+###### 创建一个对象
 
 > **import audio**
 >
@@ -2314,6 +2422,10 @@ if __name__ == '__main__':
 >>> import audio
 >>> aud = audio.Audio(1)
 ```
+
+
+
+###### 设置输出pa的gpio
 
 > **aud.set_pa(gpio)**
 
@@ -2344,6 +2456,10 @@ if __name__ == '__main__':
 >>> aud.play(2, 1, 'U:/music.mp3')
 0
 ```
+
+
+
+###### 音频文件播放
 
 > **aud.play(priority, breakin, filename)**
 
@@ -2387,6 +2503,8 @@ if __name__ == '__main__':
 
 
 
+###### 停止音频文件播放
+
 > **aud.stop()**
 
 停止音频文件播放。
@@ -2400,6 +2518,8 @@ if __name__ == '__main__':
 成功返回整型0，失败返回整型-1。
 
 
+
+###### 注册回调函数
 
 > **aud.setCallback(usrFun)**
 
@@ -2440,6 +2560,8 @@ aud.play(1, 0, 'U:/test.mp3')
 
 
 
+###### 获取audio初始化状态
+
 > **aud.getState()**
 
 获取audio初始化状态。
@@ -2454,6 +2576,8 @@ audio初始化未完成返回整型值-1，初始化完成返回整型值0。
 
 
 
+###### 获取audio音量大小
+
 > **aud.getVolume()**
 
 获取audio音量大小，默认值7。
@@ -2467,6 +2591,8 @@ audio初始化未完成返回整型值-1，初始化完成返回整型值0。
 返回整型音量值。
 
 
+
+###### 设置audio音量大小
 
 > **aud.setVolume(vol)**
 
@@ -2497,7 +2623,7 @@ audio初始化未完成返回整型值-1，初始化完成返回整型值0。
 
 适配版本：EC100Y(V0009)及以上；EC600S(V0003)及以上。
 
-**创建一个对象**
+###### 创建一个对象
 
 > **import audio**
 >
@@ -2519,6 +2645,8 @@ record_test = audio.Record()
 ```
 
 
+
+###### 开始录音
 
 > **record.start(file_name,seconds)**
 
@@ -2559,6 +2687,8 @@ record_test.start(“test”,40)	#录制amr格式
 
 
 
+###### 停止录音
+
 > **record.stop()**
 
 停止录音。
@@ -2578,6 +2708,8 @@ record_test.stop()
 ```
 
 
+
+###### 读取录音文件存放路径
 
 > **record. getFilePath(file_name)**
 
@@ -2600,6 +2732,8 @@ record_test.getFilePath(“test.wav”)
 ```
 
 
+
+###### 读取录音数据
 
 > **record.getData(file_name，offset, size)**
 
@@ -2641,6 +2775,8 @@ record_test.getData(“test.amr”,0, 44)
 
 
 
+###### 读取录音文件大小
+
 > **record.getSize(file_name)**
 
 读取录音文件大小。
@@ -2677,6 +2813,8 @@ record_test.getSize(“test.amr”)
 
 
 
+###### 删除录音文件
+
 > **record.Delete(file_name/无参数)**
 
 删除录音文件。
@@ -2708,6 +2846,8 @@ record_test.Delete()
 
 
 
+###### 判断录音文件是否存在
+
 > **record.exists(file_name)**
 
 判断录音文件是否存在。
@@ -2717,8 +2857,6 @@ record_test.Delete()
 | 参数     | 参数类型 | 参数说明   |
 | -------- | -------- | ---------- |
 | ile_name | str      | 录音文件名 |
-
-
 
 * 返回值
 
@@ -2735,6 +2873,8 @@ record_test.exists(“test.amr”)
 ```
 
 
+
+###### 判断是否正在录音
 
 > **record.isBusy()**
 
@@ -2758,6 +2898,8 @@ record_test.isBusy()
 
 
 
+###### 注册录音结束回调
+
 > **record.end_callback(callback)**
 
 设置录音结束回调
@@ -2767,8 +2909,6 @@ record_test.isBusy()
 | 参数     | 参数类型 | 参数说明 |
 | -------- | -------- | -------- |
 | callback | api      | 回调api  |
-
-
 
 * 返回值
 
@@ -2789,9 +2929,11 @@ record_test.end_callback(record_callback)
 
 
 
+###### 设置录音增益
+
 > **record.gain(code_gain,dsp_gain)**
 
-查看该对象下录音文件列表
+设置录音增益。
 
 * 参数
 
@@ -2799,8 +2941,6 @@ record_test.end_callback(record_callback)
 | --------- | -------- | ---------------------- |
 | code_gain | int      | 上行编解码器增益 [0,4] |
 | dsp_gain  | int      | 上行数字增益 [-36,12]  |
-
-
 
 * 返回值
 
@@ -2813,6 +2953,8 @@ record_test.gain(4,12)
 ```
 
 
+
+###### 查看录音文件列表
 
 > **record.list_file()**
 
@@ -2834,7 +2976,7 @@ record_test.list_file()
 
 
 
-**示例代码**
+###### 使用示例
 
 ```python
 import utime
@@ -2895,6 +3037,8 @@ while 1:
 
 关机以及软件重启。
 
+###### 模块关机
+
 > **from misc import Power**
 >
 > **Power.powerDown()**
@@ -2911,6 +3055,8 @@ while 1:
 
 
 
+###### 模块重启
+
 > **Power.powerRestart()**
 
 模块重启。
@@ -2924,6 +3070,8 @@ while 1:
 无
 
 
+
+###### 获取模块启动原因
 
 > **Power. powerOnReason()**
 
@@ -2953,6 +3101,8 @@ while 1:
 
 
 
+###### 获取模块上次关机原因
+
 > **Power. powerDownReason()**
 
 获取模块上次关机原因。
@@ -2979,6 +3129,8 @@ while 1:
 
 
 
+###### 获取电池电压
+
 > **Power. getVbatt()**
 
 获取电池电压，单位mV。
@@ -3002,18 +3154,18 @@ int类型电压值。
 
 ##### PWM
 
-**常量说明**
+###### 常量说明
 
-| 常量     | 说明 |
-| -------- | ---- |
-| PWM.PWM0 | PWM0 |
-| PWM.PWM1 | PWM1 |
-| PWM.PWM2 | PWM2 |
-| PWM.PWM3 | PWM3 |
+| 常量     | 说明 | 使用平台                               |
+| -------- | ---- | -------------------------------------- |
+| PWM.PWM0 | PWM0 | EC600S / EC600N / EC100Y/EC600U/EC200U |
+| PWM.PWM1 | PWM1 | EC600S / EC600N / EC100Y               |
+| PWM.PWM2 | PWM2 | EC600S / EC600N / EC100Y               |
+| PWM.PWM3 | PWM3 | EC600S / EC600N / EC100Y               |
 
 
 
-**创建一个pwm对象**
+###### 创建一个pwm对象
 
 > **from misc import PWM**
 >
@@ -3023,7 +3175,7 @@ int类型电压值。
 
 | 参数      | 参数类型 | 参数说明                                                     |
 | --------- | -------- | ------------------------------------------------------------ |
-| PWMn      | int      | PWM号<br/>注：EC100YCN平台，支持PWM0-PWM3，对应引脚如下：<br/>PWM0 – 引脚号19<br/>PWM1 – 引脚号18<br/>PWM2 – 引脚号23<br/>PWM3 – 引脚号22<br/>注：EC600SCN平台，支持PWM0-PWM3，对应引脚如下：<br/>PWM0 – 引脚号52<br/>PWM1 – 引脚号53<br/>PWM2 – 引脚号70<br/>PWM3 – 引脚号69 |
+| PWMn      | int      | PWM号<br/>注：EC100YCN平台，支持PWM0-PWM3，对应引脚如下：<br/>PWM0 – 引脚号19<br/>PWM1 – 引脚号18<br/>PWM2 – 引脚号23<br/>PWM3 – 引脚号22<br/>注：EC600SCN/EC600N平台，支持PWM0-PWM3，对应引脚如下：<br/>PWM0 – 引脚号52<br/>PWM1 – 引脚号53<br/>PWM2 – 引脚号70<br/>PWM3 – 引脚号69<br />注：EC200UCN平台，支持PWM0，对应引脚如下：<br />PWM0 – 引脚号135<br />注：EC600UCN平台，支持PWM0，对应引脚如下：<br />PWM0 – 引脚号70<br /> |
 | ABOVE_xx  | int      | PWM.ABOVE_MS				ms级取值范围：(0,1023]<br/>PWM.ABOVE_1US				us级取值范围：(0,157]<br/>PWM.ABOVE_10US				us级取值范围：(1,1575]<br/>PWM.ABOVE_BELOW_US			ns级 取值(0,1024] |
 | highTime  | int      | ms级时，单位为ms<br/>us级时，单位为us<br/>ns级别：需要使用者计算<br/>               频率 = 13Mhz / cycleTime<br/>               占空比 = highTime/ cycleTime |
 | cycleTime | int      | ms级时，单位为ms<br/>us级时，单位为us<br/>ns级别：需要使用者计算<br/>             频率 = 13Mhz / cycleTime<br/>             占空比 = highTime/ cycleTime |
@@ -3036,6 +3188,8 @@ int类型电压值。
 ```
 
 
+
+###### 开启PWM输出
 
 > **pwm.open()**
 
@@ -3051,6 +3205,8 @@ int类型电压值。
 
 
 
+###### 关闭PWM输出
+
 > **pwm.close()**
 
 关闭PWM输出。
@@ -3065,7 +3221,7 @@ int类型电压值。
 
 
 
-**使用示例**
+###### 使用示例
 
 ```python
 # PWM使用示例
@@ -3111,16 +3267,18 @@ if __name__ == '__main__':
 
 ##### ADC
 
-**常量说明**
+###### 常量说明
 
-| 常量     | 说明     |
-| -------- | -------- |
-| ADC.ADC0 | ADC通道0 |
-| ADC.ADC1 | ADC通道1 |
+| 常量     | 说明     | 适用平台                           |
+| -------- | -------- | ---------------------------------- |
+| ADC.ADC0 | ADC通道0 | EC600S/EC600N/EC100Y/EC600U/EC200U |
+| ADC.ADC1 | ADC通道1 | EC600S/EC600N/EC600U/EC200U        |
+| ADC.ADC2 | ADC通道2 | EC600U/EC200U                      |
+| ADC.ADC3 | ADC通道3 | EC600U                             |
 
 
 
-**创建一个ADC对象**
+###### 创建一个ADC对象
 
 > **from misc import ADC**
 >
@@ -3134,6 +3292,8 @@ if __name__ == '__main__':
 ```
 
 
+
+###### ADC功能初始化
 
 > **adc.open()**
 
@@ -3149,6 +3309,8 @@ ADC功能初始化。
 
 
 
+###### 读取通道电压值
+
 > **adc.read(ADCn)**
 
 读取指定通道的电压值，单位mV。
@@ -3157,7 +3319,7 @@ ADC功能初始化。
 
 | 参数 | 参数类型 | 参数说明                                                     |
 | ---- | -------- | ------------------------------------------------------------ |
-| ADCn | int      | ADC通道<br/>EC100Y平台支持ADC0，ADC1，对应引脚如下<br/>ADC0 – 引脚号39<br/>ADC1 – 引脚号81<br/>EC600S平台支持ADC0，对应引脚如下<br/>ADC0 – 引脚号19<br/>ADC1 – 引脚号20 |
+| ADCn | int      | ADC通道<br/>EC100Y平台对应引脚如下<br/>ADC0 – 引脚号39<br/>ADC1 – 引脚号81<br/>EC600S/EC600N平台对应引脚如下<br/>ADC0 – 引脚号19<br/>EC600U平台对应引脚如下<br />ADC0 – 引脚号19<br/>ADC1 – 引脚号20<br />ADC2 – 引脚号113<br />ADC3 – 引脚号114<br />EC200U平台对应引脚如下<br />ADC0 – 引脚号45<br/>ADC1 – 引脚号44<br />ADC2 – 引脚号43<br /> |
 
 * 返回值
 
@@ -3173,6 +3335,8 @@ ADC功能初始化。
 ```
 
 
+
+###### 关闭ADC
 
 > **adc.close()**
 
@@ -3191,6 +3355,8 @@ ADC功能初始化。
 #### modem - 设备相关
 
 模块功能：设备信息获取。
+
+##### 获取设备的IMEI
 
 > **modem.getDevImei()**
 
@@ -3214,6 +3380,8 @@ ADC功能初始化。
 
 
 
+##### 获取设备型号
+
 > **modem.getDevModel()**
 
 获取设备型号。
@@ -3234,6 +3402,8 @@ ADC功能初始化。
 ```
 
 
+
+##### 获取设备序列号
 
 > **modem.getDevSN()**
 
@@ -3256,6 +3426,8 @@ ADC功能初始化。
 
 
 
+##### 获取固件版本号
+
 > **modem.getDevFwVersion()**
 
 获取设备固件版本号。
@@ -3276,6 +3448,8 @@ ADC功能初始化。
 ```
 
 
+
+##### 获取设备制造商ID
 
 > **modem.getDevProductId()**
 
@@ -3306,26 +3480,26 @@ ADC功能初始化。
 
 类功能：GPIO读写操作。
 
-**常量说明**
+###### 常量说明
 
 | 常量             | 适配平台                   | 说明      |
 | ---------------- | ------------------------ | -------- |
-| Pin.GPIO1        | EC600S / EC600N / EC100Y | GPIO1    |
-| Pin.GPIO2        | EC600S / EC600N / EC100Y | GPIO2    |
-| Pin.GPIO3        | EC600S / EC600N / EC100Y | GPIO3    |
-| Pin.GPIO4        | EC600S / EC600N / EC100Y | GPIO4    |
-| Pin.GPIO5        | EC600S / EC600N / EC100Y | GPIO5    |
-| Pin.GPIO6        | EC600S / EC600N / EC100Y | GPIO6    |
-| Pin.GPIO7        | EC600S / EC600N / EC100Y | GPIO7    |
-| Pin.GPIO8        | EC600S / EC600N / EC100Y | GPIO8    |
-| Pin.GPIO9        | EC600S / EC600N / EC100Y | GPIO9    |
-| Pin.GPIO10       | EC600S / EC600N / EC100Y | GPIO10   |
-| Pin.GPIO11       | EC600S / EC600N / EC100Y | GPIO11   |
-| Pin.GPIO12       | EC600S / EC600N / EC100Y | GPIO12   |
-| Pin.GPIO13       | EC600S / EC600N / EC100Y | GPIO13   |
-| Pin.GPIO14       | EC600S / EC600N / EC100Y | GPIO14   |
-| Pin.GPIO15       | EC600S / EC600N / EC100Y | GPIO15   |
-| Pin.GPIO16       | EC600S / EC600N / EC100Y | GPIO16   |
+| Pin.GPIO1        | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO1    |
+| Pin.GPIO2        | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO2    |
+| Pin.GPIO3        | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO3    |
+| Pin.GPIO4        | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO4    |
+| Pin.GPIO5        | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO5    |
+| Pin.GPIO6        | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO6    |
+| Pin.GPIO7        | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO7    |
+| Pin.GPIO8        | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO8    |
+| Pin.GPIO9        | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO9    |
+| Pin.GPIO10       | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO10   |
+| Pin.GPIO11       | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO11   |
+| Pin.GPIO12       | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO12   |
+| Pin.GPIO13       | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO13   |
+| Pin.GPIO14       | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO14   |
+| Pin.GPIO15       | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO15   |
+| Pin.GPIO16       | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO16   |
 | Pin.GPIO17       | EC600S / EC600N / EC100Y | GPIO17   |
 | Pin.GPIO18       | EC600S / EC600N / EC100Y | GPIO18   |
 | Pin.GPIO19       | EC600S / EC600N / EC100Y | GPIO19   |
@@ -3349,7 +3523,7 @@ ADC功能初始化。
 
 文档中提供的GPIO引脚号对应的为模块外部的引脚编号，例如EC600S下GPIO1对应引脚号22，这里的引脚号22为模块外部的引脚编号。可参考提供的硬件资料查看模块外部的引脚编号。
 
-**创建gpio对象**
+###### 创建gpio对象
 
 > **gpio = Pin(GPIOn, direction, pullMode, level)**
 
@@ -3357,7 +3531,7 @@ ADC功能初始化。
 
 | 参数      | 类型 | 说明                                                         |
 | :-------- | :--- | ------------------------------------------------------------ |
-| GPIOn     | int  | 引脚号<br />EC100YCN平台引脚对应关系如下（引脚号为外部引脚编号）：<br />GPIO1 – 引脚号22<br />GPIO2 – 引脚号23<br />GPIO3 – 引脚号38<br />GPIO4 – 引脚号53<br />GPIO5 – 引脚号54<br />GPIO6 – 引脚号104<br />GPIO7 – 引脚号105<br />GPIO8 – 引脚号106<br />GPIO9 – 引脚号107<br />GPIO10 – 引脚号178<br />GPIO11 – 引脚号195<br />GPIO12 – 引脚号196<br />GPIO13 – 引脚号197<br />GPIO14 – 引脚号198<br />GPIO15 – 引脚号199<br />GPIO16 – 引脚号203<br />GPIO17 – 引脚号204<br />GPIO18 – 引脚号214<br />GPIO19 – 引脚号215<br />EC600SCN/EC600NCN平台引脚对应关系如下（引脚号为模块外部引脚编号）：<br />GPIO1 – 引脚号10<br />GPIO2 – 引脚号11<br />GPIO3 – 引脚号12<br />GPIO4 – 引脚号13<br />GPIO5 – 引脚号14<br />GPIO6 – 引脚号15<br />GPIO7 – 引脚号16<br />GPIO8 – 引脚号39<br />GPIO9 – 引脚号40<br />GPIO10 – 引脚号48<br />GPIO11 – 引脚号58<br />GPIO12 – 引脚号59<br />GPIO13 – 引脚号60<br />GPIO14 – 引脚号61<br />GPIO15 – 引脚号62<br/>GPIO16 – 引脚号63<br/>GPIO17 – 引脚号69<br/>GPIO18 – 引脚号70<br/>GPIO19 – 引脚号1<br/>GPIO20 – 引脚号3<br/>GPIO21 – 引脚号49<br/>GPIO22 – 引脚号50<br/>GPIO23 – 引脚号51<br/>GPIO24 – 引脚号52<br/>GPIO25 – 引脚号53<br/>GPIO26 – 引脚号54<br/>GPIO27 – 引脚号55<br/>GPIO28 – 引脚号56<br/>GPIO29 – 引脚号57 |
+| GPIOn     | int  | 引脚号<br />EC100YCN平台引脚对应关系如下（引脚号为外部引脚编号）：<br />GPIO1 – 引脚号22<br />GPIO2 – 引脚号23<br />GPIO3 – 引脚号38<br />GPIO4 – 引脚号53<br />GPIO5 – 引脚号54<br />GPIO6 – 引脚号104<br />GPIO7 – 引脚号105<br />GPIO8 – 引脚号106<br />GPIO9 – 引脚号107<br />GPIO10 – 引脚号178<br />GPIO11 – 引脚号195<br />GPIO12 – 引脚号196<br />GPIO13 – 引脚号197<br />GPIO14 – 引脚号198<br />GPIO15 – 引脚号199<br />GPIO16 – 引脚号203<br />GPIO17 – 引脚号204<br />GPIO18 – 引脚号214<br />GPIO19 – 引脚号215<br />EC600SCN/EC600NCN平台引脚对应关系如下（引脚号为模块外部引脚编号）：<br />GPIO1 – 引脚号10<br />GPIO2 – 引脚号11<br />GPIO3 – 引脚号12<br />GPIO4 – 引脚号13<br />GPIO5 – 引脚号14<br />GPIO6 – 引脚号15<br />GPIO7 – 引脚号16<br />GPIO8 – 引脚号39<br />GPIO9 – 引脚号40<br />GPIO10 – 引脚号48<br />GPIO11 – 引脚号58<br />GPIO12 – 引脚号59<br />GPIO13 – 引脚号60<br />GPIO14 – 引脚号61<br />GPIO15 – 引脚号62<br/>GPIO16 – 引脚号63<br/>GPIO17 – 引脚号69<br/>GPIO18 – 引脚号70<br/>GPIO19 – 引脚号1<br/>GPIO20 – 引脚号3<br/>GPIO21 – 引脚号49<br/>GPIO22 – 引脚号50<br/>GPIO23 – 引脚号51<br/>GPIO24 – 引脚号52<br/>GPIO25 – 引脚号53<br/>GPIO26 – 引脚号54<br/>GPIO27 – 引脚号55<br/>GPIO28 – 引脚号56<br/>GPIO29 – 引脚号57<br />EC600UCN平台引脚对应关系如下（引脚号为模块外部引脚编号）<br />GPIO1 – 引脚号61<br />GPIO2 – 引脚号58<br />GPIO3 – 引脚号34<br />GPIO4 – 引脚号60<br />GPIO5 – 引脚号69<br />GPIO6 – 引脚号70<br />GPIO7 – 引脚号123<br />GPIO8 – 引脚号118<br />GPIO9 – 引脚号9<br />GPIO10 – 引脚号1<br />GPIO11 – 引脚号4<br />GPIO12 – 引脚号3<br />GPIO13 – 引脚号2<br />GPIO14 – 引脚号54<br />GPIO15 – 引脚号57<br/>GPIO16 – 引脚号56<br/>EC200UCN平台引脚对应关系如下（引脚号为模块外部引脚编号）<br />GPIO1 – 引脚号27<br />GPIO2 – 引脚号26<br />GPIO3 – 引脚号24<br />GPIO4 – 引脚号25<br />GPIO5 – 引脚号13<br />GPIO6 – 引脚号135<br />GPIO7 – 引脚号136<br />GPIO8 – 引脚号133<br />GPIO9 – 引脚号3<br />GPIO10 – 引脚号40<br />GPIO11 – 引脚号37<br />GPIO12 – 引脚号38<br />GPIO13 – 引脚号39<br />GPIO14 – 引脚号5<br />GPIO15 – 引脚号141<br/>GPIO16 – 引脚号142<br/> |
 | direction | int  | IN – 输入模式，OUT – 输出模式                                |
 | pullMode  | int  | PULL_DISABLE – 浮空模式<br />PULL_PU – 上拉模式<br />PULL_PD – 下拉模式 |
 | level     | int  | 0 - 设置引脚为低电平, 1- 设置引脚为高电平                    |
@@ -3370,6 +3544,8 @@ gpio1 = Pin(Pin.GPIO1, Pin.OUT, Pin.PULL_DISABLE, 0)
 ```
 
 
+
+###### 获取引脚电平
 
 > **Pin.read()**
 
@@ -3384,6 +3560,8 @@ gpio1 = Pin(Pin.GPIO1, Pin.OUT, Pin.PULL_DISABLE, 0)
 PIN脚电平，0-低电平，1-高电平。
 
 
+
+###### 设置引脚电平
 
 > **Pin.write(value)**
 
@@ -3410,7 +3588,9 @@ PIN脚电平，0-低电平，1-高电平。
 1
 ```
 
-**使用示例**
+
+
+###### 使用示例
 
 ```python
 # Pin使用示例
@@ -3504,7 +3684,7 @@ if __name__ == '__main__':
 
 类功能：uart串口数据传输。
 
-**常量说明**
+###### 常量说明
 
 | 常量       | 说明  |
 | ---------- | ----- |
@@ -3515,7 +3695,7 @@ if __name__ == '__main__':
 
 
 
-**创建uart对象**
+###### 创建uart对象
 
 > **uart = UART(UART.UARTn, buadrate, databits, parity, stopbits, flowctl)**
 
@@ -3523,7 +3703,7 @@ if __name__ == '__main__':
 
 | 参数     | 类型 | 说明                                                         |
 | :------- | :--- | ------------------------------------------------------------ |
-| UARTn    | int  | 端口号<br />EC100YCN平台与EC600SCN平台,UARTn作用如下：<br />UART0 - DEBUG PORT<br />UART1 – BT PORT<br />UART2 – MAIN PORT<br />UART3 – USB CDC PORT |
+| UARTn    | int  | UARTn作用如下：<br />UART0 - DEBUG PORT<br />UART1 – BT PORT<br />UART2 – MAIN PORT<br />UART3 – USB CDC PORT |
 | buadrate | int  | 波特率，常用波特率都支持，如4800、9600、19200、38400、57600、115200、230400等 |
 | databits | int  | 数据位（5~8）                                                |
 | parity   | int  | 奇偶校验（0 – NONE，1 – EVEN，2 - ODD）                      |
@@ -3538,6 +3718,8 @@ if __name__ == '__main__':
 ```
 
 
+
+###### 获取接收缓存未读数据大小
 
 > **uart.any()**
 
@@ -3560,6 +3742,8 @@ if __name__ == '__main__':
 
 
 
+###### 串口读数据
+
 > **uart.read(nbytes)**
 
 从串口读取数据。
@@ -3575,6 +3759,8 @@ if __name__ == '__main__':
 返回读取的数据。
 
 
+
+###### 串口发数据
 
 > **uart.write(data)**
 
@@ -3592,6 +3778,8 @@ if __name__ == '__main__':
 
 
 
+###### 关闭串口
+
 > **uart.close()**
 
 关闭串口。
@@ -3606,7 +3794,7 @@ if __name__ == '__main__':
 
 
 
-**UART使用示例**
+###### 使用示例
 
 ```python
 """
@@ -3724,7 +3912,7 @@ INFO:UART:UartRead msg: read msg 3
 
 PS:使用该定时器时需注意：定时器0-3，每个在同一时间内只能执行一件任务，且多个对象不可使用同一个定时器。
 
-**常量说明**
+###### 常量说明
 
 | 常量           | 说明                       |
 | -------------- | -------------------------- |
@@ -3737,7 +3925,7 @@ PS:使用该定时器时需注意：定时器0-3，每个在同一时间内只�
 
 
 
-**创建Timer对象**
+###### 创建Timer对象
 
 > **timer = Timer(Timern)**
 
@@ -3757,6 +3945,8 @@ PS:使用该定时器时需注意：定时器0-3，每个在同一时间内只�
 ```
 
 
+
+###### 启动定时器
 
 > **timer.start(period, mode, callback)**
 
@@ -3790,6 +3980,8 @@ PS:使用该定时器时需注意：定时器0-3，每个在同一时间内只�
 
 
 
+###### 关闭定时器
+
 > **timer.stop()**
 
 关闭定时器。
@@ -3804,7 +3996,7 @@ PS:使用该定时器时需注意：定时器0-3，每个在同一时间内只�
 
 
 
-**Timer使用示例**
+###### 使用示例
 
 ```python
 '''
@@ -3860,46 +4052,48 @@ if __name__ == '__main__':
 
 类功能：用于配置I/O引脚在发生外部事件时中断。
 
-**常量说明**
+###### 常量说明
 
-| 常量             | 适配平台                 | 说明     |
-| ---------------- | ------------------------ | -------- |
-| Pin.GPIO1        | EC600S / EC600N / EC100Y | GPIO1    |
-| Pin.GPIO2        | EC600S / EC600N / EC100Y | GPIO2    |
-| Pin.GPIO3        | EC600S / EC600N / EC100Y | GPIO3    |
-| Pin.GPIO4        | EC600S / EC600N / EC100Y | GPIO4    |
-| Pin.GPIO5        | EC600S / EC600N / EC100Y | GPIO5    |
-| Pin.GPIO6        | EC600S / EC600N / EC100Y | GPIO6    |
-| Pin.GPIO7        | EC600S / EC600N / EC100Y | GPIO7    |
-| Pin.GPIO8        | EC600S / EC600N / EC100Y | GPIO8    |
-| Pin.GPIO9        | EC600S / EC600N / EC100Y | GPIO9    |
-| Pin.GPIO10       | EC600S / EC600N / EC100Y | GPIO10   |
-| Pin.GPIO11       | EC600S / EC600N / EC100Y | GPIO11   |
-| Pin.GPIO12       | EC600S / EC600N / EC100Y | GPIO12   |
-| Pin.GPIO13       | EC600S / EC600N / EC100Y | GPIO13   |
-| Pin.GPIO14       | EC600S / EC600N / EC100Y | GPIO14   |
-| Pin.GPIO15       | EC600S / EC600N / EC100Y | GPIO15   |
-| Pin.GPIO16       | EC600S / EC600N / EC100Y | GPIO16   |
-| Pin.GPIO17       | EC600S / EC600N / EC100Y | GPIO17   |
-| Pin.GPIO18       | EC600S / EC600N / EC100Y | GPIO18   |
-| Pin.GPIO19       | EC600S / EC600N / EC100Y | GPIO19   |
-| Pin.GPIO20       | EC600S / EC600N          | GPIO20   |
-| Pin.GPIO21       | EC600S / EC600N          | GPIO21   |
-| Pin.GPIO22       | EC600S / EC600N          | GPIO22   |
-| Pin.GPIO23       | EC600S / EC600N          | GPIO23   |
-| Pin.GPIO24       | EC600S / EC600N          | GPIO24   |
-| Pin.GPIO25       | EC600S / EC600N          | GPIO25   |
-| Pin.GPIO26       | EC600S / EC600N          | GPIO26   |
-| Pin.GPIO27       | EC600S / EC600N          | GPIO27   |
-| Pin.GPIO28       | EC600S / EC600N          | GPIO28   |
-| Pin.GPIO29       | EC600S / EC600N          | GPIO29   |
-| Pin.IN           | --                       | 输入模式 |
-| Pin.OUT          | --                       | 输出模式 |
-| Pin.PULL_DISABLE | --                       | 浮空模式 |
-| Pin.PULL_PU      | --                       | 上拉模式 |
-| Pin.PULL_PD      | --                       | 下拉模式 |
+| 常量             | 适配平台                               | 说明     |
+| ---------------- | -------------------------------------- | -------- |
+| Pin.GPIO1        | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO1    |
+| Pin.GPIO2        | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO2    |
+| Pin.GPIO3        | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO3    |
+| Pin.GPIO4        | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO4    |
+| Pin.GPIO5        | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO5    |
+| Pin.GPIO6        | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO6    |
+| Pin.GPIO7        | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO7    |
+| Pin.GPIO8        | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO8    |
+| Pin.GPIO9        | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO9    |
+| Pin.GPIO10       | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO10   |
+| Pin.GPIO11       | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO11   |
+| Pin.GPIO12       | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO12   |
+| Pin.GPIO13       | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO13   |
+| Pin.GPIO14       | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO14   |
+| Pin.GPIO15       | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO15   |
+| Pin.GPIO16       | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO16   |
+| Pin.GPIO17       | EC600S / EC600N / EC100Y               | GPIO17   |
+| Pin.GPIO18       | EC600S / EC600N / EC100Y               | GPIO18   |
+| Pin.GPIO19       | EC600S / EC600N / EC100Y               | GPIO19   |
+| Pin.GPIO20       | EC600S / EC600N                        | GPIO20   |
+| Pin.GPIO21       | EC600S / EC600N                        | GPIO21   |
+| Pin.GPIO22       | EC600S / EC600N                        | GPIO22   |
+| Pin.GPIO23       | EC600S / EC600N                        | GPIO23   |
+| Pin.GPIO24       | EC600S / EC600N                        | GPIO24   |
+| Pin.GPIO25       | EC600S / EC600N                        | GPIO25   |
+| Pin.GPIO26       | EC600S / EC600N                        | GPIO26   |
+| Pin.GPIO27       | EC600S / EC600N                        | GPIO27   |
+| Pin.GPIO28       | EC600S / EC600N                        | GPIO28   |
+| Pin.GPIO29       | EC600S / EC600N                        | GPIO29   |
+| Pin.IN           | --                                     | 输入模式 |
+| Pin.OUT          | --                                     | 输出模式 |
+| Pin.PULL_DISABLE | --                                     | 浮空模式 |
+| Pin.PULL_PU      | --                                     | 上拉模式 |
+| Pin.PULL_PD      | --                                     | 下拉模式 |
 
-**创建ExtInt对象**
+
+
+###### 创建ExtInt对象
 
 > **extint = ExtInt(GPIOn, mode, pull, callback)**
 
@@ -3907,7 +4101,7 @@ if __name__ == '__main__':
 
 | 参数     | 类型 | 说明                                                         |
 | :------- | :--- | ------------------------------------------------------------ |
-| GPIOn    | int  | 引脚号<br />EC100YCN平台引脚对应关系如下（引脚号为外部引脚编号）：<br />GPIO1 – 引脚号22<br />GPIO2 – 引脚号23<br />GPIO3 – 引脚号38<br />GPIO4 – 引脚号53<br />GPIO5 – 引脚号54<br />GPIO6 – 引脚号104<br />GPIO7 – 引脚号105<br />GPIO8 – 引脚号106<br />GPIO9 – 引脚号107<br />GPIO10 – 引脚号178<br />GPIO11 – 引脚号195<br />GPIO12 – 引脚号196<br />GPIO13 – 引脚号197<br />GPIO14 – 引脚号198<br />GPIO15 – 引脚号199<br />GPIO16 – 引脚号203<br />GPIO17 – 引脚号204<br />GPIO18 – 引脚号214<br />GPIO19 – 引脚号215<br />EC600SCN/EC600NCN平台引脚对应关系如下（引脚号为模块外部引脚编号）：<br />GPIO1 – 引脚号10<br />GPIO2 – 引脚号11<br />GPIO3 – 引脚号12<br />GPIO4 – 引脚号13<br />GPIO5 – 引脚号14<br />GPIO6 – 引脚号15<br />GPIO7 – 引脚号16<br />GPIO8 – 引脚号39<br />GPIO9 – 引脚号40<br />GPIO10 – 引脚号48<br />GPIO11 – 引脚号58<br />GPIO12 – 引脚号59<br />GPIO13 – 引脚号60<br />GPIO14 – 引脚号61<br />GPIO15 – 引脚号62<br/>GPIO16 – 引脚号63<br/>GPIO17 – 引脚号69<br/>GPIO18 – 引脚号70<br/>GPIO19 – 引脚号1<br/>GPIO20 – 引脚号3<br/>GPIO21 – 引脚号49<br/>GPIO22 – 引脚号50<br/>GPIO23 – 引脚号51<br/>GPIO24 – 引脚号52<br/>GPIO25 – 引脚号53<br/>GPIO26 – 引脚号54<br/>GPIO27 – 引脚号55<br/>GPIO28 – 引脚号56<br/>GPIO29 – 引脚号57 |
+| GPIOn    | int  | 引脚号<br />EC100YCN平台引脚对应关系如下（引脚号为外部引脚编号）：<br />GPIO1 – 引脚号22<br />GPIO2 – 引脚号23<br />GPIO3 – 引脚号38<br />GPIO4 – 引脚号53<br />GPIO5 – 引脚号54<br />GPIO6 – 引脚号104<br />GPIO7 – 引脚号105<br />GPIO8 – 引脚号106<br />GPIO9 – 引脚号107<br />GPIO10 – 引脚号178<br />GPIO11 – 引脚号195<br />GPIO12 – 引脚号196<br />GPIO13 – 引脚号197<br />GPIO14 – 引脚号198<br />GPIO15 – 引脚号199<br />GPIO16 – 引脚号203<br />GPIO17 – 引脚号204<br />GPIO18 – 引脚号214<br />GPIO19 – 引脚号215<br />EC600SCN/EC600NCN平台引脚对应关系如下（引脚号为模块外部引脚编号）：<br />GPIO1 – 引脚号10<br />GPIO2 – 引脚号11<br />GPIO3 – 引脚号12<br />GPIO4 – 引脚号13<br />GPIO5 – 引脚号14<br />GPIO6 – 引脚号15<br />GPIO7 – 引脚号16<br />GPIO8 – 引脚号39<br />GPIO9 – 引脚号40<br />GPIO10 – 引脚号48<br />GPIO11 – 引脚号58<br />GPIO12 – 引脚号59<br />GPIO13 – 引脚号60<br />GPIO14 – 引脚号61<br />GPIO15 – 引脚号62<br/>GPIO16 – 引脚号63<br/>GPIO17 – 引脚号69<br/>GPIO18 – 引脚号70<br/>GPIO19 – 引脚号1<br/>GPIO20 – 引脚号3<br/>GPIO21 – 引脚号49<br/>GPIO22 – 引脚号50<br/>GPIO23 – 引脚号51<br/>GPIO24 – 引脚号52<br/>GPIO25 – 引脚号53<br/>GPIO26 – 引脚号54<br/>GPIO27 – 引脚号55<br/>GPIO28 – 引脚号56<br/>GPIO29 – 引脚号57<br />EC600UCN平台引脚对应关系如下（引脚号为模块外部引脚编号）<br />GPIO1 – 引脚号61<br />GPIO2 – 引脚号58<br />GPIO3 – 引脚号34<br />GPIO4 – 引脚号60<br />GPIO5 – 引脚号69<br />GPIO6 – 引脚号70<br />GPIO7 – 引脚号123<br />GPIO8 – 引脚号118<br />GPIO9 – 引脚号9<br />GPIO10 – 引脚号1<br />GPIO11 – 引脚号4<br />GPIO12 – 引脚号3<br />GPIO13 – 引脚号2<br />GPIO14 – 引脚号54<br />GPIO15 – 引脚号57<br/>GPIO16 – 引脚号56<br/>EC200UCN平台引脚对应关系如下（引脚号为模块外部引脚编号）<br />GPIO1 – 引脚号27<br />GPIO2 – 引脚号26<br />GPIO3 – 引脚号24<br />GPIO4 – 引脚号25<br />GPIO5 – 引脚号13<br />GPIO6 – 引脚号135<br />GPIO7 – 引脚号136<br />GPIO8 – 引脚号133<br />GPIO9 – 引脚号3<br />GPIO10 – 引脚号40<br />GPIO11 – 引脚号37<br />GPIO12 – 引脚号38<br />GPIO13 – 引脚号39<br />GPIO14 – 引脚号5<br />GPIO15 – 引脚号141<br/>GPIO16 – 引脚号142<br/> |
 | mode     | int  | 设置触发方式<br /> IRQ_RISING – 上升沿触发<br /> IRQ_FALLING – 下降沿触发<br /> IRQ_RISING_FALLING – 上升和下降沿触发 |
 | pull     | int  | PULL_DISABLE – 浮空模式<br />PULL_PU – 上拉模式 <br />PULL_PD  – 下拉模式 |
 | callback | int  | 中断触发回调函数                                             |
@@ -3917,11 +4111,14 @@ if __name__ == '__main__':
 ```python
 >>> from machine import ExtInt
 >>> def fun(args):
-        print(“###interrupt  %d ###” %args)
+        print('### interrupt  {} ###'.format(args))
 >>> extint = ExtInt(ExtInt.GPIO1, ExtInt.IRQ_FALLING, ExtInt.PULL_PU, fun)
 ```
 
 
+
+
+###### 使能中断
 
 > **extint.enable()**
 
@@ -3937,6 +4134,8 @@ if __name__ == '__main__':
 
 
 
+###### 关闭中断
+
 > **extint.disable()**
 
 禁用与extint对象关联的中断 。
@@ -3950,6 +4149,8 @@ if __name__ == '__main__':
 使能成功返回整型值0，使能失败返回整型值-1。
 
 
+
+###### 读取引脚映射行号
 
 > **extint.line()**
 
@@ -3967,7 +4168,7 @@ if __name__ == '__main__':
 
 ```python
 >>> extint = ExtInt(ExtInt.GPIO1, ExtInt.IRQ_FALLING, ExtInt.PULL_PU, fun)
->>> ext.line()
+>>> extint.line()
 32
 ```
 
@@ -3977,13 +4178,15 @@ if __name__ == '__main__':
 
 类功能：提供获取设置rtc时间方法。
 
-**创建RTC对象**
+###### 创建RTC对象
 
 > **from machine import RTC**
 >
 > **rtc = RTC()**
 
 
+
+###### 设置和获取RTC时间
 
 > **rtc.datetime([year, month, day, week, hour, minute, second, microsecond])**
 
@@ -4029,26 +4232,29 @@ if __name__ == '__main__':
 
 类功能：用于设备之间通信的双线协议。
 
-**常量说明**
+###### 常量说明
 
-| 常量              |                   |
-| ----------------- | ----------------- |
-| I2C.I2C0          | i2c 通路索引号: 0 |
-| I2C.I2C1          | i2c 通路索引号: 1 |
-| I2C.STANDARD_MODE | 标准模式          |
-| I2C.FAST_MODE     | 快速模式          |
+| 常量              |                   | 适用平台                      |
+| ----------------- | ----------------- | ----------------------------- |
+| I2C.I2C0          | i2c 通路索引号: 0 | EC100Y/EC600U/EC200U          |
+| I2C.I2C1          | i2c 通路索引号: 1 | EC600S/EC600N/EC600U/EC200U |
+| I2C.I2C2          | i2c 通路索引号: 2 | EC600U/EC200U                 |
+| I2C.STANDARD_MODE | 标准模式          |                               |
+| I2C.FAST_MODE     | 快速模式          |                               |
 
-**创建I2C对象**
+
+
+###### 创建I2C对象
 
 > **from machine import I2C**
 >
 > **i2c_obj = I2C(I2Cn,  MODE)**
 
-**参数说明**
+* 参数说明
 
 | 参数 | 类型 | 说明                                                         |
 | ---- | ---- | ------------------------------------------------------------ |
-| I2Cn | int  | i2c 通路索引号:<br />I2C.I2C0 : 0  （EC100Y）<br />I2C.I2C1 : 1  （EC600S） |
+| I2Cn | int  | i2c 通路索引号:<br />I2C.I2C0 : 0  <br />I2C.I2C0 : 1  <br />I2C.I2C0 : 2  <br />I2C.I2C0 : 3 |
 | MODE | int  | i2c 的工作模式:<br />I2C.STANDARD_MODE : 0 标准模式<br />I2C.FAST_MODE ： 1 快速模式 |
 
 - 示例
@@ -4060,6 +4266,8 @@ i2c_obj = I2C(I2C.I2C0, I2C.STANDARD_MODE)  # 返回i2c对象
 ```
 
 
+
+###### 读取数据
 
 > **I2C.read(slaveaddress, addr,addr_len, r_data, datalen, delay)**
 
@@ -4082,11 +4290,13 @@ i2c_obj = I2C(I2C.I2C0, I2C.STANDARD_MODE)  # 返回i2c对象
 
 
 
+###### 写入数据
+
 > **I2C.write(slaveaddress, addr, addr_len, data, datalen)**
 
 从 I2C 总线中写入数据。
 
-**参数说明**
+* 参数说明
 
 | 参数         | 类型      | 说明           |
 | ------------ | --------- | -------------- |
@@ -4102,7 +4312,7 @@ i2c_obj = I2C(I2C.I2C0, I2C.STANDARD_MODE)  # 返回i2c对象
 
 
 
-**使用示例**
+###### 使用示例
 
 需要连接设备使用！
 
@@ -4151,11 +4361,11 @@ if __name__ == '__main__':
 
 适配版本：EC100Y(V0009)及以上；EC600S(V0002)及以上。
 
-**创建SPI对象**
+###### 创建SPI对象
 
 > **spi_obj = SPI(port, mode, clk)**
 
-**参数说明**
+* 参数说明
 
 | 参数 | 类型 | 说明                                                         |
 | ---- | ---- | ------------------------------------------------------------ |
@@ -4173,28 +4383,13 @@ spi_obj = SPI(1, 0, 1)  # 返回spi对象
 
 
 
-> **SPI.write(data, datalen)**
-
-写入数据。
-
-**参数说明**
-
-| 参数    | 类型  | 说明           |
-| ------- | ----- | -------------- |
-| data    | bytes | 写入的数据     |
-| datalen | int   | 写入的数据长度 |
-
-* 返回值
-
-失败返回整型值-1。
-
-
+###### 读取数据
 
 > **SPI.read(recv_data, datalen)**
 
 读取数据。
 
-**参数说明**
+* 参数说明
 
 | 参数      | 类型      | 说明               |
 | --------- | --------- | ------------------ |
@@ -4207,11 +4402,32 @@ spi_obj = SPI(1, 0, 1)  # 返回spi对象
 
 
 
+###### 写入数据
+
+> **SPI.write(data, datalen)**
+
+写入数据。
+
+* 参数说明
+
+| 参数    | 类型  | 说明           |
+| ------- | ----- | -------------- |
+| data    | bytes | 写入的数据     |
+| datalen | int   | 写入的数据长度 |
+
+* 返回值
+
+失败返回整型值-1。
+
+
+
+###### 写入并读取数据
+
 > **SPI.write_read(r_data，data, datalen)**
 
 写入和读取数据。
 
-**参数说明**
+* 参数说明
 
 | 参数    | 类型      | 说明               |
 | ------- | --------- | ------------------ |
@@ -4223,7 +4439,9 @@ spi_obj = SPI(1, 0, 1)  # 返回spi对象
 
 失败返回整型值-1。
 
-**使用示例**
+
+
+###### 使用示例
 
 需要配合外设使用！
 
@@ -4267,11 +4485,11 @@ if __name__ == '__main__':
 
 适配版本：EC100Y(V0009)及以上；EC600S(V0002)及以上。
 
-**创建LCD对象**
+###### 创建LCD对象
 
 > **lcd = LCD()**
 
-**参数说明**
+* 参数说明
 
 无
 
@@ -4283,6 +4501,8 @@ lcd = LCD()   # 创建lcd对象
 ```
 
 
+
+###### LCD初始化
 
 > **lcd.lcd_init(lcd_init_data, lcd_width, lcd_hight, lcd_clk, data_line, line_num, lcd_type, lcd_invalid, lcd_display_on, lcd_display_off, lcd_set_brightness)**
 
@@ -4319,6 +4539,8 @@ lcd = LCD()   # 创建lcd对象
 
 
 
+###### 清屏
+
 
 > **lcd.lcd_clear(color)**
 
@@ -4335,6 +4557,8 @@ lcd = LCD()   # 创建lcd对象
 成功返回0， 失败返回-1。
 
 
+
+###### 区域写屏
 
 > **lcd.lcd_write(color_buffer,start_x,start_y,end_x,end_y)**
 
@@ -4362,6 +4586,8 @@ lcd = LCD()   # 创建lcd对象
 
 
 
+###### 设置屏幕亮度
+
 > **lcd.lcd_brightness(level)**
 
 设置屏幕亮度等级。
@@ -4378,6 +4604,8 @@ lcd = LCD()   # 创建lcd对象
 
 
 
+###### 打开屏显
+
 > **lcd.lcd_display_on()**
 
 打开屏显 。调用此接口后调用 lcd.lcd_init()中的 lcd_display_on 回调。 
@@ -4392,6 +4620,8 @@ lcd = LCD()   # 创建lcd对象
 
 
 
+###### 关闭屏显
+
 > **lcd.lcd_display_off()**
 
 关闭屏显 。调用此接口后调用 lcd.lcd_init()中的 lcd_display_off 回调。 
@@ -4405,6 +4635,8 @@ lcd = LCD()   # 创建lcd对象
 成功返回0， 失败返回-1。
 
 
+
+###### 写入命令
 
 > **lcd.lcd_write_cmd(cmd_value, cmd_value_len)**
 
@@ -4423,6 +4655,8 @@ lcd = LCD()   # 创建lcd对象
 
 
 
+###### 写入数据
+
 > **lcd.lcd_write_data(data_value, data_value_len)**
 
 写入数据。
@@ -4439,6 +4673,8 @@ lcd = LCD()   # 创建lcd对象
 成功返回0， 失败返回其他值。
 
 
+
+###### 显示图片
 
 > **lcd.lcd_show(file_name, start_x,start_y,width,hight)**
 
@@ -4462,7 +4698,7 @@ lcd = LCD()   # 创建lcd对象
 
 
 
-**使用示例**
+###### 使用示例
 
 需要配合LCD屏使用，如下代码以 ili9225 为例！
 
@@ -4538,6 +4774,8 @@ lcd.show("lcd_test1.bin",0,0,126,220) #该lcd_test1.bin 中没有包含图像头
 
 模块功能：APP应用程序发生异常不执行时进行系统重启操作
 
+###### 创建wdt对象
+
 > ​	**wdt = WDT(period)**
 
 创建软狗对象。
@@ -4554,6 +4792,8 @@ lcd.show("lcd_test1.bin",0,0,126,220) #该lcd_test1.bin 中没有包含图像头
 
 
 
+###### 喂狗
+
 > ​	**wdt.feed()**
 
 喂狗
@@ -4567,6 +4807,8 @@ lcd.show("lcd_test1.bin",0,0,126,220) #该lcd_test1.bin 中没有包含图像头
 无
 
 
+
+###### 关闭软狗
 
 > ​	**wdt.stop()**
 
@@ -4582,7 +4824,7 @@ lcd.show("lcd_test1.bin",0,0,126,220) #该lcd_test1.bin 中没有包含图像头
 
 
 
-**使用示例**
+###### 使用示例
 
 ```PYTHON
 '''
@@ -4626,8 +4868,6 @@ if __name__ == '__main__':
 
 > ​	qrcode.show(qrcode_str,magnification,start_x,start_y,Background_color,Foreground_color)
 
-创建wake_lock锁  +++还有放大
-
 - 参数
 
 | 参数             | 类型   | 说明                           |
@@ -4655,9 +4895,11 @@ if __name__ == '__main__':
 
 模块功能：在无业务处理时使系统进入休眠状态，进入低功耗模式。
 
+##### 创建wake_lock锁
+
 > ​	**lpm_fd = pm.create_wakelock(lock_name, name_size)**
 
-创建wake_lock锁
+创建wake_lock锁。
 
 - 参数
 
@@ -4672,9 +4914,11 @@ if __name__ == '__main__':
 
 
 
+##### 删除wake_lock锁
+
 > ​	**pm.delete_wakelock(lpm_fd)**
 
-删除wake_lock锁
+删除wake_lock锁。
 
 - 参数
 
@@ -4688,9 +4932,9 @@ if __name__ == '__main__':
 
 
 
-> ​	**pm.wakelock_lock(lpm_fd)**
+##### 加锁
 
-加锁
+> ​	**pm.wakelock_lock(lpm_fd)**
 
 - 参数
 
@@ -4703,6 +4947,8 @@ if __name__ == '__main__':
 成功返回0，否则返回-1。
 
 
+
+##### 释放锁
 
 > ​	**pm.wakelock_unlock(lpm_fd)**
 
@@ -4720,6 +4966,8 @@ if __name__ == '__main__':
 
 
 
+##### 自动休眠模式控制
+
 > ​	**pm.autosleep(sleep_flag)**
 
 自动休眠模式控制
@@ -4736,6 +4984,8 @@ if __name__ == '__main__':
 
 
 
+##### 获取已创建的锁数量
+
 > ​	**pm.get_wakelock_num()**
 
 获取已创建的锁数量
@@ -4750,7 +5000,7 @@ if __name__ == '__main__':
 
 
 
-**使用示例**
+##### 使用示例
 
 模拟测试，实际开发请根据业务场景选择使用！
 
@@ -4783,7 +5033,7 @@ while 1:
 
 模块功能：提供通过正则表达式匹配数据（ps：此re模块目前支持的操作符较少，部分操作符暂不支持）
 
-**支持操作符：**
+##### 支持的操作符
 
 | **字符** | **说明**                                       |
 | -------- | ---------------------------------------------- |
@@ -4815,6 +5065,8 @@ while 1:
 
 
 
+##### 编译并生成正则表达式对象
+
 > ​	**ure.compile(regex)**
 
 compile 函数用于编译正则表达式，生成一个正则表达式（ Pattern ）对象，供 match() 和 search() 这两个函数使用。
@@ -4830,6 +5082,8 @@ compile 函数用于编译正则表达式，生成一个正则表达式（ Patte
 返回 regex 对象
 
 
+
+#####  匹配
 
 > ​	**ure.match(regex, string)**
 
@@ -4848,9 +5102,11 @@ compile 函数用于编译正则表达式，生成一个正则表达式（ Patte
 
 
 
+##### 查找
+
 > ​	**ure.search(regex, string)**
 
-re.search 扫描整个字符串并返回第一个成功的匹配。
+ure.search 扫描整个字符串并返回第一个成功的匹配。
 
 - 参数
 
@@ -4869,6 +5125,8 @@ re.search 扫描整个字符串并返回第一个成功的匹配。
 
 匹配由 match() 和 serach 方法返回的对象
 
+##### 匹配单个字符串
+
 > ​	**match.group(index)**
 
 匹配的整个表达式的字符串
@@ -4885,6 +5143,8 @@ re.search 扫描整个字符串并返回第一个成功的匹配。
 
 
 
+##### 匹配多个字符串
+
 > ​	**match.groups()**
 
 匹配的整个表达式的字符串
@@ -4898,6 +5158,8 @@ re.search 扫描整个字符串并返回第一个成功的匹配。
 返回一个包含该匹配组的所有子字符串的元组。
 
 
+
+##### 获取起始索引
 
 > ​	**match.start(index)**
 
@@ -4915,6 +5177,8 @@ re.search 扫描整个字符串并返回第一个成功的匹配。
 
 
 
+##### 获取结束索引
+
 > ​	**match.end(index)**
 
 返回匹配的子字符串组的结束原始字符串中的索引。
@@ -4931,7 +5195,7 @@ re.search 扫描整个字符串并返回第一个成功的匹配。
 
 
 
-**使用示例**
+##### 使用示例
 
 ```python
 import ure
@@ -4947,9 +5211,11 @@ r = ure.search("GNGGA(.+?)M", res)
 print(r.group(0))
 ```
 
+
+
 ####  wifiScan
 
-**判断当前平台是否支持 wifiScan**
+##### 判断是否支持 wifiScan
 
 > **wifiScan.support()**
 
@@ -4975,7 +5241,7 @@ True
 
 
 
-**开启或者关闭 wifiScan 功能**
+##### 开启或关闭 wifiScan 功能
 
 > **wifiScan.control(option)**
 
@@ -5004,7 +5270,7 @@ True
 
 
 
-**获取 wifiScan 的当前状态**
+##### 获取 wifiScan 当前状态
 
 > **wifiScan.getState()**
 
@@ -5029,7 +5295,7 @@ True
 
 
 
-**获取当前 wifiScan 功能配置**
+##### 获取当前 wifiScan 功能配置
 
 > **wifiScan.getConfig()**
 
@@ -5064,7 +5330,7 @@ True
 
 
 
-**设置当前 wifiScan 功能配置**
+##### 设置当前 wifiScan 功能配置
 
 > **wifiScan.setConfig(timeout, round, max_bssid_num, scan_timeout, priority)**
 
@@ -5076,9 +5342,9 @@ True
 
   | 参数          | 类型 | 说明                                                         |
   | ------------- | ---- | ------------------------------------------------------------ |
-  | timeout       | 整型 | 该超时时间参数是上层应用的超时，当触发超时会主动上报已扫描到的热点信息，若在超时前扫描到设置的热点个数或达到底层扫频超时时间会自动上报热点信息。该参数设置范围为4-255秒。 |
-  | round         | 整型 | 该参数是wifi扫描轮，达到扫描轮数后，会结束扫描并获取扫描结果。该参数设置范围为1-3轮次。 |
-  | max_bssid_num | 整型 | 该参数是wifi扫描热点最大个，若底层扫描热点个数达到设置的最大个数，会结束扫描并获取扫描结果。该参数设置范围为4-30个。 |
+  | timeout       | 整型 | 该超时时间参数是上层应用的超时，当触发超时会主动上报已扫描到的热点信息，若在超时前扫描到设置的热点个数或达到底层扫频超时时间会自动上报热点信息。<br>参数范围：<br/>600S ：4-255秒<br/>200U/600U ：120-5000秒 |
+  | round         | 整型 | 该参数是wifi扫描轮，达到扫描轮数后，会结束扫描并获取扫描结果。<br/>参数范围：<br/>600S ：1-3轮次<br/>200U/600U ：1-10轮次 |
+  | max_bssid_num | 整型 | 该参数是wifi扫描热点最大个，若底层扫描热点个数达到设置的最大个数，会结束扫描并获取扫描结果。<br/>参数范围：<br/>600S ：4-30个<br/>200U/600U ：1-300个 |
   | scan_timeout  | 整型 | 该参数是底层wifi扫描热点超时时间，若底层扫描热点时间达到设置的超时时间，会结束扫描并获取扫描结果。该参数设置范围为1-255秒。 |
   | priority      | 整型 | 该参数是wifi扫描业务优先级设置，0为ps优先，1为wifi优先。ps优先时，当有数据业务发起时会中断wifi扫描。Wifi优先时，当有数据业务发起时，不会建立RRC连接，保障wifi扫描正常执行，扫描结束后才会建立RRC连接。 |
 
@@ -5095,7 +5361,7 @@ True
 
 
 
-**注册回调函数**
+##### 注册回调函数
 
 > **wifiScan.setCallback(usrFun)**
 
@@ -5123,7 +5389,7 @@ wifiScan.setCallback(usr_cb)
 
 
 
-**启动 wifiScan 扫描-异步接口**
+##### 启动 wifiScan 扫描-异步接口
 
 > **wifiScan.asyncStart()**
 
@@ -5156,7 +5422,7 @@ wifi list:(2, [('F0:B4:29:86:95:C7': -79),('44:00:4D:D5:26:E0', -92)])
 
 
 
-**启动 wifiScan 扫描-同步接口**
+##### 启动 wifiScan 扫描-同步接口
 
 > **wifiScan.start()**
 
@@ -5191,7 +5457,9 @@ wifi list:(2, [('F0:B4:29:86:95:C7': -79),('44:00:4D:D5:26:E0', -92)])
 
 #### ble - 蓝牙低功耗
 
-模块功能：提供 BLE GATT Server 端功能。目前仅200U/600U模块支持。
+模块功能：提供 BLE GATT Server 端功能。目前仅200U/600U平台支持。
+
+##### 初始化 BLE 并注册回调函数
 
 > **ble.serverInit(user_cb)**
 
@@ -5340,6 +5608,8 @@ ble.serverInit(ble_callback)
 
 
 
+##### BLE SERVER 资源释放
+
 > **ble.serverRelease()**
 
 * 功能：
@@ -5361,6 +5631,8 @@ ble.serverInit(ble_callback)
 ```
 
 
+
+##### 开启 BLE GATT 功能
 
 > **ble.gattStart()**
 
@@ -5384,6 +5656,8 @@ ble.serverInit(ble_callback)
 
 
 
+##### 关闭 BLE GATT 功能
+
 > **ble.gattStop()**
 
 * 功能：
@@ -5405,6 +5679,8 @@ ble.serverInit(ble_callback)
 ```
 
 
+
+##### 设置 BLE 名称
 
 > **ble.setLocalName(code, name)**
 
@@ -5431,6 +5707,8 @@ ble.serverInit(ble_callback)
 ```
 
 
+
+##### 设置广播参数
 
 > **ble.setAdvParam(min_adv,max_adv,adv_type,addr_type,channel,filter_policy,discov_mode,no_br_edr,enable_adv)**
 
@@ -5479,6 +5757,8 @@ def ble_gatt_set_param():
 
 
 
+##### 设置广播数据内容
+
 > **ble.setAdvData(data)**
 
 * 功能：
@@ -5518,6 +5798,8 @@ def ble_gatt_set_data():
 ```
 
 
+
+##### 设置扫描回复数据
 
 > **ble.setAdvRspData(data)**
 
@@ -5559,6 +5841,8 @@ def ble_gatt_set_rsp_data():
 
 
 
+##### 增加一个服务
+
 > **ble.addService(primary, server_id, uuid_type, uuid_s, uuid_l)**
 
 * 功能：
@@ -5597,6 +5881,8 @@ def ble_gatt_add_service():
 ```
 
 
+
+##### 在服务里增加一个特征
 
 > **ble.addChara(server_id, chara_id, chara_prop, uuid_type, uuid_s, uuid_l)**
 
@@ -5638,6 +5924,8 @@ def ble_gatt_add_characteristic():
 ```
 
 
+
+##### 在特征里增加一个特征值
 
 > **ble.addCharaValue(server_id, chara_id, permission, uuid_type, uuid_s, uuid_l, value)**
 
@@ -5685,6 +5973,8 @@ def ble_gatt_add_characteristic_value():
 
 
 
+##### 在特征里增加一个特征描述
+
 > **ble.addCharaDesc(server_id, chara_id, permission, uuid_type, uuid_s, uuid_l, value)**
 
 * 功能：
@@ -5729,6 +6019,8 @@ def ble_gatt_add_characteristic_desc():
 
 
 
+##### 增加服务完成或删除增加的服务
+
 > **ble.addOrClearService(option, mode)**
 
 * 功能：
@@ -5753,6 +6045,8 @@ def ble_gatt_add_characteristic_desc():
 ```
 
 
+
+##### 发送通知
 
 > **ble.sendNotification(connect_id, attr_handle, value)**
 
@@ -5780,6 +6074,8 @@ def ble_gatt_add_characteristic_desc():
 
 
 
+##### 发送指示
+
 > **ble.sendIndication(connect_id, attr_handle, value)**
 
 * 功能：
@@ -5806,6 +6102,8 @@ def ble_gatt_add_characteristic_desc():
 
 
 
+##### 开启广播
+
 > **ble.advStart()**
 
 * 功能：
@@ -5823,6 +6121,8 @@ def ble_gatt_add_characteristic_desc():
 
 
 
+##### 停止广播
+
 > **ble.advStop()**
 
 功能：
@@ -5837,7 +6137,9 @@ def ble_gatt_add_characteristic_desc():
 
 执行成功返回整型0，失败返回整型-1。
 
-综合示例
+
+
+##### 综合示例
 
 ```python
 # -*- coding: UTF-8 -*-
