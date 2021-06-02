@@ -3350,6 +3350,74 @@ ADC功能初始化。
 
 0关闭成功，-1关闭失败。
 
+##### USB
+
+提供USB插拔检测接口。
+
+###### 创建USB对象
+
+> from misc import USB
+>
+> usb = USB()
+
+* 参数
+
+  无
+
+* 返回值
+
+  无
+
+  
+
+###### 获取当前USB连接状态
+
+> usb.getStatus()
+
+* 参数
+
+  无
+
+* 返回值
+
+  -1 - 获取状态失败
+
+  0 - USB当前没有连接
+
+  1 - USB已连接
+
+
+
+###### 注册回调函数
+
+> usb.setCallback(usrFun)
+
+* 参数
+
+| 参数   | 参数类型 | 参数说明                                                     |
+| ------ | -------- | ------------------------------------------------------------ |
+| usrFun | function | 回调函数，当USB插入或者拔出时，会触发回调来通知用户当前USB状态。注意：回调函数中不要进行阻塞性的操作。 |
+
+* 返回值
+
+  注册成功返回整型0，失败返回整型-1。
+
+示例
+
+```python
+from misc import USB
+
+usb = USB()
+
+def usb_callback(conn_status):
+	status = conn_status
+	if status == 0:
+		print('USB is disconnected.')
+	elif status == 1:
+		print('USB is connected.')
+usb.setCallback(usb_callback)
+```
+
 
 
 #### modem - 设备相关

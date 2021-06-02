@@ -135,27 +135,55 @@ uos模块包含文件系统访问和挂载构建，该模块实现了CPython模�
 
 > **uos.uname()**
 
-获取关于底层信息或其操作系统的信息。返回一个元组，形式为：
+获取关于底层信息或其操作系统的信息。该接口与micropython官方接口返回值形式有所区别，返回一个元组，形式为：
 
 `(sysname, nodename, release, version, machine)`
 
 * `sysname` – 底层系统的名称，string类型
-
 * `nodename` – 网络名称(可以与 sysname 相同) ，string类型
-
 * `release` – 底层系统的版本，string类型
-
 * `version` – MicroPython版本和构建日期，string类型
-
 * `machine` – 底层硬件(如主板、CPU)的标识符，string类型
+* `qpyver` – QuecPython 短版本号，string类型
 
 示例：
 
-```
+```python
 >>> import uos
 >>> uos.uname()
-(sysname='EC100Y', nodename='EC100Y', release='1.12.0', version='v1.12 on 2020-06-23', machine='EC100Y with QUECTEL')
+('sysname=EC600S-CNLB', 'nodename=EC600S', 'release=1.12.0', 'version=v1.12 on 2020-06-23', 'machine=EC600S with QUECTEL', 'qpyver=V0001')
+>>> uos.uname()[0].split('=')[1] # 可通过这种方式来获取sysname的值
+'EC600S-CNLB'
 ```
+
+
+
+> **uos.uname2()**
+
+获取关于底层信息或其操作系统的信息。该接口与micropython官方接口返回值形式一致。注意与上面uos.uname()接口返回值的区别，返回值形式为：
+
+`(sysname='xxx', nodename='xxx', release='xxx', version='xxx', machine='xxx', qpyver='xxx')`
+
+* `sysname` – 底层系统的名称，string类型
+* `nodename` – 网络名称(可以与 sysname 相同) ，string类型
+* `release` – 底层系统的版本，string类型
+* `version` – MicroPython版本和构建日期，string类型
+* `machine` – 底层硬件(如主板、CPU)的标识符，string类型
+* `qpyver` – QuecPython 短版本号，string类型
+
+示例：
+
+```python
+>>> import uos
+>>> uos.uname2()
+(sysname='EC600S-CNLB', nodename='EC600S', release='1.12.0', version='v1.12 on 2020-06-23', machine='EC600S with QUECTEL', qpyver='V0001')
+>>> uos.uname2().sysname  # 可通过这种方式直接获取sysname的值
+'EC600S-CNLB'
+>>> uos.uname2().machine
+'EC600S with QUECTEL'
+```
+
+
 
 ##### 返回具有*n个*随机字节的bytes对象
 
