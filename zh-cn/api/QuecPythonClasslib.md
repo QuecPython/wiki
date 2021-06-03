@@ -3418,7 +3418,80 @@ def usb_callback(conn_status):
 usb.setCallback(usb_callback)
 ```
 
+##### PowerKey
 
+提供power key按键回调注册功能接口。
+
+###### 创建PowerKey对象
+
+> from misc import PowerKey
+>
+> pk = PowerKey()
+
+* 参数
+
+  无
+
+* 返回值
+
+  返回一个对象
+
+
+
+
+###### 注册回调函数
+
+> pk.powerKeyEventRegister(usrFun)
+
+* 参数
+
+| 参数   | 参数类型 | 参数说明                                    |
+| ------ | -------- | ------------------------------------------- |
+| usrFun | function | 回调函数，按下或松开power key按键时触发回调 |
+
+* 返回值
+
+  注册成功返回整型0，失败返回整型-1。
+
+* 注意
+
+  EC600S/EC600N等ASR平台，对于powerkey，按下和松开时，都会触发用户注册的回调函数；
+
+  EC200U/EC600U等展锐平台，对于powerkey，只在按键松开时才会触发回调函数，并且按键按下的时间需要维持500ms以上。
+
+* 示例
+
+  EC600S/EC600N平台：
+
+```python
+from misc import PowerKey
+
+pk = PowerKey()
+
+def pwk_callback(status):
+	if status == 0:
+		print('powerkey release.')
+	elif status == 1:
+		print('powerkey press.')
+        
+pk.powerKeyEventRegister(pwk_callback)
+```
+
+​		EC200U/EC600U平台：
+
+```python
+from misc import PowerKey
+
+pk = PowerKey()
+
+def pwk_callback(status):
+	if status == 0: # 只有按键释放时才会触发回调
+		print('powerkey release.')
+
+pk.powerKeyEventRegister(pwk_callback)
+```
+
+​		
 
 #### modem - 设备相关
 
