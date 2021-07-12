@@ -68,6 +68,37 @@
 
 无
 
+##### 设置异常回调函数
+
+> **aLiYun.error_register_cb(callback)**
+
+设置异常回调函数，aliyun以及umqtt内部线程异常时通过回调返回error信息，该方法在设置不使用内部重连的情况下才可触发回调
+
+* 参数 
+
+| 参数     | 参数类型 | 说明         |
+| -------- | -------- | ------------ |
+| callback | function | 异常回调函数 |
+
+* 返回值
+
+无
+
+异常回调函数示例
+
+```python
+from aLiYun import aLiYun
+
+def err_cb(err):
+    print("thread err:")
+    print(err)
+
+ali = aLiYun(productKey, productSecret, DeviceName, DeviceSecret)
+ali.error_register_cb(err_cb)
+```
+
+
+
 ##### 订阅mqtt主题
 
 > **aLiYun.subscribe(topic,qos)**
@@ -122,20 +153,6 @@
 > **aLiYun.disconnect()**
 
 关闭连接。
-
-* 参数
-
-无
-
-* 返回值
-
-无
-
-##### 关闭Socket
-
-> **aLiYun.close()**
-
-释放socket资源,(注意区别disconnect方法，close只释放socket资源，disconnect包含线程等资源)
 
 * 参数
 
@@ -259,11 +276,11 @@ if __name__ == '__main__':
 
 模块功能：腾讯云物联网套件客户端功能,目前的产品节点类型仅支持“设备”，设备认证方式支持“一机一密和“动态注册认证”。
 
-##### 配置阿里云物联网套件的产品信息和设备信息
+##### 配置腾讯云物联网套件的产品信息和设备信息
 
 > **TXyun(productID, devicename, devicePsk, ProductSecret)**
 
-配置阿里云物联网套件的产品信息和设备信息。
+配置腾讯云物联网套件的产品信息和设备信息。
 
 * 参数
 
@@ -311,6 +328,37 @@ if __name__ == '__main__':
 * 返回值
 
 无
+
+##### 设置异常回调函数
+
+> **TXyun.error_register_cb(callback)**
+
+设置异常回调函数，腾讯云以及umqtt内部线程异常时通过回调返回error信息，该方法在设置不使用内部重连的情况下才可触发回调
+
+* 参数 
+
+| 参数     | 参数类型 | 说明         |
+| -------- | -------- | ------------ |
+| callback | function | 异常回调函数 |
+
+* 返回值
+
+无
+
+异常回调函数示例
+
+```python
+from TenCentYun import TXyun
+
+def err_cb(err):
+    print("thread err:")
+    print(err)
+
+tenxun = TXyun(productID, devicename, devicePsk, ProductSecret)
+tenxun.error_register_cb(err_cb)
+```
+
+
 
 ##### 订阅mqtt主题
 
@@ -366,20 +414,6 @@ if __name__ == '__main__':
 > **TXyun.disconnect()**
 
 关闭连接。
-
-* 参数
-
-无
-
-* 返回值
-
-无
-
-##### 关闭Socket
-
-> **TXyun.close()**
-
-释放socket资源,(注意区别disconnect方法，close只释放socket资源，disconnect包含线程等资源)
 
 * 参数
 
@@ -914,7 +948,7 @@ QoS2 – 有且仅有一次，是最高级别；保证消息送达且仅送达�
 
 ##### 构建mqtt连接对象
 
-> **MQTTClient(client_id, server, port=0, user=None, password=None, keepalive=0, ssl=False, ssl_params={},reconn=True)**
+> **MQTTClient(client_id, server, port=0, user=None, password=None, keepalive=0, ssl=False, ssl_params={},reconn=True,version=4)**
 
 构建mqtt连接对象。
 
@@ -931,6 +965,7 @@ QoS2 – 有且仅有一次，是最高级别；保证消息送达且仅送达�
 | ssl        | bool     | （可选）是否使能 SSL/TLS 支持                                |
 | ssl_params | string   | （可选）SSL/TLS 参数                                         |
 | reconn     | bool     | （可选）控制是否使用内部重连的标志，默认开启为True           |
+| version    | int      | （可选）选择使用mqtt版本,version=3开启MQTTv3.1，默认version=4开启MQTTv3.1.1 |
 
 * 返回值 
 
@@ -951,6 +986,35 @@ mqtt对象。
 * 返回值
 
 无
+
+##### 设置异常回调函数
+
+> **MQTTClient.error_register_cb(callback)**
+
+设置异常回调函数，umqtt内部线程异常时通过回调返回error信息，该方法在设置不使用内部重连的情况下才可触发回调
+
+* 参数 
+
+| 参数     | 参数类型 | 说明         |
+| -------- | -------- | ------------ |
+| callback | function | 异常回调函数 |
+
+* 返回值
+
+无
+
+异常回调函数示例
+
+```python
+from umqtt import MQTTClient
+
+def err_cb(err):
+    print("thread err:")
+    print(err)
+    
+c = MQTTClient("umqtt_client", "mq.tongxinmao.com", 18830)
+c.error_register_cb(err_cb)
+```
 
 ##### 设置要发送给服务器的遗嘱
 
@@ -1006,6 +1070,8 @@ mqtt对象。
 > **MQTTClient.close()**
 
 释放socket资源,(注意区别disconnect方法，close只释放socket资源，disconnect包含线程等资源)
+
+注意：该方法仅用于在自己实现重连时使用，具体请参照mqtt重连示例代码，正常关闭mqtt连接请使用disconnect。
 
 * 参数
 
@@ -1204,6 +1270,8 @@ if __name__ == '__main__':
 在执行用户代码前，会先打印这两个变量的值。
 '''
 import utime
+import log
+import net
 import _thread
 import checkNet
 import dataCall
@@ -1220,14 +1288,17 @@ TaskEnable = True
 log.basicConfig(level=log.INFO)
 mqtt_log = log.getLogger("MQTT")
 
+
 # 封装mqtt，使其可以支持更多自定义逻辑
 class MqttClient():
     '''
     mqtt init
     '''
+
     # 说明：reconn该参数用于控制使用或关闭umqtt内部的重连机制，默认为True，使用内部重连机制。
     # 如需测试或使用外部重连机制可参考此示例代码，测试前需将reconn=False,否则默认会使用内部重连机制！
-    def __init__(self, clientid, server, port, user=None, password=None, keepalive=0,ssl=False, ssl_params={},reconn=True):
+    def __init__(self, clientid, server, port, user=None, password=None, keepalive=0, ssl=False, ssl_params={},
+                 reconn=True):
         self.__clientid = clientid
         self.__pw = password
         self.__server = server
@@ -1240,9 +1311,12 @@ class MqttClient():
         self.qos = None
         # 网络状态标志
         self.__nw_flag = True
+        # 创建互斥锁
+        self.mp_lock = _thread.allocate_lock()
         # 创建类的时候初始化出mqtt对象
         self.client = MQTTClient(self.__clientid, self.__server, self.__port, self.__uasename, self.__pw,
-                                 keepalive=self.__keepalive, ssl=self.__ssl, ssl_params=self.__ssl_params,reconn=reconn)
+                                 keepalive=self.__keepalive, ssl=self.__ssl, ssl_params=self.__ssl_params,
+                                 reconn=reconn)
 
     def connect(self):
         '''
@@ -1261,12 +1335,18 @@ class MqttClient():
         '''
         self.client.set_callback(sub_cb)
 
+    def error_register_cb(self, func):
+        '''
+        注册一个接收umqtt内线程异常的回调函数
+        '''
+        self.client.error_register_cb(func)
+
     def subscribe(self, topic, qos=0):
         '''
         订阅Topic
         '''
         self.topic = topic  # 保存topic ，多个topic可使用list保存
-        self.qos = qos      # 保存qos
+        self.qos = qos  # 保存qos
         self.client.subscribe(topic, qos)
 
     def publish(self, topic, msg, qos=0):
@@ -1291,13 +1371,17 @@ class MqttClient():
         PS：1.如有其他业务需要在mqtt重连后重新开启，请先考虑是否需要释放之前业务上的资源再进行业务重启
             2.该部分需要自己根据实际业务逻辑添加，此示例只包含mqtt重连后重新订阅Topic
         '''
+        # 判断锁是否已经被获取
+        if self.mp_lock.locked():
+            return
+        self.mp_lock.acquire()
         # 重新连接前关闭之前的连接，释放资源(注意区别disconnect方法，close只释放socket资源，disconnect包含mqtt线程等资源)
         self.client.close()
         # 重新建立mqtt连接
         while True:
-            net_sta = net.getState() # 获取网络注册信息
+            net_sta = net.getState()  # 获取网络注册信息
             if net_sta != -1 and net_sta[1][0] == 1:
-                call_state = dataCall.getInfo(1, 0) # 获取拨号信息
+                call_state = dataCall.getInfo(1, 0)  # 获取拨号信息
                 if (call_state != -1) and (call_state[2][0] == 1):
                     try:
                         # 网络正常，重新连接mqtt
@@ -1314,16 +1398,18 @@ class MqttClient():
                 # 重新连接mqtt成功，订阅Topic
                 try:
                     # 多个topic采用list保存，遍历list重新订阅
-                    self.subscribe(self.topic, self.qos)
+                    if self.topic is not None:
+                        self.client.subscribe(self.topic, self.qos)
+                    self.mp_lock.release()
                 except:
                     # 订阅失败，重新执行重连逻辑
                     self.client.close()
-                    utime.sleep(3)
+                    utime.sleep(5)
                     continue
             else:
                 utime.sleep(5)
                 continue
-            break # 结束循环
+            break  # 结束循环
         # 退出重连
         return True
 
@@ -1358,14 +1444,9 @@ class MqttClient():
                 else:
                     # 这里可选择使用raise主动抛出异常或者返回-1
                     return -1
-                
-    def loop_forever(self):
-        try:
-            _thread.start_new_thread(self.__listen, ())
-        except Exception:
-            # 在这里可以捕获到线程中出现的异常，根据实际业务情况编写处理逻辑
-            pass
 
+    def loop_forever(self):
+        _thread.start_new_thread(self.__listen, ())
 
 if __name__ == '__main__':
     '''
@@ -1384,12 +1465,21 @@ if __name__ == '__main__':
     def sub_cb(topic, msg):
         # global state
         mqtt_log.info("Subscribe Recv: Topic={},Msg={}".format(topic.decode(), msg.decode()))
-        # state = 1
-
-    c = MqttClient("umqtt_client_753", "mq.tongxinmao.com", 18830)
+    
+    c = MqttClient("umqtt_client_753", "mq.tongxinmao.com", 18830, reconn=False)
+    
+    def err_cb(error):
+        '''
+        接收umqtt线程内异常的回调函数
+        '''
+    	mqtt_log.info(error)
+    	c.reconnect() # 可根据异常进行重连
+        
     # c = MqttClient("umqtt_client_753", "mq.tongxinmao.com", 18830, reconn=False)
     # 设置消息回调
     c.set_callback(sub_cb)
+    # 设置异常回调
+    c.error_register_cb(err_cb)
     # 建立连接
     c.connect()
     # 订阅主题
@@ -1402,9 +1492,9 @@ if __name__ == '__main__':
     c.loop_forever()
     # 等待5s接收消息
     # PS:如果需要测试重连，包括服务器断开连接等情况，请注释掉c.disconnect()和utime.sleep(5)
-    utime.sleep(5)
+    # utime.sleep(5)
     # 关闭连接
-    c.disconnect()
+    # c.disconnect()
 ```
 
 

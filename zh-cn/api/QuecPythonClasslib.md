@@ -1865,9 +1865,40 @@ if __name__ == '__main__':
 >
 > **fota_obj = fota()**
 
+##### 一键升级接口
+
+> **fota_obj.httpDownload(url1=, url2=, callback=)**
+
+一个接口实现固件下载和升级整个过程
+
+- 参数
+
+| 参数     | 参数类型 | 参数说明                                                     |
+| -------- | -------- | ------------------------------------------------------------ |
+| url1     | str      | 待下载的第一阶段升级包的url                                  |
+| url2     | str      | 待下载的第二阶段升级包的url，注：最小系统升级分为2个阶段，必须传入该参数，而差分升级、全包升级只有一个阶段，该参数禁止传入 |
+| callback | function | 回调函数，显示下载进度和状态，可选择传不传入，注：EC600S/EC600N平台且是非最小系统升级方式时有效，其他平台该回调没有反应 |
+
+- 返回值
+
+  下载成功返回整形值0，下载失败返回整形值-1。注：EC600S/EC600N平台，返回值只代表指令下发成功、失败，下载状态需通过回调反馈。
+
+- 示例
+
+```python
+#args[0]表示下载状态，下载成功返回整型值：0或1或2，下载失败返回整型值：-1，args[1]表示下载进度，当下载状态是成功时表示百分比，下载状态是失败时表示错误码
+def result(args):
+    print('download status:',args[0],'download process:',args[1])
+    
+#差分升级、全量升级    
+fota_obj.httpDownload(url1="http://www.example.com/fota.bin",callback=result)    
+#最小系统升级
+fota_obj.httpDownload(url1="http://www.example.com/fota1.bin",url2="http://www.example.com/fota2.bin")
+```
 
 
-##### 写入升级包数据流
+
+##### 分步升级接口，写入升级包数据流
 
 > **fota_obj.write(bytesData, file_size)**
 
@@ -1886,7 +1917,23 @@ if __name__ == '__main__':
 
 
 
-##### 数据校验
+##### 分步升级接口，刷新缓存数据到flash
+
+> **fota_obj.flush()**
+
+刷新缓存数据到flash
+
+- 参数
+
+无
+
+- 返回值
+
+刷新成功返回整型值0，刷新失败返回整型值-1。
+
+
+
+##### 分步升级接口，数据校验
 
 > **fota_obj.verify()**
 
@@ -1910,6 +1957,43 @@ if __name__ == '__main__':
 
 
 ##### 使用示例
+
+###### 一键升级接口
+
+```python
+import fota
+import utime
+import log
+
+# 设置日志输出级别
+log.basicConfig(level=log.INFO)
+fota_log = log.getLogger("Fota")
+
+# 此示例需要升级包文件（差分包等.bin文件）。
+def result(args):
+    print('download status:',args[0],'download process:',args[1])
+    
+def run():
+    fota_obj = fota()  # 创建Fota对象
+    fota_log.info("httpDownload...")
+    #差分升级、全量升级    
+    res = fota_obj.httpDownload(url1="http://www.example.com/fota.bin",callback=result)    
+    #最小系统升级
+    #res = fota_obj.httpDownload(url1="http://www.example.com/fota1.bin",url2="http://www.example.com/fota2.bin")
+    if res != 0:
+        fota_log.error("httpDownload error")
+        return
+    fota_log.info("wait httpDownload update...")
+    utime.sleep(2)
+
+if __name__ == '__main__':
+    fota_log.info("run start...")
+    run()    
+```
+
+
+
+###### 分步升级接口
 
 ```python
 '''
@@ -1937,7 +2021,7 @@ PROJECT_VERSION = "1.0.0"
 log.basicConfig(level=log.INFO)
 fota_log = log.getLogger("Fota")
 
-# 此示例需要升级包文件（差分包等.bin文件）
+# 此示例需要升级包文件（差分包等.bin文件），且存放到文件系统中
 
 def run():
     fota_obj = fota()  # 创建Fota对象
@@ -1949,13 +2033,18 @@ def run():
             if not c:
                 break
             fota_obj.write(c, file_size)  # 写入.bin文件数据与文件总字节数
-
-    fota_log.info("flush verify...")
+	
+    fota_log.info("fota image flush...")
+    res = fota_obj.flush()  # 刷新
+    if res != 0:
+        fota_log.error("flush error")
+        return
+    fota_log.info("fota image verify...")
     res = fota_obj.verify()  # 校验
     if res != 0:
         fota_log.error("verify error")
         return
-    fota_log.info("flush power_reset...")
+    fota_log.info("power_reset...")
     utime.sleep(2)
     Power.powerRestart()   # 重启模块
 
@@ -3152,6 +3241,81 @@ int类型电压值。
 
 
 
+##### PowerKey
+
+提供power key按键回调注册功能接口。
+
+###### 创建PowerKey对象
+
+> from misc import PowerKey
+>
+> pk = PowerKey()
+
+* 参数
+
+  无
+
+* 返回值
+
+  返回一个对象
+
+
+
+
+###### 注册回调函数
+
+> pk.powerKeyEventRegister(usrFun)
+
+* 参数
+
+| 参数   | 参数类型 | 参数说明                                    |
+| ------ | -------- | ------------------------------------------- |
+| usrFun | function | 回调函数，按下或松开power key按键时触发回调 |
+
+* 返回值
+
+  注册成功返回整型0，失败返回整型-1。
+
+* 注意
+
+  EC600S/EC600N等ASR平台，对于powerkey，按下和松开时，都会触发用户注册的回调函数；
+
+  EC200U/EC600U等展锐平台，对于powerkey，只在按键松开时才会触发回调函数，并且按键按下的时间需要维持500ms以上。
+
+* 示例
+
+  EC600S/EC600N平台：
+
+```python
+from misc import PowerKey
+
+pk = PowerKey()
+
+def pwk_callback(status):
+	if status == 0:
+		print('powerkey release.')
+	elif status == 1:
+		print('powerkey press.')
+        
+pk.powerKeyEventRegister(pwk_callback)
+```
+
+​		EC200U/EC600U平台：
+
+```python
+from misc import PowerKey
+
+pk = PowerKey()
+
+def pwk_callback(status):
+	if status == 0: # 只有按键释放时才会触发回调
+		print('powerkey release.')
+
+pk.powerKeyEventRegister(pwk_callback)
+```
+
+
+
 ##### PWM
 
 ###### 常量说明
@@ -3418,80 +3582,7 @@ def usb_callback(conn_status):
 usb.setCallback(usb_callback)
 ```
 
-##### PowerKey
 
-提供power key按键回调注册功能接口。
-
-###### 创建PowerKey对象
-
-> from misc import PowerKey
->
-> pk = PowerKey()
-
-* 参数
-
-  无
-
-* 返回值
-
-  返回一个对象
-
-
-
-
-###### 注册回调函数
-
-> pk.powerKeyEventRegister(usrFun)
-
-* 参数
-
-| 参数   | 参数类型 | 参数说明                                    |
-| ------ | -------- | ------------------------------------------- |
-| usrFun | function | 回调函数，按下或松开power key按键时触发回调 |
-
-* 返回值
-
-  注册成功返回整型0，失败返回整型-1。
-
-* 注意
-
-  EC600S/EC600N等ASR平台，对于powerkey，按下和松开时，都会触发用户注册的回调函数；
-
-  EC200U/EC600U等展锐平台，对于powerkey，只在按键松开时才会触发回调函数，并且按键按下的时间需要维持500ms以上。
-
-* 示例
-
-  EC600S/EC600N平台：
-
-```python
-from misc import PowerKey
-
-pk = PowerKey()
-
-def pwk_callback(status):
-	if status == 0:
-		print('powerkey release.')
-	elif status == 1:
-		print('powerkey press.')
-        
-pk.powerKeyEventRegister(pwk_callback)
-```
-
-​		EC200U/EC600U平台：
-
-```python
-from misc import PowerKey
-
-pk = PowerKey()
-
-def pwk_callback(status):
-	if status == 0: # 只有按键释放时才会触发回调
-		print('powerkey release.')
-
-pk.powerKeyEventRegister(pwk_callback)
-```
-
-​		
 
 #### modem - 设备相关
 
@@ -4182,9 +4273,6 @@ def timer_test(t):
 
 if __name__ == '__main__':
 	t.start(period=1000, mode=t.PERIODIC, callback=timer_test)   # 启动定时器
-
-	while state:
-		pass
 ```
 
 
@@ -6692,5 +6780,230 @@ def main():
 if __name__ == '__main__':
     main()
 
+```
+
+
+
+#### camera - 摄像扫码
+
+模块功能：实现摄像头预览，照相机，录像机，扫码功能（目前仅支持预览和扫码功能）
+
+
+
+##### 预览
+
+预览功能。使用该功能前，需要初始化LCD。
+
+###### 创建预览对象
+
+> **import camera**
+> **preview = camera.camPreview(model,cam_w,cam_h,lcd_w,lcd_h,perview_level)**
+
+* 参数
+
+| 参数          | 参数类型 | 参数说明                                               |
+| ------------- | -------- | ------------------------------------------------------ |
+| model         | int      | camera型号：<br />*0: gc032a spi*<br />*1: bf3901 spi* |
+| cam_w         | int      | *camera水平分辨率*                                     |
+| *cam_h*       | int      | *camera垂直分辨率*                                     |
+| *lcd_w*       | int      | *LCD水平分辨率*                                        |
+| *lcd_h*       | int      | *LCD垂直分辨率*                                        |
+| perview_level | int      | 预览等级[1,2]。等级越高，图像越流畅,消耗资源越大       |
+
+* 返回值
+
+*-1*；初始化失败
+
+若返回对象，则表示创建成功
+
+* 示例
+
+```python
+>>> import camera
+>>> preview = camera.camPreview(0,640,480,176,220,1)
+```
+
+
+
+###### 打开预览功能
+
+**camPreview.open()**
+
+* 参数
+
+无
+
+* 返回值
+
+0：成功
+
+其它：打开失败
+
+
+
+关闭预览功能
+
+**camPreview.close()**
+
+关闭预览功能。
+
+* 参数
+
+无
+
+* 返回值
+
+0：成功
+
+其它：失败
+
+
+
+##### 扫码识别
+
+扫码识别功能。使用该功能前，需要初始化LCD。
+
+###### 创建对象
+
+**import camera**
+**scan= camera.camScandecode(model,decode_level,cam_w,cam_h,perview_level,lcd_w,lcd_h)**
+
+* 参数
+
+| 参数          | 参数类型 | 参数说明                                               |
+| ------------- | -------- | ------------------------------------------------------ |
+| model         | int      | camera型号：<br />*0: gc032a spi*<br />*1: bf3901 spi* |
+| decode_level  | int      | *解码等级[1,2]，等级越高，识别效果越好但资源消耗越大*  |
+| cam_w         | int      | *camera水平分辨率*                                     |
+| *cam_h*       | int      | *camera垂直分辨率*                                     |
+| perview_level | int      | 预览等级[1,2]。等级越高，图像越流畅,消耗资源越大       |
+| *lcd_w*       | int      | *LCD水平分辨率*                                        |
+| *lcd_h*       | int      | *LCD垂直分辨率*                                        |
+
+* 返回值
+
+*-1*；失败
+
+若返回对象，则表示创建成功
+
+
+
+###### 打开摄像头
+
+**camScandecode.open()**
+
+* 参数
+
+无
+
+* 返回值
+
+0：成功
+
+其它：失败
+
+
+
+###### 关闭摄像头
+
+**camScandecode.close()**
+
+* 参数
+
+无
+
+* 返回值
+
+0：成功
+
+其它：关闭失败
+
+
+
+###### 开启扫码识别功能
+
+**camScandecode.start()**
+
+* 参数
+
+无
+
+* 返回值
+
+0：成功
+
+其它：失败
+
+
+
+###### 关闭扫码识别功能
+
+**camScandecode.stop()**
+
+* 参数
+
+无
+
+* 返回值
+
+0：成功
+
+其它：失败
+
+
+
+###### 暂停扫码识别功能
+
+**camScandecode.pause()**
+
+* 参数
+
+无
+
+* 返回值
+
+0：成功
+
+其它：失败
+
+
+
+###### 继续扫码识别功能
+
+* 参数
+
+无
+
+* 返回值
+
+0：成功
+
+其它：失败
+
+
+
+###### 设置识别回调
+
+**camScandecode.callback(callback)**
+
+* 参数
+
+| 参数     | 参数类型 | 参数说明 |
+| -------- | -------- | -------- |
+| callback | api      | 回调api  |
+
+* 返回值
+
+0：成功
+
+其它：失败
+
+* 示例
+
+```python
+def callback(para):
+    print(para)		#para[0] 识别结果 	0：成功 其它：失败
+    				#para[1] 识别内容	
+Scandecode.callback(callback) 
 ```
 

@@ -1878,7 +1878,13 @@ _thread 模块提供创建新线程的方法，并提供互斥锁。
 
 > **_thread.start_new_thread(function, args)**
 
-创建一个新线程，接收执行函数和被执行函数参数，当 function 函数无参时传入空的元组。
+创建一个新线程，接收执行函数和被执行函数参数，当 function 函数无参时传入空的元组。返回线程的id。
+
+##### 根据线程id删除一个线程
+
+> **_thread.stop_thread(thread_id)**
+
+删除一个线程，thread_id为创建线程时返回的线程id。当 thread_id为0时则删除当前线程。不可删除主线程。
 
 ##### 创建一个互斥锁对象
 
@@ -1959,13 +1965,22 @@ def th_func(delay, id):
 		lock.release()  # 释放锁
 		utime.sleep(delay)
 
+def th_func1():
+	while True:
+		thread_log.info('thread th_func1 is running')
+		utime.sleep(1)
 
 if __name__ == '__main__':
 	for i in range(2):
 		_thread.start_new_thread(th_func, (i + 1, i))   # 创建一个线程，当函数无参时传入空的元组
-
+        
+	thread_id = _thread.start_new_thread(th_func1, ())   # 创建一个线程，当函数无参时传入空的元组
+    
 	while state:
 		pass
+    
+	_thread.stop_thread(thread_id)
+	thread_log.info('thread th_func1 is stopped')
 ```
 
 
