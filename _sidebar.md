@@ -11,7 +11,7 @@
 * [**English**](/en-us/)
 	* [Video tutorial](https://space.bilibili.com/491326023/channel/detail?cid=150963)
 	* [Step By Step](/en-us/sbs/)
-	* [python basis](/en-us/python/)
+	* [Python Basis](/en-us/python/)
 	* [QuecPython API](/en-us/api/)
 	* [QuecPython FAQ](/en-us/faq/)
 
