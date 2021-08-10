@@ -64,7 +64,7 @@ myprint()
 
 | 参数       | 参数类型 | 参数说明                                                     |
 | ---------- | -------- | ------------------------------------------------------------ |
-| profileIdx | int      | PDP索引，取值1-8，一般设置为1，设置其他值可能需要专用apn与密码才能设置成功 |
+| profileIdx | int      | PDP索引，ASR平台范围1-8，展锐平台范围1-7，一般设置为1，设置其他值可能需要专用apn与密码才能设置成功 |
 | ipType     | int      | IP类型，0-IPV4，1-IPV6，2-IPV4和IPV6                         |
 | apn        | string   | apn名称，可为空，最大长度不超过63字节                        |
 | username   | string   | apn用户名，可为空，最大长度不超过15字节                      |
@@ -95,7 +95,7 @@ myprint()
 
 | 参数       | 参数类型 | 参数说明                                                     |
 | ---------- | -------- | ------------------------------------------------------------ |
-| profileIdx | int      | PDP索引，取值1-8，一般设置为1，设置其他值可能需要专用apn与密码才能设置成功 |
+| profileIdx | int      | PDP索引，ASR平台范围1-8，展锐平台范围1-7，一般设置为1，设置其他值可能需要专用apn与密码才能设置成功 |
 | ipType     | int      | IP类型，0-IPV4，1-IPV6，2-IPV4和IPV6                         |
 | apn        | string   | apn名称，可为空，最大长度不超过63字节                        |
 | username   | string   | apn用户名，可为空，最大长度不超过15字节                      |
@@ -166,10 +166,10 @@ myprint()
 
 * 参数
 
-| 参数       | 参数类型 | 参数说明                             |
-| ---------- | -------- | ------------------------------------ |
-| profileIdx | int      | PDP索引，取值1-8                     |
-| ipType     | int      | IP类型，0-IPV4，1-IPV6，2-IPV4和IPV6 |
+| 参数       | 参数类型 | 参数说明                                 |
+| ---------- | -------- | ---------------------------------------- |
+| profileIdx | int      | PDP索引，ASR平台范围1-8，展锐平台范围1-7 |
+| ipType     | int      | IP类型，0-IPV4，1-IPV6，2-IPV4和IPV6     |
 
 * 返回值
 
@@ -178,7 +178,7 @@ ipType =0，返回值格式如下：
 
 `(profileIdx, ipType, [nwState, reconnect, ipv4Addr, priDns, secDns])`
 
-`profileIdx`：PDP索引，取值1-8
+`profileIdx`：PDP索引，ASR平台范围1-8，展锐平台范围1-7
 
 `ipType`：IP类型，0-IPV4，1-IPV6，2-IPV4和IPV6
 
@@ -196,7 +196,7 @@ ipType =1，返回值格式如下：
 
 `(profileIdx, ipType, [nwState, reconnect, ipv6Addr, priDns, secDns])`
 
-`profileIdx`：PDP索引，取值1-8
+`profileIdx`：PDP索引，ASR平台范围1-8，展锐平台范围1-7
 
 `ipType`：IP类型，0-IPV4，1-IPV6，2-IPV4和IPV6
 
@@ -300,7 +300,7 @@ if __name__ == '__main__':
 | port       | int      | 服务器端口，目前仅支持 80 端口                               |
 | token      | string   | 密钥，16位字符组成，需要申请                                 |
 | timeout    | int      | 设置超时时间，范围1-300s，默认300s                           |
-| profileID  | int      | PDP索引，范围1-8                                             |
+| profileID  | int      | PDP索引，ASR平台范围1-8，展锐平台范围1-7                     |
 
 * 返回值
 
@@ -2493,6 +2493,22 @@ tts.play(4, 0, 2, str1)
 
 
 
+###### 停止队列播放
+
+> **tts.stopAll()**
+
+停止整个队列的播放，即当前如果正在播放TTS或者音频，并且队列中还有其他待播放内容，调用该接口后，不仅会停止当前播放的内容，还会清除这个队列的内容，不再播放任何内容。如果当前正在播放，且播放队列为空，那么调用该接口效果等同与stop()接口。
+
+* 参数
+
+无
+
+* 返回值
+
+成功返回整型0，失败返回整型-1。
+
+
+
 ###### 注册回调函数
 
 > **tts.setCallback(usrFun)**
@@ -2821,6 +2837,22 @@ if __name__ == '__main__':
 
 
 
+###### 停止队列播放
+
+> **aud.stopAll()**
+
+停止整个队列的播放，即当前如果正在播放TTS或者音频，并且队列中还有其他待播放内容，调用该接口后，不仅会停止当前播放的内容，还会清除这个队列的内容，不再播放任何内容。如果当前正在播放，且播放队列为空，那么调用该接口效果等同与stop()接口。
+
+* 参数
+
+无
+
+* 返回值
+
+成功返回整型0，失败返回整型-1。
+
+
+
 ###### 注册回调函数
 
 > **aud.setCallback(usrFun)**
@@ -2975,9 +3007,7 @@ record_test = audio.Record()
 
 -5：定时器资源申请失败
 
--6 ：音频格式检测错误；
-
--7 ：该文件已经由其他对象创建了。
+-6 ：音频格式检测错误
 
 * 示例
 
@@ -4150,7 +4180,7 @@ if __name__ == '__main__':
 | :------- | :--- | ------------------------------------------------------------ |
 | UARTn    | int  | UARTn作用如下：<br />UART0 - DEBUG PORT<br />UART1 – BT PORT<br />UART2 – MAIN PORT<br />UART3 – USB CDC PORT |
 | buadrate | int  | 波特率，常用波特率都支持，如4800、9600、19200、38400、57600、115200、230400等 |
-| databits | int  | 数据位（5~8）                                                |
+| databits | int  | 数据位（5~8），展锐平台当前仅支持8位                         |
 | parity   | int  | 奇偶校验（0 – NONE，1 – EVEN，2 - ODD）                      |
 | stopbits | int  | 停止位（1~2）                                                |
 | flowctl  | int  | 硬件控制流（0 – FC_NONE， 1 – FC_HW）                        |
@@ -4236,6 +4266,33 @@ if __name__ == '__main__':
 * 返回值
 
 成功返回整型0，失败返回整型-1。
+
+
+
+###### 控制485通信方向
+
+> **uart.control_485(UART.GPIOn, direction)**
+
+串口发送数据之前和之后进行拉高拉低指定GPIO，用来指示485通信的方向。
+
+- 参数
+
+| 参数      | 类型 | 说明                                                         |
+| --------- | ---- | ------------------------------------------------------------ |
+| GPIOn     | int  | 需要控制的GPIO引脚号，参照Pin模块的定义                      |
+| direction | int  | 1 - 表示引脚电平变化为：串口发送数据之前由低拉高、发送数据之后再由高拉低<br />0 - 表示引脚电平变化为：串口发送数据之前由高拉低、发送数据之后再由低拉高 |
+
+- 返回值
+
+成功返回整型0，失败返回整型-1。
+
+- 示例
+
+```python
+>>> from machine import UART
+>>> uart1 = UART(UART.UART1, 115200, 8, 0, 1, 0)
+>>> uart1.control_485(UART.GPIO24, 1)
+```
 
 
 
@@ -4641,7 +4698,7 @@ if __name__ == '__main__':
 | year        | int  | 年                                                           |
 | month       | int  | 月，范围1~12                                                 |
 | day         | int  | 日，范围1~31                                                 |
-| week        | int  | 星期，设置时间时，该参数不起作用，保留；获取时间时该参数有效 |
+| week        | int  | 星期，范围0 ~ 6，其中0表示周日，1 ~ 6分别表示周一到周六；设置时间时，该参数不起作用，保留；获取时间时该参数有效 |
 | hour        | int  | 时，范围0~23                                                 |
 | minute      | int  | 分，范围0~59                                                 |
 | second      | int  | 秒，范围0~59                                                 |
@@ -4728,7 +4785,7 @@ i2c_obj = I2C(I2C.I2C0, I2C.STANDARD_MODE)  # 返回i2c对象
 | 参数         | 类型      | 说明                             |
 | ------------ | --------- | -------------------------------- |
 | slaveaddress | int       | i2c 设备地址                     |
-| addr         | int       | i2c 寄存器地址                   |
+| addr         | bytearray | i2c 寄存器地址                   |
 | addr_len     | int       | 寄存器地址长度                   |
 | r_data       | bytearray | 接收数据的字节数组               |
 | datalen      | int       | 字节数组的长度                   |
@@ -4751,7 +4808,7 @@ i2c_obj = I2C(I2C.I2C0, I2C.STANDARD_MODE)  # 返回i2c对象
 | 参数         | 类型      | 说明           |
 | ------------ | --------- | -------------- |
 | slaveaddress | int       | i2c 设备地址   |
-| addr         | int       | i2c 寄存器地址 |
+| addr         | bytearray | i2c 寄存器地址 |
 | addr_len     | int       | 寄存器地址长度 |
 | data         | bytearray | 写入的数据     |
 | datalen      | int       | 写入数据的长度 |
@@ -7235,5 +7292,199 @@ def callback(para):
     print(para)		#para[0] 识别结果 	0：成功 其它：失败
     				#para[1] 识别内容	
 Scandecode.callback(callback) 
+```
+
+
+
+#### GNSS - 定位授时
+
+模块功能：对L76K GPS型号进行数据获取，可以得到模块定位是否成功，定位的经纬度数据，UTC授时时间，获取GPS模块的定位模式，获取GPS模块定位使用卫星数量，获取GPS模块定位可见卫星数量，获取定位方位角，GPS模块对地速度，模块定位大地高等数据信息。
+
+> 暂时只支持EC600U CNLB
+
+##### 打开GNSS串口，读取并解析GNSS数据
+
+**gnss = GnssGetData(uartn,baudrate,databits,parity,stopbits,flowctl)**
+
+**gnss.read_gnss_data()**
+
+- **参数**
+
+| 参数     | 类型 | 说明                                                         |
+| :------- | :--- | ------------------------------------------------------------ |
+| uartn    | int  | UARTn范围为0-3：<br />0-UART0 - DEBUG PORT<br />1-UART1 – BT PORT<br />2-UART2 – MAIN PORT<br />3-UART3 – USB CDC PORT |
+| baudrate | int  | 波特率，常用波特率都支持，如4800、9600、19200、38400、57600、115200、230400等 |
+| databits | int  | 数据位（5~8）                                                |
+| parity   | int  | 奇偶校验（0 – NONE，1 – EVEN，2 - ODD）                      |
+| stopbits | int  | 停止位（1~2）                                                |
+| flowctl  | int  | 硬件控制流（0 – FC_NONE， 1 – FC_HW）                        |
+
+
+
+##### 获取是否定位成功
+
+**gnss.isFix()**
+
+- **参数**
+
+无
+
+- **返回值**
+
+1：定位成功
+
+0：定位失败
+
+
+
+##### 获取UTC时间
+
+**gnss.getUtcTime()**
+
+- **参数**
+
+无
+
+- **返回值**
+
+UTC时间
+
+
+
+##### 获取GPS模块定位模式
+
+**gnss.getLocationMode()**
+
+- **参数**
+
+无
+
+- **返回值**
+
+| 0    | 定位不可用或者无效                  |
+| ---- | ----------------------------------- |
+| 1    | 定位有效,定位模式：GPS、SPS 模式    |
+| 2    | 定位有效,定位模式： DGPS、DSPS 模式 |
+
+
+
+##### 获取GPS模块定位使用卫星数量
+
+**gnss.getUsedSateCnt()**
+
+- **参数**
+
+无
+
+- **返回值**
+
+GPS模块定位使用卫星数量
+
+
+
+##### 获取GPS模块定位的经纬度信息
+
+**gnss.getLocation()**
+
+- **参数**
+
+无
+
+- **返回值**
+
+GPS模块定位的经纬度信息
+
+
+
+##### 获取GPS模块定位可见卫星数量
+
+**gnss.getViewedSateCnt()**
+
+- **参数**
+
+无
+
+- **返回值**
+
+GPS模块定位可见卫星数量
+
+
+
+##### 获取GPS模块定位方位角 
+
+**gnss.getCourse()**
+
+- **参数**
+
+无
+
+- **返回值**
+
+定位方位角，范围：0~359，以真北为参考平面。
+
+
+
+##### 获取GPS模块定位大地高
+
+**gnss.getGeodeticHeight()**
+
+- **参数**
+
+无
+
+- **返回值**
+
+定位大地高(单位:米)
+
+
+
+##### 获取GPS模块对地速度
+
+**gnss.getSpeed()**
+
+- **参数**
+
+无
+
+- **返回值**
+
+GPS模块对地速度(单位:KM/h)
+
+
+
+- **示例**
+
+```python
+from machine import UART
+from gnss import GnssGetData
+import utime
+
+if __name__ == '__main__':
+    print("#### enter system main####")
+    gnss=GnssGetData(1, 9600, 8, 0, 1, 0)
+    while True:
+        gnss.read_gnss_data()
+        print(gnss.isFix())
+        print(gnss.getUtcTime())
+        print(gnss.getLocationMode())
+        print(gnss.getUsedSateCnt())
+        print(gnss.getLocation())
+        print(gnss.getViewedSateCnt())
+        print(gnss.getCourse())
+        print(gnss.getGeodeticHeight())
+        print(gnss.getSpeed())
+        utime.sleep(3)
+    
+    
+运行结果示例：
+1
+020031.000
+1
+16
+(22.32905, 'N', 113.5597, 'E')
+13
+034
+67.5
+0.0
 ```
 
