@@ -1200,7 +1200,7 @@ if __name__ == '__main__':
 
 | 参数 | 参数类型 | 参数说明                                       |
 | ---- | -------- | ---------------------------------------------- |
-| addr | string   | 需要设置的短信中心号码，最大长度不超过30字节。 |
+| addr | string   | 需要设置的短信中心号码                         |
 
 * 返回值
 
@@ -1296,6 +1296,8 @@ PDU解码
 
 * 示例
 
+示例一：
+
 ```python
 import sms
 
@@ -1303,6 +1305,33 @@ def cb(args):
     index = args[1]
     storage = args[2]
     print('New message! storage:{},index:{}'.format(storage, index))
+    
+sms.setCallback(cb)
+```
+
+示例二：
+
+```python
+import sms
+
+def cb(args):
+    ind_flag = args[0]
+	if ind_flag == 4097:
+	    mes_buf = args[1]
+		mes_len = args[2]
+		print('New message! ind_flag:{},mes_buf:{},mes_len:{}'.format(ind_flag, mes_buf, mes_len))
+    elif ind_flag == 4099:
+	    mes_type = args[1]
+		storage = args[2]
+        index = args[3]
+        print('New message! ind_flag:{},mes_type:{},storage:{},index:{}'.format(ind_flag, mes_type, storage, index))
+	elif ind_flag == 4100:
+	    mes_buf = args[1]
+        print('New message! ind_flag:{},mes_buf:{}'.format(ind_flag, mes_buf))
+	elif ind_flag == 4101:
+		storage = args[1]
+        index = args[2]
+        print('New message! ind_flag:{},storage:{},index:{}'.format(ind_flag, storage, index))
     
 sms.setCallback(cb)
 ```

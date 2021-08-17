@@ -1247,7 +1247,7 @@ This function sets the short message center number. And it is not recommended to
 
 | Parameter | Type   | Description                                                  |
 | --------- | ------ | ------------------------------------------------------------ |
-| addr      | string | The short message center number to be set. The maximum length is 30 bytes. |
+| addr      | string | The short message center number to be set.|
 
 * Return Value
 
@@ -1353,6 +1353,10 @@ This function registers the listening callback function. This function will be t
 
 * Example
 
+The new architecture refers to example 1, and the old architecture refers to example 2
+
+example 1:
+
 ```python
 import sms
 
@@ -1360,6 +1364,33 @@ def cb(args):
     index = args[1]
     storage = args[2]
     print('New message! storage:{},index:{}'.format(storage, index))
+    
+sms.setCallback(cb)
+```
+
+example 2:
+
+```python
+import sms
+
+def cb(args):
+    ind_flag = args[0]
+	if ind_flag == 4097:
+	    mes_buf = args[1]
+		mes_len = args[2]
+		print('New message! ind_flag:{},mes_buf:{},mes_len:{}'.format(ind_flag, mes_buf, mes_len))
+    elif ind_flag == 4099:
+	    mes_type = args[1]
+		storage = args[2]
+        index = args[3]
+        print('New message! ind_flag:{},mes_type:{},storage:{},index:{}'.format(ind_flag, mes_type, storage, index))
+	elif ind_flag == 4100:
+	    mes_buf = args[1]
+        print('New message! ind_flag:{},mes_buf:{}'.format(ind_flag, mes_buf))
+	elif ind_flag == 4101:
+		storage = args[1]
+        index = args[2]
+        print('New message! ind_flag:{},storage:{},index:{}'.format(ind_flag, storage, index))
     
 sms.setCallback(cb)
 ```
