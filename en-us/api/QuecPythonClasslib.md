@@ -1938,7 +1938,7 @@ This function sets the current modem functionality.
 
 | Parameter | Type | Description                                                  |
 | --------- | ---- | ------------------------------------------------------------ |
-| function  | int  | 0 - Minimum functionality. 1 - Full functionality. 4 - Airplane mode. |
+| function  | int  | 0 - Minimum functionality. 1 - Full functionality. 4 - Airplane mode.(The RDA platform does not support CFUN4) |
 | rst       | int  | Optional. 0 - Take effect immediately (Default). 1 - Take effect after rebooting. |
 
 * Return Value
