@@ -77,6 +77,10 @@ This function starts the dial-up and activates the data link.
 
 -1  Failed execution.
 
+* note
+
+  The BC25PA platform does not support this method.
+
 * Example
 
 ```python
@@ -110,6 +114,9 @@ After calling this interface, the user_apn.json will be created in the user part
 
 -1  Failed execution.
 
+* note
+
+  The BC25PA platform does not support this method.
 * Example
 
 ```python
@@ -138,6 +145,10 @@ This function registers the callback function to send the notification when the 
 
 -1  Failed execution.
 
+* note
+
+  The BC25PA platform does not support this method.
+  
 * Example
 
 ```python
@@ -293,6 +304,10 @@ if __name__ == '__main__':
 
 Function: Provides base station positioning interface to obtain coordinate information.
 
+* note
+
+  The BC25PA platform does not support this module function.
+  
 ##### Obtain Coordinate Information
 
 > **cellLocator.getLocation(serverAddr, port, token, timeout, profileID)**
@@ -403,6 +418,10 @@ NA
 
 Returns the phone number in string type, or returns -1 if failed.
 
+* note
+
+  The BC25PA platform does not support this method.
+  
 * Example
 
 ```python
@@ -468,7 +487,11 @@ This function enables PIN authentication, and then you need to enter the correct
 0  Successful execution.
 
 -1  Failed execution.
+  
+* note
 
+  The BC25PA platform pin password supports up to eight digits.
+  
 * Example
 
 ```python
@@ -495,7 +518,11 @@ This function disables PIN authentication
 0  Successful execution.
 
 -1  Failed execution.
+  
+* note
 
+  The BC25PA platform pin password supports up to eight digits.
+  
 * Example
 
 ```python
@@ -522,7 +549,11 @@ PIN authentication. Only can be called after sim.enablePin(pin) is executed succ
 0  Successful execution.
 
 -1  Failed execution.
+  
+* note
 
+  The BC25PA platform pin password supports up to eight digits.
+  
 * Example
 
 ```python
@@ -550,7 +581,11 @@ This function unlocks the SIM card. When PIN/PIN2 code is wrongly input for time
 0  Successful execution.
 
 -1  Failed execution.
+  
+* note
 
+  The BC25PA platform pin password supports up to eight digits.
+  
 * Example
 
 ```python
@@ -578,7 +613,11 @@ Changes PIN.
 0  Successful execution.
 
 -1  Failed execution.
+  
+* note
 
+  The BC25PA platform pin password supports up to eight digits.
+  
 * Example
 
 ```python
@@ -619,6 +658,10 @@ Description:
 
 `phone_number` – String type. Phone number.
 
+* note
+
+  The BC25PA platform does not support this method.
+  
 * Example
 
 ```python
@@ -655,6 +698,10 @@ This function writes a phone number record.
 
 -1  Failed execution.
 
+* note
+
+  The BC25PA platform does not support this method.
+  
 * Example
 
 ```python
@@ -684,6 +731,10 @@ This function registers the listening callback function. This function will be t
 
 -1  Failed execution.
 
+* note
+
+  The BC25PA platform does not support this method.
+  
 * Example
 
 ```python
@@ -717,6 +768,10 @@ This function sets the SIM card hot-plugging related configurations.
 
 -1  Failed execution.
 
+* note
+
+  The BC25PA platform does not support this method.
+  
 * Example
 
 ```python
@@ -748,6 +803,10 @@ Description：
 
 `insertlevel` – High/low level (0/1).
 
+* note
+
+  The BC25PA platform does not support this method.
+  
 Example
 
 ```python
@@ -963,7 +1022,8 @@ def voice_callback(args):
 #### sms - SMS
 
 Function: Provides SMS related APIs.
-
+Note: The BC25PA platform does not support this module function.
+  
 ##### Send the Message in TEXT Mode
 
 > **sms.sendTextMsg(phoneNumber, msg, codeMode)**
@@ -1420,6 +1480,10 @@ This function sets APN.
 
 -1  Failed execution
 
+* note
+
+  The BC25PA platform does not support this module function.
+  
 ##### Obtain the Current  APN
 
 > **net.getApn(simid)**
@@ -1438,6 +1502,10 @@ This function obtains the current APN.
 
 -1  Failed execution.
 
+* note
+
+  The BC25PA platform does not support this module function.
+ 
 ##### Obtain CSQ
 
 > **net.csqQueryPoll()**
@@ -1531,6 +1599,8 @@ The description of the return value for LTE:
 
 ##### Obtain RAT and Roaming Configuration
 
+>**net.getConfig()**
+
 The function obtains the current RAT and the roaming configuration.
 
 * Parameter
@@ -1541,6 +1611,10 @@ NA
 
 If the execution is failed, -1 is returned. If the execution is successful, a tuple including the current primary RAT and roaming configuration  is returned.
 
+* note
+
+  The BC25PA platform does not support this module function.
+ 
 RAT
 
 | Value | RAT                                                          |
@@ -1593,7 +1667,10 @@ The function sets the current RAT and the roaming configuration.
 
 -1  Failed execution.
 
+* note
 
+  The BC25PA platform does not support this module function.
+ 
 
 ##### Obtain the Network Mode
 
@@ -1959,7 +2036,7 @@ This function sets the current modem functionality.
 #### checkNet - Wait for Network to be Ready
 
 Function: The checkNet module is mainly used for the script programs [auto-startup], and provides APIs to wait for the network to be ready. If it times out or exits abnormally, the program returns an error code. Therefore, if there are network-related operations in the your program, the method in the checkNet module should be called at the beginning of the user program to wait for the network to be ready. Of course, you can also implement the functions of this module by yourselves. 
-
+Note: The BC25PA platform does not support this module function.
 ##### Create checkNet Object
 
 > **import checkNet**
@@ -2201,6 +2278,9 @@ Write upgrade package data stream
 
   -1	Failed execution
 
+* note
+
+  The BC25PA platform does not support this method.
 
 
 ##### Interface to Upgrade Step by Step and Refresh Cached Data to Flash
@@ -2219,7 +2299,9 @@ None
 
   -1	Failed execution
 
+* note
 
+  The BC25PA platform does not support this method.
 
 ##### Interface to Upgrade Step by Step and Verify the Data
 
@@ -2236,6 +2318,10 @@ None
   0 	Successful execution
 
   -1	Failed execution
+
+* note
+
+  The BC25PA platform does not support this method.
 
 * Example
 
@@ -2350,7 +2436,7 @@ if __name__ == '__main__':
 #### app_fota - Upgrade User File 
 
 Module function: Upgrade user file 
-
+Note: The BC25PA platform does not support this module function.
 ##### Create an app_fota Object
 
 1. Import app_fota module
@@ -2427,7 +2513,7 @@ In this example, assuming that `http://www.example.com/test.txt`fails to be down
 #### audio - Audio Playback
 
 Module function: audio playback, supports to play files in TTS, mp3 and AMR.
-
+Note: The BC25PA platform does not support this module function.
 ##### TTS 
 
 ###### Create the TTS Object
@@ -3024,7 +3110,7 @@ Set audio volume.
 ##### Record
 
 Applicable versions: EC100Y(V0009) and above; EC600S(V0003) and above.
-
+Note: The BC25PA platform does not support this module function.
 ###### Create an Object
 
 > **import audio**
@@ -3503,7 +3589,9 @@ The values returned are explained as follows:
 
 0: Unknown
 
+* note
 
+  BC25PA platform only does not support restart reason 5.
 
 ###### Get the Reason for the Last Powering Down of the Module
 
@@ -3532,6 +3620,9 @@ None
 0: Unknown
 
 
+* note
+
+  The BC25PA platform does not support this method.
 
 ###### Get Voltage of the Battery.
 
@@ -3632,7 +3723,7 @@ pk.powerKeyEventRegister(pwk_callback)
 
 
 ##### PWM
-
+Note: The BC25PA platform does not support this module function.
 ###### Constant Description
 
 | Constent | Description | Usage Platform                         |
@@ -3748,9 +3839,9 @@ if __name__ == '__main__':
 
 ###### Constant Description
 
-| Constant | Description   | Usage Platform                     |
-| -------- | ------------- | ---------------------------------- |
-| ADC.ADC0 | ADC Channel 0 | EC600S/EC600N/EC100Y/EC600U/EC200U |
+| Constant | Description   | Usage Platform                            |
+| -------- | ------------- | ----------------------------------------- |
+| ADC.ADC0 | ADC Channel 0 | EC600S/EC600N/EC100Y/EC600U/EC200U/BC25PA |
 | ADC.ADC1 | ADC Channel 1 | EC600S/EC600N/EC600U/EC200U        |
 | ADC.ADC2 | ADC Channel 2 | EC600U/EC200U                      |
 | ADC.ADC3 | ADC Channel 3 | EC600U                             |
@@ -3832,7 +3923,7 @@ Return 0 if the execution is successful, otherwise return -1.
 ##### USB
 
 It provides USB plug detection interface.
-
+Note: The BC25PA platform does not support this module function.
 ###### Create an USB Object
 
 > from misc import USB
@@ -4066,6 +4157,26 @@ Function: GPIO read and write operations.
 | Pin.PULL_PU      | --                                     | Pull-up mode   |
 | Pin.PULL_PD      | --                                     | Pull-down mode |
 
+Constant description for BC25PA platform
+| Constant         | Applicable Platform                    | Description    |
+| ---------------- | -------------------------------------- | -------------- |
+| Pin.GPIO1        | BC25PA                   | GPIO3    |
+| Pin.GPIO2        | BC25PA                   | GPIO4    |
+| Pin.GPIO3        | BC25PA                   | GPIO5    |
+| Pin.GPIO4        | BC25PA                   | GPIO6    |
+| Pin.GPIO5        | BC25PA                   | GPIO16   |
+| Pin.GPIO6        | BC25PA                   | GPIO20   |
+| Pin.GPIO7        | BC25PA                   | GPIO21   |
+| Pin.GPIO8        | BC25PA                   | GPIO22   |
+| Pin.GPIO9        | BC25PA                   | GPIO23   |
+| Pin.GPIO10       | BC25PA                   | GPIO25   |
+| Pin.GPIO11       | BC25PA                   | GPIO28   |
+| Pin.GPIO12       | BC25PA                   | GPIO29   |
+| Pin.GPIO13       | BC25PA                   | GPIO30   |
+| Pin.GPIO14       | BC25PA                   | GPIO31   |
+| Pin.GPIO15       | BC25PA                   | GPIO32   |
+| Pin.GPIO16       | BC25PA                   | GPIO33   |
+
 **Corresponding Pin Number Description of GPIO**
 
 The GPIO pin numbers provided in this document correspond to the external pin numbers of the module. For example, the GPIO1 of the EC600S-CN module corresponds to the pin number 22, which is the external pin number of the module. Uses can refer to the corresponding hardware resource to view the external pin number of the module.
@@ -4231,6 +4342,9 @@ if __name__ == '__main__':
 
 Function: UART serial data transmission
 
+* note
+  BC25PA platform, only uart1 is supported
+  
 ###### Constant Description
 
 | Constant   | Sedcription |
@@ -4338,6 +4452,37 @@ None
 * Return Value
 
 Return 0 if the execution is successful, otherwise return -1.
+
+
+
+###### Control 485 communication direction
+
+> **uart.control_485(UART.GPIOn, direction)**
+
+Before and after the serial port sends data, pull up and down the specified GPIO to indicate the direction of 485 communication.
+
+- parameter
+
+| Parameter      | Type | Description                                                         |
+| --------- | ---- | ------------------------------------------------------------ |
+| GPIOn     | int  | For the GPIO pin number to be controlled, refer to the definition of pin module                      |
+| direction | int  | 1 - Indicates that the pin level changes as follows: the serial port pulls high from low before sending data, and then pulls low from high after sending data<br />0 - Indicates that the pin level changes as follows: the serial port pulls low from high before sending data, and then pulls high from low after sending data |
+
+- Return Value
+
+Return 0 if the execution is successful, otherwise return -1.。
+
+* note
+
+  The BC25PA platform does not support this method.
+  
+- Example
+
+```python
+>>> from machine import UART
+>>> uart1 = UART(UART.UART1, 115200, 8, 0, 1, 0)
+>>> uart1.control_485(UART.GPIO24, 1)
+```
 
 
 
@@ -4634,7 +4779,25 @@ Function: The module configures I/O pins to interrupt when an external event occ
 | Pin.PULL_PU      | --                                     | Pull-up mode   |
 | Pin.PULL_PD      | --                                     | Pull-down mode |
 
-
+Constant description for BC25PA platform
+| Constant         | Applicable Platform                    | Description    |
+| ---------------- | -------------------------------------- | -------------- |
+| Pin.GPIO1        | BC25PA                   | GPIO3    |
+| Pin.GPIO2        | BC25PA                   | GPIO4    |
+| Pin.GPIO3        | BC25PA                   | GPIO5    |
+| Pin.GPIO4        | BC25PA                   | GPIO6    |
+| Pin.GPIO5        | BC25PA                   | GPIO16   |
+| Pin.GPIO6        | BC25PA                   | GPIO20   |
+| Pin.GPIO7        | BC25PA                   | GPIO21   |
+| Pin.GPIO8        | BC25PA                   | GPIO22   |
+| Pin.GPIO9        | BC25PA                   | GPIO23   |
+| Pin.GPIO10       | BC25PA                   | GPIO25   |
+| Pin.GPIO11       | BC25PA                   | GPIO28   |
+| Pin.GPIO12       | BC25PA                   | GPIO29   |
+| Pin.GPIO13       | BC25PA                   | GPIO30   |
+| Pin.GPIO14       | BC25PA                   | GPIO31   |
+| Pin.GPIO15       | BC25PA                   | GPIO32   |
+| Pin.GPIO16       | BC25PA                   | GPIO33   |
 
 ###### Create ExtInt Object
 
@@ -4785,8 +4948,8 @@ Class function: A two-wire protocol used for communication between devices.
 
 | Constant          |                             | Applicable Platform         |
 | ----------------- | --------------------------- | --------------------------- |
-| I2C.I2C0          | I2C channel index number: 0 | EC100Y/EC600U/EC200U        |
-| I2C.I2C1          | I2C channel index number: 1 | EC600S/EC600N/EC600U/EC200U |
+| I2C.I2C0          | I2C channel index number: 0 | EC100Y/EC600U/EC200U/BC25PA        |
+| I2C.I2C1          | I2C channel index number: 1 | EC600S/EC600N/EC600U/EC200U/BC25PA |
 | I2C.STANDARD_MODE | Standard mode               |                             |
 | I2C.FAST_MODE     | Fast mode                   |                             |
 
@@ -4811,9 +4974,9 @@ Class function: A two-wire protocol used for communication between devices.
 | ------------- | ------------------------------------------------------------ |
 | EC600U        | I2C0:<br />SCL: Pin number 11<br />SDA: Pin number 12<br />I2C1:<br />SCL: Pin number 57<br />SDA: Pin number 56 |
 | EC200U        | I2C0:<br />SCL: Pin number 41<br />SDA: Pin number 42<br />I2C1:<br />SCL:Pin number 141<br />SDA:Pin number 142 |
-| EC600S/EC600N | I2C1:<br />SCL:Pin number 57<br />SDA:Pin number 56          |
-| EC100Y        | I2C0:<br />SCL:Pin nu mber57<br />SDA:Pin number 56          |
-
+| EC600S/EC600N | I2C1:<br />SCL: Pin number 57<br />SDA: Pin number 56          |
+| EC100Y        | I2C0:<br />SCL: Pin number 57<br />SDA: Pin number 56          |
+| BC25PA        | I2C0:<br />SCL: Pin number 22<br />SDA: Pin number 23<br />I2C1:<br />SCL: Pin number 20<br />SDA: Pin number 21 |
 - Exmaple
 
 ```python
@@ -4943,6 +5106,7 @@ Adaptation version: EC100Y (V0009) and above; EC600S (V0002) and above.
 | EC200U        | port0:<br />CS:Pin number 134<br />CLK:Pin number 133<br />MOSI:Pin number 132<br />MISO:Pin number 131<br />port1:<br />CS:Pin number 26<br />CLK:Pin number 27<br />MOSI:Pin number 24<br />MISO:Pin number 25 |
 | EC600S/EC600N | port0:<br />CS:Pin number 58<br />CLK:Pin number 61<br />MOSI:Pin number 60<br />MISO:Pin number 59<br />port1:<br />CS:Pin number 4<br />CLK:Pin number 1<br />MOSI:Pin number 3<br />MISO:Pin number 2 |
 | EC100Y        | port0:<br />CS:Pin number 25<br />CLK:Pin number 26<br />MOSI:Pin number 27<br />MISO:Pin number 28<br />port1:<br />CS:Pin number 105<br />CLK:Pin number 104<br />MOSI:Pin number 107<br />MISO:Pin number 106 |
+| BC25PA        | port0:<br />CS:Pin number 6<br />CLK:Pin number 5<br />MOSI:Pin number 4<br />MISO:Pin number 3|
 
 - Example
 
@@ -5055,6 +5219,8 @@ if __name__ == '__main__':
 Class function: This module provides control of the LCD display. 
 
 Adaptation version: EC100Y(V0009) and above; EC600S(V0002) and above. 
+
+Note: The BC25PA platform does not support this module function.
 
 ###### Create LCD Object
 
@@ -5450,6 +5616,7 @@ if __name__ == '__main__':
 #### qrcode- QR Code Display 
 
 Module function:  Generate the corresponding QR code according to the input content. 
+Note: The BC25PA platform does not support this module function.
 
 > ​	qrcode.show(qrcode_str,magnification,start_x,start_y,Background_color,Foreground_color)
 
@@ -5499,6 +5666,9 @@ wakelock's Identification number   Successful execution.
 
 -1   Failed execution.
 
+* note
+
+  The BC25PA platform does not support this method.
 
 
 ##### Delete wake_lock Lock 
@@ -5517,6 +5687,9 @@ It deletes wake_lock lock.
 
 0      Successful execution.
 
+* note
+
+  The BC25PA platform does not support this method.
 
 
 ##### Lock 
@@ -5535,6 +5708,9 @@ It deletes wake_lock lock.
 
 -1	Failed execution.
 
+* note
+
+  The BC25PA platform does not support this method.
 
 
 ##### Release Lock 
@@ -5555,7 +5731,9 @@ It releases lock.
 
 -1	Failed execution.
 
+* note
 
+  The BC25PA platform does not support this method.
 
 ##### Automatic Sleep Mode Control 
 
@@ -5589,6 +5767,9 @@ NA
 
 It returns the number of wakelock locks that have been created. 
 
+* note
+
+  The BC25PA platform does not support this method.
 
 
 ##### Example
@@ -5803,6 +5984,8 @@ print(r.group(0))
 ```
 
 ####  wifiScan
+
+Note: The BC25PA platform does not support this module function.
 
 ##### Determine whether wifiScan is supported
 
@@ -6067,6 +6250,7 @@ wifi list:(2, [('F0:B4:29:86:95:C7': -79),('44:00:4D:D5:26:E0', -92)])
 #### ble - Bluetooth Low Energy
 
 Module function: provide function of BLE GATT Server. Currently only 200U/600U modules support BLE.
+Note: The BC25PA platform does not support this module function.
 
 ##### Initialize BLE and Register Callback Function
 
@@ -7201,7 +7385,7 @@ if __name__ == '__main__':
 #### camera - Camera and Code Scan 
 
 Module function: Preview, camera, video recorder, code scan (currently only preview and code scan are supported.)
-
+Note: The BC25PA platform does not support this module function.
 
 
 ##### Preview
@@ -7423,7 +7607,7 @@ Scandecode.callback(callback)
 
 Module function: Get positioning data from GPS model of L76 module, including whether the module locates successfully, latitude, longitude, UTC time, positioning mode,  number of satellites, number of visible satellites, azimuth angle, speed over the ground, geodetic height and so on. 
 
-
+Note: The BC25PA platform does not support this module function.
 
 ###### Turn on GNSS Port to Read and Parse GNSS Data
 

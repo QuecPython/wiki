@@ -75,6 +75,10 @@ myprint()
 
 成功返回整型值0，失败返回整型值-1。
 
+* 注意
+
+  BC25PA不支持此方法。
+
 * 示例 
 
 ```python
@@ -106,6 +110,10 @@ myprint()
 
 成功返回整型值0，失败返回整型值-1。
 
+* 注意
+
+  BC25PA不支持此方法。
+
 * 示例
 
 ```python
@@ -131,6 +139,10 @@ myprint()
 * 返回值
 
 注册失败返回整型-1，成功返回整型0。
+
+* 注意
+
+  BC25PA不支持此方法。
 
 * 示例
 
@@ -286,6 +298,10 @@ if __name__ == '__main__':
 
 模块功能：提供基站定位接口，获取坐标信息。
 
+* 注意
+
+  BC25PA平台不支持此模块。
+
 ##### 获取坐标
 
 > **cellLocator.getLocation(serverAddr, port, token, timeout, profileID)**
@@ -396,6 +412,10 @@ if __name__ == '__main__':
 
 成功返回string类型的phone number，失败返回整型-1。
 
+* 注意
+
+  BC25PA不支持此方法。
+
 * 示例
 
 ```python
@@ -460,6 +480,10 @@ if __name__ == '__main__':
 
 成功返回整型0，失败返回整型-1。
 
+* 注意
+
+  BC25PA平台PIN密码最大支持八位。
+
 * 示例
 
 ```python
@@ -485,6 +509,10 @@ if __name__ == '__main__':
 
 成功返回整型0，失败返回整型-1。
 
+* 注意
+
+  BC25PA平台PIN密码最大支持八位。
+
 * 示例
 
 ```python
@@ -509,6 +537,10 @@ sim卡PIN码验证。需要在调用sim.enablePin(pin)成功之后，才能进�
 * 返回值
 
 验证成功返回整型0，验证失败返回整型-1。
+
+* 注意
+
+  BC25PA平台PIN密码最大支持八位。
 
 * 示例
 
@@ -536,6 +568,10 @@ sim卡解锁。当多次错误输入 PIN/PIN2 码后，SIM 卡状态为请求 PU
 
 解锁成功返回整型0，解锁失败返回整型-1。
 
+* 注意
+
+  BC25PA平台PIN密码最大支持八位。
+
 * 示例
 
 ```python
@@ -561,6 +597,10 @@ sim卡解锁。当多次错误输入 PIN/PIN2 码后，SIM 卡状态为请求 PU
 * 返回值
 
 更改成功返回整型0，更改失败返回整型-1。
+
+* 注意
+
+  BC25PA平台PIN密码最大支持八位。
 
 * 示例
 
@@ -602,6 +642,10 @@ sim卡解锁。当多次错误输入 PIN/PIN2 码后，SIM 卡状态为请求 PU
 
 `phone_number` – 电话号码，string类型
 
+* 注意
+
+  BC25PA平台不支持此方法。
+  
 * 示例
 
 ```python
@@ -636,6 +680,10 @@ sim卡解锁。当多次错误输入 PIN/PIN2 码后，SIM 卡状态为请求 PU
 
 写入成功返回整型0，写入失败返回整型-1。
 
+* 注意
+
+  BC25PA平台不支持此方法。
+
 示例
 
 ```python
@@ -662,6 +710,10 @@ sim卡解锁。当多次错误输入 PIN/PIN2 码后，SIM 卡状态为请求 PU
 * 返回值
 
 注册成功返回整型0，失败返回整型-1。
+
+* 注意
+
+  BC25PA平台不支持此方法。
 
 * 示例
 
@@ -694,6 +746,10 @@ sim.setCallback(cb)
 
 设置成功返回整型0，设置失败返回整型-1。
 
+* 注意
+
+  BC25PA平台不支持此方法。
+
 示例
 
 ```python
@@ -725,6 +781,10 @@ sim.setCallback(cb)
 
 `insertlevel` – 高低电平配置(0/1)
 
+* 注意
+
+  BC25PA平台不支持此方法。
+
 示例
 
 ```python
@@ -739,6 +799,8 @@ sim.setCallback(cb)
 模块功能：该模块提供电话功能相关接口。
 
 说明：4G only的版本必须打开volte才能正常使用电话功能。
+
+注意：BC25PA平台不支持此模块。
 
 ##### 设置自动应答时间
 
@@ -928,6 +990,8 @@ def voice_callback(args):
 模块功能：该模块提供短信功能相关接口。
 
 说明：当前QuecPython底层为非volte版本，暂不支持电信发送短信。
+
+注意：BC25PA平台不支持此模块。
 
 ##### 发送TEXT类型消息
 
@@ -1359,7 +1423,9 @@ sms.setCallback(cb)
 
 设置成功返回整型值0，设置失败返回整型值-1。
 
+* 注意
 
+  BC25PA平台不支持此方法。
 
 ##### 获取当前APN
 
@@ -1377,7 +1443,9 @@ sms.setCallback(cb)
 
 成功返回获取到的APN，失败返回整型值-1。
 
+* 注意
 
+  BC25PA平台不支持此方法。
 
 ##### 获取csq信号强度
 
@@ -1508,6 +1576,10 @@ LTE网络系统返回值说明
 | 17   | UMTS_LTE, dual link. not supported in EC100Y and EC200S      |
 | 18   | GSM_UMTS_LTE, dual link. not supported in EC100Y and EC200S  |
 
+* 注意
+
+  BC25PA平台不支持此方法。
+
 * 示例
 
 ```python
@@ -1534,6 +1606,9 @@ LTE网络系统返回值说明
 
 设置成功返回整型值0，设置失败返回整型值-1。
 
+* 注意
+
+  BC25PA平台不支持此方法。
 
 
 ##### 获取网络配置模式
@@ -1909,6 +1984,8 @@ LTE list：
 
 模块功能：checkNet模块主要用于【开机自动运行】的用户脚本程序，该模块提供API用来阻塞等待网络就绪，如果超时或者其他异常退出会返回错误码，所以如果用户的程序中有涉及网络相关的操作，那么在用户程序的开始应该调用 checkNet 模块中的方法以等待网络就绪。当然，用户也可以自己实现这个模块的功能。
 
+注意：BC25PA平台不支持此模块。
+  
 ##### 创建checkNet对象
 
 > **import checkNet**
@@ -2157,6 +2234,9 @@ fota_obj.httpDownload(url1="http://www.example.com/fota1.bin",url2="http://www.e
 
 写入成功返回整型值0，写入失败返回值整型值-1。
 
+* 注意
+
+  BC25PA平台不支持此方法。
 
 
 ##### 分步升级接口，刷新缓存数据到flash
@@ -2173,6 +2253,9 @@ fota_obj.httpDownload(url1="http://www.example.com/fota1.bin",url2="http://www.e
 
 刷新成功返回整型值0，刷新失败返回整型值-1。
 
+* 注意
+
+  BC25PA平台不支持此方法。
 
 
 ##### 分步升级接口，数据校验
@@ -2189,6 +2272,10 @@ fota_obj.httpDownload(url1="http://www.example.com/fota1.bin",url2="http://www.e
 
 检验成功返回整型值0，校验失败返回整型值-1。
 
+* 注意
+
+  BC25PA平台不支持此方法。
+  
 * 示例
 
 ```python
@@ -2303,6 +2390,8 @@ if __name__ == '__main__':
 
 模块功能：用户文件升级
 
+注意：BC25PA平台不支持此模块。
+  
 ##### 创建app_fota对象
 
 1. 导入app_fota模块
@@ -2378,6 +2467,8 @@ download_list = [{'url': 'http://www.example.com/app.py', 'file_name': '/usr/app
 
 模块功能：音频播放，支持TTS、mp3以及AMR文件播放。
 
+注意：BC25PA平台不支持此模块。
+  
 ##### TTS 
 
 ###### 创建TTS对象
@@ -2986,6 +3077,8 @@ audio初始化未完成返回整型值-1，初始化完成返回整型值0。
 
 适配版本：EC100Y(V0009)及以上；EC600S(V0003)及以上。
 
+注意：BC25PA平台不支持此模块。
+
 ###### 创建一个对象
 
 > **import audio**
@@ -3461,6 +3554,9 @@ while 1:
 0：未知
 
 
+* 注意
+
+  BC25PA平台支持仅不支持重启原因5。
 
 ###### 获取模块上次关机原因
 
@@ -3488,6 +3584,9 @@ while 1:
 
 0：未知
 
+* 注意
+
+  BC25PA平台支持仅不支持此方法。
 
 
 ###### 获取电池电压
@@ -3589,6 +3688,8 @@ pk.powerKeyEventRegister(pwk_callback)
 
 
 ##### PWM
+
+注意：BC25PA平台支持仅不支持此模块。
 
 ###### 常量说明
 
@@ -3705,12 +3806,12 @@ if __name__ == '__main__':
 
 ###### 常量说明
 
-| 常量     | 说明     | 适用平台                           |
-| -------- | -------- | ---------------------------------- |
-| ADC.ADC0 | ADC通道0 | EC600S/EC600N/EC100Y/EC600U/EC200U |
-| ADC.ADC1 | ADC通道1 | EC600S/EC600N/EC600U/EC200U        |
-| ADC.ADC2 | ADC通道2 | EC600U/EC200U                      |
-| ADC.ADC3 | ADC通道3 | EC600U                             |
+| 常量     | 说明     | 适用平台                                  |
+| -------- | -------- | ----------------------------------------- |
+| ADC.ADC0 | ADC通道0 | EC600S/EC600N/EC100Y/EC600U/EC200U/BC25PA |
+| ADC.ADC1 | ADC通道1 | EC600S/EC600N/EC600U/EC200U               |
+| ADC.ADC2 | ADC通道2 | EC600U/EC200U                             |
+| ADC.ADC3 | ADC通道3 | EC600U                                    |
 
 
 
@@ -3789,6 +3890,8 @@ ADC功能初始化。
 ##### USB
 
 提供USB插拔检测接口。
+
+注意：BC25PA平台支持仅不支持此模块。
 
 ###### 创建USB对象
 
@@ -4023,6 +4126,27 @@ usb.setCallback(usb_callback)
 | Pin.PULL_PU      | --                       | 上拉模式 |
 | Pin.PULL_PD      | --                       | 下拉模式 |
 
+对于BC25PA平台常量说明
+
+| 常量             | 适配平台                 | 说明     |
+| ---------------- | ------------------------ | -------- |
+| Pin.GPIO1        | BC25PA                   | GPIO3    |
+| Pin.GPIO2        | BC25PA                   | GPIO4    |
+| Pin.GPIO3        | BC25PA                   | GPIO5    |
+| Pin.GPIO4        | BC25PA                   | GPIO6    |
+| Pin.GPIO5        | BC25PA                   | GPIO16   |
+| Pin.GPIO6        | BC25PA                   | GPIO20   |
+| Pin.GPIO7        | BC25PA                   | GPIO21   |
+| Pin.GPIO8        | BC25PA                   | GPIO22   |
+| Pin.GPIO9        | BC25PA                   | GPIO23   |
+| Pin.GPIO10       | BC25PA                   | GPIO25   |
+| Pin.GPIO11       | BC25PA                   | GPIO28   |
+| Pin.GPIO12       | BC25PA                   | GPIO29   |
+| Pin.GPIO13       | BC25PA                   | GPIO30   |
+| Pin.GPIO14       | BC25PA                   | GPIO31   |
+| Pin.GPIO15       | BC25PA                   | GPIO32   |
+| Pin.GPIO16       | BC25PA                   | GPIO33   |
+
 **GPIO对应引脚号说明**
 
 文档中提供的GPIO引脚号对应的为模块外部的引脚编号，例如EC600S下GPIO1对应引脚号22，这里的引脚号22为模块外部的引脚编号。可参考提供的硬件资料查看模块外部的引脚编号。
@@ -4188,6 +4312,10 @@ if __name__ == '__main__':
 
 类功能：uart串口数据传输。
 
+* 注意
+
+  BC25PA平台，仅支持UART1。
+
 ###### 常量说明
 
 | 常量       | 说明  |
@@ -4201,14 +4329,14 @@ if __name__ == '__main__':
 
 ###### 创建uart对象
 
-> **uart = UART(UART.UARTn, baudrate, databits, parity, stopbits, flowctl)**
+> **uart = UART(UART.UARTn, buadrate, databits, parity, stopbits, flowctl)**
 
 * 参数
 
 | 参数     | 类型 | 说明                                                         |
 | :------- | :--- | ------------------------------------------------------------ |
 | UARTn    | int  | UARTn作用如下：<br />UART0 - DEBUG PORT<br />UART1 – BT PORT<br />UART2 – MAIN PORT<br />UART3 – USB CDC PORT |
-| baudrate | int  | 波特率，常用波特率都支持，如4800、9600、19200、38400、57600、115200、230400等 |
+| buadrate | int  | 波特率，常用波特率都支持，如4800、9600、19200、38400、57600、115200、230400等 |
 | databits | int  | 数据位（5~8），展锐平台当前仅支持8位                         |
 | parity   | int  | 奇偶校验（0 – NONE，1 – EVEN，2 - ODD）                      |
 | stopbits | int  | 停止位（1~2）                                                |
@@ -4315,6 +4443,10 @@ if __name__ == '__main__':
 
 成功返回整型0，失败返回整型-1。
 
+* 注意
+
+  BC25PA平台不支持此方法。
+  
 - 示例
 
 ```python
@@ -4619,7 +4751,26 @@ if __name__ == '__main__':
 | Pin.PULL_PU      | --                                     | 上拉模式 |
 | Pin.PULL_PD      | --                                     | 下拉模式 |
 
+对于BC25PA平台常量说明
 
+| 常量             | 适配平台                 | 说明     |
+| ---------------- | ------------------------ | -------- |
+| Pin.GPIO1        | BC25PA                   | GPIO3    |
+| Pin.GPIO2        | BC25PA                   | GPIO4    |
+| Pin.GPIO3        | BC25PA                   | GPIO5    |
+| Pin.GPIO4        | BC25PA                   | GPIO6    |
+| Pin.GPIO5        | BC25PA                   | GPIO16   |
+| Pin.GPIO6        | BC25PA                   | GPIO20   |
+| Pin.GPIO7        | BC25PA                   | GPIO21   |
+| Pin.GPIO8        | BC25PA                   | GPIO22   |
+| Pin.GPIO9        | BC25PA                   | GPIO23   |
+| Pin.GPIO10       | BC25PA                   | GPIO25   |
+| Pin.GPIO11       | BC25PA                   | GPIO28   |
+| Pin.GPIO12       | BC25PA                   | GPIO29   |
+| Pin.GPIO13       | BC25PA                   | GPIO30   |
+| Pin.GPIO14       | BC25PA                   | GPIO31   |
+| Pin.GPIO15       | BC25PA                   | GPIO32   |
+| Pin.GPIO16       | BC25PA                   | GPIO33   |
 
 ###### 创建ExtInt对象
 
@@ -4764,8 +4915,8 @@ if __name__ == '__main__':
 
 | 常量              |                   | 适用平台                      |
 | ----------------- | ----------------- | ----------------------------- |
-| I2C.I2C0          | i2c 通路索引号: 0 | EC100Y/EC600U/EC200U          |
-| I2C.I2C1          | i2c 通路索引号: 1 | EC600S/EC600N/EC600U/EC200U |
+| I2C.I2C0          | i2c 通路索引号: 0 | EC100Y/EC600U/EC200U/BC25PA          |
+| I2C.I2C1          | i2c 通路索引号: 1 | EC600S/EC600N/EC600U/EC200U/BC25PA  |
 | I2C.STANDARD_MODE | 标准模式 |                  |
 | I2C.FAST_MODE | 快速模式      |                               |
 
@@ -4792,7 +4943,7 @@ if __name__ == '__main__':
 | EC200U        | I2C0:<br />SCL: 引脚号41<br />SDA: 引脚号42<br />I2C1:<br />SCL:引脚号141<br />SDA:引脚号142 |
 | EC600S/EC600N | I2C1:<br />SCL:引脚号57<br />SDA:引脚号56                    |
 | EC100Y        | I2C0:<br />SCL:引脚号57<br />SDA:引脚号56                    |
-
+| BC25PA        | I2C0:<br />SCL: 引脚号22<br />SDA: 引脚号23<br />I2C1:<br />SCL:引脚号20<br />SDA:引脚号21 |
 - 示例
 
 ```python
@@ -4917,6 +5068,7 @@ if __name__ == '__main__':
 | EC200U        | port0:<br />CS:引脚号134<br />CLK:引脚号133<br />MOSI:引脚号132<br />MISO:引脚号131<br />port1:<br />CS:引脚号26<br />CLK:引脚号27<br />MOSI:引脚号24<br />MISO:引脚号25 |
 | EC600S/EC600N | port0:<br />CS:引脚号58<br />CLK:引脚号61<br />MOSI:引脚号60<br />MISO:引脚号59<br />port1:<br />CS:引脚号4<br />CLK:引脚号1<br />MOSI:引脚号3<br />MISO:引脚号2 |
 | EC100Y        | port0:<br />CS:引脚号25<br />CLK:引脚号26<br />MOSI:引脚号27<br />MISO:引脚号28<br />port1:<br />CS:引脚号105<br />CLK:引脚号104<br />MOSI:引脚号107<br />MISO:引脚号106 |
+| BC25PA        | port0:<br />CS:引脚号6<br />CLK:引脚号5<br />MOSI:引脚号4<br />MISO:引脚号3|
 
 - 示例
 
@@ -5030,6 +5182,9 @@ if __name__ == '__main__':
 
 适配版本：EC100Y(V0009)及以上；EC600S(V0002)及以上。
 
+* 注意
+  BC25PA平台不支持此模块功能。
+  
 ###### 创建LCD对象
 
 > **lcd = LCD()**
@@ -5411,6 +5566,9 @@ if __name__ == '__main__':
 
 模块功能：根据输入的内容，生成对应的二维码。
 
+* 注意
+  BC25PA平台不支持此模块功能。
+  
 > ​	qrcode.show(qrcode_str,magnification,start_x,start_y,Background_color,Foreground_color)
 
 - 参数
@@ -5458,6 +5616,9 @@ if __name__ == '__main__':
 成功返回wakelock的标识号，否则返回-1。
 
 
+* 注意
+  BC25PA平台不支持此方法。
+  
 
 ##### 删除wake_lock锁
 
@@ -5475,6 +5636,8 @@ if __name__ == '__main__':
 
 成功返回0。
 
+* 注意
+  BC25PA平台不支持此方法。
 
 
 ##### 加锁
@@ -5491,6 +5654,8 @@ if __name__ == '__main__':
 
 成功返回0，否则返回-1。
 
+* 注意
+  BC25PA平台不支持此方法。
 
 
 ##### 释放锁
@@ -5509,7 +5674,8 @@ if __name__ == '__main__':
 
 成功返回0，否则返回-1。
 
-
+* 注意
+  BC25PA平台不支持此方法。
 
 ##### 自动休眠模式控制
 
@@ -5543,6 +5709,8 @@ if __name__ == '__main__':
 
 返回已创建wakelock锁的数量。
 
+* 注意
+  BC25PA平台不支持此方法。
 
 
 ##### 使用示例
@@ -5760,6 +5928,8 @@ print(r.group(0))
 
 ####  wifiScan
 
+注意：BC25PA平台不支持此方法。
+  
 ##### 判断是否支持 wifiScan
 
 > **wifiScan.support()**
@@ -6004,6 +6174,8 @@ wifi list:(2, [('F0:B4:29:86:95:C7': -79),('44:00:4D:D5:26:E0', -92)])
 
 模块功能：提供 BLE GATT Server 端功能。目前仅200U/600U平台支持。
 
+注意：BC25PA平台不支持模块功能。
+  
 ##### 初始化 BLE 并注册回调函数
 
 > **ble.serverInit(user_cb)**
@@ -7104,6 +7276,8 @@ if __name__ == '__main__':
 
 模块功能：实现摄像头预览，照相机，录像机，扫码功能（目前仅支持预览和扫码功能）
 
+注意：BC25PA平台不支持模块功能。
+  
 
 
 ##### 预览
@@ -7329,6 +7503,9 @@ Scandecode.callback(callback)
 
 模块功能：对L76K GPS型号进行数据获取，可以得到模块定位是否成功，定位的经纬度数据，UTC授时时间，获取GPS模块的定位模式，获取GPS模块定位使用卫星数量，获取GPS模块定位可见卫星数量，获取定位方位角，GPS模块对地速度，模块定位大地高等数据信息。
 
+* 注意
+  BC25PA平台不支持模块功能。
+  
 > 暂时只支持EC600U CNLB
 
 ##### 打开GNSS串口，读取并解析GNSS数据
@@ -7515,98 +7692,5 @@ if __name__ == '__main__':
 034
 67.5
 0.0
-```
-
-
-
-
-
-#### SecureData - 安全数据区
-
-模块功能：模组提供一块裸flash区域及专门的读写接口供客户存贮重要信息，且信息在烧录固件后不丢失(烧录不包含此功能的固件无法保证不丢失)。提供一个存储和读取接口，不提供删除接口。
-
-> 目前只支持EC600N、EC600S系列项目
-
-##### 数据存储
-
-SecureData.Store(index,databuf,len)
-
-- **参数**
-
-| 参数    | 类型      | 说明                                                         |
-| :------ | :-------- | ------------------------------------------------------------ |
-| index   | int       | index范围为1-16：<br />1 - 8 最大存储50字节数据<br />9 - 12 最大存储100字节数据<br />13 - 14 最大存储500字节数据<br />15 - 16 最大存储1000字节数据 |
-| databuf | bytearray | 待存储的数据数组                                             |
-| len     | int       | 要写入数据的长度                                             |
-
-存储时按照databuf和len两者中长度较小的进行存储
-
-**返回值**
-
--1: 参数有误 
-
-0: 执行正常
-
-
-
-##### 数据读取
-
-SecureData.Read(index,databuf,len)
-
-- **参数**
-
-| 参数    | 类型      | 说明                                            |
-| :------ | :-------- | ----------------------------------------------- |
-| index   | int       | index范围为1-16：<br />读取存储数据对应的索引号 |
-| databuf | bytearray | 存储读取到的数据                                |
-| len     | int       | 要读取数据的长度                                |
-
-若存储的数据没有传入的len大，则返回实际存储的数据长度
-
-**返回值**
-
--2: 存储数据不存在且备份数据也不存在
-
--1: 参数有误
-
-其他 :  实际读取到的数据长度
-
-
-
-- **示例**
-
-```python
-import SecureData
-
-# 即将存储的数据buf
-databuf = '\x31\x32\x33\x34\x35\x36\x37\x38'
-
-# 在index为1的存储区域中存储长度为8的数据databuf
-SecureData.Store(1, databuf, 8)
-
-# 定义一个长度为20的数组用于读取存储的数据
-buf = bytearray(20)
-
-# 读取index为1的存储区域中的数据至buf中,将读取到数据的长度存储在变量len中
-len = SecureData.Read(1, buf, 20)
-
-# 输出读到的数据
-print(buf[:len])
-```
-
-
-
-- **执行结果**
-
-```python
->>> import SecureData
->>> databuf = '\x31\x32\x33\x34\x35\x36\x37\x38'
->>> SecureData.Store(1, databuf, 8)
-0
->>> buf = bytearray(20)
->>> len = SecureData.Read(1, buf, 20)
->>> print(buf[:len])
-bytearray(b'12345678')
->>> 
 ```
 

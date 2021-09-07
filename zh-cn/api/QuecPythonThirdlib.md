@@ -4,6 +4,8 @@
 
 模块功能：阿里云物联网套件客户端功能,目前的产品节点类型仅支持“设备”，设备认证方式支持“一机一密和“一型一密”。
 
+注意：BC25PA平台不支持模块功能。
+  
 > **aLiYun(productKey, productSecret, DeviceName, DeviceSecret)**
 
 配置阿里云物联网套件的产品信息和设备信息。
@@ -276,6 +278,8 @@ if __name__ == '__main__':
 
 模块功能：腾讯云物联网套件客户端功能,目前的产品节点类型仅支持“设备”，设备认证方式支持“一机一密和“动态注册认证”。
 
+注意：BC25PA平台不支持模块功能。
+  
 ##### 配置腾讯云物联网套件的产品信息和设备信息
 
 > **TXyun(productID, devicename, devicePsk, ProductSecret)**
@@ -526,6 +530,8 @@ if __name__ == '__main__':
 
 模块功能：HTTP客户端的相关功能函数。
 
+注意：BC25PA平台不支持模块功能。
+  
 ##### 发送GET请求
 
 > **request.get(url, data, headers,decode,sizeof,ssl_params)**
@@ -1503,6 +1509,8 @@ if __name__ == '__main__':
 
 模块功能：该模块用于时间同步。
 
+注意：BC25PA平台不支持模块功能。
+  
 ##### 返回当前的ntp服务器
 
 > **ntptime.host**
@@ -1621,6 +1629,9 @@ system.replSetEnable(1)  # 开启交互保护
 
 #### ussl-SSL算法
 
+* 注意
+  BC25PA平台不支持模块功能。
+  
 ssl加密算法套件支持
 
 |                        算法套件                        |

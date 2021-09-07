@@ -1,5 +1,7 @@
 #### aLiYun - Alibaba Cloud Service
 
+Note: The BC25PA platform does not support this module function.
+
 ##### Configure the Product and Device Information of Alibaba Cloud loT  Suite
 
 Function : This module provides Alibaba Cloud loT suite client function. The current product node type only supports "device" and device authentication mode supports "unique-certificate-per-device authentication" and "unique-certificate-per-product authentication".
@@ -276,6 +278,8 @@ if __name__ == '__main__':
 
 Function: This module provides Tencent Cloud loT suite client function. The current product node type only supports "device" and device authentication mode supports "unique-certificate-per-device authentication" and "unique-certificate-per-product authentication".
 
+Note: The BC25PA platform does not support this module function.
+
 ##### Configure the Product and Device Information of Tentent Cloud loT Suite.
 
 > **TXyun(productID, devicename, devicePsk, ProductSecret)**
@@ -525,6 +529,8 @@ if __name__ == '__main__':
 #### request - HTTP
 
 Function: This module provides HTTP Client related Functions.
+
+Note: The BC25PA platform does not support this module function.
 
 ##### Send the GET Request
 
@@ -1502,6 +1508,8 @@ if __name__ == '__main__':
 
 Function: This module provides the interface fir time synchronization.
 
+Note: The BC25PA platform does not support this module function.
+
 ##### Return the Current NTP Server Address
 
 > **ntptime.host**
@@ -1619,6 +1627,7 @@ system.replSetEnable(1)  # Enable interactive protection.
 
 
 #### ussl-SSL Algorithm
+Note: The BC25PA platform does not support this module function.
 
 SSL cipher suite supports the algorithm as following:
 
