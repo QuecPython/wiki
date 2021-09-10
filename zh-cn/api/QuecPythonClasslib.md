@@ -338,9 +338,9 @@ if __name__ == '__main__':
 
 ```python
 >>> import cellLocator
->>> cellLocator.getLocation("www.queclocator.com", 80, "1111111122222222", 8, 1)
+>>> cellLocator.getLocation("www.queclocator.com", 80, "xxxxxxxxxxxxxxxx", 8, 1)
 (117.1138, 31.82279, 550)
-# 上面使用的密钥仅为测试密钥
+# 上面使用的密钥"xxxxxxxxxxxxxxxx"指代token，具体需要向移远申请”
 ```
 
 
