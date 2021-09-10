@@ -340,7 +340,7 @@ if __name__ == '__main__':
 >>> import cellLocator
 >>> cellLocator.getLocation("www.queclocator.com", 80, "xxxxxxxxxxxxxxxx", 8, 1)
 (117.1138, 31.82279, 550)
-# 上面使用的密钥"xxxxxxxxxxxxxxxx"指代token，具体需要向移远申请”
+# 上面使用的密钥"xxxxxxxxxxxxxxxx"指代token，具体需要向移远申请
 ```
 
 
