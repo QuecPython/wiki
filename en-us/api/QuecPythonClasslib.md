@@ -487,7 +487,7 @@ This function enables PIN authentication, and then you need to enter the correct
 0  Successful execution.
 
 -1  Failed execution.
-  
+
 * note
 
   The BC25PA platform pin password supports up to eight digits.
@@ -518,7 +518,7 @@ This function disables PIN authentication
 0  Successful execution.
 
 -1  Failed execution.
-  
+
 * note
 
   The BC25PA platform pin password supports up to eight digits.
@@ -549,7 +549,7 @@ PIN authentication. Only can be called after sim.enablePin(pin) is executed succ
 0  Successful execution.
 
 -1  Failed execution.
-  
+
 * note
 
   The BC25PA platform pin password supports up to eight digits.
@@ -581,7 +581,7 @@ This function unlocks the SIM card. When PIN/PIN2 code is wrongly input for time
 0  Successful execution.
 
 -1  Failed execution.
-  
+
 * note
 
   The BC25PA platform pin password supports up to eight digits.
@@ -613,7 +613,7 @@ Changes PIN.
 0  Successful execution.
 
 -1  Failed execution.
-  
+
 * note
 
   The BC25PA platform pin password supports up to eight digits.
@@ -807,6 +807,7 @@ Description：
 
   The BC25PA platform does not support this method.
   
+
 Example
 
 ```python
@@ -1023,7 +1024,7 @@ def voice_callback(args):
 
 Function: Provides SMS related APIs.
 Note: The BC25PA platform does not support this module function.
-  
+
 ##### Send the Message in TEXT Mode
 
 > **sms.sendTextMsg(phoneNumber, msg, codeMode)**
@@ -1505,7 +1506,7 @@ This function obtains the current APN.
 * note
 
   The BC25PA platform does not support this module function.
- 
+
 ##### Obtain CSQ
 
 > **net.csqQueryPoll()**
@@ -1614,7 +1615,7 @@ If the execution is failed, -1 is returned. If the execution is successful, a tu
 * note
 
   The BC25PA platform does not support this module function.
- 
+
 RAT
 
 | Value | RAT                                                          |
@@ -1670,7 +1671,7 @@ The function sets the current RAT and the roaming configuration.
 * note
 
   The BC25PA platform does not support this module function.
- 
+
 
 ##### Obtain the Network Mode
 
@@ -7797,19 +7798,258 @@ Results:
 
 
 
+#### NB Internet of things cloud platform
 
+Module function: it provides the function of connecting to the Internet of things cloud platform and connecting to the Internet of things cloud platform. Through the communication function of IOT cloud platform and module equipment, it currently supports China Telecom lot IOT platform, China Telecom AEP IOT platform and China Mobile onenet IOT platform.
 
+Module name: nb(lowercase)
 
+Support platform: BC25PA
 
+Introduction: it includes three sub modules OC, AEP. The two sub modules all use lwm2m for data interaction.
 
+##### OC
 
+###### Create OC object
 
+> **oc=OC(ip,port,psk)**
 
+- **Parameter**
 
+| Parameter | Type   | Description                                                  |
+| --------- | ------ | ------------------------------------------------------------ |
+| ip        | string | The server IP address of the Internet of things platform, with a maximum length of 16. |
+| port      | string | Server port of Internet of things platform, maximum length 5. |
+| psk       | string | PSK code module will be used for communication with dtls protocol (it is OK not to enter it now, but it cannot be empty). The maximum length is 64. |
 
+- Example
 
+```python
+>>> from nb import OC
+>>> oc=OC("180.101.147.115","5683","763c9692c6639541e1ddcd6769fc9e33")
+```
 
+###### Connect to OC cloud platform
 
+> **oc.connect()**
+
+- **Parameter**
+
+None.
+
+- **Return Value**
+
+  Success - 0
+
+  Failed - not 0
+
+- Example
+
+```python
+>>> oc.connect()
+0
+```
+
+###### Receive data
+
+> **oc.recv(data_len,data)**
+
+- **Parameter**
+
+| Parameter | Type   | Description                                                  |
+| --------- | ------ | ------------------------------------------------------------ |
+| data_len  | int    | Expected accepted data length (note that this parameter is adjusted according to the actual length of data, and the minimum value is taken according to the comparison between the capacity of data variable and data_len) |
+| data      | string | Store received data                                          |
+
+- Note
+
+The received data is a hexadecimal string, so the data length must be even.
+
+- **Return Value**
+
+Success - 0
+
+Failed - not 0
+
+- Example
+
+```python
+>>> oc.recv(6,data)
+0
+```
+
+###### Send data
+
+> **oc.send(data_len,data,type)**
+
+- **Parameter**
+
+| Parameter | Type   | Description                                                  |
+| --------- | ------ | ------------------------------------------------------------ |
+| data_len  | int    | Expected Send data length (note that this parameter is adjusted according to the actual length of data, and the minimum value is taken according to the comparison between the capacity of data variable and data_len) |
+| data      | string | Data to be sent                                              |
+| type      | int    | Sending method: 0, 1 and 2 do not need response confirmation, and 100, 101 and 102 need response confirmation. Only 0, 1 and 2 sending methods are supported temporarily. |
+
+- Note
+
+The sent data is a hexadecimal string, and the data length is even.
+
+- **Return Value**
+
+Success - 0
+
+Failed - not 0
+
+- Example
+
+```python
+>>> print(data)
+bytearray(b'313233')
+>>> oc.send(6,data,0)
+0
+```
+
+###### Close connection
+
+- **Parameter**
+
+None
+
+- **Return Value**
+
+Success -True
+
+Failed -False
+
+- Example
+
+```python
+>>> oc.close()
+True
+```
+
+##### AEP
+
+###### Create AEP object
+
+> **aep=AEP(ip,port)**
+
+- **Parameter**
+
+| Parameter | Type   | Description                                                  |
+| --------- | ------ | ------------------------------------------------------------ |
+| ip        | string | The server IP address of the Internet of things platform, with a maximum length of 16. |
+| port      | string | Server port of Internet of things platform, maximum length 5. |
+
+- Example
+
+```python
+>>> from nb import AEP
+>>> aep=AEP("221.229.214.202","5683")
+```
+
+###### Connect to AEP cloud platform
+
+> **aep.connect()**
+
+- **Parameter**
+
+None.
+
+- **Return Value**
+
+  Success - 0
+
+  Failed - not 0
+
+- Example
+
+```python
+>>> aep.connect()
+0
+```
+
+###### Receive data
+
+> **aep.recv(data_len,data)**
+
+- **Parameter**
+
+| Parameter | Type   | Description                                                  |
+| --------- | ------ | ------------------------------------------------------------ |
+| data_len  | int    | Expected accepted data length (note that this parameter is adjusted according to the actual length of data, and the minimum value is taken according to the comparison between the capacity of data variable and data_len) |
+| data      | string | Store received data                                          |
+
+- Note
+
+The received data is a hexadecimal string, so the data length must be even.
+
+- **Return Value**
+
+Success - 0
+
+Failed - not 0
+
+- Example
+
+```python
+>>> aep.recv(6,data)
+0
+```
+
+###### Send data
+
+> **aep.send(data_len,data,type)**
+
+- **Parameter**
+
+| Parameter | Type   | Description                                                  |
+| --------- | ------ | ------------------------------------------------------------ |
+| data_len  | int    | Expected Send data length (note that this parameter is adjusted according to the actual length of data, and the minimum value is taken according to the comparison between the capacity of data variable and data_len) |
+| data      | string | Data to be sent                                              |
+| type      | int    | Sending method: 0, 1 and 2 do not need response confirmation, and 100, 101 and 102 need response confirmation. Only 0, 1 and 2 sending methods are supported temporarily. |
+
+- Note
+
+The sent data is a hexadecimal string, and the data length is even.
+
+- **Return Value**
+
+Success - 0
+
+Failed - not 0
+
+- Example
+
+```python
+>>> print(data)
+bytearray(b'313233')
+>>> aep.send(6,data,0)
+0
+```
+
+###### Close connection
+
+- **Parameter**
+
+None
+
+- **Return Value**
+
+Success -True
+
+Failed -False
+
+- Example
+
+```python
+>>> aep.close()
+True
+```
+
+##### 
+
+###### 
 
 
 
