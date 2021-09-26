@@ -902,19 +902,83 @@ sim.setCallback(cb)
 
 成功返回整型0，失败返回整型-1。
 
-* 示例
+*callback函数中的event定义
 
+1、老架构
+typedef enum
+{
+    QL_VOICECALL_IDLE_IND = 0,
+    
+    /***cc call***/
+    //MT
+    QL_VOICECALL_INCOMING_IND,
+    QL_VOICECALL_WAITING_IND,
+    //MO
+    QL_VOICECALL_DIALING_IND,
+    QL_VOICECALL_ALERTING_IND,
+    QL_VOICECALL_MO_FAILED_IND,  
+    //
+    QL_VOICECALL_CONNECTED_IND,
+    QL_VOICECALL_HOLDING_IND,
+    QL_VOICECALL_DISCONNECTING_IND,
+    QL_VOICECALL_DISCONNECTED_IND,
+
+    /***volte call***/
+    //MT
+    QL_VOICECALL_VOLTE_INCOMMING_IND = 10,
+    QL_VOICECALL_VOLTE_WAITING_IND,
+    //MO
+    QL_VOICECALL_VOLTE_DIALING_IND,
+    QL_VOICECALL_VOLTE_ALERTING_IND,
+    //
+    QL_VOICECALL_VOLTE_CONNECTED_IND,
+    QL_VOICECALL_VOLTE_HOLDING_IND,
+    QL_VOICECALL_VOLTE_DISCONNECTED_IND,
+
+    QL_VOICECALL_STATE_MAX_NUM
+}QL_VOICECALL_STATE;
+
+2、新架构
+typedef enum
+{
+	HELIOS_VC_INIT_OK_IND = 1,
+	HELIOS_VC_RING_IND,
+	HELIOS_VC_CONNECT_IND,
+	HELIOS_VC_NOCARRIER_IND,
+	HELIOS_VC_ERROR_IND,
+	HELIOS_VC_CCWA_IND,
+	HELIOS_VC_DIALING_IND,
+	HELIOS_VC_MO_FAILED_IND,
+	HELIOS_VC_HOLDING_IND,
+	
+	HELIOS_VC_RING_VOLTE_IND,
+	HELIOS_VC_CONNECT_VOLTE_IND,
+	HELIOS_VC_NOCARRIER_VOLTE_IND,
+	HELIOS_VC_CCWA_VOLTE_IND,
+	HELIOS_VC_DIALING_VOLTE_IND,
+	HELIOS_VC_ALERTING_VOLTE_IND,
+	HELIOS_VC_HOLDING_VOLTE_IND
+}HELIOS_VC_EVENT_ID_E;
+
+* 示例
+(注意:这里的args以老架构定义的枚举值举例)
 ```python
 def voice_callback(args):
-     if args[0] == 4106:
-         print('voicecall is waiting')
-     elif args[0] == 4105:
-         print('voicecall disconnect')
-     elif args[0] == 4104:
-         print('voicecall connected, CallNO.: ', args[6])
-     elif args[0] == 4103:
+     if args[0] == 10:
          print('voicecall incoming call, PhoneNO.: ', args[6])
-
+     elif args[0] == 11:
+         print('voicecall is waiting, PhoneNO.: ', args[6])
+     elif args[0] == 12:
+         print('voicecall dialing, PhoneNO.: ', args[6])
+	 elif args[0] == 13:
+         print('voicecall alerting, PhoneNO.: ', args[6])
+     elif args[0] == 14:
+         print('voicecall connected, PhoneNO.: ', args[6])
+     elif args[0] == 15:
+         print('voicecall holding, PhoneNO.: ', args[6])
+     elif args[0] == 16:
+         print('voicecall disconnect')
+     
 >>> voiceCall.setCallback(voice_callback)
 0
 >>> voiceCall.callStart('10086')
