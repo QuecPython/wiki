@@ -984,7 +984,7 @@ typedef enum
     QL_VOICECALL_HOLDING_IND,
     QL_VOICECALL_DISCONNECTING_IND,
     QL_VOICECALL_DISCONNECTED_IND,
-
+    
     /***volte call***/
     //MT
     QL_VOICECALL_VOLTE_INCOMMING_IND = 10,
@@ -996,7 +996,7 @@ typedef enum
     QL_VOICECALL_VOLTE_CONNECTED_IND,
     QL_VOICECALL_VOLTE_HOLDING_IND,
     QL_VOICECALL_VOLTE_DISCONNECTED_IND,
-
+    
     QL_VOICECALL_STATE_MAX_NUM
 }QL_VOICECALL_STATE;
 
@@ -4021,6 +4021,66 @@ def usb_callback(conn_status):
 	elif status == 1:
 		print('USB is connected.')
 usb.setCallback(usb_callback)
+```
+
+
+
+##### USBNET
+
+提供USB网卡功能
+
+注意：目前仅ASR平台支持
+
+###### 设置USB网卡工作类型（重启生效）
+
+USBNET.set_worktype(type)
+
+- 参数
+
+  | 参数 | 参数类型 | 参数说明                                                     |
+  | ---- | -------- | ------------------------------------------------------------ |
+  | type | int      | USBNET 工作类型<br/>Type_ECM – ECM 模式<br/>Type_RNDIS – RNDIS模式<br/> |
+
+- 返回值
+
+  设置成功返回整型0，失败返回整型-1。
+
+  
+
+###### 打开USB网卡
+
+USBNET.open()
+
+- 参数
+
+  无
+
+- 返回值
+
+  打开成功返回整型0，失败返回整型-1。
+
+  
+
+示例
+
+```python
+from misc import USBNET
+from misc import Power
+
+#work on ECM mode default
+USBNET.open()
+
+USBNET.set_worktype(USBNET.Type_RNDIS)
+
+#reset the module
+Power.powerRestart()
+
+
+#After restart
+from misc import USBNET
+
+#work on RNDIS mode
+USBNET.open()
 ```
 
 
