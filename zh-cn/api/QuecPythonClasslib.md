@@ -7336,6 +7336,111 @@ def callback(para):
 Scandecode.callback(callback) 
 ```
 
+##### 照相机
+
+照相机功能。
+
+###### 创建对象
+
+**import camera**
+**cap= camera.camCaputre(model,cam_w,cam_h,perview_level,lcd_w,lcd_h)**
+
+* 参数
+
+| 参数          | 参数类型 | 参数说明                                                     |
+| ------------- | -------- | ------------------------------------------------------------ |
+| model         | int      | camera型号：<br />*0: gc032a spi*<br />*1: bf3901 spi*       |
+| cam_w         | int      | camera水平分辨率                                             |
+| *cam_h*       | int      | *camera垂直分辨率*                                           |
+| perview_level | int      | 预览等级[0,2]。等级越高，图像越流畅,消耗资源越大。<br />等于0时，无lcd预览功能<br />等于1或2时，必须先初始化lcd |
+| *lcd_w*       | int      | LCD水平分辨率                                                |
+| *lcd_h*       | int      | *LCD垂直分辨率*                                              |
+
+* 返回值
+
+若返回对象，则表示创建成功
+
+
+
+###### 打开摄像头
+
+**camCaputre.open()**
+
+* 参数
+
+无
+
+* 返回值
+
+0：成功
+
+其它：失败
+
+
+
+###### 关闭摄像头
+
+**camCaputre.close()**
+
+* 参数
+
+无
+
+* 返回值
+
+0：成功
+
+其它：关闭失败
+
+
+
+###### 拍照
+
+拍照格式为jpeg
+
+**camCaputre.start(width,  height, pic_name)**
+
+* 参数
+
+| 参数     | 参数类型 | 参数说明                                  |
+| -------- | -------- | ----------------------------------------- |
+| width    | int      | 保存图片水平分辨率                        |
+| height   | int      | 保存图片垂直分辨率                        |
+| pic_name | str      | 图片名。图片无需加后缀.jpeg，会自动添加。 |
+
+* 返回值
+
+0 ： 成功（实际还需看拍照回调）
+
+
+
+###### 设置拍照回调
+
+**camCaputre.callback(callback)**
+
+* 参数
+
+| 参数     | 参数类型 | 参数说明 |
+| -------- | -------- | -------- |
+| callback | api      | 回调api  |
+
+* 返回值
+
+0：成功
+
+其它：失败
+
+* 示例
+
+```python
+def callback(para):
+    print(para)		#para[0] 拍照结果 	0：成功 其它：失败
+    				#para[1] 保存图片的名称	
+camCaputre.callback(callback) 
+```
+
+
+
 
 
 #### GNSS - 定位授时
