@@ -3311,6 +3311,95 @@ record_test.end_callback(record_callback)
 record_test.gain(4,12)
 ```
 
+###### 录音流
+
+目前适用于EC600U EC200U平台
+
+> **record.stream_start(format, samplerate, time)**
+
+录音音频流
+
+* 参数
+
+| 参数       | 参数类型 | 参数说明                      |
+| ---------- | -------- | ----------------------------- |
+| format     | int      | 音频格式，目前支持pcm wav amr |
+| samplerate | int      | 采样率，目前支持8K 和 16K     |
+| time       | int      | 录音时长，单位 S (秒)         |
+
+* 返回值
+
+0：成功
+
+其它：失败
+
+* 示例
+
+```python
+record_test.stream_start(record_test.AMRNB, 8000, 5)
+```
+
+注意：录制音频流的同时，应及时读取音频流。目前是采用循环buf,不及时读取，会导致数据丢失
+
+###### 读取录音流
+
+目前适用于展锐平台
+
+> **record.stream_read(read_buf, len)**
+
+录音音频流
+
+* 参数
+
+| 参数     | 参数类型 | 参数说明      |
+| -------- | -------- | ------------- |
+| read_buf | buf      | 录音流保存buf |
+| len      | int      | 读取的长度    |
+
+* 返回值
+
+-1：读取失败
+
+大于0：实际读取的个数
+
+* 示例
+
+```python
+read_buf = bytearray(128)
+record_test.stream_read(read_buf, 128)
+```
+
+###### 录音流示例
+
+```python
+import audio
+import utime
+record_test = audio.Record()
+audio_test = audio.Audio(0)
+
+read_time = 5
+
+buf = bytearray(0)
+
+def stream_rec_cb(para):
+    global buf
+    if(para[0] == 'stream'):
+        if(para[2] == 1):
+            read_buf = bytearray(para[1])
+            record_test.stream_read(read_buf,para[1])
+            buf += read_buf
+            del read_buf
+        elif (para[2] == 3):
+            audio_test.stopPlayStream()
+            audio_test.playStream(record_test.AMRNB, buf)
+
+
+
+record_test.end_callback(stream_rec_cb)
+audio_test.stopPlayStream()
+record_test.stream_start(record_test.AMRNB, 8000, read_time)
+```
+
 
 
 ###### 使用示例
