@@ -3991,6 +3991,42 @@ usb.setCallback(usb_callback)
 
 
 
+##### USBNET
+
+It provides the USB network adapter function.
+
+NOTE：Currently, only the ASR platform supports it.
+
+###### Setting the USBNET working type (Take effect after restart)
+
+USBNET.set_worktype(type)
+
+- Parameter
+
+  | Parameter | Type | Description                                                  |
+  | --------- | ---- | ------------------------------------------------------------ |
+  | type      | int  | USBNET working type<br/>Type_ECM – ECM mode<br/>Type_RNDIS – RNDIS mode<br/> |
+
+- Return Value
+
+  Return 0 if the setting is successful, otherwise return -1.
+
+  
+
+###### Open USBNET
+
+USBNET.open()
+
+- Parameter
+
+  None
+
+- Return Value
+
+  Return 0 if the opening is successful, otherwise return -1.
+
+
+
 #### modem - Related Device
 
 Function: This module gets device information.
