@@ -3124,7 +3124,7 @@ record_test.getFilePath(“test.wav”)
 
 -7： 内存不足10K
 
--8： 文件不属于该对象
+
 
 bytes:返回数据
 
@@ -3164,7 +3164,7 @@ amr格式时，此值会比返回callback返回值大6 bytes（6 bytes为文件�
 
 *-3*  文件正在使用 ；
 
--4 文件不属于该对象
+
 
 * 示例
 
@@ -3195,8 +3195,6 @@ record_test.getSize(“test.amr”)
 -1：文件不存在 
 
 -2：文件正在使用
-
--3 :  文件不属于该对象
 
 * 示例
 
@@ -3311,28 +3309,6 @@ record_test.end_callback(record_callback)
 
 ```python
 record_test.gain(4,12)
-```
-
-
-
-###### 查看录音文件列表
-
-> **record.list_file()**
-
-查看该对象下录音文件列表
-
-* 参数
-
-无
-
-* 返回值
-
-*str*  字符串。录音文件列表  
-
-* 示例
-
-```python
-record_test.list_file()
 ```
 
 
