@@ -4308,6 +4308,33 @@ if __name__ == '__main__':
 >>> uart1.control_485(UART.GPIO24, 1)
 ```
 
+###### 设置串口数据回调
+
+> **uart.set_callback(fun)**
+
+串口收到数据后，会执行该回调。
+
+- 参数
+
+| 参数 | 类型     | 说明                                                         |
+| ---- | -------- | ------------------------------------------------------------ |
+| fun  | function | 串口接收数据回调 [result, port, num]<br />result: 接收接口（0：成功， 其它：失败）<br />port: 接收端口<br />num: 返回有多少数据 |
+
+- 返回值
+
+成功返回整型0，失败返回整型-1。
+
+- 示例
+
+```python
+>>> from machine import UART
+>>> uart1 = UART(UART.UART1, 115200, 8, 0, 1, 0)
+>>> 
+>>>def uart_call(para):
+>>>		print(para)
+>>> uart1.set_callback(uart_call)
+```
+
 
 
 ###### 使用示例
