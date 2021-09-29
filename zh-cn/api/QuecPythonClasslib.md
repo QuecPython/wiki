@@ -4061,6 +4061,30 @@ USBNET.open()
 
   
 
+示例
+
+```python
+from misc import USBNET
+from misc import Power
+
+#work on ECM mode default
+USBNET.open()
+
+USBNET.set_worktype(USBNET.Type_RNDIS)
+
+#reset the module
+Power.powerRestart()
+
+
+#After restart
+from misc import USBNET
+
+#work on RNDIS mode
+USBNET.open()
+```
+
+
+
 #### modem - 设备相关
 
 模块功能：设备信息获取。

@@ -4025,6 +4025,30 @@ USBNET.open()
 
   Return 0 if the opening is successful, otherwise return -1.
 
+Example
+
+```python
+from misc import USBNET
+from misc import Power
+
+#work on ECM mode default
+USBNET.open()
+
+USBNET.set_worktype(USBNET.Type_RNDIS)
+
+#reset the module
+Power.powerRestart()
+
+
+#After restart
+from misc import USBNET
+
+#work on RNDIS mode
+USBNET.open()
+```
+
+
+
 
 
 #### modem - Related Device
