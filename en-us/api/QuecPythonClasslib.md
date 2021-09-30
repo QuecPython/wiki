@@ -4977,8 +4977,8 @@ Class function: A two-wire protocol used for communication between devices.
 | EC200U        | I2C0:<br />SCL: Pin number 41<br />SDA: Pin number 42<br />I2C1:<br />SCL:Pin number 141<br />SDA:Pin number 142 |
 | EC600S/EC600N | I2C1:<br />SCL: Pin number 57<br />SDA: Pin number 56          |
 | EC100Y        | I2C0:<br />SCL: Pin number 57<br />SDA: Pin number 56          |
-| BC25PA        | I2C0:<br />SCL: Pin number 22<br />SDA: Pin number 23<br />I2C1:<br />SCL: Pin number 20<br />SDA: Pin number 21 |
-- Exmaple
+| BC25PA        | I2C0:<br />SCL: Pin number 23<br />SDA: Pin number 22<br />I2C1:<br />SCL: Pin number 20<br />SDA: Pin number 21 |
+|- Exmaple||
 
 ```python
 from machine import I2C

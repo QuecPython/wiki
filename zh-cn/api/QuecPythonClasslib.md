@@ -4943,8 +4943,8 @@ if __name__ == '__main__':
 | EC200U        | I2C0:<br />SCL: 引脚号41<br />SDA: 引脚号42<br />I2C1:<br />SCL:引脚号141<br />SDA:引脚号142 |
 | EC600S/EC600N | I2C1:<br />SCL:引脚号57<br />SDA:引脚号56                    |
 | EC100Y        | I2C0:<br />SCL:引脚号57<br />SDA:引脚号56                    |
-| BC25PA        | I2C0:<br />SCL: 引脚号22<br />SDA: 引脚号23<br />I2C1:<br />SCL:引脚号20<br />SDA:引脚号21 |
-- 示例
+| BC25PA        | I2C0:<br />SCL: 引脚号23<br />SDA: 引脚号22<br />I2C1:<br />SCL:引脚号20<br />SDA:引脚号21 |
+|- 示例||
 
 ```python
 from machine import I2C
