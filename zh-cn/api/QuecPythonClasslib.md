@@ -4091,22 +4091,22 @@ usb.setCallback(usb_callback)
 
 | 常量             | 适配平台                   | 说明      |
 | ---------------- | ------------------------ | -------- |
-| Pin.GPIO1        | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO1    |
-| Pin.GPIO2        | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO2    |
-| Pin.GPIO3        | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO3    |
-| Pin.GPIO4        | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO4    |
-| Pin.GPIO5        | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO5    |
-| Pin.GPIO6        | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO6    |
-| Pin.GPIO7        | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO7    |
-| Pin.GPIO8        | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO8    |
-| Pin.GPIO9        | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO9    |
-| Pin.GPIO10       | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO10   |
-| Pin.GPIO11       | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO11   |
-| Pin.GPIO12       | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO12   |
-| Pin.GPIO13       | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO13   |
-| Pin.GPIO14       | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO14   |
-| Pin.GPIO15       | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO15   |
-| Pin.GPIO16       | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO16   |
+| Pin.GPIO1        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO1    |
+| Pin.GPIO2        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO2    |
+| Pin.GPIO3        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO3    |
+| Pin.GPIO4        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO4    |
+| Pin.GPIO5        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO5    |
+| Pin.GPIO6        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO6    |
+| Pin.GPIO7        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO7    |
+| Pin.GPIO8        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO8    |
+| Pin.GPIO9        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO9    |
+| Pin.GPIO10       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO10   |
+| Pin.GPIO11       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO11   |
+| Pin.GPIO12       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO12   |
+| Pin.GPIO13       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO13   |
+| Pin.GPIO14       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO14   |
+| Pin.GPIO15       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO15   |
+| Pin.GPIO16       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO16   |
 | Pin.GPIO17       | EC600S / EC600N / EC100Y | GPIO17   |
 | Pin.GPIO18       | EC600S / EC600N / EC100Y | GPIO18   |
 | Pin.GPIO19       | EC600S / EC600N / EC100Y | GPIO19   |
@@ -4126,26 +4126,7 @@ usb.setCallback(usb_callback)
 | Pin.PULL_PU      | --                       | 上拉模式 |
 | Pin.PULL_PD      | --                       | 下拉模式 |
 
-对于BC25PA平台常量说明
 
-| 常量             | 适配平台                 | 说明     |
-| ---------------- | ------------------------ | -------- |
-| Pin.GPIO1        | BC25PA                   | GPIO3    |
-| Pin.GPIO2        | BC25PA                   | GPIO4    |
-| Pin.GPIO3        | BC25PA                   | GPIO5    |
-| Pin.GPIO4        | BC25PA                   | GPIO6    |
-| Pin.GPIO5        | BC25PA                   | GPIO16   |
-| Pin.GPIO6        | BC25PA                   | GPIO20   |
-| Pin.GPIO7        | BC25PA                   | GPIO21   |
-| Pin.GPIO8        | BC25PA                   | GPIO22   |
-| Pin.GPIO9        | BC25PA                   | GPIO23   |
-| Pin.GPIO10       | BC25PA                   | GPIO25   |
-| Pin.GPIO11       | BC25PA                   | GPIO28   |
-| Pin.GPIO12       | BC25PA                   | GPIO29   |
-| Pin.GPIO13       | BC25PA                   | GPIO30   |
-| Pin.GPIO14       | BC25PA                   | GPIO31   |
-| Pin.GPIO15       | BC25PA                   | GPIO32   |
-| Pin.GPIO16       | BC25PA                   | GPIO33   |
 
 **GPIO对应引脚号说明**
 
@@ -4159,7 +4140,7 @@ usb.setCallback(usb_callback)
 
 | 参数      | 类型 | 说明                                                         |
 | :-------- | :--- | ------------------------------------------------------------ |
-| GPIOn     | int  | 引脚号<br />EC100YCN平台引脚对应关系如下（引脚号为外部引脚编号）：<br />GPIO1 – 引脚号22<br />GPIO2 – 引脚号23<br />GPIO3 – 引脚号38<br />GPIO4 – 引脚号53<br />GPIO5 – 引脚号54<br />GPIO6 – 引脚号104<br />GPIO7 – 引脚号105<br />GPIO8 – 引脚号106<br />GPIO9 – 引脚号107<br />GPIO10 – 引脚号178<br />GPIO11 – 引脚号195<br />GPIO12 – 引脚号196<br />GPIO13 – 引脚号197<br />GPIO14 – 引脚号198<br />GPIO15 – 引脚号199<br />GPIO16 – 引脚号203<br />GPIO17 – 引脚号204<br />GPIO18 – 引脚号214<br />GPIO19 – 引脚号215<br />EC600SCN/EC600NCN平台引脚对应关系如下（引脚号为模块外部引脚编号）：<br />GPIO1 – 引脚号10<br />GPIO2 – 引脚号11<br />GPIO3 – 引脚号12<br />GPIO4 – 引脚号13<br />GPIO5 – 引脚号14<br />GPIO6 – 引脚号15<br />GPIO7 – 引脚号16<br />GPIO8 – 引脚号39<br />GPIO9 – 引脚号40<br />GPIO10 – 引脚号48<br />GPIO11 – 引脚号58<br />GPIO12 – 引脚号59<br />GPIO13 – 引脚号60<br />GPIO14 – 引脚号61<br />GPIO15 – 引脚号62<br/>GPIO16 – 引脚号63<br/>GPIO17 – 引脚号69<br/>GPIO18 – 引脚号70<br/>GPIO19 – 引脚号1<br/>GPIO20 – 引脚号3<br/>GPIO21 – 引脚号49<br/>GPIO22 – 引脚号50<br/>GPIO23 – 引脚号51<br/>GPIO24 – 引脚号52<br/>GPIO25 – 引脚号53<br/>GPIO26 – 引脚号54<br/>GPIO27 – 引脚号55<br/>GPIO28 – 引脚号56<br/>GPIO29 – 引脚号57<br />EC600UCN平台引脚对应关系如下（引脚号为模块外部引脚编号）<br />GPIO1 – 引脚号61<br />GPIO2 – 引脚号58<br />GPIO3 – 引脚号34<br />GPIO4 – 引脚号60<br />GPIO5 – 引脚号69<br />GPIO6 – 引脚号70<br />GPIO7 – 引脚号123<br />GPIO8 – 引脚号118<br />GPIO9 – 引脚号9<br />GPIO10 – 引脚号1<br />GPIO11 – 引脚号4<br />GPIO12 – 引脚号3<br />GPIO13 – 引脚号2<br />GPIO14 – 引脚号54<br />GPIO15 – 引脚号57<br/>GPIO16 – 引脚号56<br/>EC200UCN平台引脚对应关系如下（引脚号为模块外部引脚编号）<br />GPIO1 – 引脚号27<br />GPIO2 – 引脚号26<br />GPIO3 – 引脚号24<br />GPIO4 – 引脚号25<br />GPIO5 – 引脚号13<br />GPIO6 – 引脚号135<br />GPIO7 – 引脚号136<br />GPIO8 – 引脚号133<br />GPIO9 – 引脚号3<br />GPIO10 – 引脚号40<br />GPIO11 – 引脚号37<br />GPIO12 – 引脚号38<br />GPIO13 – 引脚号39<br />GPIO14 – 引脚号5<br />GPIO15 – 引脚号141<br/>GPIO16 – 引脚号142<br/> |
+| GPIOn     | int  | 引脚号<br />EC100YCN平台引脚对应关系如下（引脚号为外部引脚编号）：<br />GPIO1 – 引脚号22<br />GPIO2 – 引脚号23<br />GPIO3 – 引脚号38<br />GPIO4 – 引脚号53<br />GPIO5 – 引脚号54<br />GPIO6 – 引脚号104<br />GPIO7 – 引脚号105<br />GPIO8 – 引脚号106<br />GPIO9 – 引脚号107<br />GPIO10 – 引脚号178<br />GPIO11 – 引脚号195<br />GPIO12 – 引脚号196<br />GPIO13 – 引脚号197<br />GPIO14 – 引脚号198<br />GPIO15 – 引脚号199<br />GPIO16 – 引脚号203<br />GPIO17 – 引脚号204<br />GPIO18 – 引脚号214<br />GPIO19 – 引脚号215<br />EC600SCN/EC600NCN平台引脚对应关系如下（引脚号为模块外部引脚编号）：<br />GPIO1 – 引脚号10<br />GPIO2 – 引脚号11<br />GPIO3 – 引脚号12<br />GPIO4 – 引脚号13<br />GPIO5 – 引脚号14<br />GPIO6 – 引脚号15<br />GPIO7 – 引脚号16<br />GPIO8 – 引脚号39<br />GPIO9 – 引脚号40<br />GPIO10 – 引脚号48<br />GPIO11 – 引脚号58<br />GPIO12 – 引脚号59<br />GPIO13 – 引脚号60<br />GPIO14 – 引脚号61<br />GPIO15 – 引脚号62<br/>GPIO16 – 引脚号63<br/>GPIO17 – 引脚号69<br/>GPIO18 – 引脚号70<br/>GPIO19 – 引脚号1<br/>GPIO20 – 引脚号3<br/>GPIO21 – 引脚号49<br/>GPIO22 – 引脚号50<br/>GPIO23 – 引脚号51<br/>GPIO24 – 引脚号52<br/>GPIO25 – 引脚号53<br/>GPIO26 – 引脚号54<br/>GPIO27 – 引脚号55<br/>GPIO28 – 引脚号56<br/>GPIO29 – 引脚号57<br />EC600UCN平台引脚对应关系如下（引脚号为模块外部引脚编号）<br />GPIO1 – 引脚号61<br />GPIO2 – 引脚号58<br />GPIO3 – 引脚号34<br />GPIO4 – 引脚号60<br />GPIO5 – 引脚号69<br />GPIO6 – 引脚号70<br />GPIO7 – 引脚号123<br />GPIO8 – 引脚号118<br />GPIO9 – 引脚号9<br />GPIO10 – 引脚号1<br />GPIO11 – 引脚号4<br />GPIO12 – 引脚号3<br />GPIO13 – 引脚号2<br />GPIO14 – 引脚号54<br />GPIO15 – 引脚号57<br/>GPIO16 – 引脚号56<br/>EC200UCN平台引脚对应关系如下（引脚号为模块外部引脚编号）<br />GPIO1 – 引脚号27<br />GPIO2 – 引脚号26<br />GPIO3 – 引脚号24<br />GPIO4 – 引脚号25<br />GPIO5 – 引脚号13<br />GPIO6 – 引脚号135<br />GPIO7 – 引脚号136<br />GPIO8 – 引脚号133<br />GPIO9 – 引脚号3<br />GPIO10 – 引脚号40<br />GPIO11 – 引脚号37<br />GPIO12 – 引脚号38<br />GPIO13 – 引脚号39<br />GPIO14 – 引脚号5<br />GPIO15 – 引脚号141<br/>GPIO16 – 引脚号142<br/>BC25PA平台引脚对应关系如下（引脚号为模块外部引脚编号）<br />GPIO1 – 引脚号3<br />GPIO2 – 引脚号4<br />GPIO3 – 引脚号5<br />GPIO4 – 引脚号6<br />GPIO5 – 引脚号16<br />GPIO6 – 引脚号20<br />GPIO7 – 引脚号21<br />GPIO8 – 引脚号22<br />GPIO9 – 引脚号23<br />GPIO10 – 引脚号25<br />GPIO11 – 引脚号28<br />GPIO12 – 引脚号29<br />GPIO13 – 引脚号30<br />GPIO14 – 引脚号31<br />GPIO15 – 引脚号32<br/>GPIO16 – 引脚号33<br/> |
 | direction | int  | IN – 输入模式，OUT – 输出模式                                |
 | pullMode  | int  | PULL_DISABLE – 浮空模式<br />PULL_PU – 上拉模式<br />PULL_PD – 下拉模式 |
 | level     | int  | 0 - 设置引脚为低电平, 1- 设置引脚为高电平                    |
