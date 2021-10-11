@@ -3787,7 +3787,7 @@ pk.powerKeyEventRegister(pwk_callback)
 
 ```python
 >>> from misc import PWM
->>> pwm1 = PWM(PWM.PWM1, PWM.BOVE_MS, 100, 200)
+>>> pwm1 = PWM(PWM.PWM1, PWM.ABOVE_MS, 100, 200)
 ```
 
 
