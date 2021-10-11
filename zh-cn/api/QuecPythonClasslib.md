@@ -4732,27 +4732,6 @@ if __name__ == '__main__':
 | Pin.PULL_PU      | --                                            | 上拉模式 |
 | Pin.PULL_PD      | --                                            | 下拉模式 |
 
-对于BC25PA平台常量说明
-
-| 常量             | 适配平台                 | 说明     |
-| ---------------- | ------------------------ | -------- |
-| Pin.GPIO1        | BC25PA                   | GPIO3    |
-| Pin.GPIO2        | BC25PA                   | GPIO4    |
-| Pin.GPIO3        | BC25PA                   | GPIO5    |
-| Pin.GPIO4        | BC25PA                   | GPIO6    |
-| Pin.GPIO5        | BC25PA                   | GPIO16   |
-| Pin.GPIO6        | BC25PA                   | GPIO20   |
-| Pin.GPIO7        | BC25PA                   | GPIO21   |
-| Pin.GPIO8        | BC25PA                   | GPIO22   |
-| Pin.GPIO9        | BC25PA                   | GPIO23   |
-| Pin.GPIO10       | BC25PA                   | GPIO25   |
-| Pin.GPIO11       | BC25PA                   | GPIO28   |
-| Pin.GPIO12       | BC25PA                   | GPIO29   |
-| Pin.GPIO13       | BC25PA                   | GPIO30   |
-| Pin.GPIO14       | BC25PA                   | GPIO31   |
-| Pin.GPIO15       | BC25PA                   | GPIO32   |
-| Pin.GPIO16       | BC25PA                   | GPIO33   |
-
 ###### 创建ExtInt对象
 
 > **extint = ExtInt(GPIOn, mode, pull, callback)**
