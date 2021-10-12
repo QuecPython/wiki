@@ -948,6 +948,90 @@ sim.setCallback(cb)
 
 
 
+##### 自动录音使能接口
+
+> **voiceCall.setAutoRecord(enable, record_type, record_mode, filename)**
+
+自动录音使能接口。(默认关闭自动录音)
+
+注：非volte版本无该接口
+
+* 参数
+
+| 参数         | 参数类型 | 参数说明                                              |
+| --------     | -------- | ----------------------------------------------------- |
+| enable       | int      | 使能开关。    范围：【0/1】；  0：关闭自动录音接口 1：开启自动录音功能     |
+| record_type  | int      | 录音文件类型。范围：【0/1】；  0：AMR  1:WAV                |
+| record_mode  | int      | mode。        范围：【0/1/2】；0：RX   1:TX    2:MIX                |
+| filename     | string   | 文件名。                |
+
+* 返回值
+
+设置成功返回整型0，设置失败返回整型-1, 不支持该接口返回字符串"NOT SUPPORT"。
+
+示例
+
+```python
+>>> voiceCall.setAutoRecord(1,0,2,'U:/test.amr')
+0
+```
+
+
+
+##### 开始录音
+
+> **voiceCall.startRecord(record_type, record_mode, filename)**
+
+开始录音接口。
+
+注：非volte版本无该接口
+
+* 参数
+
+| 参数         | 参数类型 | 参数说明                                              |
+| --------     | -------- | ----------------------------------------------------- |
+| record_type  | int      | 录音文件类型。范围：【0/1】；  0：AMR  1:WAV                |
+| record_mode  | int      | mode。        范围：【0/1/2】；0：RX   1:TX    2:MIX                |
+| filename     | string   | 文件名。                |
+
+* 返回值
+
+设置成功返回整型0，设置失败返回整型-1, 不支持该接口返回字符串"NOT SUPPORT"。
+
+示例
+
+```python
+>>> voiceCall.startRecord(0,2,'U:/test.amr')
+0
+```
+
+
+
+##### 结束录音
+
+> **voiceCall.stopRecord()**
+
+结束录音接口。
+
+注：非volte版本无该接口
+
+* 参数
+
+无
+
+* 返回值
+
+设置成功返回整型0，设置失败返回整型-1, 不支持该接口返回字符串"NOT SUPPORT"。
+
+示例
+
+```python
+>>> voiceCall.stopRecord()
+0
+```
+
+
+
 ##### 注册监听回调函数
 
 > **voiceCall.setCallback(usrFun))**
@@ -1155,6 +1239,7 @@ if __name__ == '__main__':
 > **sms.setSaveLoc(mem1, mem2, mem3)**
 
 设置短信存储位置。开机默认存储位置为SIM卡。一般SIM卡最大可存储50条短信，用户在使用时，如果短信存储在SIM卡中，要注意及时清理历史短信，防止SIM卡存储短信满了导致收不到新的短信。
+注意：ASR平台如果要改变接收消息的存储位置，需要重置MEM2 & MEM3,展锐平台只需设定MEM3即可（具体原因和平台底部的实现有关，此处不再赘述）
 
 * 参数
 
