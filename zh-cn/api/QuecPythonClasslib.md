@@ -967,6 +967,7 @@ sim.setCallback(cb)
 *callback函数中的event定义
 
 1、老架构
+```c
 typedef enum
 {
     QL_VOICECALL_IDLE_IND = 0,
@@ -999,8 +1000,10 @@ typedef enum
 
     QL_VOICECALL_STATE_MAX_NUM
 }QL_VOICECALL_STATE;
+```
 
 2、新架构
+```c
 typedef enum
 {
 	HELIOS_VC_INIT_OK_IND = 1,
@@ -1021,6 +1024,7 @@ typedef enum
 	HELIOS_VC_ALERTING_VOLTE_IND,
 	HELIOS_VC_HOLDING_VOLTE_IND
 }HELIOS_VC_EVENT_ID_E;
+```
 
 * 示例
 (注意:这里的args以老架构定义的枚举值举例)
