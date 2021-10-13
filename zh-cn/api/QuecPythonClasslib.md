@@ -5701,8 +5701,8 @@ Color_buffer = bytearray(Color_buffer)
 lcd.lcd_write(Color_buffer,10,10,20,20)
 lcd.lcd_clear(0xf800) # 红色
 
-lcd.show("lcd_test.bin",0,0)	#该lcd_test.bin 中包含图像头数据
-lcd.show("lcd_test1.bin",0,0,126,220) #该lcd_test1.bin 中没有包含图像头数据
+lcd.lcd_show("lcd_test.bin",0,0)	#该lcd_test.bin 中包含图像头数据
+lcd.lcd_show("lcd_test1.bin",0,0,126,220) #该lcd_test1.bin 中没有包含图像头数据
 ```
 
 
