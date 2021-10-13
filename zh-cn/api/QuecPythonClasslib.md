@@ -1069,7 +1069,7 @@ typedef enum
     QL_VOICECALL_HOLDING_IND,
     QL_VOICECALL_DISCONNECTING_IND,
     QL_VOICECALL_DISCONNECTED_IND,
-    
+
     /***volte call***/
     //MT
     QL_VOICECALL_VOLTE_INCOMMING_IND = 10,
@@ -1081,7 +1081,7 @@ typedef enum
     QL_VOICECALL_VOLTE_CONNECTED_IND,
     QL_VOICECALL_VOLTE_HOLDING_IND,
     QL_VOICECALL_VOLTE_DISCONNECTED_IND,
-    
+
     QL_VOICECALL_STATE_MAX_NUM
 }QL_VOICECALL_STATE;
 ```
@@ -2684,7 +2684,7 @@ download_list = [{'url': 'http://www.example.com/app.py', 'file_name': '/usr/app
 | -------- | -------- | ------------------------------------------------------------ |
 | priority | int      | 播放优先级，支持优先级0~4，数值越大优先级越高                |
 | breakin  | int      | 打断模式，0表示不允许被打断，1表示允许被打断                 |
-| mode     | int      | 编码模式，1 - UNICODE16(Size end conversion)，2 - UTF-8，3 - UNICODE16(Don't convert) |
+| mode     | int      | 编码模式，1 - UNICODE16(UTF-16大端模式)，2 - UTF-8，3 - UNICODE16(UTF-16小端模式) |
 | str      | string   | 待播放字符串                                                 |
 
 * 返回值
@@ -2735,18 +2735,25 @@ download_list = [{'url': 'http://www.example.com/app.py', 'file_name': '/usr/app
 >>> tts.play(2, 0, 2, '4444444444444444444')  #任务C
 1
 
+#播放UTF16BE模式的语音
+>>> tts.play(1,1,1,'6B228FCE4F7F752879FB8FDC901A4FE16A2157573002')
+0
+
+#播放UTF16LE模式的语音
+>>> tts.play(1,1,3,'226BCE8F7F4F2875FB79DC8F1A90E14F216A57570230')
+0
 ```
 
 tts播放中文示例：
 
-注意，python文件开头需要加上“# -*- coding: UTF-8 -*-”，如果播放的中文中有标点符号，要用英文的标点符号。
+注意，python文件开头需要加上“# -*- coding: UTF-8 -*-”。
 
 ```python
 # -*- coding: UTF-8 -*-
 import audio
 
 tts = audio.TTS(1)
-str1 = '移联万物,志高行远' #这里的逗号是英文的逗号
+str1 = '移联万物，志高行远' 
 tts.play(4, 0, 2, str1)
 ```
 
@@ -4175,66 +4182,6 @@ def usb_callback(conn_status):
 	elif status == 1:
 		print('USB is connected.')
 usb.setCallback(usb_callback)
-```
-
-
-
-##### USBNET
-
-提供USB网卡功能
-
-注意：目前仅ASR平台支持
-
-###### 设置USB网卡工作类型（重启生效）
-
-USBNET.set_worktype(type)
-
-- 参数
-
-  | 参数 | 参数类型 | 参数说明                                                     |
-  | ---- | -------- | ------------------------------------------------------------ |
-  | type | int      | USBNET 工作类型<br/>Type_ECM – ECM 模式<br/>Type_RNDIS – RNDIS模式<br/> |
-
-- 返回值
-
-  设置成功返回整型0，失败返回整型-1。
-
-  
-
-###### 打开USB网卡
-
-USBNET.open()
-
-- 参数
-
-  无
-
-- 返回值
-
-  打开成功返回整型0，失败返回整型-1。
-
-  
-
-示例
-
-```python
-from misc import USBNET
-from misc import Power
-
-#work on ECM mode default
-USBNET.open()
-
-USBNET.set_worktype(USBNET.Type_RNDIS)
-
-#reset the module
-Power.powerRestart()
-
-
-#After restart
-from misc import USBNET
-
-#work on RNDIS mode
-USBNET.open()
 ```
 
 
