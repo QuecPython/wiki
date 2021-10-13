@@ -4181,62 +4181,42 @@ Function: GPIO read and write operations.
 
 ###### Constant Description
 
-| Constant         | Applicable Platform                    | Description    |
-| ---------------- | -------------------------------------- | -------------- |
-| Pin.GPIO1        | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO1          |
-| Pin.GPIO2        | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO2          |
-| Pin.GPIO3        | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO3          |
-| Pin.GPIO4        | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO4          |
-| Pin.GPIO5        | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO5          |
-| Pin.GPIO6        | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO6          |
-| Pin.GPIO7        | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO7          |
-| Pin.GPIO8        | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO8          |
-| Pin.GPIO9        | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO9          |
-| Pin.GPIO10       | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO10         |
-| Pin.GPIO11       | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO11         |
-| Pin.GPIO12       | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO12         |
-| Pin.GPIO13       | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO13         |
-| Pin.GPIO14       | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO14         |
-| Pin.GPIO15       | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO15         |
-| Pin.GPIO16       | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO16         |
-| Pin.GPIO17       | EC600S / EC600N / EC100Y               | GPIO17         |
-| Pin.GPIO18       | EC600S / EC600N / EC100Y               | GPIO18         |
-| Pin.GPIO19       | EC600S / EC600N / EC100Y               | GPIO19         |
-| Pin.GPIO20       | EC600S / EC600N                        | GPIO20         |
-| Pin.GPIO21       | EC600S / EC600N                        | GPIO21         |
-| Pin.GPIO22       | EC600S / EC600N                        | GPIO22         |
-| Pin.GPIO23       | EC600S / EC600N                        | GPIO23         |
-| Pin.GPIO24       | EC600S / EC600N                        | GPIO24         |
-| Pin.GPIO25       | EC600S / EC600N                        | GPIO25         |
-| Pin.GPIO26       | EC600S / EC600N                        | GPIO26         |
-| Pin.GPIO27       | EC600S / EC600N                        | GPIO27         |
-| Pin.GPIO28       | EC600S / EC600N                        | GPIO28         |
-| Pin.GPIO29       | EC600S / EC600N                        | GPIO29         |
-| Pin.IN           | --                                     | Input mode     |
-| Pin.OUT          | --                                     | Output mode    |
-| Pin.PULL_DISABLE | --                                     | Floating mode  |
-| Pin.PULL_PU      | --                                     | Pull-up mode   |
-| Pin.PULL_PD      | --                                     | Pull-down mode |
-
-Constant description for BC25PA platform
-| Constant         | Applicable Platform                    | Description    |
-| ---------------- | -------------------------------------- | -------------- |
-| Pin.GPIO1        | BC25PA                   | GPIO3    |
-| Pin.GPIO2        | BC25PA                   | GPIO4    |
-| Pin.GPIO3        | BC25PA                   | GPIO5    |
-| Pin.GPIO4        | BC25PA                   | GPIO6    |
-| Pin.GPIO5        | BC25PA                   | GPIO16   |
-| Pin.GPIO6        | BC25PA                   | GPIO20   |
-| Pin.GPIO7        | BC25PA                   | GPIO21   |
-| Pin.GPIO8        | BC25PA                   | GPIO22   |
-| Pin.GPIO9        | BC25PA                   | GPIO23   |
-| Pin.GPIO10       | BC25PA                   | GPIO25   |
-| Pin.GPIO11       | BC25PA                   | GPIO28   |
-| Pin.GPIO12       | BC25PA                   | GPIO29   |
-| Pin.GPIO13       | BC25PA                   | GPIO30   |
-| Pin.GPIO14       | BC25PA                   | GPIO31   |
-| Pin.GPIO15       | BC25PA                   | GPIO32   |
-| Pin.GPIO16       | BC25PA                   | GPIO33   |
+| Constant         | Applicable Platform                           | Description    |
+| ---------------- | --------------------------------------------- | -------------- |
+| Pin.GPIO1        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO1          |
+| Pin.GPIO2        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO2          |
+| Pin.GPIO3        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO3          |
+| Pin.GPIO4        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO4          |
+| Pin.GPIO5        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO5          |
+| Pin.GPIO6        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO6          |
+| Pin.GPIO7        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO7          |
+| Pin.GPIO8        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO8          |
+| Pin.GPIO9        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO9          |
+| Pin.GPIO10       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO10         |
+| Pin.GPIO11       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO11         |
+| Pin.GPIO12       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO12         |
+| Pin.GPIO13       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO13         |
+| Pin.GPIO14       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO14         |
+| Pin.GPIO15       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO15         |
+| Pin.GPIO16       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO16         |
+| Pin.GPIO17       | EC600S / EC600N / EC100Y                      | GPIO17         |
+| Pin.GPIO18       | EC600S / EC600N / EC100Y                      | GPIO18         |
+| Pin.GPIO19       | EC600S / EC600N / EC100Y                      | GPIO19         |
+| Pin.GPIO20       | EC600S / EC600N                               | GPIO20         |
+| Pin.GPIO21       | EC600S / EC600N                               | GPIO21         |
+| Pin.GPIO22       | EC600S / EC600N                               | GPIO22         |
+| Pin.GPIO23       | EC600S / EC600N                               | GPIO23         |
+| Pin.GPIO24       | EC600S / EC600N                               | GPIO24         |
+| Pin.GPIO25       | EC600S / EC600N                               | GPIO25         |
+| Pin.GPIO26       | EC600S / EC600N                               | GPIO26         |
+| Pin.GPIO27       | EC600S / EC600N                               | GPIO27         |
+| Pin.GPIO28       | EC600S / EC600N                               | GPIO28         |
+| Pin.GPIO29       | EC600S / EC600N                               | GPIO29         |
+| Pin.IN           | --                                            | Input mode     |
+| Pin.OUT          | --                                            | Output mode    |
+| Pin.PULL_DISABLE | --                                            | Floating mode  |
+| Pin.PULL_PU      | --                                            | Pull-up mode   |
+| Pin.PULL_PD      | --                                            | Pull-down mode |
 
 **Corresponding Pin Number Description of GPIO**
 
@@ -4250,7 +4230,7 @@ The GPIO pin numbers provided in this document correspond to the external pin nu
 
 | Parameter | Type | Description                                                  |
 | :-------- | :--- | ------------------------------------------------------------ |
-| GPIOn     | int  | Pin Number<br />The  corresponding pins of EC100Y-CN module are as follows (pin number is external pin number):<br />GPIO1 – Pin No. 22<br />GPIO2 – Pin No. 23<br />GPIO3 – Pin No. 38<br />GPIO4 – Pin No. 53<br />GPIO5 – Pin No. 54<br />GPIO6 – Pin No. 104<br />GPIO7 – Pin No. 105<br />GPIO8 – Pin No. 106<br />GPIO9 – Pin No. 107<br />GPIO10 – Pin No. 178<br />GPIO11 – Pin No. 195<br />GPIO12 – Pin No. 196<br />GPIO13 – Pin No. 197<br />GPIO14 – Pin No. 198<br />GPIO15 – Pin No. 199<br />GPIO16 – Pin No. 203<br />GPIO17 – Pin No. 204<br />GPIO18 – Pin No. 214<br />GPIO19 – Pin No. 215<br />The corresponding pins of EC600S-CN/EC600N-CN modules are as follows (pin number is external pin number): <br />GPIO1 – Pin No. 10<br />GPIO2 – Pin No. 11<br />GPIO3 – Pin No. 12<br />GPIO4 – Pin No. 13<br />GPIO5 – Pin No. 14<br />GPIO6 – Pin No. 15<br />GPIO7 – Pin No. 16<br />GPIO8 – Pin No. 39<br />GPIO9 – Pin No. 40<br />GPIO10 – Pin No. 48<br />GPIO11 – Pin No. 58<br />GPIO12 – Pin No. 59<br />GPIO13 – Pin No. 60<br />GPIO14 – Pin No. 61<br />GPIO15 – Pin No. 62<br/>GPIO16 – Pin No. 63<br/>GPIO17 – Pin No. 69<br/>GPIO18 – Pin No. 70<br/>GPIO19 – Pin No. 1<br/>GPIO20 – Pin No. 3<br/>GPIO21 – Pin No. 49<br/>GPIO22 – Pin No. 50<br/>GPIO23 – Pin No. 51<br/>GPIO24 – Pin No. 52<br/>GPIO25 – Pin No. 53<br/>GPIO26 – Pin No. 54<br/>GPIO27 – Pin No. 55<br/>GPIO28 – Pin No. 56<br/>GPIO29 – Pin No. 57<br />The corresponding pins of EC600U series module are as follows (pin number is external pin number): <br />GPIO1 – Pin No. 61<br />GPIO2 – Pin No. 58<br />GPIO3 – Pin No. 34<br />GPIO4 – Pin No. 60<br />GPIO5 – Pin No. 69<br />GPIO6 – Pin No. 70<br />GPIO7 – Pin No. 123<br />GPIO8 – Pin No. 118<br />GPIO9 – Pin No. 9<br />GPIO10 – Pin No. 1<br />GPIO11 – Pin No. 4<br />GPIO12 – Pin No. 3<br />GPIO13 – Pin No. 2<br />GPIO14 – Pin No. 54<br />GPIO15 – Pin No. 57<br/>GPIO16 – Pin No. 56<br/>The corresponding pins of EC200U series module are as follows (pin number is external pin number): <br />GPIO1 – Pin No. 27<br />GPIO2 – Pin No. 26<br />GPIO3 – Pin No. 24<br />GPIO4 – Pin No. 25<br />GPIO5 – Pin No. 13<br />GPIO6 – Pin No. 135<br />GPIO7 – Pin No. 136<br />GPIO8 – Pin No. 133<br />GPIO9 – Pin No. 3<br />GPIO10 – Pin No. 40<br />GPIO11 – Pin No. 37<br />GPIO12 – Pin No. 38<br />GPIO13 – Pin No. 39<br />GPIO14 – Pin No. 5<br />GPIO15 – Pin No. 141<br/>GPIO16 – Pin No. 142<br/> |
+| GPIOn     | int  | Pin Number<br />The  corresponding pins of EC100Y-CN module are as follows (pin number is external pin number):<br />GPIO1 – Pin No. 22<br />GPIO2 – Pin No. 23<br />GPIO3 – Pin No. 38<br />GPIO4 – Pin No. 53<br />GPIO5 – Pin No. 54<br />GPIO6 – Pin No. 104<br />GPIO7 – Pin No. 105<br />GPIO8 – Pin No. 106<br />GPIO9 – Pin No. 107<br />GPIO10 – Pin No. 178<br />GPIO11 – Pin No. 195<br />GPIO12 – Pin No. 196<br />GPIO13 – Pin No. 197<br />GPIO14 – Pin No. 198<br />GPIO15 – Pin No. 199<br />GPIO16 – Pin No. 203<br />GPIO17 – Pin No. 204<br />GPIO18 – Pin No. 214<br />GPIO19 – Pin No. 215<br />The corresponding pins of EC600S-CN/EC600N-CN modules are as follows (pin number is external pin number): <br />GPIO1 – Pin No. 10<br />GPIO2 – Pin No. 11<br />GPIO3 – Pin No. 12<br />GPIO4 – Pin No. 13<br />GPIO5 – Pin No. 14<br />GPIO6 – Pin No. 15<br />GPIO7 – Pin No. 16<br />GPIO8 – Pin No. 39<br />GPIO9 – Pin No. 40<br />GPIO10 – Pin No. 48<br />GPIO11 – Pin No. 58<br />GPIO12 – Pin No. 59<br />GPIO13 – Pin No. 60<br />GPIO14 – Pin No. 61<br />GPIO15 – Pin No. 62<br/>GPIO16 – Pin No. 63<br/>GPIO17 – Pin No. 69<br/>GPIO18 – Pin No. 70<br/>GPIO19 – Pin No. 1<br/>GPIO20 – Pin No. 3<br/>GPIO21 – Pin No. 49<br/>GPIO22 – Pin No. 50<br/>GPIO23 – Pin No. 51<br/>GPIO24 – Pin No. 52<br/>GPIO25 – Pin No. 53<br/>GPIO26 – Pin No. 54<br/>GPIO27 – Pin No. 55<br/>GPIO28 – Pin No. 56<br/>GPIO29 – Pin No. 57<br />The corresponding pins of EC600U series module are as follows (pin number is external pin number): <br />GPIO1 – Pin No. 61<br />GPIO2 – Pin No. 58<br />GPIO3 – Pin No. 34<br />GPIO4 – Pin No. 60<br />GPIO5 – Pin No. 69<br />GPIO6 – Pin No. 70<br />GPIO7 – Pin No. 123<br />GPIO8 – Pin No. 118<br />GPIO9 – Pin No. 9<br />GPIO10 – Pin No. 1<br />GPIO11 – Pin No. 4<br />GPIO12 – Pin No. 3<br />GPIO13 – Pin No. 2<br />GPIO14 – Pin No. 54<br />GPIO15 – Pin No. 57<br/>GPIO16 – Pin No. 56<br/>The corresponding pins of EC200U series module are as follows (pin number is external pin number): <br />GPIO1 – Pin No. 27<br />GPIO2 – Pin No. 26<br />GPIO3 – Pin No. 24<br />GPIO4 – Pin No. 25<br />GPIO5 – Pin No. 13<br />GPIO6 – Pin No. 135<br />GPIO7 – Pin No. 136<br />GPIO8 – Pin No. 133<br />GPIO9 – Pin No. 3<br />GPIO10 – Pin No. 40<br />GPIO11 – Pin No. 37<br />GPIO12 – Pin No. 38<br />GPIO13 – Pin No. 39<br />GPIO14 – Pin No. 5<br />GPIO15 – Pin No. 141<br/>GPIO16 – Pin No. 142<br/>The pin correspondence of BC25PA platform is as follows (pin numbers are external pin numbers):<br />GPIO1 – Pin number 3<br />GPIO2 – Pin number 4<br />GPIO3 – Pin number 5<br />GPIO4 – Pin number 6<br />GPIO5 – Pin number 16<br />GPIO6 – Pin number 20<br />GPIO7 – Pin number 21<br />GPIO8 – Pin number 22<br />GPIO9 – Pin number 23<br />GPIO10 – Pin number 25<br />GPIO11 – Pin number 28<br />GPIO12 – Pin number 29<br />GPIO13 – Pin number 30<br />GPIO14 – Pin number 31<br />GPIO15 – Pin number 32<br/>GPIO16 – Pin number 33<br/> |
 | direction | int  | IN – input mode; OUT – output mode                           |
 | pullMode  | int  | PULL_DISABLE – floating mode<br />PULL_PU – pull-up mode<br />PULL_PD – pull-down mode |
 | level     | int  | 0 - Set the pin to low level; 1- Set the pin to high level   |
@@ -4803,62 +4783,42 @@ Function: The module configures I/O pins to interrupt when an external event occ
 
 ###### Constant Description
 
-| Constant         | Applicable Platform                    | Description    |
-| ---------------- | -------------------------------------- | -------------- |
-| Pin.GPIO1        | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO1          |
-| Pin.GPIO2        | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO2          |
-| Pin.GPIO3        | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO3          |
-| Pin.GPIO4        | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO4          |
-| Pin.GPIO5        | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO5          |
-| Pin.GPIO6        | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO6          |
-| Pin.GPIO7        | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO7          |
-| Pin.GPIO8        | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO8          |
-| Pin.GPIO9        | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO9          |
-| Pin.GPIO10       | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO10         |
-| Pin.GPIO11       | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO11         |
-| Pin.GPIO12       | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO12         |
-| Pin.GPIO13       | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO13         |
-| Pin.GPIO14       | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO14         |
-| Pin.GPIO15       | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO15         |
-| Pin.GPIO16       | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO16         |
-| Pin.GPIO17       | EC600S / EC600N / EC100Y               | GPIO17         |
-| Pin.GPIO18       | EC600S / EC600N / EC100Y               | GPIO18         |
-| Pin.GPIO19       | EC600S / EC600N / EC100Y               | GPIO19         |
-| Pin.GPIO20       | EC600S / EC600N                        | GPIO20         |
-| Pin.GPIO21       | EC600S / EC600N                        | GPIO21         |
-| Pin.GPIO22       | EC600S / EC600N                        | GPIO22         |
-| Pin.GPIO23       | EC600S / EC600N                        | GPIO23         |
-| Pin.GPIO24       | EC600S / EC600N                        | GPIO24         |
-| Pin.GPIO25       | EC600S / EC600N                        | GPIO25         |
-| Pin.GPIO26       | EC600S / EC600N                        | GPIO26         |
-| Pin.GPIO27       | EC600S / EC600N                        | GPIO27         |
-| Pin.GPIO28       | EC600S / EC600N                        | GPIO28         |
-| Pin.GPIO29       | EC600S / EC600N                        | GPIO29         |
-| Pin.IN           | --                                     | Input mode     |
-| Pin.OUT          | --                                     | Output mode    |
-| Pin.PULL_DISABLE | --                                     | Floating mode  |
-| Pin.PULL_PU      | --                                     | Pull-up mode   |
-| Pin.PULL_PD      | --                                     | Pull-down mode |
-
-Constant description for BC25PA platform
-| Constant         | Applicable Platform                    | Description    |
-| ---------------- | -------------------------------------- | -------------- |
-| Pin.GPIO1        | BC25PA                   | GPIO3    |
-| Pin.GPIO2        | BC25PA                   | GPIO4    |
-| Pin.GPIO3        | BC25PA                   | GPIO5    |
-| Pin.GPIO4        | BC25PA                   | GPIO6    |
-| Pin.GPIO5        | BC25PA                   | GPIO16   |
-| Pin.GPIO6        | BC25PA                   | GPIO20   |
-| Pin.GPIO7        | BC25PA                   | GPIO21   |
-| Pin.GPIO8        | BC25PA                   | GPIO22   |
-| Pin.GPIO9        | BC25PA                   | GPIO23   |
-| Pin.GPIO10       | BC25PA                   | GPIO25   |
-| Pin.GPIO11       | BC25PA                   | GPIO28   |
-| Pin.GPIO12       | BC25PA                   | GPIO29   |
-| Pin.GPIO13       | BC25PA                   | GPIO30   |
-| Pin.GPIO14       | BC25PA                   | GPIO31   |
-| Pin.GPIO15       | BC25PA                   | GPIO32   |
-| Pin.GPIO16       | BC25PA                   | GPIO33   |
+| Constant         | Applicable Platform                           | Description    |
+| ---------------- | --------------------------------------------- | -------------- |
+| Pin.GPIO1        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO1          |
+| Pin.GPIO2        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO2          |
+| Pin.GPIO3        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO3          |
+| Pin.GPIO4        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO4          |
+| Pin.GPIO5        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO5          |
+| Pin.GPIO6        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO6          |
+| Pin.GPIO7        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO7          |
+| Pin.GPIO8        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO8          |
+| Pin.GPIO9        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO9          |
+| Pin.GPIO10       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO10         |
+| Pin.GPIO11       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO11         |
+| Pin.GPIO12       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO12         |
+| Pin.GPIO13       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO13         |
+| Pin.GPIO14       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO14         |
+| Pin.GPIO15       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO15         |
+| Pin.GPIO16       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO16         |
+| Pin.GPIO17       | EC600S / EC600N / EC100Y                      | GPIO17         |
+| Pin.GPIO18       | EC600S / EC600N / EC100Y                      | GPIO18         |
+| Pin.GPIO19       | EC600S / EC600N / EC100Y                      | GPIO19         |
+| Pin.GPIO20       | EC600S / EC600N                               | GPIO20         |
+| Pin.GPIO21       | EC600S / EC600N                               | GPIO21         |
+| Pin.GPIO22       | EC600S / EC600N                               | GPIO22         |
+| Pin.GPIO23       | EC600S / EC600N                               | GPIO23         |
+| Pin.GPIO24       | EC600S / EC600N                               | GPIO24         |
+| Pin.GPIO25       | EC600S / EC600N                               | GPIO25         |
+| Pin.GPIO26       | EC600S / EC600N                               | GPIO26         |
+| Pin.GPIO27       | EC600S / EC600N                               | GPIO27         |
+| Pin.GPIO28       | EC600S / EC600N                               | GPIO28         |
+| Pin.GPIO29       | EC600S / EC600N                               | GPIO29         |
+| Pin.IN           | --                                            | Input mode     |
+| Pin.OUT          | --                                            | Output mode    |
+| Pin.PULL_DISABLE | --                                            | Floating mode  |
+| Pin.PULL_PU      | --                                            | Pull-up mode   |
+| Pin.PULL_PD      | --                                            | Pull-down mode |
 
 ###### Create ExtInt Object
 
@@ -4868,7 +4828,7 @@ Constant description for BC25PA platform
 
 | Parameter | Type | Description                                                  |
 | :-------- | :--- | ------------------------------------------------------------ |
-| GPIOn     | int  | Pin number<br />The pin correspondence of EC100YCN platform is as follows (pin numbers are external pin numbers):<br />GPIO1 – Pin number 22<br />GPIO2 – Pin number 23<br />GPIO3 – Pin number 38<br />GPIO4 – Pin number 53<br />GPIO5 – Pin number 54<br />GPIO6 – Pin number 104<br />GPIO7 – Pin number 105<br />GPIO8 – Pin number 106<br />GPIO9 – Pin number 107<br />GPIO10 –Pin number 178<br />GPIO11 – Pin number 195<br />GPIO12 – Pin number 196<br />GPIO13 – Pin number 197<br />GPIO14 – Pin number 198<br />GPIO15 – Pin number 199<br />GPIO16 – Pin number 203<br />GPIO17 – Pin number 204<br />GPIO18 – Pin number 214<br />GPIO19 – Pin number 215<br />The pin correspondence of EC600SCN/EC600NCN platform is as follows (pin numbers are external pin numbers):<br />GPIO1 – Pin number 10<br />GPIO2 – Pin number 11<br />GPIO3 – Pin number 12<br />GPIO4 – Pin number 13<br />GPIO5 – Pin number 14<br />GPIO6 – Pin number 15<br />GPIO7 – Pin number 16<br />GPIO8 – Pin number 39<br />GPIO9 – Pin number 40<br />GPIO10 – Pin number 48<br />GPIO11 – Pin number 58<br />GPIO12 – Pin number 59<br />GPIO13 – Pin number60<br />GPIO14 – Pin number 61<br />GPIO15 – Pin number 62<br/>GPIO16 – Pin number 63<br/>GPIO17 – Pin number 69<br/>GPIO18 – Pin number 70<br/>GPIO19 – Pin number 1<br/>GPIO20 – Pin number 3<br/>GPIO21 – Pin number 49<br/>GPIO22 – Pin number 50<br/>GPIO23 – Pin number 51<br/>GPIO24 – Pin number 52<br/>GPIO25 – Pin number 53<br/>GPIO26 – Pin number 54<br/>GPIO27 – Pin number 55<br/>GPIO28 – Pin number 56<br/>GPIO29 – Pin number 57<br />The pin correspondence of EC600UCN platform is as follows (pin numbers are external pin numbers):<br />GPIO1 – Pin number 61<br />GPIO2 – Pin number 58<br />GPIO3 – Pin number 34<br />GPIO4 – Pin number 60<br />GPIO5 – Pin number 69<br />GPIO6 – Pin number 70<br />GPIO7 – Pin number 123<br />GPIO8 – Pin number 118<br />GPIO9 – Pin number 9<br />GPIO10 – Pin number 1<br />GPIO11 – Pin number 4<br />GPIO12 – Pin number 3<br />GPIO13 – Pin number 2<br />GPIO14 – Pin number 54<br />GPIO15 – Pin number 57<br/>GPIO16 – Pin number 56<br/>The pin correspondence of EC200UCN platform is as follows (pin numbers are external pin numbers):<br />GPIO1 – Pin number 27<br />GPIO2 – Pin number 26<br />GPIO3 – Pin number 24<br />GPIO4 – Pin number 25<br />GPIO5 – Pin number 13<br />GPIO6 – Pin number 135<br />GPIO7 – Pin number 136<br />GPIO8 – Pin number 133<br />GPIO9 – Pin number 3<br />GPIO10 – Pin number 40<br />GPIO11 – Pin number 37<br />GPIO12 – Pin number 38<br />GPIO13 – Pin number 39<br />GPIO14 – Pin number 5<br />GPIO15 – Pin number 141<br/>GPIO16 – Pin number 142<br/> |
+| GPIOn     | int  | Pin number<br />The pin correspondence of EC100YCN platform is as follows (pin numbers are external pin numbers):<br />GPIO1 – Pin number 22<br />GPIO2 – Pin number 23<br />GPIO3 – Pin number 38<br />GPIO4 – Pin number 53<br />GPIO5 – Pin number 54<br />GPIO6 – Pin number 104<br />GPIO7 – Pin number 105<br />GPIO8 – Pin number 106<br />GPIO9 – Pin number 107<br />GPIO10 –Pin number 178<br />GPIO11 – Pin number 195<br />GPIO12 – Pin number 196<br />GPIO13 – Pin number 197<br />GPIO14 – Pin number 198<br />GPIO15 – Pin number 199<br />GPIO16 – Pin number 203<br />GPIO17 – Pin number 204<br />GPIO18 – Pin number 214<br />GPIO19 – Pin number 215<br />The pin correspondence of EC600SCN/EC600NCN platform is as follows (pin numbers are external pin numbers):<br />GPIO1 – Pin number 10<br />GPIO2 – Pin number 11<br />GPIO3 – Pin number 12<br />GPIO4 – Pin number 13<br />GPIO5 – Pin number 14<br />GPIO6 – Pin number 15<br />GPIO7 – Pin number 16<br />GPIO8 – Pin number 39<br />GPIO9 – Pin number 40<br />GPIO10 – Pin number 48<br />GPIO11 – Pin number 58<br />GPIO12 – Pin number 59<br />GPIO13 – Pin number60<br />GPIO14 – Pin number 61<br />GPIO15 – Pin number 62<br/>GPIO16 – Pin number 63<br/>GPIO17 – Pin number 69<br/>GPIO18 – Pin number 70<br/>GPIO19 – Pin number 1<br/>GPIO20 – Pin number 3<br/>GPIO21 – Pin number 49<br/>GPIO22 – Pin number 50<br/>GPIO23 – Pin number 51<br/>GPIO24 – Pin number 52<br/>GPIO25 – Pin number 53<br/>GPIO26 – Pin number 54<br/>GPIO27 – Pin number 55<br/>GPIO28 – Pin number 56<br/>GPIO29 – Pin number 57<br />The pin correspondence of EC600UCN platform is as follows (pin numbers are external pin numbers):<br />GPIO1 – Pin number 61<br />GPIO2 – Pin number 58<br />GPIO3 – Pin number 34<br />GPIO4 – Pin number 60<br />GPIO5 – Pin number 69<br />GPIO6 – Pin number 70<br />GPIO7 – Pin number 123<br />GPIO8 – Pin number 118<br />GPIO9 – Pin number 9<br />GPIO10 – Pin number 1<br />GPIO11 – Pin number 4<br />GPIO12 – Pin number 3<br />GPIO13 – Pin number 2<br />GPIO14 – Pin number 54<br />GPIO15 – Pin number 57<br/>GPIO16 – Pin number 56<br/>The pin correspondence of EC200UCN platform is as follows (pin numbers are external pin numbers):<br />GPIO1 – Pin number 27<br />GPIO2 – Pin number 26<br />GPIO3 – Pin number 24<br />GPIO4 – Pin number 25<br />GPIO5 – Pin number 13<br />GPIO6 – Pin number 135<br />GPIO7 – Pin number 136<br />GPIO8 – Pin number 133<br />GPIO9 – Pin number 3<br />GPIO10 – Pin number 40<br />GPIO11 – Pin number 37<br />GPIO12 – Pin number 38<br />GPIO13 – Pin number 39<br />GPIO14 – Pin number 5<br />GPIO15 – Pin number 141<br/>GPIO16 – Pin number 142<br/>The pin correspondence of BC25PA platform is as follows (pin numbers are external pin numbers):<br />GPIO1 – Pin number 3<br />GPIO2 – Pin number 4<br />GPIO3 – Pin number 5<br />GPIO4 – Pin number 6<br />GPIO5 – Pin number 16<br />GPIO6 – Pin number 20<br />GPIO7 – Pin number 21<br />GPIO8 – Pin number 22<br />GPIO9 – Pin number 23<br />GPIO10 – Pin number 25<br />GPIO11 – Pin number 28<br />GPIO12 – Pin number 29<br />GPIO13 – Pin number 30<br />GPIO14 – Pin number 31<br />GPIO15 – Pin number 32<br/>GPIO16 – Pin number 33<br/> |
 | mode      | int  | Set the trigger method<br /> IRQ_RISING – Rising edge trigger<br /> IRQ_FALLING – Falling edge trigger<br /> IRQ_RISING_FALLING – Rising and falling edge trigger |
 | pull      | int  | PULL_DISABLE – Floating mode<br />PULL_PU – Pull-up mode<br />PULL_PD  – Pull-down mode |
 | callback  | int  | Interrupt trigger callback function                          |
@@ -5037,8 +4997,8 @@ Class function: A two-wire protocol used for communication between devices.
 | EC200U        | I2C0:<br />SCL: Pin number 41<br />SDA: Pin number 42<br />I2C1:<br />SCL:Pin number 141<br />SDA:Pin number 142 |
 | EC600S/EC600N | I2C1:<br />SCL: Pin number 57<br />SDA: Pin number 56          |
 | EC100Y        | I2C0:<br />SCL: Pin number 57<br />SDA: Pin number 56          |
-| BC25PA        | I2C0:<br />SCL: Pin number 22<br />SDA: Pin number 23<br />I2C1:<br />SCL: Pin number 20<br />SDA: Pin number 21 |
-- Exmaple
+| BC25PA        | I2C0:<br />SCL: Pin number 23<br />SDA: Pin number 22<br />I2C1:<br />SCL: Pin number 20<br />SDA: Pin number 21 |
+|- Exmaple||
 
 ```python
 from machine import I2C
