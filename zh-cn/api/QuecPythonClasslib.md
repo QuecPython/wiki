@@ -2684,7 +2684,7 @@ download_list = [{'url': 'http://www.example.com/app.py', 'file_name': '/usr/app
 | -------- | -------- | ------------------------------------------------------------ |
 | priority | int      | 播放优先级，支持优先级0~4，数值越大优先级越高                |
 | breakin  | int      | 打断模式，0表示不允许被打断，1表示允许被打断                 |
-| mode     | int      | 编码模式，1 - UNICODE16(Size end conversion)，2 - UTF-8，3 - UNICODE16(Don't convert) |
+| mode     | int      | 编码模式，1 - UNICODE16(UTF-16大端模式)，2 - UTF-8，3 - UNICODE16(UTF-16小端模式) |
 | str      | string   | 待播放字符串                                                 |
 
 * 返回值
@@ -2735,18 +2735,25 @@ download_list = [{'url': 'http://www.example.com/app.py', 'file_name': '/usr/app
 >>> tts.play(2, 0, 2, '4444444444444444444')  #任务C
 1
 
+#播放UTF16BE模式的语音
+>>> tts.play(1,1,1,'6B228FCE4F7F752879FB8FDC901A4FE16A2157573002')
+0
+
+#播放UTF16LE模式的语音
+>>> tts.play(1,1,3,'226BCE8F7F4F2875FB79DC8F1A90E14F216A57570230')
+0
 ```
 
 tts播放中文示例：
 
-注意，python文件开头需要加上“# -*- coding: UTF-8 -*-”，如果播放的中文中有标点符号，要用英文的标点符号。
+注意，python文件开头需要加上“# -*- coding: UTF-8 -*-”。
 
 ```python
 # -*- coding: UTF-8 -*-
 import audio
 
 tts = audio.TTS(1)
-str1 = '移联万物,志高行远' #这里的逗号是英文的逗号
+str1 = '移联万物，志高行远' 
 tts.play(4, 0, 2, str1)
 ```
 

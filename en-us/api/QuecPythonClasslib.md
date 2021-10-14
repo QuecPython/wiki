@@ -2577,7 +2577,7 @@ Audio playback supports priority 0–4, the higher the number, the higher the pr
 | --------- | -------------- | ------------------------------------------------------------ |
 | priority  | int            | Playback priority. Supports Priority 0–4. The higher the number, the higher the priority. |
 | breakin   | int            | Interruption mode. 0 means not allowed to be interrupted; 1 means allowed to be interrupted |
-| mode      | int            | Encoding mode. 1 - UNICODE16 (Size end conversion), 2 - UTF-8, 3 - UNICODE16 (Don't convert) |
+| mode      | int            | Encoding mode. 1 - UNICODE16 (UTF-16 big-endian), 2 - UTF-8, 3 - UNICODE16 (UTF-16 little-endian) |
 | str       | string         | String to be played                                          |
 
 * Return Value
@@ -2627,18 +2627,25 @@ Audio playback supports priority 0–4, the higher the number, the higher the pr
 >>> tts.play(2, 0, 2, '4444444444444444444')  #Task C
 1
 
+#Play the voice in UTF-16BE mode
+>>> tts.play(1,1,1,'6B228FCE4F7F752879FB8FDC901A4FE16A2157573002')
+0
+
+#Play the voice in UTF-16LE mode
+>>> tts.play(1,1,3,'226BCE8F7F4F2875FB79DC8F1A90E14F216A57570230')
+0
 ```
 
 Chinese example of tts playback:
 
-Note that "# -*- coding: UTF-8 -*-" needs to be added at the beginning of the python file. If there are punctuation marks in the Chinese to be played, they should be changed to English punctuation marks.
+Note that "# -*- coding: UTF-8 -*-" needs to be added at the beginning of the python file. 
 
 ```python
 # -*- coding: UTF-8 -*-
 import audio
 
 tts = audio.TTS(1)
-str1 = '移联万物,志高行远' #The comma here is in English
+str1 = '移联万物,志高行远'
 tts.play(4, 0, 2, str1)
 ```
 
