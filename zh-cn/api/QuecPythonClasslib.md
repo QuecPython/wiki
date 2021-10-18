@@ -351,6 +351,33 @@ if __name__ == '__main__':
 
 注意：能成功获取IMSI、ICCID、电话号码的前提是SIM卡状态为1，可通过sim.getStatus()查询。
 
+##### 通用SIM访问接口
+
+> **sim.genericAccess(sim_id, cmd_APDU)**
+
+将命令APDU通过modem传递给SIM卡，然会返回响应APDU。
+
+* 参数
+
+|  参数   | 参数类型 | 参数说明                                      |
+|  ----   | -------- | --------------------------------------------- |
+| sim_id  |   int    | simid, 范围：0 or 1                             |
+|  APDU   |  string  | command passed on by the MT to the SIM in the format as described in GSM 51.011 |
+
+* 返回值
+
+成功返回(length,响应APDU)，失败返回整型-1。
+
+* 示例
+
+```python
+>>> sim.genericAccess(0,'80F2000016')
+(48, '623E8202782183027FF08410A0000000871002FF86FF9000')
+>>>
+```
+
+
+
 ##### 获取IMSI
 
 > **sim.getImsi()**
