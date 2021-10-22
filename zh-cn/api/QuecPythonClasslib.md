@@ -1075,45 +1075,8 @@ sim.setCallback(cb)
 
 成功返回整型0，失败返回整型-1。
 
-*callback函数中的event定义
 
-1、老架构
-```c
-typedef enum
-{
-    QL_VOICECALL_IDLE_IND = 0,
-    
-    /***cc call***/
-    //MT
-    QL_VOICECALL_INCOMING_IND,
-    QL_VOICECALL_WAITING_IND,
-    //MO
-    QL_VOICECALL_DIALING_IND,
-    QL_VOICECALL_ALERTING_IND,
-    QL_VOICECALL_MO_FAILED_IND,  
-    //
-    QL_VOICECALL_CONNECTED_IND,
-    QL_VOICECALL_HOLDING_IND,
-    QL_VOICECALL_DISCONNECTING_IND,
-    QL_VOICECALL_DISCONNECTED_IND,
-
-    /***volte call***/
-    //MT
-    QL_VOICECALL_VOLTE_INCOMMING_IND = 10,
-    QL_VOICECALL_VOLTE_WAITING_IND,
-    //MO
-    QL_VOICECALL_VOLTE_DIALING_IND,
-    QL_VOICECALL_VOLTE_ALERTING_IND,
-    //
-    QL_VOICECALL_VOLTE_CONNECTED_IND,
-    QL_VOICECALL_VOLTE_HOLDING_IND,
-    QL_VOICECALL_VOLTE_DISCONNECTED_IND,
-
-    QL_VOICECALL_STATE_MAX_NUM
-}QL_VOICECALL_STATE;
-```
-
-2、新架构
+*callback函数中的event_ID枚举值
 ```c
 typedef enum
 {
@@ -1127,7 +1090,7 @@ typedef enum
 	HELIOS_VC_MO_FAILED_IND,
 	HELIOS_VC_HOLDING_IND,
 	
-	HELIOS_VC_RING_VOLTE_IND,
+	HELIOS_VC_RING_VOLTE_IND = 10,
 	HELIOS_VC_CONNECT_VOLTE_IND,
 	HELIOS_VC_NOCARRIER_VOLTE_IND,
 	HELIOS_VC_CCWA_VOLTE_IND,
@@ -1137,29 +1100,70 @@ typedef enum
 }HELIOS_VC_EVENT_ID_E;
 ```
 
+*callback函数中args定义如下
+```
+args[0]:event id(具体释义见上述枚举)
+args[1]:call id(call identification number as described in 3GPP TS 22.030 subclause 4.5.5.1; this number can be used in +CHLD command operations)
+args[2]:dir(MO/MT)
+args[3]:state of the call
+args[4]:type(这里一般都是0，表示voice call，语音通话业务)
+args[5]:mpty(判断是否是多方通话，0：call is not one of multiparty (conference) call parties，1：call is one of multiparty (conference) call parties)
+args[6]:phone num
+args[7]:num type([129/145],129:Dialing string without international access code “+”,145:Dialing string includes international access code character “+”)
+```
+
+
 * 示例
-(注意:这里的args以老架构定义的枚举值举例)
 ```python
 def voice_callback(args):
      if args[0] == 10:
          print('voicecall incoming call, PhoneNO.: ', args[6])
      elif args[0] == 11:
-         print('voicecall is waiting, PhoneNO.: ', args[6])
+	     print('voicecall connected, PhoneNO.: ', args[6])
      elif args[0] == 12:
-         print('voicecall dialing, PhoneNO.: ', args[6])
+	     print('voicecall disconnect')
 	 elif args[0] == 13:
-         print('voicecall alerting, PhoneNO.: ', args[6])
+	     print('voicecall is waiting, PhoneNO.: ', args[6])
      elif args[0] == 14:
-         print('voicecall connected, PhoneNO.: ', args[6])
+         print('voicecall dialing, PhoneNO.: ', args[6])
      elif args[0] == 15:
-         print('voicecall holding, PhoneNO.: ', args[6])
+	     print('voicecall alerting, PhoneNO.: ', args[6])
      elif args[0] == 16:
-         print('voicecall disconnect')
+	     print('voicecall holding, PhoneNO.: ', args[6])
      
 >>> voiceCall.setCallback(voice_callback)
 0
 >>> voiceCall.callStart('10086')
 0
+```
+
+*注意
+1、pyhton目前的语音通话支持的是volte call，所以示例中只给出了volte通话的内容
+2、QPY_V0004_EC600N_CNLC_FW_VOLTE(2021-09-09发布)之前发布的版本都按照以下规则使用voiceCall
+
+*callback函数中的event_ID数值
+```
+#define QUEC_VOICE_CALL_INDICATION_BASE                          ((uint_32)(0x1000))
+#define QUEC_VOLTE_INCOMING_CALL_IND                             ((uint_32)(0x0007 + QUEC_VOICE_CALL_INDICATION_BASE))
+#define QUEC_VOLTE_CONNECT_CALL_IND                              ((uint_32)(0x0008 + QUEC_VOICE_CALL_INDICATION_BASE))
+#define QUEC_VOLTE_DISCONNECT_CALL_IND                           ((uint_32)(0x0009 + QUEC_VOICE_CALL_INDICATION_BASE))
+#define QUEC_VOLTE_WAITING_CALL_IND                              ((uint_32)(0x000A + QUEC_VOICE_CALL_INDICATION_BASE))
+```
+
+*callback函数中args定义如下
+args定义未改变
+
+*示例
+```python
+def voice_callback(args):
+	if args[0] == 4106:
+		print('voicecall is waiting')
+	elif args[0] == 4105:
+		print('voicecall disconnect')
+	elif args[0] == 4104:
+		print('voicecall connected, CallNO.: ', args[6])
+	elif args[0] == 4103:
+		print('voicecall incoming call, PhoneNO.: ', args[6])
 ```
 
 
