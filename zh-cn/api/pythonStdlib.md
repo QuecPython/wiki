@@ -1929,6 +1929,12 @@ lock = _thread.allocate_lock()
 
 返回锁的状态，True表示被某个线程获取，False则表示没有。
 
+##### 删除锁
+
+> **_thread.delete_lock(lock)**
+
+删除已经创建的锁。
+
 
 
 **_thread使用示例**
@@ -1959,18 +1965,22 @@ thread_log = log.getLogger("Thread")
 
 a = 0
 state = 1
+state1 = 1
 # 创建一个lock的实例
 lock = _thread.allocate_lock()
 
 def th_func(delay, id):
 	global a
-	global state
+	global state,state1
 	while True:
 		lock.acquire()  # 获取锁
 		if a >= 10:
 			thread_log.info('thread %d exit' % id)
 			lock.release()  # 释放锁
-			state = 0
+			if id == 1:
+				state = 0
+			else:
+				state1 = 0
 			break
 		a += 1
 		thread_log.info('[thread %d] a is %d' % (id, a))
@@ -1988,10 +1998,11 @@ if __name__ == '__main__':
         
 	thread_id = _thread.start_new_thread(th_func1, ())   # 创建一个线程，当函数无参时传入空的元组
     
-	while state:
+	while state or state1:
 		pass
     
-	_thread.stop_thread(thread_id)
+	_thread.stop_thread(thread_id)   # 删除线程
+	_thread.delete_lock(lock)   # 删除锁
 	thread_log.info('thread th_func1 is stopped')
 ```
 

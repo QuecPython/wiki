@@ -1,0 +1,20 @@
+.sidebar {
+ background-color: rgb(245, 247, 250);
+}
+.sidebar-toggle{
+ background-color: rgba(245, 247, 250, 0);
+}
+input{
+ border-radius: 9px;
+}
+*{
+ transition: 0.5s all;
+ -webkit-transition: 0.5s all;
+ -moz-transition: 0.5s all;
+ -o-transition: 0.5s all;
+ -ms-transition: 0.5s all;
+ /* font-weight:bold; */
+ -webkit-animation: neon2 1.5s ease-in-out infinite alternate;
+ -moz-animation: neon2 1.5s ease-in-out infinite alternate;
+ animation: neon2 1.5s ease-in-out infinite alternate;
+}

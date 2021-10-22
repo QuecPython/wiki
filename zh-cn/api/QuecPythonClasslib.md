@@ -75,6 +75,10 @@ myprint()
 
 成功返回整型值0，失败返回整型值-1。
 
+* 注意
+
+  BC25PA不支持此方法。
+
 * 示例 
 
 ```python
@@ -106,6 +110,10 @@ myprint()
 
 成功返回整型值0，失败返回整型值-1。
 
+* 注意
+
+  BC25PA不支持此方法。
+
 * 示例
 
 ```python
@@ -131,6 +139,10 @@ myprint()
 * 返回值
 
 注册失败返回整型-1，成功返回整型0。
+
+* 注意
+
+  BC25PA不支持此方法。
 
 * 示例
 
@@ -286,6 +298,10 @@ if __name__ == '__main__':
 
 模块功能：提供基站定位接口，获取坐标信息。
 
+* 注意
+
+  BC25PA平台不支持此模块。
+
 ##### 获取坐标
 
 > **cellLocator.getLocation(serverAddr, port, token, timeout, profileID)**
@@ -322,9 +338,9 @@ if __name__ == '__main__':
 
 ```python
 >>> import cellLocator
->>> cellLocator.getLocation("www.queclocator.com", 80, "1111111122222222", 8, 1)
+>>> cellLocator.getLocation("www.queclocator.com", 80, "xxxxxxxxxxxxxxxx", 8, 1)
 (117.1138, 31.82279, 550)
-# 上面使用的密钥仅为测试密钥
+# 上面使用的密钥"xxxxxxxxxxxxxxxx"指代token，具体需要向移远申请
 ```
 
 
@@ -423,6 +439,10 @@ if __name__ == '__main__':
 
 成功返回string类型的phone number，失败返回整型-1。
 
+* 注意
+
+  BC25PA不支持此方法。
+
 * 示例
 
 ```python
@@ -487,6 +507,10 @@ if __name__ == '__main__':
 
 成功返回整型0，失败返回整型-1。
 
+* 注意
+
+  BC25PA平台PIN密码最大支持八位。
+
 * 示例
 
 ```python
@@ -512,6 +536,10 @@ if __name__ == '__main__':
 
 成功返回整型0，失败返回整型-1。
 
+* 注意
+
+  BC25PA平台PIN密码最大支持八位。
+
 * 示例
 
 ```python
@@ -536,6 +564,10 @@ sim卡PIN码验证。需要在调用sim.enablePin(pin)成功之后，才能进�
 * 返回值
 
 验证成功返回整型0，验证失败返回整型-1。
+
+* 注意
+
+  BC25PA平台PIN密码最大支持八位。
 
 * 示例
 
@@ -563,6 +595,10 @@ sim卡解锁。当多次错误输入 PIN/PIN2 码后，SIM 卡状态为请求 PU
 
 解锁成功返回整型0，解锁失败返回整型-1。
 
+* 注意
+
+  BC25PA平台PIN密码最大支持八位。
+
 * 示例
 
 ```python
@@ -588,6 +624,10 @@ sim卡解锁。当多次错误输入 PIN/PIN2 码后，SIM 卡状态为请求 PU
 * 返回值
 
 更改成功返回整型0，更改失败返回整型-1。
+
+* 注意
+
+  BC25PA平台PIN密码最大支持八位。
 
 * 示例
 
@@ -629,6 +669,10 @@ sim卡解锁。当多次错误输入 PIN/PIN2 码后，SIM 卡状态为请求 PU
 
 `phone_number` – 电话号码，string类型
 
+* 注意
+
+  BC25PA平台不支持此方法。
+  
 * 示例
 
 ```python
@@ -663,6 +707,10 @@ sim卡解锁。当多次错误输入 PIN/PIN2 码后，SIM 卡状态为请求 PU
 
 写入成功返回整型0，写入失败返回整型-1。
 
+* 注意
+
+  BC25PA平台不支持此方法。
+
 示例
 
 ```python
@@ -689,6 +737,10 @@ sim卡解锁。当多次错误输入 PIN/PIN2 码后，SIM 卡状态为请求 PU
 * 返回值
 
 注册成功返回整型0，失败返回整型-1。
+
+* 注意
+
+  BC25PA平台不支持此方法。
 
 * 示例
 
@@ -721,6 +773,10 @@ sim.setCallback(cb)
 
 设置成功返回整型0，设置失败返回整型-1。
 
+* 注意
+
+  BC25PA平台不支持此方法。
+
 示例
 
 ```python
@@ -752,6 +808,10 @@ sim.setCallback(cb)
 
 `insertlevel` – 高低电平配置(0/1)
 
+* 注意
+
+  BC25PA平台不支持此方法。
+
 示例
 
 ```python
@@ -766,6 +826,8 @@ sim.setCallback(cb)
 模块功能：该模块提供电话功能相关接口。
 
 说明：4G only的版本必须打开volte才能正常使用电话功能。
+
+注意：BC25PA平台不支持此模块。
 
 ##### 设置自动应答时间
 
@@ -1013,8 +1075,9 @@ sim.setCallback(cb)
 
 成功返回整型0，失败返回整型-1。
 
+
 *callback函数中的event_ID枚举值
-```
+```c
 typedef enum
 {
 	HELIOS_VC_INIT_OK_IND = 1,
@@ -1048,6 +1111,7 @@ args[5]:mpty(判断是否是多方通话，0：call is not one of multiparty (co
 args[6]:phone num
 args[7]:num type([129/145],129:Dialing string without international access code “+”,145:Dialing string includes international access code character “+”)
 ```
+
 
 * 示例
 ```python
@@ -1109,6 +1173,8 @@ def voice_callback(args):
 模块功能：该模块提供短信功能相关接口。
 
 说明：当前QuecPython底层为非volte版本，暂不支持电信发送短信。
+
+注意：BC25PA平台不支持此模块。
 
 ##### 发送TEXT类型消息
 
@@ -1183,7 +1249,7 @@ if __name__ == '__main__':
 
 | 参数  | 参数类型 | 参数说明                                                     |
 | ----- | -------- | ------------------------------------------------------------ |
-| index | int      | 需删除短信的索引号<br/>如果设置短信存储在SIM卡，则范围0~49<br/>如果设置短信存储在ME，则范围0~179，注意，当短信存储在ME时，只有对应的index索引处有短信存在，才能删除成功，否则删除会失败 |
+| index | int      | 需删除短信的索引号<br/>如果设置短信存储在SIM卡，则范围0 ~ 49<br/>如果设置短信存储在ME，则范围0 ~ 179，注意，当短信存储在ME时，只有对应的index索引处有短信存在，才能删除成功，否则删除会失败 |
 
 返回值
 
@@ -1543,7 +1609,9 @@ sms.setCallback(cb)
 
 设置成功返回整型值0，设置失败返回整型值-1。
 
+* 注意
 
+  BC25PA平台不支持此方法。
 
 ##### 获取当前APN
 
@@ -1561,7 +1629,9 @@ sms.setCallback(cb)
 
 成功返回获取到的APN，失败返回整型值-1。
 
+* 注意
 
+  BC25PA平台不支持此方法。
 
 ##### 获取csq信号强度
 
@@ -1692,6 +1762,10 @@ LTE网络系统返回值说明
 | 17   | UMTS_LTE, dual link. not supported in EC100Y and EC200S      |
 | 18   | GSM_UMTS_LTE, dual link. not supported in EC100Y and EC200S  |
 
+* 注意
+
+  BC25PA平台不支持此方法。
+
 * 示例
 
 ```python
@@ -1718,6 +1792,9 @@ LTE网络系统返回值说明
 
 设置成功返回整型值0，设置失败返回整型值-1。
 
+* 注意
+
+  BC25PA平台不支持此方法。
 
 
 ##### 获取网络配置模式
@@ -2093,6 +2170,8 @@ LTE list：
 
 模块功能：checkNet模块主要用于【开机自动运行】的用户脚本程序，该模块提供API用来阻塞等待网络就绪，如果超时或者其他异常退出会返回错误码，所以如果用户的程序中有涉及网络相关的操作，那么在用户程序的开始应该调用 checkNet 模块中的方法以等待网络就绪。当然，用户也可以自己实现这个模块的功能。
 
+注意：BC25PA平台不支持此模块。
+
 ##### 创建checkNet对象
 
 > **import checkNet**
@@ -2341,6 +2420,9 @@ fota_obj.httpDownload(url1="http://www.example.com/fota1.bin",url2="http://www.e
 
 写入成功返回整型值0，写入失败返回值整型值-1。
 
+* 注意
+
+  BC25PA平台不支持此方法。
 
 
 ##### 分步升级接口，刷新缓存数据到flash
@@ -2357,6 +2439,9 @@ fota_obj.httpDownload(url1="http://www.example.com/fota1.bin",url2="http://www.e
 
 刷新成功返回整型值0，刷新失败返回整型值-1。
 
+* 注意
+
+  BC25PA平台不支持此方法。
 
 
 ##### 分步升级接口，数据校验
@@ -2373,6 +2458,10 @@ fota_obj.httpDownload(url1="http://www.example.com/fota1.bin",url2="http://www.e
 
 检验成功返回整型值0，校验失败返回整型值-1。
 
+* 注意
+
+  BC25PA平台不支持此方法。
+  
 * 示例
 
 ```python
@@ -2487,6 +2576,8 @@ if __name__ == '__main__':
 
 模块功能：用户文件升级
 
+注意：BC25PA平台不支持此模块。
+
 ##### 创建app_fota对象
 
 1. 导入app_fota模块
@@ -2562,6 +2653,8 @@ download_list = [{'url': 'http://www.example.com/app.py', 'file_name': '/usr/app
 
 模块功能：音频播放，支持TTS、mp3以及AMR文件播放。
 
+注意：BC25PA平台不支持此模块。
+
 ##### TTS 
 
 ###### 创建TTS对象
@@ -2622,7 +2715,7 @@ download_list = [{'url': 'http://www.example.com/app.py', 'file_name': '/usr/app
 | -------- | -------- | ------------------------------------------------------------ |
 | priority | int      | 播放优先级，支持优先级0~4，数值越大优先级越高                |
 | breakin  | int      | 打断模式，0表示不允许被打断，1表示允许被打断                 |
-| mode     | int      | 编码模式，1 - UNICODE16(Size end conversion)，2 - UTF-8，3 - UNICODE16(Don't convert) |
+| mode     | int      | 编码模式，1 - UNICODE16(UTF-16大端模式)，2 - UTF-8，3 - UNICODE16(UTF-16小端模式) |
 | str      | string   | 待播放字符串                                                 |
 
 * 返回值
@@ -2673,18 +2766,25 @@ download_list = [{'url': 'http://www.example.com/app.py', 'file_name': '/usr/app
 >>> tts.play(2, 0, 2, '4444444444444444444')  #任务C
 1
 
+#播放UTF16BE模式的语音
+>>> tts.play(1,1,1,'6B228FCE4F7F752879FB8FDC901A4FE16A2157573002')
+0
+
+#播放UTF16LE模式的语音
+>>> tts.play(1,1,3,'226BCE8F7F4F2875FB79DC8F1A90E14F216A57570230')
+0
 ```
 
 tts播放中文示例：
 
-注意，python文件开头需要加上“# -*- coding: UTF-8 -*-”，如果播放的中文中有标点符号，要用英文的标点符号。
+注意，python文件开头需要加上“# -*- coding: UTF-8 -*-”。
 
 ```python
 # -*- coding: UTF-8 -*-
 import audio
 
 tts = audio.TTS(1)
-str1 = '移联万物,志高行远' #这里的逗号是英文的逗号
+str1 = '移联万物，志高行远' 
 tts.play(4, 0, 2, str1)
 ```
 
@@ -3170,6 +3270,8 @@ audio初始化未完成返回整型值-1，初始化完成返回整型值0。
 
 适配版本：EC100Y(V0009)及以上；EC600S(V0003)及以上。
 
+注意：BC25PA平台不支持此模块。
+
 ###### 创建一个对象
 
 > **import audio**
@@ -3308,7 +3410,7 @@ record_test.getFilePath(“test.wav”)
 
 -7： 内存不足10K
 
--8： 文件不属于该对象
+
 
 bytes:返回数据
 
@@ -3348,7 +3450,7 @@ amr格式时，此值会比返回callback返回值大6 bytes（6 bytes为文件�
 
 *-3*  文件正在使用 ；
 
--4 文件不属于该对象
+
 
 * 示例
 
@@ -3379,8 +3481,6 @@ record_test.getSize(“test.amr”)
 -1：文件不存在 
 
 -2：文件正在使用
-
--3 :  文件不属于该对象
 
 * 示例
 
@@ -3497,26 +3597,93 @@ record_test.end_callback(record_callback)
 record_test.gain(4,12)
 ```
 
+###### 录音流
 
+目前适用于EC600U EC200U平台
 
-###### 查看录音文件列表
+> **record.stream_start(format, samplerate, time)**
 
-> **record.list_file()**
-
-查看该对象下录音文件列表
+录音音频流
 
 * 参数
 
-无
+| 参数       | 参数类型 | 参数说明                      |
+| ---------- | -------- | ----------------------------- |
+| format     | int      | 音频格式，目前支持pcm wav amr |
+| samplerate | int      | 采样率，目前支持8K 和 16K     |
+| time       | int      | 录音时长，单位 S (秒)         |
 
 * 返回值
 
-*str*  字符串。录音文件列表  
+0：成功
+
+其它：失败
 
 * 示例
 
 ```python
-record_test.list_file()
+record_test.stream_start(record_test.AMRNB, 8000, 5)
+```
+
+注意：录制音频流的同时，应及时读取音频流。目前是采用循环buf,不及时读取，会导致数据丢失
+
+###### 读取录音流
+
+目前适用于展锐平台
+
+> **record.stream_read(read_buf, len)**
+
+录音音频流
+
+* 参数
+
+| 参数     | 参数类型 | 参数说明      |
+| -------- | -------- | ------------- |
+| read_buf | buf      | 录音流保存buf |
+| len      | int      | 读取的长度    |
+
+* 返回值
+
+-1：读取失败
+
+大于0：实际读取的个数
+
+* 示例
+
+```python
+read_buf = bytearray(128)
+record_test.stream_read(read_buf, 128)
+```
+
+###### 录音流示例
+
+```python
+import audio
+import utime
+record_test = audio.Record()
+audio_test = audio.Audio(0)
+
+read_time = 5
+
+buf = bytearray(0)
+
+def stream_rec_cb(para):
+    global buf
+    if(para[0] == 'stream'):
+        if(para[2] == 1):
+            read_buf = bytearray(para[1])
+            record_test.stream_read(read_buf,para[1])
+            buf += read_buf
+            del read_buf
+        elif (para[2] == 3):
+            audio_test.stopPlayStream()
+            audio_test.playStream(record_test.AMRNB, buf)
+
+
+
+record_test.end_callback(stream_rec_cb)
+audio_test.stopPlayStream()
+record_test.stream_start(record_test.AMRNB, 8000, read_time)
 ```
 
 
@@ -3645,6 +3812,9 @@ while 1:
 0：未知
 
 
+* 注意
+
+  BC25PA平台支持仅不支持重启原因5。
 
 ###### 获取模块上次关机原因
 
@@ -3672,6 +3842,9 @@ while 1:
 
 0：未知
 
+* 注意
+
+  BC25PA平台支持仅不支持此方法。
 
 
 ###### 获取电池电压
@@ -3774,6 +3947,8 @@ pk.powerKeyEventRegister(pwk_callback)
 
 ##### PWM
 
+注意：BC25PA平台支持仅不支持此模块。
+
 ###### 常量说明
 
 | 常量     | 说明 | 使用平台                               |
@@ -3804,7 +3979,7 @@ pk.powerKeyEventRegister(pwk_callback)
 
 ```python
 >>> from misc import PWM
->>> pwm1 = PWM(PWM.PWM1, PWM.BOVE_MS, 100, 200)
+>>> pwm1 = PWM(PWM.PWM1, PWM.ABOVE_MS, 100, 200)
 ```
 
 
@@ -3889,12 +4064,12 @@ if __name__ == '__main__':
 
 ###### 常量说明
 
-| 常量     | 说明     | 适用平台                           |
-| -------- | -------- | ---------------------------------- |
-| ADC.ADC0 | ADC通道0 | EC600S/EC600N/EC100Y/EC600U/EC200U |
-| ADC.ADC1 | ADC通道1 | EC600S/EC600N/EC600U/EC200U        |
-| ADC.ADC2 | ADC通道2 | EC600U/EC200U                      |
-| ADC.ADC3 | ADC通道3 | EC600U                             |
+| 常量     | 说明     | 适用平台                                  |
+| -------- | -------- | ----------------------------------------- |
+| ADC.ADC0 | ADC通道0 | EC600S/EC600N/EC100Y/EC600U/EC200U/BC25PA |
+| ADC.ADC1 | ADC通道1 | EC600S/EC600N/EC600U/EC200U               |
+| ADC.ADC2 | ADC通道2 | EC600U/EC200U                             |
+| ADC.ADC3 | ADC通道3 | EC600U                                    |
 
 
 
@@ -3973,6 +4148,8 @@ ADC功能初始化。
 ##### USB
 
 提供USB插拔检测接口。
+
+注意：BC25PA平台支持仅不支持此模块。
 
 ###### 创建USB对象
 
@@ -4172,22 +4349,22 @@ usb.setCallback(usb_callback)
 
 | 常量             | 适配平台                   | 说明      |
 | ---------------- | ------------------------ | -------- |
-| Pin.GPIO1        | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO1    |
-| Pin.GPIO2        | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO2    |
-| Pin.GPIO3        | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO3    |
-| Pin.GPIO4        | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO4    |
-| Pin.GPIO5        | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO5    |
-| Pin.GPIO6        | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO6    |
-| Pin.GPIO7        | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO7    |
-| Pin.GPIO8        | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO8    |
-| Pin.GPIO9        | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO9    |
-| Pin.GPIO10       | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO10   |
-| Pin.GPIO11       | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO11   |
-| Pin.GPIO12       | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO12   |
-| Pin.GPIO13       | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO13   |
-| Pin.GPIO14       | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO14   |
-| Pin.GPIO15       | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO15   |
-| Pin.GPIO16       | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO16   |
+| Pin.GPIO1        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO1    |
+| Pin.GPIO2        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO2    |
+| Pin.GPIO3        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO3    |
+| Pin.GPIO4        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO4    |
+| Pin.GPIO5        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO5    |
+| Pin.GPIO6        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO6    |
+| Pin.GPIO7        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO7    |
+| Pin.GPIO8        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO8    |
+| Pin.GPIO9        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO9    |
+| Pin.GPIO10       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO10   |
+| Pin.GPIO11       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO11   |
+| Pin.GPIO12       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO12   |
+| Pin.GPIO13       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO13   |
+| Pin.GPIO14       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO14   |
+| Pin.GPIO15       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO15   |
+| Pin.GPIO16       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO16   |
 | Pin.GPIO17       | EC600S / EC600N / EC100Y | GPIO17   |
 | Pin.GPIO18       | EC600S / EC600N / EC100Y | GPIO18   |
 | Pin.GPIO19       | EC600S / EC600N / EC100Y | GPIO19   |
@@ -4207,6 +4384,8 @@ usb.setCallback(usb_callback)
 | Pin.PULL_PU      | --                       | 上拉模式 |
 | Pin.PULL_PD      | --                       | 下拉模式 |
 
+
+
 **GPIO对应引脚号说明**
 
 文档中提供的GPIO引脚号对应的为模块外部的引脚编号，例如EC600S下GPIO1对应引脚号22，这里的引脚号22为模块外部的引脚编号。可参考提供的硬件资料查看模块外部的引脚编号。
@@ -4219,7 +4398,7 @@ usb.setCallback(usb_callback)
 
 | 参数      | 类型 | 说明                                                         |
 | :-------- | :--- | ------------------------------------------------------------ |
-| GPIOn     | int  | 引脚号<br />EC100YCN平台引脚对应关系如下（引脚号为外部引脚编号）：<br />GPIO1 – 引脚号22<br />GPIO2 – 引脚号23<br />GPIO3 – 引脚号38<br />GPIO4 – 引脚号53<br />GPIO5 – 引脚号54<br />GPIO6 – 引脚号104<br />GPIO7 – 引脚号105<br />GPIO8 – 引脚号106<br />GPIO9 – 引脚号107<br />GPIO10 – 引脚号178<br />GPIO11 – 引脚号195<br />GPIO12 – 引脚号196<br />GPIO13 – 引脚号197<br />GPIO14 – 引脚号198<br />GPIO15 – 引脚号199<br />GPIO16 – 引脚号203<br />GPIO17 – 引脚号204<br />GPIO18 – 引脚号214<br />GPIO19 – 引脚号215<br />EC600SCN/EC600NCN平台引脚对应关系如下（引脚号为模块外部引脚编号）：<br />GPIO1 – 引脚号10<br />GPIO2 – 引脚号11<br />GPIO3 – 引脚号12<br />GPIO4 – 引脚号13<br />GPIO5 – 引脚号14<br />GPIO6 – 引脚号15<br />GPIO7 – 引脚号16<br />GPIO8 – 引脚号39<br />GPIO9 – 引脚号40<br />GPIO10 – 引脚号48<br />GPIO11 – 引脚号58<br />GPIO12 – 引脚号59<br />GPIO13 – 引脚号60<br />GPIO14 – 引脚号61<br />GPIO15 – 引脚号62<br/>GPIO16 – 引脚号63<br/>GPIO17 – 引脚号69<br/>GPIO18 – 引脚号70<br/>GPIO19 – 引脚号1<br/>GPIO20 – 引脚号3<br/>GPIO21 – 引脚号49<br/>GPIO22 – 引脚号50<br/>GPIO23 – 引脚号51<br/>GPIO24 – 引脚号52<br/>GPIO25 – 引脚号53<br/>GPIO26 – 引脚号54<br/>GPIO27 – 引脚号55<br/>GPIO28 – 引脚号56<br/>GPIO29 – 引脚号57<br />EC600UCN平台引脚对应关系如下（引脚号为模块外部引脚编号）<br />GPIO1 – 引脚号61<br />GPIO2 – 引脚号58<br />GPIO3 – 引脚号34<br />GPIO4 – 引脚号60<br />GPIO5 – 引脚号69<br />GPIO6 – 引脚号70<br />GPIO7 – 引脚号123<br />GPIO8 – 引脚号118<br />GPIO9 – 引脚号9<br />GPIO10 – 引脚号1<br />GPIO11 – 引脚号4<br />GPIO12 – 引脚号3<br />GPIO13 – 引脚号2<br />GPIO14 – 引脚号54<br />GPIO15 – 引脚号57<br/>GPIO16 – 引脚号56<br/>EC200UCN平台引脚对应关系如下（引脚号为模块外部引脚编号）<br />GPIO1 – 引脚号27<br />GPIO2 – 引脚号26<br />GPIO3 – 引脚号24<br />GPIO4 – 引脚号25<br />GPIO5 – 引脚号13<br />GPIO6 – 引脚号135<br />GPIO7 – 引脚号136<br />GPIO8 – 引脚号133<br />GPIO9 – 引脚号3<br />GPIO10 – 引脚号40<br />GPIO11 – 引脚号37<br />GPIO12 – 引脚号38<br />GPIO13 – 引脚号39<br />GPIO14 – 引脚号5<br />GPIO15 – 引脚号141<br/>GPIO16 – 引脚号142<br/> |
+| GPIOn     | int  | 引脚号<br />EC100YCN平台引脚对应关系如下（引脚号为外部引脚编号）：<br />GPIO1 – 引脚号22<br />GPIO2 – 引脚号23<br />GPIO3 – 引脚号38<br />GPIO4 – 引脚号53<br />GPIO5 – 引脚号54<br />GPIO6 – 引脚号104<br />GPIO7 – 引脚号105<br />GPIO8 – 引脚号106<br />GPIO9 – 引脚号107<br />GPIO10 – 引脚号178<br />GPIO11 – 引脚号195<br />GPIO12 – 引脚号196<br />GPIO13 – 引脚号197<br />GPIO14 – 引脚号198<br />GPIO15 – 引脚号199<br />GPIO16 – 引脚号203<br />GPIO17 – 引脚号204<br />GPIO18 – 引脚号214<br />GPIO19 – 引脚号215<br />EC600SCN/EC600NCN平台引脚对应关系如下（引脚号为模块外部引脚编号）：<br />GPIO1 – 引脚号10<br />GPIO2 – 引脚号11<br />GPIO3 – 引脚号12<br />GPIO4 – 引脚号13<br />GPIO5 – 引脚号14<br />GPIO6 – 引脚号15<br />GPIO7 – 引脚号16<br />GPIO8 – 引脚号39<br />GPIO9 – 引脚号40<br />GPIO10 – 引脚号48<br />GPIO11 – 引脚号58<br />GPIO12 – 引脚号59<br />GPIO13 – 引脚号60<br />GPIO14 – 引脚号61<br />GPIO15 – 引脚号62<br/>GPIO16 – 引脚号63<br/>GPIO17 – 引脚号69<br/>GPIO18 – 引脚号70<br/>GPIO19 – 引脚号1<br/>GPIO20 – 引脚号3<br/>GPIO21 – 引脚号49<br/>GPIO22 – 引脚号50<br/>GPIO23 – 引脚号51<br/>GPIO24 – 引脚号52<br/>GPIO25 – 引脚号53<br/>GPIO26 – 引脚号54<br/>GPIO27 – 引脚号55<br/>GPIO28 – 引脚号56<br/>GPIO29 – 引脚号57<br />EC600UCN平台引脚对应关系如下（引脚号为模块外部引脚编号）<br />GPIO1 – 引脚号61<br />GPIO2 – 引脚号58<br />GPIO3 – 引脚号34<br />GPIO4 – 引脚号60<br />GPIO5 – 引脚号69<br />GPIO6 – 引脚号70<br />GPIO7 – 引脚号123<br />GPIO8 – 引脚号118<br />GPIO9 – 引脚号9<br />GPIO10 – 引脚号1<br />GPIO11 – 引脚号4<br />GPIO12 – 引脚号3<br />GPIO13 – 引脚号2<br />GPIO14 – 引脚号54<br />GPIO15 – 引脚号57<br/>GPIO16 – 引脚号56<br/>EC200UCN平台引脚对应关系如下（引脚号为模块外部引脚编号）<br />GPIO1 – 引脚号27<br />GPIO2 – 引脚号26<br />GPIO3 – 引脚号24<br />GPIO4 – 引脚号25<br />GPIO5 – 引脚号13<br />GPIO6 – 引脚号135<br />GPIO7 – 引脚号136<br />GPIO8 – 引脚号133<br />GPIO9 – 引脚号3<br />GPIO10 – 引脚号40<br />GPIO11 – 引脚号37<br />GPIO12 – 引脚号38<br />GPIO13 – 引脚号39<br />GPIO14 – 引脚号5<br />GPIO15 – 引脚号141<br/>GPIO16 – 引脚号142<br/>BC25PA平台引脚对应关系如下（引脚号为模块外部引脚编号）<br />GPIO1 – 引脚号3<br />GPIO2 – 引脚号4<br />GPIO3 – 引脚号5<br />GPIO4 – 引脚号6<br />GPIO5 – 引脚号16<br />GPIO6 – 引脚号20<br />GPIO7 – 引脚号21<br />GPIO8 – 引脚号22<br />GPIO9 – 引脚号23<br />GPIO10 – 引脚号25<br />GPIO11 – 引脚号28<br />GPIO12 – 引脚号29<br />GPIO13 – 引脚号30<br />GPIO14 – 引脚号31<br />GPIO15 – 引脚号32<br/>GPIO16 – 引脚号33<br/> |
 | direction | int  | IN – 输入模式，OUT – 输出模式                                |
 | pullMode  | int  | PULL_DISABLE – 浮空模式<br />PULL_PU – 上拉模式<br />PULL_PD – 下拉模式 |
 | level     | int  | 0 - 设置引脚为低电平, 1- 设置引脚为高电平                    |
@@ -4372,6 +4551,10 @@ if __name__ == '__main__':
 
 类功能：uart串口数据传输。
 
+* 注意
+
+  BC25PA平台，仅支持UART1。
+
 ###### 常量说明
 
 | 常量       | 说明  |
@@ -4397,6 +4580,15 @@ if __name__ == '__main__':
 | parity   | int  | 奇偶校验（0 – NONE，1 – EVEN，2 - ODD）                      |
 | stopbits | int  | 停止位（1~2）                                                |
 | flowctl  | int  | 硬件控制流（0 – FC_NONE， 1 – FC_HW）                        |
+
+- 引脚对应关系
+
+| 平台          |                                                              |
+| ------------- | ------------------------------------------------------------ |
+| EC600U        | uart1:<br />TX: 引脚号124<br />RX: 引脚号123<br />uart2:<br />TX:引脚号32<br />RX:引脚号31 |
+| EC200U        | uart1:<br />TX: 引脚号138<br />RX: 引脚号137<br />uart2:<br />TX:引脚号67<br />RX:引脚号68 |
+| EC600S/EC600N | uart0:<br />TX: 引脚号71<br />RX: 引脚号72<br />uart1:<br />TX: 引脚号3<br />RX: 引脚号2<br />uart2:<br />TX:引脚号32<br />RX:引脚号31 |
+| EC100Y        | uart0:<br />TX: 引脚号21<br />RX: 引脚号20<br />uart1:<br />TX: 引脚号27<br />RX: 引脚号28<br />uart2:<br />TX:引脚号50<br />RX:引脚号49 |
 
 * 示例
 
@@ -4499,12 +4691,43 @@ if __name__ == '__main__':
 
 成功返回整型0，失败返回整型-1。
 
+* 注意
+
+  BC25PA平台不支持此方法。
+  
 - 示例
 
 ```python
 >>> from machine import UART
 >>> uart1 = UART(UART.UART1, 115200, 8, 0, 1, 0)
 >>> uart1.control_485(UART.GPIO24, 1)
+```
+
+###### 设置串口数据回调
+
+> **uart.set_callback(fun)**
+
+串口收到数据后，会执行该回调。
+
+- 参数
+
+| 参数 | 类型     | 说明                                                         |
+| ---- | -------- | ------------------------------------------------------------ |
+| fun  | function | 串口接收数据回调 [result, port, num]<br />result: 接收接口（0：成功， 其它：失败）<br />port: 接收端口<br />num: 返回有多少数据 |
+
+- 返回值
+
+成功返回整型0，失败返回整型-1。
+
+- 示例
+
+```python
+>>> from machine import UART
+>>> uart1 = UART(UART.UART1, 115200, 8, 0, 1, 0)
+>>> 
+>>>def uart_call(para):
+>>>		print(para)
+>>> uart1.set_callback(uart_call)
 ```
 
 
@@ -4766,44 +4989,42 @@ if __name__ == '__main__':
 
 ###### 常量说明
 
-| 常量             | 适配平台                               | 说明     |
-| ---------------- | -------------------------------------- | -------- |
-| Pin.GPIO1        | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO1    |
-| Pin.GPIO2        | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO2    |
-| Pin.GPIO3        | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO3    |
-| Pin.GPIO4        | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO4    |
-| Pin.GPIO5        | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO5    |
-| Pin.GPIO6        | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO6    |
-| Pin.GPIO7        | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO7    |
-| Pin.GPIO8        | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO8    |
-| Pin.GPIO9        | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO9    |
-| Pin.GPIO10       | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO10   |
-| Pin.GPIO11       | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO11   |
-| Pin.GPIO12       | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO12   |
-| Pin.GPIO13       | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO13   |
-| Pin.GPIO14       | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO14   |
-| Pin.GPIO15       | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO15   |
-| Pin.GPIO16       | EC600S / EC600N / EC100Y/EC600U/EC200U | GPIO16   |
-| Pin.GPIO17       | EC600S / EC600N / EC100Y               | GPIO17   |
-| Pin.GPIO18       | EC600S / EC600N / EC100Y               | GPIO18   |
-| Pin.GPIO19       | EC600S / EC600N / EC100Y               | GPIO19   |
-| Pin.GPIO20       | EC600S / EC600N                        | GPIO20   |
-| Pin.GPIO21       | EC600S / EC600N                        | GPIO21   |
-| Pin.GPIO22       | EC600S / EC600N                        | GPIO22   |
-| Pin.GPIO23       | EC600S / EC600N                        | GPIO23   |
-| Pin.GPIO24       | EC600S / EC600N                        | GPIO24   |
-| Pin.GPIO25       | EC600S / EC600N                        | GPIO25   |
-| Pin.GPIO26       | EC600S / EC600N                        | GPIO26   |
-| Pin.GPIO27       | EC600S / EC600N                        | GPIO27   |
-| Pin.GPIO28       | EC600S / EC600N                        | GPIO28   |
-| Pin.GPIO29       | EC600S / EC600N                        | GPIO29   |
-| Pin.IN           | --                                     | 输入模式 |
-| Pin.OUT          | --                                     | 输出模式 |
-| Pin.PULL_DISABLE | --                                     | 浮空模式 |
-| Pin.PULL_PU      | --                                     | 上拉模式 |
-| Pin.PULL_PD      | --                                     | 下拉模式 |
-
-
+| 常量             | 适配平台                                      | 说明     |
+| ---------------- | --------------------------------------------- | -------- |
+| Pin.GPIO1        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO1    |
+| Pin.GPIO2        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO2    |
+| Pin.GPIO3        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO3    |
+| Pin.GPIO4        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO4    |
+| Pin.GPIO5        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO5    |
+| Pin.GPIO6        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO6    |
+| Pin.GPIO7        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO7    |
+| Pin.GPIO8        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO8    |
+| Pin.GPIO9        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO9    |
+| Pin.GPIO10       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO10   |
+| Pin.GPIO11       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO11   |
+| Pin.GPIO12       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO12   |
+| Pin.GPIO13       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO13   |
+| Pin.GPIO14       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO14   |
+| Pin.GPIO15       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO15   |
+| Pin.GPIO16       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO16   |
+| Pin.GPIO17       | EC600S / EC600N / EC100Y                      | GPIO17   |
+| Pin.GPIO18       | EC600S / EC600N / EC100Y                      | GPIO18   |
+| Pin.GPIO19       | EC600S / EC600N / EC100Y                      | GPIO19   |
+| Pin.GPIO20       | EC600S / EC600N                               | GPIO20   |
+| Pin.GPIO21       | EC600S / EC600N                               | GPIO21   |
+| Pin.GPIO22       | EC600S / EC600N                               | GPIO22   |
+| Pin.GPIO23       | EC600S / EC600N                               | GPIO23   |
+| Pin.GPIO24       | EC600S / EC600N                               | GPIO24   |
+| Pin.GPIO25       | EC600S / EC600N                               | GPIO25   |
+| Pin.GPIO26       | EC600S / EC600N                               | GPIO26   |
+| Pin.GPIO27       | EC600S / EC600N                               | GPIO27   |
+| Pin.GPIO28       | EC600S / EC600N                               | GPIO28   |
+| Pin.GPIO29       | EC600S / EC600N                               | GPIO29   |
+| Pin.IN           | --                                            | 输入模式 |
+| Pin.OUT          | --                                            | 输出模式 |
+| Pin.PULL_DISABLE | --                                            | 浮空模式 |
+| Pin.PULL_PU      | --                                            | 上拉模式 |
+| Pin.PULL_PD      | --                                            | 下拉模式 |
 
 ###### 创建ExtInt对象
 
@@ -4813,7 +5034,7 @@ if __name__ == '__main__':
 
 | 参数     | 类型 | 说明                                                         |
 | :------- | :--- | ------------------------------------------------------------ |
-| GPIOn    | int  | 引脚号<br />EC100YCN平台引脚对应关系如下（引脚号为外部引脚编号）：<br />GPIO1 – 引脚号22<br />GPIO2 – 引脚号23<br />GPIO3 – 引脚号38<br />GPIO4 – 引脚号53<br />GPIO5 – 引脚号54<br />GPIO6 – 引脚号104<br />GPIO7 – 引脚号105<br />GPIO8 – 引脚号106<br />GPIO9 – 引脚号107<br />GPIO10 – 引脚号178<br />GPIO11 – 引脚号195<br />GPIO12 – 引脚号196<br />GPIO13 – 引脚号197<br />GPIO14 – 引脚号198<br />GPIO15 – 引脚号199<br />GPIO16 – 引脚号203<br />GPIO17 – 引脚号204<br />GPIO18 – 引脚号214<br />GPIO19 – 引脚号215<br />EC600SCN/EC600NCN平台引脚对应关系如下（引脚号为模块外部引脚编号）：<br />GPIO1 – 引脚号10<br />GPIO2 – 引脚号11<br />GPIO3 – 引脚号12<br />GPIO4 – 引脚号13<br />GPIO5 – 引脚号14<br />GPIO6 – 引脚号15<br />GPIO7 – 引脚号16<br />GPIO8 – 引脚号39<br />GPIO9 – 引脚号40<br />GPIO10 – 引脚号48<br />GPIO11 – 引脚号58<br />GPIO12 – 引脚号59<br />GPIO13 – 引脚号60<br />GPIO14 – 引脚号61<br />GPIO15 – 引脚号62<br/>GPIO16 – 引脚号63<br/>GPIO17 – 引脚号69<br/>GPIO18 – 引脚号70<br/>GPIO19 – 引脚号1<br/>GPIO20 – 引脚号3<br/>GPIO21 – 引脚号49<br/>GPIO22 – 引脚号50<br/>GPIO23 – 引脚号51<br/>GPIO24 – 引脚号52<br/>GPIO25 – 引脚号53<br/>GPIO26 – 引脚号54<br/>GPIO27 – 引脚号55<br/>GPIO28 – 引脚号56<br/>GPIO29 – 引脚号57<br />EC600UCN平台引脚对应关系如下（引脚号为模块外部引脚编号）<br />GPIO1 – 引脚号61<br />GPIO2 – 引脚号58<br />GPIO3 – 引脚号34<br />GPIO4 – 引脚号60<br />GPIO5 – 引脚号69<br />GPIO6 – 引脚号70<br />GPIO7 – 引脚号123<br />GPIO8 – 引脚号118<br />GPIO9 – 引脚号9<br />GPIO10 – 引脚号1<br />GPIO11 – 引脚号4<br />GPIO12 – 引脚号3<br />GPIO13 – 引脚号2<br />GPIO14 – 引脚号54<br />GPIO15 – 引脚号57<br/>GPIO16 – 引脚号56<br/>EC200UCN平台引脚对应关系如下（引脚号为模块外部引脚编号）<br />GPIO1 – 引脚号27<br />GPIO2 – 引脚号26<br />GPIO3 – 引脚号24<br />GPIO4 – 引脚号25<br />GPIO5 – 引脚号13<br />GPIO6 – 引脚号135<br />GPIO7 – 引脚号136<br />GPIO8 – 引脚号133<br />GPIO9 – 引脚号3<br />GPIO10 – 引脚号40<br />GPIO11 – 引脚号37<br />GPIO12 – 引脚号38<br />GPIO13 – 引脚号39<br />GPIO14 – 引脚号5<br />GPIO15 – 引脚号141<br/>GPIO16 – 引脚号142<br/> |
+| GPIOn    | int  | 引脚号<br />EC100YCN平台引脚对应关系如下（引脚号为外部引脚编号）：<br />GPIO1 – 引脚号22<br />GPIO2 – 引脚号23<br />GPIO3 – 引脚号38<br />GPIO4 – 引脚号53<br />GPIO5 – 引脚号54<br />GPIO6 – 引脚号104<br />GPIO7 – 引脚号105<br />GPIO8 – 引脚号106<br />GPIO9 – 引脚号107<br />GPIO10 – 引脚号178<br />GPIO11 – 引脚号195<br />GPIO12 – 引脚号196<br />GPIO13 – 引脚号197<br />GPIO14 – 引脚号198<br />GPIO15 – 引脚号199<br />GPIO16 – 引脚号203<br />GPIO17 – 引脚号204<br />GPIO18 – 引脚号214<br />GPIO19 – 引脚号215<br />EC600SCN/EC600NCN平台引脚对应关系如下（引脚号为模块外部引脚编号）：<br />GPIO1 – 引脚号10<br />GPIO2 – 引脚号11<br />GPIO3 – 引脚号12<br />GPIO4 – 引脚号13<br />GPIO5 – 引脚号14<br />GPIO6 – 引脚号15<br />GPIO7 – 引脚号16<br />GPIO8 – 引脚号39<br />GPIO9 – 引脚号40<br />GPIO10 – 引脚号48<br />GPIO11 – 引脚号58<br />GPIO12 – 引脚号59<br />GPIO13 – 引脚号60<br />GPIO14 – 引脚号61<br />GPIO15 – 引脚号62<br/>GPIO16 – 引脚号63<br/>GPIO17 – 引脚号69<br/>GPIO18 – 引脚号70<br/>GPIO19 – 引脚号1<br/>GPIO20 – 引脚号3<br/>GPIO21 – 引脚号49<br/>GPIO22 – 引脚号50<br/>GPIO23 – 引脚号51<br/>GPIO24 – 引脚号52<br/>GPIO25 – 引脚号53<br/>GPIO26 – 引脚号54<br/>GPIO27 – 引脚号55<br/>GPIO28 – 引脚号56<br/>GPIO29 – 引脚号57<br />EC600UCN平台引脚对应关系如下（引脚号为模块外部引脚编号）<br />GPIO1 – 引脚号61<br />GPIO2 – 引脚号58<br />GPIO3 – 引脚号34<br />GPIO4 – 引脚号60<br />GPIO5 – 引脚号69<br />GPIO6 – 引脚号70<br />GPIO7 – 引脚号123<br />GPIO8 – 引脚号118<br />GPIO9 – 引脚号9<br />GPIO10 – 引脚号1<br />GPIO11 – 引脚号4<br />GPIO12 – 引脚号3<br />GPIO13 – 引脚号2<br />GPIO14 – 引脚号54<br />GPIO15 – 引脚号57<br/>GPIO16 – 引脚号56<br/>EC200UCN平台引脚对应关系如下（引脚号为模块外部引脚编号）<br />GPIO1 – 引脚号27<br />GPIO2 – 引脚号26<br />GPIO3 – 引脚号24<br />GPIO4 – 引脚号25<br />GPIO5 – 引脚号13<br />GPIO6 – 引脚号135<br />GPIO7 – 引脚号136<br />GPIO8 – 引脚号133<br />GPIO9 – 引脚号3<br />GPIO10 – 引脚号40<br />GPIO11 – 引脚号37<br />GPIO12 – 引脚号38<br />GPIO13 – 引脚号39<br />GPIO14 – 引脚号5<br />GPIO15 – 引脚号141<br/>GPIO16 – 引脚号142<br/>BC25PA平台引脚对应关系如下（引脚号为模块外部引脚编号）<br />GPIO1 – 引脚号3<br />GPIO2 – 引脚号4<br />GPIO3 – 引脚号5<br />GPIO4 – 引脚号6<br />GPIO5 – 引脚号16<br />GPIO6 – 引脚号20<br />GPIO7 – 引脚号21<br />GPIO8 – 引脚号22<br />GPIO9 – 引脚号23<br />GPIO10 – 引脚号25<br />GPIO11 – 引脚号28<br />GPIO12 – 引脚号29<br />GPIO13 – 引脚号30<br />GPIO14 – 引脚号31<br />GPIO15 – 引脚号32<br/>GPIO16 – 引脚号33<br/> |
 | mode     | int  | 设置触发方式<br /> IRQ_RISING – 上升沿触发<br /> IRQ_FALLING – 下降沿触发<br /> IRQ_RISING_FALLING – 上升和下降沿触发 |
 | pull     | int  | PULL_DISABLE – 浮空模式<br />PULL_PU – 上拉模式 <br />PULL_PD  – 下拉模式 |
 | callback | int  | 中断触发回调函数                                             |
@@ -4884,7 +5105,43 @@ if __name__ == '__main__':
 32
 ```
 
+###### 读取中断数
 
+> **extint.read_count(is_reset)**
+
+返回触发中断的次数。
+
+* 参数
+
+| 参数     | 类型 | 说明                                           |
+| -------- | ---- | ---------------------------------------------- |
+| is_reset | int  | 读取后是否重置计数<br />0：不重置<br />1：重置 |
+
+* 返回值
+
+列表 [rising_count, falling_count]
+
+​		rising_count:	上升沿触发次数
+
+​		falling_count：下降沿触发次数
+
+
+
+###### 清空中断数
+
+> **extint.count_reset()**
+
+清空触发中断的次数。
+
+* 参数
+
+无
+
+* 返回值
+
+0：成功
+
+其他：失败
 
 ##### RTC
 
@@ -4948,8 +5205,8 @@ if __name__ == '__main__':
 
 | 常量              |                   | 适用平台                      |
 | ----------------- | ----------------- | ----------------------------- |
-| I2C.I2C0          | i2c 通路索引号: 0 | EC100Y/EC600U/EC200U          |
-| I2C.I2C1          | i2c 通路索引号: 1 | EC600S/EC600N/EC600U/EC200U |
+| I2C.I2C0          | i2c 通路索引号: 0 | EC100Y/EC600U/EC200U/BC25PA          |
+| I2C.I2C1          | i2c 通路索引号: 1 | EC600S/EC600N/EC600U/EC200U/BC25PA  |
 | I2C.STANDARD_MODE | 标准模式 |                  |
 | I2C.FAST_MODE | 快速模式      |                               |
 
@@ -4976,8 +5233,8 @@ if __name__ == '__main__':
 | EC200U        | I2C0:<br />SCL: 引脚号41<br />SDA: 引脚号42<br />I2C1:<br />SCL:引脚号141<br />SDA:引脚号142 |
 | EC600S/EC600N | I2C1:<br />SCL:引脚号57<br />SDA:引脚号56                    |
 | EC100Y        | I2C0:<br />SCL:引脚号57<br />SDA:引脚号56                    |
-
-- 示例
+| BC25PA        | I2C0:<br />SCL: 引脚号23<br />SDA: 引脚号22<br />I2C1:<br />SCL:引脚号20<br />SDA:引脚号21 |
+|- 示例||
 
 ```python
 from machine import I2C
@@ -5101,6 +5358,7 @@ if __name__ == '__main__':
 | EC200U        | port0:<br />CS:引脚号134<br />CLK:引脚号133<br />MOSI:引脚号132<br />MISO:引脚号131<br />port1:<br />CS:引脚号26<br />CLK:引脚号27<br />MOSI:引脚号24<br />MISO:引脚号25 |
 | EC600S/EC600N | port0:<br />CS:引脚号58<br />CLK:引脚号61<br />MOSI:引脚号60<br />MISO:引脚号59<br />port1:<br />CS:引脚号4<br />CLK:引脚号1<br />MOSI:引脚号3<br />MISO:引脚号2 |
 | EC100Y        | port0:<br />CS:引脚号25<br />CLK:引脚号26<br />MOSI:引脚号27<br />MISO:引脚号28<br />port1:<br />CS:引脚号105<br />CLK:引脚号104<br />MOSI:引脚号107<br />MISO:引脚号106 |
+| BC25PA        | port0:<br />CS:引脚号6<br />CLK:引脚号5<br />MOSI:引脚号4<br />MISO:引脚号3|
 
 - 示例
 
@@ -5214,6 +5472,9 @@ if __name__ == '__main__':
 
 适配版本：EC100Y(V0009)及以上；EC600S(V0002)及以上。
 
+* 注意
+  BC25PA平台不支持此模块功能。
+  
 ###### 创建LCD对象
 
 > **lcd = LCD()**
@@ -5411,15 +5672,37 @@ lcd = LCD()   # 创建lcd对象
 
 该文件是由Image2Lcd工具生成的bin文件。若勾选包含图像头文件，则width和hight无需填写
 
+也可以是jpeg格式图片
+
 - 参数
 
-| 参数      | 类型   | 说明                                           |
-| --------- | ------ | ---------------------------------------------- |
-| file_name | 文件名 | 需要显示的图片                                 |
-| start_x   | int    | 起始x坐标                                      |
-| start_y   | int    | 起始y坐标                                      |
-| width     | int    | 图片宽度（若图片文件包含的头信息，则该处不填） |
-| hight     | int    | 图片高度（若图片文件包含的头信息，则该处不填） |
+| 参数      | 类型   | 说明                                                         |
+| --------- | ------ | ------------------------------------------------------------ |
+| file_name | 文件名 | 需要显示的图片                                               |
+| start_x   | int    | 起始x坐标                                                    |
+| start_y   | int    | 起始y坐标                                                    |
+| width     | int    | 图片宽度（若图片文件包含的头信息，则该处不填，jpeg格式也不需要填） |
+| hight     | int    | 图片高度（若图片文件包含的头信息，则该处不填，jpeg格式也不需要填） |
+
+* 返回值
+
+成功返回0， 失败返回其他值。
+
+
+
+###### 显示jpeg图片
+
+> **lcd.lcd_show_jpg( file_name, start_x,start_y)**
+
+采用读文件方式，显示jpeg图片。
+
+- 参数
+
+| 参数      | 类型 | 说明             |
+| --------- | ---- | ---------------- |
+| file_name | str  | 需要显示的图片名 |
+| start_x   | int  | 起始x坐标        |
+| start_y   | int  | 起始y坐标        |
 
 * 返回值
 
@@ -5492,8 +5775,8 @@ Color_buffer = bytearray(Color_buffer)
 lcd.lcd_write(Color_buffer,10,10,20,20)
 lcd.lcd_clear(0xf800) # 红色
 
-lcd.show("lcd_test.bin",0,0)	#该lcd_test.bin 中包含图像头数据
-lcd.show("lcd_test1.bin",0,0,126,220) #该lcd_test1.bin 中没有包含图像头数据
+lcd.lcd_show("lcd_test.bin",0,0)	#该lcd_test.bin 中包含图像头数据
+lcd.lcd_show("lcd_test1.bin",0,0,126,220) #该lcd_test1.bin 中没有包含图像头数据
 ```
 
 
@@ -5533,7 +5816,9 @@ lcd.show("lcd_test1.bin",0,0,126,220) #该lcd_test1.bin 中没有包含图像头
 
 * 返回值
 
-无
+0：成功
+
+其它：失败
 
 
 
@@ -5549,7 +5834,9 @@ lcd.show("lcd_test1.bin",0,0,126,220) #该lcd_test1.bin 中没有包含图像头
 
 * 返回值
 
-无
+0：成功
+
+其它：失败
 
 
 
@@ -5595,6 +5882,9 @@ if __name__ == '__main__':
 
 模块功能：根据输入的内容，生成对应的二维码。
 
+* 注意
+  BC25PA平台不支持此模块功能。
+  
 > ​	qrcode.show(qrcode_str,magnification,start_x,start_y,Background_color,Foreground_color)
 
 - 参数
@@ -5642,6 +5932,9 @@ if __name__ == '__main__':
 成功返回wakelock的标识号，否则返回-1。
 
 
+* 注意
+  BC25PA平台不支持此方法。
+  
 
 ##### 删除wake_lock锁
 
@@ -5659,6 +5952,8 @@ if __name__ == '__main__':
 
 成功返回0。
 
+* 注意
+  BC25PA平台不支持此方法。
 
 
 ##### 加锁
@@ -5675,6 +5970,8 @@ if __name__ == '__main__':
 
 成功返回0，否则返回-1。
 
+* 注意
+  BC25PA平台不支持此方法。
 
 
 ##### 释放锁
@@ -5693,7 +5990,8 @@ if __name__ == '__main__':
 
 成功返回0，否则返回-1。
 
-
+* 注意
+  BC25PA平台不支持此方法。
 
 ##### 自动休眠模式控制
 
@@ -5727,6 +6025,8 @@ if __name__ == '__main__':
 
 返回已创建wakelock锁的数量。
 
+* 注意
+  BC25PA平台不支持此方法。
 
 
 ##### 使用示例
@@ -5943,6 +6243,8 @@ print(r.group(0))
 
 
 ####  wifiScan
+
+注意：BC25PA平台不支持此方法。
 
 ##### 判断是否支持 wifiScan
 
@@ -6186,15 +6488,118 @@ wifi list:(2, [('F0:B4:29:86:95:C7': -79),('44:00:4D:D5:26:E0', -92)])
 
 #### ble - 蓝牙低功耗
 
-模块功能：提供 BLE GATT Server 端功能。目前仅200U/600U平台支持。
+模块功能：提供 BLE GATT Server 端（做从机）与 Client 端（做主机）功能，使用的是BLE 4.2版本协议。当前仅200U/600U模块支持BLE功能。
 
-##### 初始化 BLE 并注册回调函数
+##### 开启 BLE GATT 功能
+
+> **ble.gattStart()**
+
+* 功能：
+
+  开启 BLE GATT 功能。
+
+* 参数：
+
+  无
+
+* 返回值：
+
+  执行成功返回整型0，失败返回整型-1。
+
+* 示例：
+
+```python
+见 BLE Server 综合示例
+```
+
+
+
+##### 关闭 BLE GATT 功能
+
+> **ble.gattStop()**
+
+* 功能：
+
+  关闭 BLE GATT 功能。
+
+* 参数：
+
+  无
+
+* 返回值：
+
+  执行成功返回整型0，失败返回整型-1。
+
+* 示例：
+
+```python
+见 BLE Server 综合示例
+```
+
+
+
+##### 获取 BLE GATT 状态
+
+> **ble.getStatus()**
+
+* 功能：
+
+  获取 BLE 的状态。
+
+* 参数：
+
+  无
+
+* 返回值：
+
+  0 - BLE处于停止状态
+
+  1 - BLE已经正常开始
+
+  -1 - 获取状态失败
+
+* 示例：
+
+  无
+
+
+
+##### 获取 BLE 的公共地址
+
+> **ble.getPublicAddr()**
+
+* 功能：
+
+  获取 BLE 公共地址。该接口需要在BLE已经初始化完成并启动成功后才能调用，比如在回调中收到 event_id 为0的事件之后，即 start 成功后，去调用。
+
+* 参数：
+
+  无
+
+* 返回值：
+
+  执行成功返回bytearray类型的BLE地址，6字节，失败返回整型-1。
+
+* 示例：
+
+```python
+>>> addr = ble.getPublicAddr()
+>>> print(addr)
+b'\xdb3\xf5\x1ek\xac'
+>>> mac = '{:02x}:{:02x}:{:02x}:{:02x}:{:02x}:{:02x}'.format(addr[5], addr[4], addr[3], addr[2], addr[1], addr[0])
+>>> print('mac = [{}]'.format(mac))
+mac = [ac:6b:1e:f5:33:db]
+```
+
+
+
+##### BLE Server 初始化并注册回调函数
 
 > **ble.serverInit(user_cb)**
 
 * 功能：
 
-初始化 BLE SERVER 并注册回调函数。
+初始化 BLE Server 并注册回调函数。
 
 * 参数：
 
@@ -6225,9 +6630,9 @@ def ble_callback(args):
 | :------: | :------: | ------------------------------------------------------------ |
 |    0     |    2     | args[0] ：event_id，表示 BT/BLE start<br>args[1] ：status，表示操作的状态，0-成功，非0-失败 |
 |    1     |    2     | args[0] ：event_id，表示 BT/BLE stop<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败 |
-|    16    |    4     | args[0] ：event_id，表示 BLE connect<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败<br/>args[2] ：connect_id<br/>args[3] ：addr，BT/BLE address |
-|    17    |    4     | args[0] ：event_id，表示 BLE disconnect<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败<br/>args[2] ：connect_id，<br/>args[3] ：addr，BT/BLE address |
-|    18    |    7     | args[0] ：event_id，表示 BLE update connection parameter<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败<br/>args[2] ：connect_id<br/>args[3] ：max_interval，最大的间隔，间隔：1.25ms，取值范围：6-3200，时间范围：7.5ms\~4s<br/>args[4] ：min_interval，最小的间隔，间隔：1.25ms，取值范围：6-3200，时间范围：7.5ms\~4s<br/>args[5] ：latency，从机忽略连接状态事件的时间。需满足：（1+latecy)\*max_interval\*2\*1.25<timeout\*10<br/>args[6] ：timeout，没有交互，超时断开时间，间隔：10ms，取值范围：10-3200，时间范围：100ms~32s |
+|    16    |    4     | args[0] ：event_id，表示 BLE connect<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败<br/>args[2] ：connect_id<br/>args[3] ：addr，BT/BLE address，bytearray类型数据 |
+|    17    |    4     | args[0] ：event_id，表示 BLE disconnect<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败<br/>args[2] ：connect_id，<br/>args[3] ：addr，BT/BLE address，bytearray类型数据 |
+|    18    |    7     | args[0] ：event_id，表示 BLE update connection parameter<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败<br/>args[2] ：connect_id<br/>args[3] ：max_interval，最大的间隔，间隔：1.25ms，取值范围：6-3200，时间范围：7.5ms~4s<br/>args[4] ：min_interval，最小的间隔，间隔：1.25ms，取值范围：6-3200，时间范围：7.5ms~4s<br/>args[5] ：latency，从机忽略连接状态事件的时间。需满足：（1+latecy)\*max_interval\*2\*1.25<timeout\*10<br/>args[6] ：timeout，没有交互，超时断开时间，间隔：10ms，取值范围：10-3200，时间范围：100ms~32s |
 |    20    |    4     | args[0] ：event_id，表示 BLE connection mtu<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败<br/>args[2] ：handle<br/>args[3] ：mtu值 |
 |    21    |    7     | args[0] ：event_id，表示 BLE server : when ble client write characteristic value or descriptor,server get the notice<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败<br/>args[2] ：data_len，获取数据的长度<br/>args[3] ：data，一个数组，存放获取的数据<br/>args[4] ：attr_handle，属性句柄，整型值<br/>args[5] ：short_uuid，整型值<br/>args[6] ：long_uuid，一个16字节数组，存放长UUID |
 |    22    |    7     | args[0] ：event_id，表示 server : when ble client read characteristic value or descriptor,server get the notice<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败<br/>args[2] ：data_len，获取数据的长度<br/>args[3] ：data，一个数组，存放获取的数据<br/>args[4] ：attr_handle，属性句柄，整型值<br/>args[5] ：short_uuid，整型值<br/>args[6] ：long_uuid，一个16字节数组，存放长UUID |
@@ -6255,16 +6660,18 @@ def ble_callback(args):
         if status == 0:
             print('[callback] ble connect successful.')
             connect_id = args[2]
-            ble_addr = args[3]
-            print('[callback] connect_id = {}, addr = {}'.format(connect_id, ble_addr))
+            addr = args[3] # 这是一个bytearray类型
+            addr_str = '{:02x}:{:02x}:{:02x}:{:02x}:{:02x}:{:02x}'.format(addr[0], addr[1], addr[2], addr[3], addr[4], addr[5])
+            print('[callback] connect_id = {}, addr = {}'.format(connect_id, addr_str))
         else:
             print('[callback] ble connect failed.')
     elif event_id == 17:  # ble disconnect
         if status == 0:
             print('[callback] ble disconnect successful.')
             connect_id = args[2]
-            ble_addr = args[3]
-            print('[callback] connect_id = {}, addr = {}'.format(connect_id, ble_addr))
+            addr = args[3] # 这是一个bytearray类型
+            addr_str = '{:02x}:{:02x}:{:02x}:{:02x}:{:02x}:{:02x}'.format(addr[0], addr[1], addr[2], addr[3], addr[4], addr[5])
+            print('[callback] connect_id = {}, addr = {}'.format(connect_id, addr_str))
         else:
             print('[callback] ble disconnect failed.')
             ble.gattStop()
@@ -6287,7 +6694,7 @@ def ble_callback(args):
             print('[callback] ble connect mtu successful.')
             handle = args[2]
             ble_mtu = args[3]
-            print('[callback] handle = {}, ble_mtu = {}'.format(handle, ble_mtu))
+            print('[callback] handle = {:#06x}, ble_mtu = {}'.format(handle, ble_mtu))
         else:
             print('[callback] ble connect mtu failed.')
             ble.gattStop()
@@ -6296,13 +6703,13 @@ def ble_callback(args):
         if status == 0:
             print('[callback] ble recv successful.')
             data_len = args[2]
-            data = args[3]  # 这是一个bytearray
+            data = args[3]  # 这是一个bytearray类型
             attr_handle = args[4]
             short_uuid = args[5]
-            long_uuid = args[6]  # 这是一个bytearray
+            long_uuid = args[6]  # 这是一个bytearray类型
             print('len={}, data:{}'.format(data_len, data))
-            print('attr_handle = {}'.format(attr_handle))
-            print('short uuid = {}'.format(short_uuid))
+            print('attr_handle = {:#06x}'.format(attr_handle))
+            print('short uuid = {:#06x}'.format(short_uuid))
             print('long uuid = {}'.format(long_uuid))
         else:
             print('[callback] ble recv failed.')
@@ -6312,13 +6719,13 @@ def ble_callback(args):
         if status == 0:
             print('[callback] ble recv read successful.')
             data_len = args[2]
-            data = args[3]  # 这是一个bytearray
+            data = args[3]  # 这是一个bytearray类型
             attr_handle = args[4]
             short_uuid = args[5]
-            long_uuid = args[6]  # 这是一个bytearray
+            long_uuid = args[6]  # 这是一个bytearray类型
             print('len={}, data:{}'.format(data_len, data))
-            print('attr_handle = {}'.format(attr_handle))
-            print('short uuid = {}'.format(short_uuid))
+            print('attr_handle = {:#06x}'.format(attr_handle))
+            print('short uuid = {:#06x}'.format(short_uuid))
             print('long uuid = {}'.format(long_uuid))
         else:
             print('[callback] ble recv read failed.')
@@ -6337,13 +6744,13 @@ ble.serverInit(ble_callback)
 
 
 
-##### BLE SERVER 资源释放
+##### BLE Server 资源释放
 
 > **ble.serverRelease()**
 
 * 功能：
 
-  BLE SERVER 资源释放。
+  BLE Server 资源释放。
 
 * 参数：
 
@@ -6361,55 +6768,7 @@ ble.serverInit(ble_callback)
 
 
 
-##### 开启 BLE GATT 功能
-
-> **ble.gattStart()**
-
-* 功能：
-
-  开启 BLE GATT 功能。
-
-* 参数：
-
-  无
-
-* 返回值：
-
-  执行成功返回整型0，失败返回整型-1。
-
-* 示例：
-
-```python
-见最后的综合示例
-```
-
-
-
-##### 关闭 BLE GATT 功能
-
-> **ble.gattStop()**
-
-* 功能：
-
-  关闭 BLE GATT 功能。
-
-* 参数：
-
-  无
-
-* 返回值：
-
-  执行成功返回整型0，失败返回整型-1。
-
-* 示例：
-
-```python
-见最后的综合示例
-```
-
-
-
-##### 设置 BLE 名称
+##### BLE Server 设置 BLE 名称
 
 > **ble.setLocalName(code, name)**
 
@@ -6437,7 +6796,7 @@ ble.serverInit(ble_callback)
 
 
 
-##### 设置广播参数
+##### BLE Server 设置广播参数
 
 > **ble.setAdvParam(min_adv,max_adv,adv_type,addr_type,channel,filter_policy,discov_mode,no_br_edr,enable_adv)**
 
@@ -6455,7 +6814,7 @@ ble.serverInit(ble_callback)
   | addr_type     | 无符号整型 | 本地地址类型，取值范围如下：<br>0 - 公共地址<br>1 - 随机地址 |
   | channel       | 无符号整型 | 广播通道，取值范围如下：<br>1 - 37信道<br>2 - 38信道<br>4 - 39信道<br>7 - 上述3个通道都选择，默认该选项 |
   | filter_policy | 无符号整型 | 广播过滤策略，取值范围如下：<br>0 - 处理所有设备的扫描和连接请求<br/>1 - 处理所有设备的连接请求和只处理白名单设备的扫描请求<br/>2 - 处理所有设备的扫描请求和只处理白名单设备的连接请求<br/>3 - 只处理白名单设备的连接和扫描请求 |
-  | discov_mode   | 无符号整型 | 发现模式，GAP协议使用，默认为1(普通发现模式)                 |
+  | discov_mode   | 无符号整型 | 发现模式，GAP协议使用，默认为2<br/>1 - 有限可发现模式<br/>2 - 一般可发现模式 |
   | no_br_edr     | 无符号整型 | 不用BR/EDR，默认为1，如果用则为0                             |
   | enable_adv    | 无符号整型 | 使能广播，默认为1，不使能则为0                               |
 
@@ -6486,7 +6845,7 @@ def ble_gatt_set_param():
 
 
 
-##### 设置广播数据内容
+##### BLE Server 设置广播数据内容
 
 > **ble.setAdvData(data)**
 
@@ -6498,7 +6857,7 @@ def ble_gatt_set_param():
 
   | 参数 | 类型 | 说明                                                         |
   | ---- | ---- | ------------------------------------------------------------ |
-  | data | 数组 | 广播数据，广播数据最长不超过31个字节。注意该参数的类型，程序中组织好广播数据后，需要通过bytearray()来转换，然后才能传入接口，具体处理参考下面的示例。<br>关于广播数据的格式说明：<br>广播数据的内容，采用 length+type+data 的格式。一条广播数据中可以包含多个这种格式数据的组合，比如示例中就包含了两个，第一个是 "0x02, 0x01, 0x05"，0x02表示后面有两个数据，分别是0x01和0x05，0x01即type，0x05表示具体数据；第二个是ble名称长度加1（因为还要包含一个表示type的数据，所以长度需要加1）得到的长度、type 0x09以及name对应的具体编码值表示的data组成的。<br>关于type具体值代表的含义，请参考如下连接：<br/>https://www.bluetooth.com/specifications/assigned-numbers/generic-access-profile/ |
+  | data | 数组 | 广播数据，广播数据最长不超过31个字节。注意该参数的类型，程序中组织好广播数据后，需要通过bytearray()来转换，然后才能传入接口，具体处理参考下面的示例。<br>关于广播数据的格式说明：<br>广播数据的内容，采用 length+type+data 的格式。一条广播数据中可以包含多个这种格式数据的组合，比如示例中就包含了两个，第一个是 "0x02, 0x01, 0x05"，0x02表示后面有两个数据，分别是0x01和0x05，0x01即type，0x05表示具体数据；第二个是ble名称长度加1（因为还要包含一个表示type的数据，所以长度需要加1）得到的长度、type 0x09以及name对应的具体编码值表示的data组成的。<br>关于type具体值代表的含义，请参考如下连接：<br/>[Generic Access Pfofile](https://btprodspecificationrefs.blob.core.windows.net/assigned-numbers/Assigned Number Types/Generic Access Profile.pdf) |
 
 * 返回值：
 
@@ -6528,7 +6887,7 @@ def ble_gatt_set_data():
 
 
 
-##### 设置扫描回复数据
+##### BLE Server 设置扫描回复数据
 
 > **ble.setAdvRspData(data)**
 
@@ -6570,7 +6929,7 @@ def ble_gatt_set_rsp_data():
 
 
 
-##### 增加一个服务
+##### BLE Server 增加一个服务
 
 > **ble.addService(primary, server_id, uuid_type, uuid_s, uuid_l)**
 
@@ -6611,7 +6970,7 @@ def ble_gatt_add_service():
 
 
 
-##### 在服务里增加一个特征
+##### BLE Server 在服务里增加一个特征
 
 > **ble.addChara(server_id, chara_id, chara_prop, uuid_type, uuid_s, uuid_l)**
 
@@ -6654,7 +7013,7 @@ def ble_gatt_add_characteristic():
 
 
 
-##### 在特征里增加一个特征值
+##### BLE Server 在特征里增加一个特征值
 
 > **ble.addCharaValue(server_id, chara_id, permission, uuid_type, uuid_s, uuid_l, value)**
 
@@ -6702,7 +7061,7 @@ def ble_gatt_add_characteristic_value():
 
 
 
-##### 在特征里增加一个特征描述
+##### BLE Server 在特征里增加一个特征描述
 
 > **ble.addCharaDesc(server_id, chara_id, permission, uuid_type, uuid_s, uuid_l, value)**
 
@@ -6730,7 +7089,7 @@ def ble_gatt_add_characteristic_value():
 
 ```python
 def ble_gatt_add_characteristic_desc():
-    data = [0x00, 0x00, 0x00, 0x00]
+    data = [0x00, 0x00]
     server_id = 0x01
     chara_id = 0x01
     permission = 0x0001 | 0x0002
@@ -6748,7 +7107,7 @@ def ble_gatt_add_characteristic_desc():
 
 
 
-##### 增加服务完成或删除增加的服务
+##### BLE Server 增加服务完成或删除增加的服务
 
 > **ble.addOrClearService(option, mode)**
 
@@ -6770,12 +7129,12 @@ def ble_gatt_add_characteristic_desc():
 * 示例：
 
 ```python
-见最后的综合示例
+见 BLE Server 综合示例
 ```
 
 
 
-##### 发送通知
+##### BLE Server 发送通知
 
 > **ble.sendNotification(connect_id, attr_handle, value)**
 
@@ -6803,7 +7162,7 @@ def ble_gatt_add_characteristic_desc():
 
 
 
-##### 发送指示
+##### BLE Server 发送指示
 
 > **ble.sendIndication(connect_id, attr_handle, value)**
 
@@ -6826,12 +7185,12 @@ def ble_gatt_add_characteristic_desc():
 * 示例：
 
 ```python
-参考最后的综合示例
+见 BLE Server 综合示例
 ```
 
 
 
-##### 开启广播
+##### BLE Server 开启广播
 
 > **ble.advStart()**
 
@@ -6850,7 +7209,7 @@ def ble_gatt_add_characteristic_desc():
 
 
 
-##### 停止广播
+##### BLE Server 停止广播
 
 > **ble.advStop()**
 
@@ -6868,7 +7227,11 @@ def ble_gatt_add_characteristic_desc():
 
 
 
-##### 综合示例
+##### BLE Server 综合示例
+
+以下程序，包含在官方的示例程序包中，可直接下载参考，下载地址：https://python.quectel.com/download
+
+打开上述链接后，在页面上找到标题名为 Demo 的选项下载，下载解压后进入其中的BLE目录即可找到示例程序。
 
 ```python
 # -*- coding: UTF-8 -*-
@@ -6879,8 +7242,33 @@ import utime
 
 BLE_GATT_SYS_SERVICE = 0  # 0-删除系统默认的GAP和GATT服务  1-保留系统默认的GAP和GATT服务
 BLE_SERVER_HANDLE = 0
-_BLE_NAME = "Quectel_ble_test"
-# _BLE_NAME = "蓝牙_ble"
+_BLE_NAME = "Quectel_ble"
+
+
+event_dict = {
+    'BLE_START_STATUS_IND': 0,  # ble start
+    'BLE_STOP_STATUS_IND': 1,   # ble stop
+    'BLE_CONNECT_IND': 16,  # ble connect
+    'BLE_DISCONNECT_IND': 17,   # ble disconnect
+    'BLE_UPDATE_CONN_PARAM_IND': 18,    # ble update connection parameter
+    'BLE_SCAN_REPORT_IND': 19,  # ble gatt client scan and report other devices
+    'BLE_GATT_MTU': 20, # ble connection mtu
+    'BLE_GATT_RECV_WRITE_IND': 21, # when ble client write characteristic value or descriptor,server get the notice
+    'BLE_GATT_RECV_READ_IND': 22, # when ble client read characteristic value or descriptor,server get the notice
+    'BLE_GATT_RECV_NOTIFICATION_IND': 23,   # client receive notification
+    'BLE_GATT_RECV_INDICATION_IND': 24, # client receive indication
+    'BLE_GATT_SEND_END': 25, # server send notification,and receive send end notice
+}
+
+class EVENT(dict):
+    def __getattr__(self, item):
+        return self[item]
+
+    def __setattr__(self, key, value):
+        raise ValueError("{} is read-only.".format(key))
+
+
+event = EVENT(event_dict)
 
 
 def ble_callback(args):
@@ -6890,9 +7278,13 @@ def ble_callback(args):
     status = args[1]
     print('[ble_callback]: event_id={}, status={}'.format(event_id, status))
 
-    if event_id == 0:  # ble start
+    if event_id == event.BLE_START_STATUS_IND:  # ble start
         if status == 0:
             print('[callback] BLE start success.')
+            mac = ble.getPublicAddr()
+            if mac != -1 and len(mac) == 6:
+                addr = '{:02x}:{:02x}:{:02x}:{:02x}:{:02x}:{:02x}'.format(mac[5], mac[4], mac[3], mac[2], mac[1], mac[0])
+                print('BLE public addr : {}'.format(addr))
             ret = ble_gatt_set_name()
             if ret != 0:
                 ble_gatt_close()
@@ -6939,19 +7331,19 @@ def ble_callback(args):
                 return
         else:
             print('[callback] BLE start failed.')
-    elif event_id == 1:  # ble stop
+    elif event_id == event.BLE_STOP_STATUS_IND:  # ble stop
         if status == 0:
             print('[callback] ble stop successful.')
         else:
             print('[callback] ble stop failed.')
-    elif event_id == 16:  # ble connect
+    elif event_id == event.BLE_CONNECT_IND:  # ble connect
         if status == 0:
             print('[callback] ble connect successful.')
             connect_id = args[2]
-            ble_addr = args[3]
-            print('[callback] connect_id = {}, addr = {}'.format(connect_id, ble_addr))
+            addr = args[3]
+            addr_str = '{:02x}:{:02x}:{:02x}:{:02x}:{:02x}:{:02x}'.format(addr[0], addr[1], addr[2], addr[3], addr[4], addr[5])
+            print('[callback] connect_id = {}, addr = {}'.format(connect_id, addr_str))
 
-            # utime.sleep(3)
             ret = ble_gatt_send_notification()
             if ret == 0:
                 print('[callback] ble_gatt_send_notification successful.')
@@ -6961,17 +7353,19 @@ def ble_callback(args):
                 return
         else:
             print('[callback] ble connect failed.')
-    elif event_id == 17:  # ble disconnect
+    elif event_id == event.BLE_DISCONNECT_IND:  # ble disconnect
         if status == 0:
             print('[callback] ble disconnect successful.')
             connect_id = args[2]
-            ble_addr = args[3]
-            print('[callback] connect_id = {}, addr = {}'.format(connect_id, ble_addr))
+            addr = args[3]
+            addr_str = '{:02x}:{:02x}:{:02x}:{:02x}:{:02x}:{:02x}'.format(addr[0], addr[1], addr[2], addr[3], addr[4], addr[5])
+            ble_gatt_close()
+            print('[callback] connect_id = {}, addr = {}'.format(connect_id, addr_str))
         else:
             print('[callback] ble disconnect failed.')
             ble_gatt_close()
             return
-    elif event_id == 18:  # ble update connection parameter
+    elif event_id == event.BLE_UPDATE_CONN_PARAM_IND:  # ble update connection parameter
         if status == 0:
             print('[callback] ble update parameter successful.')
             connect_id = args[2]
@@ -6984,17 +7378,17 @@ def ble_callback(args):
             print('[callback] ble update parameter failed.')
             ble_gatt_close()
             return
-    elif event_id == 20:  # ble connection mtu
+    elif event_id == event.BLE_GATT_MTU:  # ble connection mtu
         if status == 0:
             print('[callback] ble connect mtu successful.')
             handle = args[2]
             ble_mtu = args[3]
-            print('[callback] handle = {}, ble_mtu = {}'.format(handle, ble_mtu))
+            print('[callback] handle = {:#06x}, ble_mtu = {}'.format(handle, ble_mtu))
         else:
             print('[callback] ble connect mtu failed.')
             ble_gatt_close()
             return
-    elif event_id == 21:  # server:when ble client write characteristic value or descriptor,server get the notice
+    elif event_id == event.BLE_GATT_RECV_WRITE_IND:
         if status == 0:
             print('[callback] ble recv successful.')
             data_len = args[2]
@@ -7003,14 +7397,14 @@ def ble_callback(args):
             short_uuid = args[5]
             long_uuid = args[6]  # 这是一个bytearray
             print('len={}, data:{}'.format(data_len, data))
-            print('attr_handle = {}'.format(attr_handle))
-            print('short uuid = {}'.format(short_uuid))
+            print('attr_handle = {:#06x}'.format(attr_handle))
+            print('short uuid = {:#06x}'.format(short_uuid))
             print('long uuid = {}'.format(long_uuid))
         else:
             print('[callback] ble recv failed.')
             ble_gatt_close()
             return
-    elif event_id == 22:  # server:when ble client read characteristic value or descriptor,server get the notice
+    elif event_id == event.BLE_GATT_RECV_READ_IND:
         if status == 0:
             print('[callback] ble recv read successful.')
             data_len = args[2]
@@ -7019,14 +7413,14 @@ def ble_callback(args):
             short_uuid = args[5]
             long_uuid = args[6]  # 这是一个bytearray
             print('len={}, data:{}'.format(data_len, data))
-            print('attr_handle = {}'.format(attr_handle))
-            print('short uuid = {}'.format(short_uuid))
+            print('attr_handle = {:#06x}'.format(attr_handle))
+            print('short uuid = {:#06x}'.format(short_uuid))
             print('long uuid = {}'.format(long_uuid))
         else:
             print('[callback] ble recv read failed.')
             ble_gatt_close()
             return
-    elif event_id == 25:  # server send notification,and recieve send end notice
+    elif event_id == event.BLE_GATT_SEND_END:
         if status == 0:
             print('[callback] ble send data successful.')
         else:
@@ -7187,7 +7581,7 @@ def ble_gatt_add_characteristic_value():
 
 
 def ble_gatt_add_characteristic_desc():
-    data = [0x00, 0x00, 0x00, 0x00]
+    data = [0x00, 0x00]
     server_id = 0x01
     chara_id = 0x01
     permission = 0x0001 | 0x0002
@@ -7205,7 +7599,7 @@ def ble_gatt_add_characteristic_desc():
 
 def ble_gatt_send_notification():
     global BLE_SERVER_HANDLE
-    data = [0x39, 0x39, 0x39, 0x39, 0x39]  # 随便发点啥数据
+    data = [0x39, 0x39, 0x39, 0x39, 0x39]  # 测试数据
     conn_id = 0
     attr_handle = BLE_SERVER_HANDLE + 2
     value = bytearray(data)
@@ -7264,7 +7658,7 @@ def main():
     else:
         return -1
     count = 0
-    while 1:
+    while True:
         utime.sleep(1)
         count += 1
         if count % 5 == 0:
@@ -7274,8 +7668,1443 @@ def main():
             print('!!!!! stop BLE now !!!!!')
             ble_gatt_close()
             ble_gatt_server_release()
-            break
+            return 0
 
+
+if __name__ == '__main__':
+    main()
+
+```
+
+
+
+##### BLE Client 初始化并注册回调函数
+
+> **ble.clientInit(user_cb)**
+
+* 功能：
+
+初始化 BLE Client 并注册回调函数。
+
+* 参数：
+
+| 参数    | 类型     | 说明     |
+| ------- | -------- | -------- |
+| user_cb | function | 回调函数 |
+
+* 返回值：
+
+执行成功返回整型0，失败返回整型-1。
+
+说明：
+
+（1）回调函数的形式
+
+```python
+def ble_callback(args):
+	event_id = args[0]  # 第一个参数固定是 event_id
+	status = args[1] # 第二个参数固定是状态，表示某个操作的执行结果，比如ble开启成功还是失败
+	......
+```
+
+（2）回调函数参数说明
+
+​		args[0] 固定表示event_id，args[1] 固定表示状态，0表示成功，非0表示失败。回调函数的参数个数并不是固定2个，而是根据第一个参数args[0]来决定的，下表中列出了不同事件ID对应的参数个数及说明。
+
+| event_id | 参数个数 | 参数说明                                                     |
+| :------: | :------: | ------------------------------------------------------------ |
+|    0     |    2     | args[0] ：event_id，表示 BT/BLE start<br>args[1] ：status，表示操作的状态，0-成功，非0-失败 |
+|    1     |    2     | args[0] ：event_id，表示 BT/BLE stop<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败 |
+|    16    |    4     | args[0] ：event_id，表示 BLE connect<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败<br/>args[2] ：connect_id<br/>args[3] ：addr，BT/BLE address，bytearray类型数据 |
+|    17    |    4     | args[0] ：event_id，表示 BLE disconnect<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败<br/>args[2] ：connect_id，<br/>args[3] ：addr，BT/BLE address，bytearray类型数据 |
+|    18    |    7     | args[0] ：event_id，表示 BLE update connection parameter<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败<br/>args[2] ：connect_id<br/>args[3] ：max_interval，最大的间隔，间隔：1.25ms，取值范围：6-3200，时间范围：7.5ms~4s<br/>args[4] ：min_interval，最小的间隔，间隔：1.25ms，取值范围：6-3200，时间范围：7.5ms~4s<br/>args[5] ：latency，从机忽略连接状态事件的时间。需满足：（1+latecy)\*max_interval\*2\*1.25<timeout\*10<br/>args[6] ：timeout，没有交互，超时断开时间，间隔：10ms，取值范围：10-3200，时间范围：100ms~32s |
+|    19    |    9     | args[0] ：event_id，表示 BLE scan report<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败<br/>args[2] ：event_type<br/>args[3] ：扫描到的设备名称<br/>args[4] ：设备地址类型<br/>args[5] ：设备地址，bytearray类型数据<br/>args[6] ：rssi，信号强度<br/>args[7] ：data_len，扫描的原始数据长度<br/>args[8] ：data，扫描的原始数据 |
+|    20    |    4     | args[0] ：event_id，表示 BLE connection mtu<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败<br/>args[2] ：handle<br/>args[3] ：mtu值 |
+|    23    |    4     | args[0] ：event_id，表示 client recieve notification，即接收通知<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败<br/>args[2] ：data_len，数据长度<br/>args[3] ：data，包含句柄等数据的原始数据，数据格式及解析见最后的综合示例程序 |
+|    24    |    4     | args[0] ：event_id，表示 client recieve indication，即接收指示<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败<br/>args[2] ：data_len，数据长度<br/>args[3] ：data，包含indication的原始数据，数据格式及解析见最后的综合示例程序 |
+|    26    |    2     | args[0] ：event_id，表示 start discover service，即开始查找服务<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败 |
+|    27    |    5     | args[0] ：event_id，表示 discover service，即查找到服务<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败<br/>args[2] ：start_handle，表示service的开始句柄<br/>args[3] ：end_handle，表示service的结束句柄<br/>args[4] ：UUID，表示service的UUID（短UUID） |
+|    28    |    4     | args[0] ：event_id，表示 discover characteristic，即查找服务特征<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败<br/>args[2] ：data_len，数据长度<br/>args[3] ：data，包含句柄、属性、UUID等数据的原始数据，数据格式及解析见最后的综合示例程序 |
+|    29    |    4     | args[0] ：event_id，表示 discover characteristic descriptor，即查找特征描述<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败<br/>args[2] ：data_len，数据长度<br/>args[3] ：data，包含句柄、UUID等数据的原始数据，数据格式及解析见最后的综合示例程序 |
+|    30    |    2     | args[0] ：event_id，表示 write characteristic value with response，即写入特征值并需要链路层确认<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败 |
+|    31    |    2     | args[0] ：event_id，表示 write characteristic value without response，即写入特征值，无需链路层确认<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败 |
+|    32    |    4     | args[0] ：event_id，表示 read characteristic value by handle，即通过句柄来读取特征值<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败<br/>args[2] ：data_len，数据长度<br/>args[3] ：data，原始数据 |
+|    33    |    4     | args[0] ：event_id，表示 read characteristic value by uuid，即通过UUID来读取特征值<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败<br/>args[2] ：data_len，数据长度<br/>args[3] ：data，原始数据 |
+|    34    |    4     | args[0] ：event_id，表示 read miltiple characteristic value，即读取多个特征值<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败<br/>args[2] ：data_len，数据长度<br/>args[3] ：data，原始数据 |
+|    35    |    2     | args[0] ：event_id，表示 wirte characteristic descriptor，即写入特征描述，需链路层确认<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败 |
+|    36    |    4     | args[0] ：event_id，表示 read characteristic descriptor，即读特征描述<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败<br/>args[2] ：data_len，数据长度<br/>args[3] ：data，原始数据 |
+|    37    |    3     | args[0] ：event_id，表示 attribute error，即属性错误<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败<br/>args[2] ：errcode，错误码 |
+
+示例：
+
+```
+见 BLE Client 综合示例
+```
+
+
+
+##### BLE Client 资源释放
+
+> **ble.clientRelease()**
+
+* 功能：
+
+  BLE Client 资源释放。
+
+* 参数：
+
+  无
+
+* 返回值：
+
+  执行成功返回整型0，失败返回整型-1。
+
+* 示例：
+
+```python
+见 BLE Client 综合示例
+```
+
+
+
+##### BLE Client 设置扫描参数
+
+> **ble.setScanParam(scan_mode, interval, scan_window, filter_policy, addr_type)**
+
+* 功能：
+
+  设置扫描参数。
+
+* 参数：
+
+| 参数          | 类型       | 说明                                                         |
+| ------------- | ---------- | ------------------------------------------------------------ |
+| scan_mode     | 无符号整型 | 扫描模式，默认为积极扫描：<br>0 - 消极扫描<br/>1 - 积极扫描，广播端设置的扫描回复数据才会有意义 |
+| interval      | 无符号整型 | 扫描间隔，范围0x0004-0x4000，计算如下：<br/>时间间隔 = interval \* 0.625，单位ms |
+| scan_window   | 无符号整型 | 一次扫描的时间，范围0x0004-0x4000，计算如下：<br/>扫描时间 = scan_window\* 0.625，单位ms |
+| filter_policy | 无符号整型 | 扫描过滤策略，默认为0：<br>0 - 除了不是本设备的定向广播，其他所有的广播包<br>1 - 除了不是本设备的定向广播，白名单设备的广播包<br>2 - 非定向广播，指向本设备的定向广播或使用Resolvable private address的定向广播<br/>3 - 白名单设备非定向广播，指向本设备的定向广播或使用Resolvable private address的定向广播 |
+| addr_type     | 无符号整型 | 本地地址类型，取值范围如下：<br>0 - 公共地址<br>1 - 随机地址 |
+
+* 注意：
+
+  关于参数 interval 和 scan_window 要注意的是，扫描时间 scan_window 不能大于扫描间隔 interval ，如果两者相等，则表示连续不停的扫描，此时 BLE 的 Controller 会连续运行扫描，占满系统资源而导致无法执行其他任务，所以不允许设置连续扫描。并且不建议将时间设置的太短，扫描越频繁则功耗越高。
+
+* 返回值：
+
+  执行成功返回整型0，失败返回整型-1。
+
+* 示例：
+
+```python
+见 BLE Client 综合示例
+```
+
+
+
+##### BLE Client 开始扫描
+
+> **ble.scanStart()**
+
+* 功能：
+
+  开始扫描。
+
+* 参数：
+
+  无
+
+* 返回值：
+
+  执行成功返回整型0，失败返回整型-1。
+
+* 示例：
+
+```python
+见 BLE Client 综合示例
+```
+
+
+
+##### BLE Client 停止扫描
+
+> **ble.scanStop()**
+
+* 功能：
+
+  停止扫描。
+
+* 参数：
+
+  无
+
+* 返回值：
+
+  执行成功返回整型0，失败返回整型-1。
+
+* 示例：
+
+```python
+见 BLE Client 综合示例
+```
+
+
+
+##### BLE Client 扫描过滤开关
+
+> **ble.setScanFilter(act)**
+
+* 功能：
+
+  打开或者关闭扫描过滤开关。如果打开，那么扫描设备的广播数据时，同一个设备的广播数据只会上报一次；如果关闭，则同一个设备的所有的广播数据都会上报。默认打开过滤功能。
+
+* 参数：
+
+  | 参数 | 类型       | 说明                                          |
+  | ---- | ---------- | --------------------------------------------- |
+  | act  | 无符号整型 | 0 - 关闭扫描过滤功能<br/>1 - 打开扫描过滤功能 |
+
+* 返回值：
+
+  执行成功返回整型0，失败返回整型-1。
+
+* 示例：
+
+```python
+见 BLE Client 综合示例
+```
+
+
+
+##### BLE Client 建立连接
+
+> **ble.connect(addr_type, addr)**
+
+* 功能：
+
+  根据指定的设备地址去连接设备。
+
+* 参数：
+
+  | 参数      | 类型       | 说明                                     |
+  | --------- | ---------- | ---------------------------------------- |
+  | addr_type | 无符号整型 | 地址类型<br>0 - 公共地址<br>1 - 随机地址 |
+  | addr      | 数组       | BLE地址，6字节                           |
+
+* 返回值：
+
+  执行成功返回整型0，失败返回整型-1。
+
+* 示例：
+
+```python
+见 BLE Client 综合示例
+```
+
+
+
+##### BLE Client 取消正在建立的连接
+
+> **ble.cancelConnect(addr)**
+
+* 功能：
+
+  取消正在建立的连接。
+
+* 参数：
+
+  | 参数 | 类型 | 说明           |
+  | ---- | ---- | -------------- |
+  | addr | 数组 | BLE地址，6字节 |
+
+* 返回值：
+
+  执行成功返回整型0，失败返回整型-1。
+
+* 示例：
+
+```python
+无
+```
+
+
+
+##### BLE Client 断开已建立的连接
+
+> **ble.disconnect(connect_id)**
+
+* 功能：
+
+  断开已建立的连接。
+
+* 参数：
+
+  | 参数       | 类型       | 说明                           |
+  | ---------- | ---------- | ------------------------------ |
+  | connect_id | 无符号整型 | 连接ID，建立连接时得到的连接ID |
+
+* 返回值：
+
+  执行成功返回整型0，失败返回整型-1。
+
+* 示例：
+
+```python
+见综合示例
+```
+
+
+
+##### BLE Client 扫描所有的服务
+
+> **ble.discoverAllService(connect_id)**
+
+* 功能：
+
+  扫描所有的服务。
+
+* 参数：
+
+  | 参数       | 类型       | 说明                           |
+  | ---------- | ---------- | ------------------------------ |
+  | connect_id | 无符号整型 | 连接ID，建立连接时得到的连接ID |
+
+* 返回值：
+
+  执行成功返回整型0，失败返回整型-1。
+
+* 示例：
+
+```python
+见 BLE Client 综合示例
+```
+
+
+
+##### BLE Client 扫描指定UUID的服务
+
+> **ble.discoverByUUID(connect_id, uuid_type, uuid_s, uuid_l)**
+
+* 功能：
+
+  扫描指定UUID的服务。
+
+* 参数：
+
+  | 参数       | 类型       | 说明                                                         |
+  | ---------- | ---------- | ------------------------------------------------------------ |
+  | connect_id | 无符号整型 | 连接ID，建立连接时得到的连接ID                               |
+  | uuid_type  | 无符号整型 | uuid类型<br>0 - 长UUID，128bit<br>1 - 短UUID，16bit          |
+  | uuid_s     | 无符号整型 | 短UUID，2个字节（16bit），当uuid_type为0时，该值给0          |
+  | uuid_l     | 数组       | 长UUID，16个字节（128bit），当uuid_type为1时，该值给 bytearray([0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]) |
+
+* 返回值：
+
+  执行成功返回整型0，失败返回整型-1。
+
+* 示例：
+
+```python
+见 BLE Client 综合示例
+```
+
+
+
+##### BLE Client 扫描所有的引用
+
+> **ble.discoverAllIncludes(connect_id, start_handle, end_handle)**
+
+* 功能：
+
+  扫描所有的引用，start_handle和end_handle要属于同一个服务。
+
+* 参数：
+
+  | 参数         | 类型       | 说明                             |
+  | ------------ | ---------- | -------------------------------- |
+  | connect_id   | 无符号整型 | 连接ID，建立连接时得到的连接ID   |
+  | start_handle | 无符号整型 | 开始句柄，从这个句柄开始寻找引用 |
+  | end_handle   | 无符号整型 | 结束句柄，从这个句柄结束寻找引用 |
+
+* 返回值：
+
+  执行成功返回整型0，失败返回整型-1。
+
+* 示例：
+
+```python
+无
+```
+
+
+
+##### BLE Client 扫描所有的特征
+
+> **ble.discoverAllChara(connect_id, start_handle, end_handle)**
+
+* 功能：
+
+  扫描所有的特征，start_handle和end_handle要属于同一个服务。
+
+* 参数：
+
+  | 参数         | 类型       | 说明                             |
+  | ------------ | ---------- | -------------------------------- |
+  | connect_id   | 无符号整型 | 连接ID，建立连接时得到的连接ID   |
+  | start_handle | 无符号整型 | 开始句柄，从这个句柄开始寻找特征 |
+  | end_handle   | 无符号整型 | 结束句柄，从这个句柄结束寻找特征 |
+
+* 返回值：
+
+  执行成功返回整型0，失败返回整型-1。
+
+* 示例：
+
+```python
+见 BLE Client 综合示例
+```
+
+
+
+##### BLE Client 扫描所有特征的描述
+
+> **ble.discoverAllCharaDesc(connect_id, start_handle, end_handle)**
+
+* 功能：
+
+  扫描所有特征的描述，start_handle和end_handle要属于同一个服务。
+
+* 参数：
+
+  | 参数         | 类型       | 说明                                 |
+  | ------------ | ---------- | ------------------------------------ |
+  | connect_id   | 无符号整型 | 连接ID，建立连接时得到的连接ID       |
+  | start_handle | 无符号整型 | 开始句柄，从这个句柄开始寻找特征描述 |
+  | end_handle   | 无符号整型 | 结束句柄，从这个句柄结束寻找特征描述 |
+
+* 返回值：
+
+  执行成功返回整型0，失败返回整型-1。
+
+* 示例：
+
+```python
+见 BLE Client 综合示例
+```
+
+
+
+##### BLE Client 读取指定UUID的特征值
+
+> **ble.readCharaByUUID(connect_id, start_handle, end_handle, uuid_type, uuid_s, uuid_l)**
+
+* 功能：
+
+  读取指定UUID的特征值，start_handle和end_handle必须要包含一个特征值句柄。
+
+* 参数：
+
+  | 参数         | 类型       | 说明                                                         |
+  | ------------ | ---------- | ------------------------------------------------------------ |
+  | connect_id   | 无符号整型 | 连接ID，建立连接时得到的连接ID                               |
+  | start_handle | 无符号整型 | 开始句柄，一定要属于同一个特征的句柄                         |
+  | end_handle   | 无符号整型 | 结束句柄，一定要属于同一个特征的句柄                         |
+  | uuid_type    | 无符号整型 | uuid类型<br>0 - 长UUID，128bit<br>1 - 短UUID，16bit          |
+  | uuid_s       | 无符号整型 | 短UUID，2个字节（16bit），当uuid_type为0时，该值给0          |
+  | uuid_l       | 数组       | 长UUID，16个字节（128bit），当uuid_type为1时，该值给 bytearray([0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]) |
+
+* 返回值：
+
+  执行成功返回整型0，失败返回整型-1。
+
+* 示例：
+
+```python
+见 BLE Client 综合示例
+```
+
+
+
+##### BLE Client 读取指定句柄的特征值
+
+> **ble.readCharaByHandle(connect_id, handle, offset, is_long)**
+
+* 功能：
+
+  读取指定句柄的特征值。
+
+* 参数：
+
+  | 参数       | 类型       | 说明                                                         |
+  | ---------- | ---------- | ------------------------------------------------------------ |
+  | connect_id | 无符号整型 | 连接ID，建立连接时得到的连接ID                               |
+  | handle     | 无符号整型 | 特征值句柄                                                   |
+  | offset     | 无符号整型 | 偏移位置                                                     |
+  | is_long    | 无符号整型 | 长特征值标志<br>0-短特征值，一次可以读取完<br>1-长特征值，分多次读取 |
+
+* 返回值：
+
+  执行成功返回整型0，失败返回整型-1。
+
+* 示例：
+
+```python
+见 BLE Client 综合示例
+```
+
+
+
+##### BLE Client 读取特征描述
+
+> **ble.readCharaDesc(connect_id, handle, is_long)**
+
+* 功能：
+
+  读取特征描述。
+
+* 参数：
+
+  | 参数       | 类型       | 说明                                               |
+  | ---------- | ---------- | -------------------------------------------------- |
+  | connect_id | 无符号整型 | 连接ID，建立连接时得到的连接ID                     |
+  | handle     | 无符号整型 | 特征描述句柄                                       |
+  | is_long    | 无符号整型 | 长特征描述标志<br>0-短特征描述值<br>1-长特征描述值 |
+
+* 返回值：
+
+  执行成功返回整型0，失败返回整型-1。
+
+* 示例：
+
+```python
+见 BLE Client 综合示例
+```
+
+
+
+##### BLE Client 写入特征值(需链路层应答)
+
+> **ble.writeChara(connect_id, handle, offset, is_long, data)**
+
+* 功能：
+
+  写入特征值，链路层需要确认。
+
+* 参数：
+
+  | 参数       | 类型       | 说明                                                         |
+  | ---------- | ---------- | ------------------------------------------------------------ |
+  | connect_id | 无符号整型 | 连接ID，建立连接时得到的连接ID                               |
+  | handle     | 无符号整型 | 特征值句柄                                                   |
+  | offset     | 无符号整型 | 偏移位置                                                     |
+  | is_long    | 无符号整型 | 长特征值标志<br>0-短特征值，一次可以读取完<br>1-长特征值，分多次读取 |
+  | data       | 数组       | 特征值数据                                                   |
+
+* 返回值：
+
+  执行成功返回整型0，失败返回整型-1。
+
+* 示例：
+
+```python
+无
+```
+
+
+
+##### BLE Client 写入特征值(无需链路层应答)
+
+> **ble.writeCharaNoRsp(connect_id, handle, data)**
+
+* 功能：
+
+  写入特征值，链路层不需要确认。
+
+* 参数：
+
+  | 参数       | 类型       | 说明                           |
+  | ---------- | ---------- | ------------------------------ |
+  | connect_id | 无符号整型 | 连接ID，建立连接时得到的连接ID |
+  | handle     | 无符号整型 | 特征值句柄                     |
+  | data       | 数组       | 特征值数据                     |
+
+* 返回值：
+
+  执行成功返回整型0，失败返回整型-1。
+
+* 示例：
+
+```python
+见 BLE Client 综合示例
+```
+
+
+
+##### BLE Client 写入特征描述
+
+> **ble.writeCharaDesc(connect_id, handle, data)**
+
+* 功能：
+
+  写入特征描述。
+
+* 参数：
+
+  | 参数       | 类型       | 说明                           |
+  | ---------- | ---------- | ------------------------------ |
+  | connect_id | 无符号整型 | 连接ID，建立连接时得到的连接ID |
+  | handle     | 无符号整型 | 特征描述句柄                   |
+  | data       | 数组       | 特征描述数据                   |
+
+* 返回值：
+
+  执行成功返回整型0，失败返回整型-1。
+
+* 示例：
+
+```python
+见 BLE Client 综合示例
+```
+
+
+
+##### BLE Client 综合示例
+
+以下程序，包含在官方的示例程序包中，可直接下载参考，下载地址：https://python.quectel.com/download
+
+打开上述链接后，在页面上找到标题名为 Demo 的选项下载，下载解压后进入其中的BLE目录即可找到示例程序。
+
+```python
+# -*- coding: UTF-8 -*-
+
+import ble
+import utime
+import _thread
+import checkNet
+from queue import Queue
+
+PROJECT_NAME = "QuecPython_BLE_Client_Example"
+PROJECT_VERSION = "1.0.0"
+checknet = checkNet.CheckNetwork(PROJECT_NAME, PROJECT_VERSION)
+
+event_dict = {
+    'BLE_START_STATUS_IND': 0,  # ble start
+    'BLE_STOP_STATUS_IND': 1,   # ble stop
+    'BLE_CONNECT_IND': 16,  # ble connect
+    'BLE_DISCONNECT_IND': 17,   # ble disconnect
+    'BLE_UPDATE_CONN_PARAM_IND': 18,    # ble update connection parameter
+    'BLE_SCAN_REPORT_IND': 19,  # ble gatt client scan and report other devices
+    'BLE_GATT_MTU': 20, # ble connection mtu
+    'BLE_GATT_RECV_NOTIFICATION_IND': 23,   # client receive notification
+    'BLE_GATT_RECV_INDICATION_IND': 24, # client receive indication
+    'BLE_GATT_START_DISCOVER_SERVICE_IND': 26,  # start discover service
+    'BLE_GATT_DISCOVER_SERVICE_IND': 27,    # discover service
+    'BLE_GATT_DISCOVER_CHARACTERISTIC_DATA_IND': 28,    # discover characteristic
+    'BLE_GATT_DISCOVER_CHARA_DESC_IND': 29, # discover characteristic descriptor
+    'BLE_GATT_CHARA_WRITE_WITH_RSP_IND': 30,    # write characteristic value with response
+    'BLE_GATT_CHARA_WRITE_WITHOUT_RSP_IND': 31, # write characteristic value without response
+    'BLE_GATT_CHARA_READ_IND': 32,  # read characteristic value by handle
+    'BLE_GATT_CHARA_READ_BY_UUID_IND': 33,  # read characteristic value by uuid
+    'BLE_GATT_CHARA_MULTI_READ_IND': 34,    # read multiple characteristic value
+    'BLE_GATT_DESC_WRITE_WITH_RSP_IND': 35, # write characteristic descriptor
+    'BLE_GATT_DESC_READ_IND': 36,   # read characteristic descriptor
+    'BLE_GATT_ATT_ERROR_IND': 37,   # attribute error
+}
+
+gatt_status_dict = {
+    'BLE_GATT_IDLE' : 0,
+    'BLE_GATT_DISCOVER_SERVICE': 1,
+    'BLE_GATT_DISCOVER_INCLUDES': 2,
+    'BLE_GATT_DISCOVER_CHARACTERISTIC': 3,
+    'BLE_GATT_WRITE_CHARA_VALUE': 4,
+    'BLE_GATT_WRITE_CHARA_DESC': 5,
+    'BLE_GATT_READ_CHARA_VALUE': 6,
+    'BLE_GATT_READ_CHARA_DESC': 7,
+}
+
+class EVENT(dict):
+    def __getattr__(self, item):
+        return self[item]
+
+    def __setattr__(self, key, value):
+        raise ValueError("{} is read-only.".format(key))
+
+
+class BleClient(object):
+    def __init__(self):
+        self.ble_server_name = 'Quectel_ble' #目标设备ble名称
+        self.connect_id = 0
+        self.connect_addr = 0
+        self.gatt_statue = 0
+        self.discover_service_mode = 0 # 0-discover all service, 1-discover service by uuid
+
+        self.scan_param = {
+            'scan_mode' : 1, # 积极扫描
+            'interval' : 0x100,
+            'scan_window' : 0x50,
+            'filter_policy' : 0,
+            'local_addr_type' : 0,
+        }
+
+        self.scan_report_info = {
+            'event_type' : 0,
+            'name' : '',
+            'addr_type' : 0,
+            'addr' : 0, # 初始化时，用0表示无效值，实际存放bytearray
+            'rssi' : 0,
+            'data_len' : 0,
+            'raw_data' : 0,
+        }
+
+        self.target_service = {
+            'start_handle' : 0,
+            'end_handle' : 0,
+            'uuid_type' : 1, # 短uuid
+            'short_uuid' : 0x180F, # 电池电量服务
+            'long_uuid' : bytearray([0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00])
+        }
+
+        self.characteristic_list = []
+        self.descriptor_list = []
+        self.characteristic_count = 0   # ql_ble_gatt_chara_count
+        self.chara_descriptor_count = 0 # ql_ble_gatt_chara_desc_count
+        self.characteristic_index = 0   # ql_ble_gatt_chara_desc_index
+        self.current_chara_index = 0    # ql_ble_gatt_cur_chara
+        self.current_desc_index = 0     # ql_ble_gatt_chara_cur_desc
+        self.ble_short_uuid_pair_len = 7
+        self.ble_long_uuid_pair_len = 21
+
+        ret = ble.clientInit(self.ble_client_callback)
+        if ret != 0:
+            print('ble client initialize failed.')
+            raise ValueError("BLE Client Init failed.")
+        else:
+            print('ble client initialize successful.')
+        print('')
+
+    @staticmethod
+    def gatt_open():
+        ret = ble.gattStart()
+        if ret != 0:
+            print('ble open failed.')
+        else:
+            print('ble open successful.')
+        print('')
+        return ret
+
+    @staticmethod
+    def gatt_close():
+        ret = ble.gattStop()
+        if ret != 0:
+            print('ble close failed.')
+        else:
+            print('ble close successful.')
+        print('')
+        return ret
+
+    @staticmethod
+    def gatt_get_status():
+        return ble.getStatus()
+
+    @staticmethod
+    def release():
+        ret = ble.clientRelease()
+        if ret != 0:
+            print('ble client release failed.')
+        else:
+            print('ble client release successful.')
+        print('')
+        return ret
+
+    def set_scan_param(self):
+        scan_mode = self.scan_param['scan_mode']
+        interval = self.scan_param['interval']
+        scan_time = self.scan_param['scan_window']
+        filter_policy = self.scan_param['filter_policy']
+        local_addr_type = self.scan_param['local_addr_type']
+        ret = ble.setScanParam(scan_mode, interval, scan_time, filter_policy, local_addr_type)
+        if ret != 0:
+            print('ble client set scan-parameters failed.')
+        else:
+            print('ble client set scan-parameters successful.')
+        print('')
+        return ret
+
+    @staticmethod
+    def start_scan():
+        ret = ble.scanStart()
+        if ret != 0:
+            print('ble client scan failed.')
+        else:
+            print('ble client scan successful.')
+        print('')
+        return ret
+
+    @staticmethod
+    def stop_scan():
+        ret = ble.scanStop()
+        if ret != 0:
+            print('ble client failed to stop scanning.')
+        else:
+            print('ble client scan stopped successfully.')
+        print('')
+        return ret
+
+    def connect(self):
+        print('start to connect.....')
+        addr_type = self.scan_report_info['addr_type']
+        addr = self.scan_report_info['addr']
+        if addr != 0 and len(addr) == 6:
+            addr_str = '{:02x}:{:02x}:{:02x}:{:02x}:{:02x}:{:02x}'.format(addr[0], addr[1], addr[2], addr[3], addr[4], addr[5])
+            print('addr_type : {}, addr : {}'.format(addr_type, addr_str))
+            ret = ble.connect(addr_type, addr)
+            if ret != 0:
+                print('ble client connect failed.')
+            else:
+                print('ble client connect successful.')
+            print('')
+            return ret
+
+    def cancel_connect(self):
+        ret = ble.cancelConnect(self.scan_report_info['addr'])
+        if ret != 0:
+            print('ble client cancel connect failed.')
+        else:
+            print('ble client cancel connect successful.')
+        print('')
+        return ret
+
+    def disconnect(self):
+        ret = ble.disconnect(self.connect_id)
+        if ret != 0:
+            print('ble client disconnect failed.')
+        else:
+            print('ble client disconnect successful.')
+        print('')
+        return ret
+
+    def discover_all_service(self):
+        ret = ble.discoverAllService(self.connect_id)
+        if ret != 0:
+            print('ble client discover all service failed.')
+        else:
+            print('ble client discover all service successful.')
+        print('')
+        return ret
+
+    def discover_service_by_uuid(self):
+        connect_id = self.connect_id
+        uuid_type = self.target_service['uuid_type']
+        short_uuid = self.target_service['short_uuid']
+        long_uuid = self.target_service['long_uuid']
+        ret = ble.discoverByUUID(connect_id, uuid_type, short_uuid, long_uuid)
+        if ret != 0:
+            print('ble client discover service by uuid failed.')
+        else:
+            print('ble client discover service by uuid successful.')
+        print('')
+        return ret
+
+    def discover_all_includes(self):
+        connect_id = self.connect_id
+        start_handle = self.target_service['start_handle']
+        end_handle = self.target_service['end_handle']
+        ret = ble.discoverAllIncludes(connect_id, start_handle, end_handle)
+        if ret != 0:
+            print('ble client discover all includes failed.')
+        else:
+            print('ble client discover all includes successful.')
+        print('')
+        return ret
+
+    def discover_all_characteristic(self):
+        connect_id = self.connect_id
+        start_handle = self.target_service['start_handle']
+        end_handle = self.target_service['end_handle']
+        ret = ble.discoverAllChara(connect_id, start_handle, end_handle)
+        if ret != 0:
+            print('ble client discover all characteristic failed.')
+        else:
+            print('ble client discover all characteristic successful.')
+        print('')
+        return ret
+
+    def discover_all_characteristic_descriptor(self):
+        connect_id = self.connect_id
+        index = self.characteristic_index
+        start_handle = self.characteristic_list[index]['value_handle'] + 1
+
+        if self.characteristic_index == (self.characteristic_count - 1):
+            end_handle = self.target_service['end_handle']
+            print('[1]start_handle = {:#06x}, end_handle = {:#06x}'.format(start_handle - 1, end_handle))
+            ret = ble.discoverAllCharaDesc(connect_id, start_handle, end_handle)
+        else:
+            end_handle = self.characteristic_list[index+1]['handle'] - 1
+            print('[2]start_handle = {:#06x}, end_handle = {:#06x}'.format(start_handle - 1, end_handle))
+            ret = ble.discoverAllCharaDesc(connect_id, start_handle, end_handle)
+        self.characteristic_index += 1
+        if ret != 0:
+            print('ble client discover all characteristic descriptor failed.')
+        else:
+            print('ble client discover all characteristic descriptor successful.')
+        print('')
+        return ret
+
+    def read_characteristic_by_uuid(self):
+        connect_id = self.connect_id
+        index = self.current_chara_index   # 根据需要改变该值
+        start_handle = self.characteristic_list[index]['handle']
+        end_handle = self.characteristic_list[index]['value_handle']
+        uuid_type = 1
+        short_uuid = self.characteristic_list[index]['short_uuid']
+        long_uuid = bytearray([0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00])
+
+        ret = ble.readCharaByUUID(connect_id, start_handle, end_handle, uuid_type, short_uuid, long_uuid)
+        if ret != 0:
+            print('ble client read characteristic by uuid failed.')
+        else:
+            print('ble client read characteristic by uuid successful.')
+        print('')
+        return ret
+
+    def read_characteristic_by_handle(self):
+        connect_id = self.connect_id
+        index = self.current_chara_index  # 根据需要改变该值
+        handle = self.characteristic_list[index]['value_handle']
+        offset = 0
+        is_long = 0
+
+        ret = ble.readCharaByHandle(connect_id, handle, offset, is_long)
+        if ret != 0:
+            print('ble client read characteristic by handle failed.')
+        else:
+            print('ble client read characteristic by handle successful.')
+        print('')
+        return ret
+
+    def read_characteristic_descriptor(self):
+        connect_id = self.connect_id
+        index = self.current_desc_index  # 根据需要改变该值
+        handle = self.descriptor_list[index]['handle']
+        print('handle = {:#06x}'.format(handle))
+        is_long = 0
+        ret = ble.readCharaDesc(connect_id, handle, is_long)
+        if ret != 0:
+            print('ble client read characteristic descriptor failed.')
+        else:
+            print('ble client read characteristic descriptor successful.')
+        print('')
+        return ret
+
+    def write_characteristic(self):
+        connect_id = self.connect_id
+        index = self.current_chara_index  # 根据需要改变该值
+        handle = self.characteristic_list[index]['value_handle']
+        offset = 0
+        is_long = 0
+        data = bytearray([0x40, 0x00])
+        print('value_handle = {:#06x}, uuid = {:#06x}'.format(handle, self.characteristic_list[index]['short_uuid']))
+        ret = ble.writeChara(connect_id, handle, offset, is_long, data)
+        if ret != 0:
+            print('ble client write characteristic failed.')
+        else:
+            print('ble client read characteristic successful.')
+        print('')
+        return ret
+
+    def write_characteristic_no_rsp(self):
+        connect_id = self.connect_id
+        index = self.current_chara_index  # 根据需要改变该值
+        handle = self.characteristic_list[index]['value_handle']
+        data = bytearray([0x20, 0x00])
+        print('value_handle = {:#06x}, uuid = {:#06x}'.format(handle, self.characteristic_list[index]['short_uuid']))
+        ret = ble.writeCharaNoRsp(connect_id, handle, data)
+        if ret != 0:
+            print('ble client write characteristic no rsp failed.')
+        else:
+            print('ble client read characteristic no rsp successful.')
+        print('')
+        return ret
+
+    def write_characteristic_descriptor(self):
+        connect_id = self.connect_id
+        index = self.current_desc_index  # 根据需要改变该值
+        handle = self.descriptor_list[index]['handle']
+        data = bytearray([0x01, 0x02])
+        print('handle = {:#06x}'.format(handle))
+
+        ret = ble.writeCharaDesc(connect_id, handle, data)
+        if ret != 0:
+            print('ble client write characteristic descriptor failed.')
+        else:
+            print('ble client read characteristic descriptor successful.')
+        print('')
+        return ret
+
+    @staticmethod
+    def ble_client_callback(args):
+        global msg_queue
+        msg_queue.put(args)
+
+
+def ble_gatt_client_event_handler():
+    global msg_queue
+    old_time = 0
+
+    while True:
+        cur_time = utime.localtime()
+        timestamp = "{:02d}:{:02d}:{:02d}".format(cur_time[3], cur_time[4], cur_time[5])
+        if cur_time[5] != old_time and cur_time[5] % 5 == 0:
+            old_time = cur_time[5]
+            print('[{}]event handler running.....'.format(timestamp))
+            print('')
+        msg = msg_queue.get()  # 没有消息时会阻塞在这
+        # print('msg : {}'.format(msg))
+        event_id = msg[0]
+        status = msg[1]
+
+        if event_id == event.BLE_START_STATUS_IND:
+            print('')
+            print('event_id : BLE_START_STATUS_IND, status = {}'.format(status))
+            if status == 0:
+                print('BLE start successful.')
+                ble_status = ble_client.gatt_get_status()
+                if ble_status == 0:
+                    print('BLE Status : stopped.')
+                    break
+                elif ble_status == 1:
+                    print('BLE Status : started.')
+                else:
+                    print('get ble status error.')
+                    ble_client.gatt_close()
+                    break
+
+                ret = ble_client.set_scan_param()
+                if ret != 0:
+                    ble_client.gatt_close()
+                    break
+                ret = ble_client.start_scan()
+                if ret != 0:
+                    ble_client.gatt_close()
+                    break
+            else:
+                print('BLE start failed.')
+                break
+        elif event_id == event.BLE_STOP_STATUS_IND:
+            print('')
+            print('event_id : BLE_STOP_STATUS_IND, status = {}'.format(status))
+            if status == 0:
+                print('ble stop successful.')
+            else:
+                print('ble stop failed.')
+                break
+        elif event_id == event.BLE_CONNECT_IND:
+            print('')
+            print('event_id : BLE_CONNECT_IND, status = {}'.format(status))
+            if status == 0:
+                ble_client.connect_id = msg[2]
+                ble_client.connect_addr = msg[3]
+                addr = ble_client.connect_addr
+                addr_str = '{:02x}:{:02x}:{:02x}:{:02x}:{:02x}:{:02x}'.format(addr[0], addr[1], addr[2], addr[3], addr[4], addr[5])
+                print('connect_id : {:#x}, connect_addr : {}'.format(ble_client.connect_id, addr_str))
+            else:
+                print('ble connect failed.')
+                break
+        elif event_id == event.BLE_DISCONNECT_IND:
+            print('')
+            print('event_id : BLE_DISCONNECT_IND, status = {}'.format(status))
+            if status == 0:
+                ble_client.connect_id = msg[2]
+                ble_client.connect_addr = msg[3]
+                addr = ble_client.connect_addr
+                addr_str = '{:02x}:{:02x}:{:02x}:{:02x}:{:02x}:{:02x}'.format(addr[0], addr[1], addr[2], addr[3], addr[4], addr[5])
+                print('connect_id : {:#x}, connect_addr : {}'.format(ble_client.connect_id, addr_str))
+            else:
+                print('ble disconnect failed.')
+            ble_client.gatt_close()
+            break
+        elif event_id == event.BLE_UPDATE_CONN_PARAM_IND:
+            print('')
+            print('event_id : BLE_UPDATE_CONN_PARAM_IND, status = {}'.format(status))
+            if status == 0:
+                connect_id = msg[2]
+                max_interval = msg[3]
+                min_interval = msg[4]
+                latency = msg[5]
+                timeout = msg[6]
+                print('connect_id={},max_interval={},min_interval={},latency={},timeout={}'.format(connect_id,max_interval,min_interval,latency,timeout))
+            else:
+                print('ble update parameter failed.')
+                ble_client.gatt_close()
+                break
+        elif event_id == event.BLE_SCAN_REPORT_IND:
+            if status == 0:
+                # print(' ble scan successful.')
+
+                ble_client.scan_report_info['event_type'] = msg[2]
+                ble_client.scan_report_info['name'] = msg[3]
+                ble_client.scan_report_info['addr_type'] = msg[4]
+                ble_client.scan_report_info['addr'] = msg[5]
+                ble_client.scan_report_info['rssi'] = msg[6]
+                ble_client.scan_report_info['data_len'] = msg[7]
+                ble_client.scan_report_info['raw_data'] = msg[8]
+
+                device_name = ble_client.scan_report_info['name']
+                addr = ble_client.scan_report_info['addr']
+                rssi = ble_client.scan_report_info['rssi']
+                addr_type = ble_client.scan_report_info['addr_type']
+                addr_str = '{:02x}:{:02x}:{:02x}:{:02x}:{:02x}:{:02x}'.format(addr[0], addr[1], addr[2], addr[3], addr[4], addr[5])
+                if device_name != '' and rssi != 0:
+                    print('name: {}, addr: {}, rssi: {}, addr_type: {}'.format(device_name, addr_str, rssi, addr_type))
+                    print('raw_data: {}'.format(ble_client.scan_report_info['raw_data']))
+
+                if device_name == ble_client.ble_server_name: # 扫描到目标设备后就停止扫描
+                    ret = ble_client.stop_scan()
+                    if ret != 0:
+                        ble_client.gatt_close()
+                        break
+
+                    ret = ble_client.connect()
+                    if ret != 0:
+                        ble_client.gatt_close()
+                        break
+            else:
+                print('ble scan failed.')
+                ret = ble_client.stop_scan()
+                if ret != 0:
+                    ble_client.gatt_close()
+                    break
+        elif event_id == event.BLE_GATT_MTU:
+            print('')
+            print('event_id : BLE_GATT_MTU, status = {}'.format(status))
+            if status == 0:
+                handle = msg[2]
+                ble_mtu = msg[3]
+                print('handle = {:#06x}, ble_mtu = {}'.format(handle, ble_mtu))
+            else:
+                print('ble connect mtu failed.')
+                ble_client.gatt_close()
+                break
+        elif event_id == event.BLE_GATT_RECV_NOTIFICATION_IND:
+            print('')
+            print('event_id : BLE_GATT_RECV_NOTIFICATION_IND, status = {}'.format(status))
+            if status == 0:
+                data_len = msg[2]
+                data = msg[3]
+                print('len={}, data:{}'.format(data_len, data))
+                handle = (data[1] << 8) | data[0]
+                print('handle = {:#06x}'.format(handle))
+            else:
+                print('ble receive notification failed.')
+                break
+        elif event_id == event.BLE_GATT_RECV_INDICATION_IND:
+            print('')
+            print('event_id : BLE_GATT_RECV_INDICATION_IND, status = {}'.format(status))
+            if status == 0:
+                data_len = msg[2]
+                data = msg[3]
+                print('len={}, data:{}'.format(data_len, data))
+            else:
+                print('ble receive indication failed.')
+                break
+        elif event_id == event.BLE_GATT_START_DISCOVER_SERVICE_IND:
+            print('')
+            print('event_id : BLE_GATT_START_DISCOVER_SERVICE_IND, status = {}'.format(status))
+            if status == 0:
+                ble_client.characteristic_count = 0
+                ble_client.chara_descriptor_count = 0
+                ble_client.characteristic_index = 0
+                ble_client.gatt_statue = gatt_status.BLE_GATT_DISCOVER_SERVICE
+
+                if ble_client.discover_service_mode == 0:
+                    print('execute the function discover_all_service.')
+                    ret = ble_client.discover_all_service()
+                else:
+                    print('execute the function discover_service_by_uuid.')
+                    ret = ble_client.discover_service_by_uuid()
+                if ret != 0:
+                    print('Execution result: Failed.')
+                    ble_client.gatt_close()
+                    break
+            else:
+                print('ble start discover service failed.')
+                ble_client.gatt_close()
+                break
+        elif event_id == event.BLE_GATT_DISCOVER_SERVICE_IND:
+            print('')
+            print('event_id : BLE_GATT_DISCOVER_SERVICE_IND, status = {}'.format(status))
+            if status == 0:
+                start_handle = msg[2]
+                end_handle = msg[3]
+                short_uuid = msg[4]
+                print('start_handle = {:#06x}, end_handle = {:#06x}, short_uuid = {:#06x}'.format(start_handle, end_handle, short_uuid))
+                if ble_client.discover_service_mode == 0: # discover service all
+                    if ble_client.target_service['short_uuid'] == short_uuid: # 查找到所有服务后，按指定uuid查找特征值
+                        ble_client.target_service['start_handle'] = start_handle
+                        ble_client.target_service['end_handle'] = end_handle
+                        ble_client.gatt_statue = gatt_status.BLE_GATT_DISCOVER_CHARACTERISTIC
+                        print('execute the function discover_all_characteristic.')
+                        ret = ble_client.discover_all_characteristic()
+                        if ret != 0:
+                            print('Execution result: Failed.')
+                            ble_client.gatt_close()
+                            break
+                else:
+                    ble_client.target_service['start_handle'] = start_handle
+                    ble_client.target_service['end_handle'] = end_handle
+                    ble_client.gatt_statue = gatt_status.BLE_GATT_DISCOVER_CHARACTERISTIC
+                    print('execute the function discover_all_characteristic.')
+                    ret = ble_client.discover_all_characteristic()
+                    if ret != 0:
+                        print('Execution result: Failed.')
+                        ble_client.gatt_close()
+                        break
+            else:
+                print('ble discover service failed.')
+                ble_client.gatt_close()
+                break
+        elif event_id == event.BLE_GATT_DISCOVER_CHARACTERISTIC_DATA_IND:
+            print('')
+            print('event_id : BLE_GATT_DISCOVER_CHARACTERISTIC_DATA_IND, status = {}'.format(status))
+            if status == 0:
+                data_len = msg[2]
+                data = msg[3]
+                pair_len = data[0]
+                print('pair_len={}, len={}, data:{}'.format(pair_len, data_len, data))
+                if data_len > 0:
+                    if ble_client.gatt_statue == gatt_status.BLE_GATT_DISCOVER_CHARACTERISTIC:
+                        i = 0
+                        while i < (data_len - 1) / pair_len:
+                            chara_dict = {
+                                'handle': (data[i * pair_len + 2] << 8) | data[i * pair_len + 1],
+                                'properties': data[i * pair_len + 3],
+                                'value_handle': (data[i * pair_len + 5] << 8) | data[i * pair_len + 4],
+                                'uuid_type': 0,
+                                'short_uuid': 0x0000,
+                                'long_uuid': bytearray([0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00])
+                            }
+                            print('handle={:#06x}, properties={:#x}, value_handle={:#06x}'.format(chara_dict['handle'], chara_dict['properties'], chara_dict['value_handle']))
+                            if pair_len == ble_client.ble_short_uuid_pair_len:
+                                chara_dict['uuid_type'] = 1
+                                chara_dict['short_uuid'] = (data[i * pair_len + 7] << 8) | data[i * pair_len + 6]
+                                print('short_uuid:{:#06x}'.format(chara_dict['short_uuid']))
+                            elif pair_len == ble_client.ble_long_uuid_pair_len:
+                                start_index = i * pair_len + 6
+                                end_index = start_index + 16
+                                chara_dict['uuid_type'] = 0
+                                chara_dict['long_uuid'] = data[start_index : end_index]
+                                print('long_uuid:{}'.format(chara_dict['long_uuid']))
+                            i += 1
+                            if ble_client.characteristic_count < 5:
+                                ble_client.characteristic_list.append(chara_dict)
+                                ble_client.characteristic_count = len(ble_client.characteristic_list)
+                            print('characteristic_list len = {}'.format(ble_client.characteristic_count))
+                    elif ble_client.gatt_statue == gatt_status.BLE_GATT_READ_CHARA_VALUE:
+                        print('data_len = {}'.format(data_len))
+                        print('pay_load = {:02x},{:02x},{:02x},{:02x}'.format(data[0], data[1], data[2], data[3]))
+            else:
+                print('ble discover characteristic failed.')
+                ble_client.gatt_close()
+                break
+        elif event_id == event.BLE_GATT_DISCOVER_CHARA_DESC_IND:
+            print('')
+            print('event_id : BLE_GATT_DISCOVER_CHARA_DESC_IND, status = {}'.format(status))
+            if status == 0:
+                data_len = msg[2]
+                data = msg[3]
+                fmt = data[0]
+                print('fmt={}, len={}, data:{}'.format(fmt, data_len, data))
+                if data_len > 0:
+                    i = 0
+                    if fmt == 1:  # 16 bit uuid
+                        while i < (data_len - 1) / 4:
+                            descriptor_dict = {
+                                'handle': (data[i * 4 + 2] << 8) | data[i * 4 + 1],
+                                'short_uuid': (data[i * 4 + 4] << 8) | data[i * 4 + 3],
+                            }
+                            print('handle={:#06x}, uuid={:#06x}'.format(descriptor_dict['handle'], descriptor_dict['short_uuid']))
+                            i += 1
+                            if ble_client.chara_descriptor_count < 5:
+                                ble_client.descriptor_list.append(descriptor_dict)
+                                ble_client.chara_descriptor_count = len(ble_client.descriptor_list)
+                            print('descriptor_list len = {}'.format(ble_client.chara_descriptor_count))
+                if ble_client.characteristic_index == ble_client.characteristic_count:
+                    print('execute the function read_characteristic_by_uuid.')
+                    # ble_client.gatt_statue = gatt_status.BLE_GATT_WRITE_CHARA_VALUE
+                    # ret = ble_client.write_characteristic()
+                    # ret = ble_client.write_characteristic_no_rsp()
+
+                    ble_client.gatt_statue = gatt_status.BLE_GATT_READ_CHARA_VALUE
+                    ret = ble_client.read_characteristic_by_uuid()
+                    # ret = ble_client.read_characteristic_by_handle()
+
+                    # ble_client.gatt_statue = gatt_status.BLE_GATT_READ_CHARA_DESC
+                    # ret = ble_client.read_characteristic_descriptor()
+
+                    # ble_client.gatt_statue = gatt_status.BLE_GATT_WRITE_CHARA_DESC
+                    # ret = ble_client.write_characteristic_descriptor()
+                else:
+                    print('execute the function discover_all_characteristic_descriptor.')
+                    ret = ble_client.discover_all_characteristic_descriptor()
+                if ret != 0:
+                    print('Execution result: Failed.')
+                    ble_client.gatt_close()
+                    break
+            else:
+                print('ble discover characteristic descriptor failed.')
+                ble_client.gatt_close()
+                break
+        elif event_id == event.BLE_GATT_CHARA_WRITE_WITH_RSP_IND:
+            print('')
+            print('event_id : BLE_GATT_CHARA_WRITE_WITH_RSP_IND, status = {}'.format(status))
+            if status == 0:
+                if ble_client.gatt_statue == gatt_status.BLE_GATT_WRITE_CHARA_VALUE:
+                    pass
+                elif ble_client.gatt_statue == gatt_status.BLE_GATT_WRITE_CHARA_DESC:
+                    pass
+            else:
+                print('ble write characteristic with response failed.')
+                break
+        elif event_id == event.BLE_GATT_CHARA_WRITE_WITHOUT_RSP_IND:
+            print('')
+            print('event_id : BLE_GATT_CHARA_WRITE_WITHOUT_RSP_IND, status = {}'.format(status))
+            if status == 0:
+                print('write characteristic value without response successful.')
+            else:
+                print('write characteristic value without response failed.')
+                break
+        elif event_id == event.BLE_GATT_CHARA_READ_IND:
+            print('')
+            # read characteristic value by handle
+            print('event_id : BLE_GATT_CHARA_READ_IND, status = {}'.format(status))
+            if status == 0:
+                data_len = msg[2]
+                data = msg[3]
+                print('data_len = {}, data : {}'.format(data_len, data))
+                if ble_client.gatt_statue == gatt_status.BLE_GATT_READ_CHARA_VALUE:
+                    # print('read characteristic value by handle.')
+                    pass
+            else:
+                print('ble read characteristic failed.')
+                break
+        elif event_id == event.BLE_GATT_CHARA_READ_BY_UUID_IND:
+            print('')
+            # read characteristic value by uuid
+            print('event_id : BLE_GATT_CHARA_READ_BY_UUID_IND, status = {}'.format(status))
+            if status == 0:
+                data_len = msg[2]
+                data = msg[3]
+                print('data_len = {}, data : {}'.format(data_len, data))
+                handle = (data[2] << 8) | data[1]
+                print('handle = {:#06x}'.format(handle))
+            else:
+                print('ble read characteristic by uuid failed.')
+                break
+        elif event_id == event.BLE_GATT_CHARA_MULTI_READ_IND:
+            print('')
+            # read multiple characteristic value
+            print('event_id : BLE_GATT_CHARA_MULTI_READ_IND, status = {}'.format(status))
+            if status == 0:
+                data_len = msg[2]
+                data = msg[3]
+                print('data_len = {}, data : {}'.format(data_len, data))
+            else:
+                print('ble read multiple characteristic by uuid failed.')
+                break
+        elif event_id == event.BLE_GATT_DESC_WRITE_WITH_RSP_IND:
+            print('')
+            print('event_id : BLE_GATT_DESC_WRITE_WITH_RSP_IND, status = {}'.format(status))
+            if status == 0:
+                if ble_client.gatt_statue == gatt_status.BLE_GATT_WRITE_CHARA_VALUE:
+                    pass
+                elif ble_client.gatt_statue == gatt_status.BLE_GATT_WRITE_CHARA_DESC:
+                    pass
+            else:
+                print('ble write characteristic descriptor failed.')
+                break
+        elif event_id == event.BLE_GATT_DESC_READ_IND:
+            print('')
+            # read characteristic descriptor
+            print('event_id : BLE_GATT_DESC_READ_IND, status = {}'.format(status))
+            if status == 0:
+                data_len = msg[2]
+                data = msg[3]
+                print('data_len = {}, data : {}'.format(data_len, data))
+                if ble_client.gatt_statue == gatt_status.BLE_GATT_READ_CHARA_DESC:
+                    # print('read characteristic descriptor.')
+                    pass
+            else:
+                print('ble read characteristic descriptor failed.')
+                break
+        elif event_id == event.BLE_GATT_ATT_ERROR_IND:
+            print('')
+            print('event_id : BLE_GATT_ATT_ERROR_IND, status = {}'.format(status))
+            if status == 0:
+                errcode = msg[2]
+                print('errcode = {:#06x}'.format(errcode))
+                if ble_client.gatt_statue == gatt_status.BLE_GATT_DISCOVER_INCLUDES:
+                    ble_client.gatt_statue = gatt_status.BLE_GATT_DISCOVER_CHARACTERISTIC
+                    print('execute the function discover_all_characteristic.')
+                    ret = ble_client.discover_all_characteristic()
+                    if ret != 0:
+                        print('Execution result: Failed.')
+                        ble_client.gatt_close()
+                        break
+                elif ble_client.gatt_statue == gatt_status.BLE_GATT_DISCOVER_CHARACTERISTIC:
+                    ble_client.gatt_statue = gatt_status.BLE_GATT_IDLE
+                    print('execute the function discover_all_characteristic_descriptor.')
+                    ret = ble_client.discover_all_characteristic_descriptor()
+                    if ret != 0:
+                        print('Execution result: Failed.')
+                        ble_client.gatt_close()
+                        break
+            else:
+                print('ble attribute error.')
+                ble_client.gatt_close()
+                break
+        else:
+            print('unknown event id : {}.'.format(event_id))
+
+    # ble_client.release()
+
+
+event = EVENT(event_dict)
+gatt_status = EVENT(gatt_status_dict)
+msg_queue = Queue(50)
+ble_client = BleClient()
+
+
+def main():
+    checknet.poweron_print_once()
+    print('create client event handler task.')
+    _thread.start_new_thread(ble_gatt_client_event_handler, ())
+    # ble.setScanFilter(0) # 关闭扫描过滤功能
+    ret = ble_client.gatt_open()
+    if ret != 0:
+        return -1
+
+    count = 0
+    while True:
+        utime.sleep(1)
+        count += 1
+        cur_time = utime.localtime()
+        timestamp = "{:02d}:{:02d}:{:02d}".format(cur_time[3], cur_time[4], cur_time[5])
+        if count % 5 == 0:
+            print('[{}] BLE Client running, count = {}......'.format(timestamp, count))
+            print('')
+        if count > 130: # 这里设置计数是为了程序运行一会自己退出，方便测试，实际根据用户需要来处理
+            count = 0
+            print('!!!!! stop BLE Client now !!!!!')
+            ble_status = ble_client.gatt_get_status()
+            if ble_status == 1:
+                ble_client.gatt_close()
+            ble_client.release()
+            break
+        else:
+            ble_status = ble_client.gatt_get_status()
+            if ble_status == 0: # stopped
+                print('BLE connection has been disconnected.')
+                ble_client.release()
+                break
 
 if __name__ == '__main__':
     main()
@@ -7287,6 +9116,8 @@ if __name__ == '__main__':
 #### camera - 摄像扫码
 
 模块功能：实现摄像头预览，照相机，录像机，扫码功能（目前仅支持预览和扫码功能）
+
+注意：BC25PA平台不支持模块功能。
 
 
 
@@ -7507,12 +9338,120 @@ def callback(para):
 Scandecode.callback(callback) 
 ```
 
+##### 照相机
+
+照相机功能。
+
+###### 创建对象
+
+**import camera**
+**cap= camera.camCaputre(model,cam_w,cam_h,perview_level,lcd_w,lcd_h)**
+
+* 参数
+
+| 参数          | 参数类型 | 参数说明                                                     |
+| ------------- | -------- | ------------------------------------------------------------ |
+| model         | int      | camera型号：<br />*0: gc032a spi*<br />*1: bf3901 spi*       |
+| cam_w         | int      | camera水平分辨率                                             |
+| *cam_h*       | int      | *camera垂直分辨率*                                           |
+| perview_level | int      | 预览等级[0,2]。等级越高，图像越流畅,消耗资源越大。<br />等于0时，无lcd预览功能<br />等于1或2时，必须先初始化lcd |
+| *lcd_w*       | int      | LCD水平分辨率                                                |
+| *lcd_h*       | int      | *LCD垂直分辨率*                                              |
+
+* 返回值
+
+若返回对象，则表示创建成功
+
+
+
+###### 打开摄像头
+
+**camCaputre.open()**
+
+* 参数
+
+无
+
+* 返回值
+
+0：成功
+
+其它：失败
+
+
+
+###### 关闭摄像头
+
+**camCaputre.close()**
+
+* 参数
+
+无
+
+* 返回值
+
+0：成功
+
+其它：关闭失败
+
+
+
+###### 拍照
+
+拍照格式为jpeg
+
+**camCaputre.start(width,  height, pic_name)**
+
+* 参数
+
+| 参数     | 参数类型 | 参数说明                                  |
+| -------- | -------- | ----------------------------------------- |
+| width    | int      | 保存图片水平分辨率                        |
+| height   | int      | 保存图片垂直分辨率                        |
+| pic_name | str      | 图片名。图片无需加后缀.jpeg，会自动添加。 |
+
+* 返回值
+
+0 ： 成功（实际还需看拍照回调）
+
+
+
+###### 设置拍照回调
+
+**camCaputre.callback(callback)**
+
+* 参数
+
+| 参数     | 参数类型 | 参数说明 |
+| -------- | -------- | -------- |
+| callback | api      | 回调api  |
+
+* 返回值
+
+0：成功
+
+其它：失败
+
+* 示例
+
+```python
+def callback(para):
+    print(para)		#para[0] 拍照结果 	0：成功 其它：失败
+    				#para[1] 保存图片的名称	
+camCaputre.callback(callback) 
+```
+
+
+
 
 
 #### GNSS - 定位授时
 
 模块功能：对L76K GPS型号进行数据获取，可以得到模块定位是否成功，定位的经纬度数据，UTC授时时间，获取GPS模块的定位模式，获取GPS模块定位使用卫星数量，获取GPS模块定位可见卫星数量，获取定位方位角，GPS模块对地速度，模块定位大地高等数据信息。
 
+* 注意
+  BC25PA平台不支持模块功能。
+  
 > 暂时只支持EC600U CNLB
 
 ##### 打开GNSS串口，读取并解析GNSS数据
@@ -7701,3 +9640,308 @@ if __name__ == '__main__':
 0.0
 ```
 
+#### SecureData - 安全数据区
+模块功能：模组提供一块裸flash区域及专门的读写接口供客户存贮重要信息，且信息在烧录固件后不丢失(烧录不包含此功能的固件无法保证不丢失)。提供一个存储和读取接口，不提供删除接口。
+> 目前只支持EC600N、EC600S系列项目
+##### 数据存储
+SecureData.Store(index,databuf,len)
+- **参数**
+| 参数    | 类型      | 说明                                                         |
+| :------ | :-------- | ------------------------------------------------------------ |
+| index   | int       | index范围为1-16：<br />1 - 8 最大存储50字节数据<br />9 - 12 最大存储100字节数据<br />13 - 14 最大存储500字节数据<br />15 - 16 最大存储1000字节数据 |
+| databuf | bytearray | 待存储的数据数组                                             |
+| len     | int       | 要写入数据的长度                                             |
+存储时按照databuf和len两者中长度较小的进行存储
+**返回值**
+-1: 参数有误 
+0: 执行正常
+##### 数据读取
+SecureData.Read(index,databuf,len)
+- **参数**
+| 参数    | 类型      | 说明                                            |
+| :------ | :-------- | ----------------------------------------------- |
+| index   | int       | index范围为1-16：<br />读取存储数据对应的索引号 |
+| databuf | bytearray | 存储读取到的数据                                |
+| len     | int       | 要读取数据的长度                                |
+若存储的数据没有传入的len大，则返回实际存储的数据长度
+**返回值**
+-2: 存储数据不存在且备份数据也不存在
+-1: 参数有误
+其他 :  实际读取到的数据长度
+- **示例**
+```python
+import SecureData
+# 即将存储的数据buf
+databuf = '\x31\x32\x33\x34\x35\x36\x37\x38'
+# 在index为1的存储区域中存储长度为8的数据databuf
+SecureData.Store(1, databuf, 8)
+# 定义一个长度为20的数组用于读取存储的数据
+buf = bytearray(20)
+# 读取index为1的存储区域中的数据至buf中,将读取到数据的长度存储在变量len中
+len = SecureData.Read(1, buf, 20)
+# 输出读到的数据
+print(buf[:len])
+```
+- **执行结果**
+```python
+>>> import SecureData
+>>> databuf = '\x31\x32\x33\x34\x35\x36\x37\x38'
+>>> SecureData.Store(1, databuf, 8)
+0
+>>> buf = bytearray(20)
+>>> len = SecureData.Read(1, buf, 20)
+>>> print(buf[:len])
+bytearray(b'12345678')
+>>> 
+```
+
+#### nb-物联网云平台
+
+模块功能：提供对接物联网云平台功能，提供连接物联网云平台。通过物联网云平台和模块设备的通信功能，目前支持中国电信lot物联网平台、中国电信AEP物联网平台和中国移动onenet物联网平台。
+
+模块名:nb(小写)
+
+支持平台：BC25PA
+
+介绍:其包含了三个子模块OC、AEP。此两个子模块均用lwm2m进行数据的交互。
+
+##### OC
+
+###### 创建OC对象
+
+> **oc=OC(ip,port,psk)**
+
+- 参数
+
+| 参数 | 类型   | 说明                                                         |
+| ---- | ------ | ------------------------------------------------------------ |
+| ip   | string | 物联网平台的服务器ip地址,最大长度16.                         |
+| port | string | 物联网平台的服务器端口,最大长度5.                            |
+| psk  | string | psk码模块用dtls协议通信会用到(现在不输入也是可以的，但是不能为空),最大长度64. |
+
+- 示例
+
+```python
+>>> from nb import OC
+>>> oc=OC("180.101.147.115","5683","763c9692c6639541e1ddcd6769fc9e33")
+```
+
+###### 连接OC云平台
+
+> **oc.connect()**
+
+- 参数
+
+无
+
+- 返回值
+
+成功-0
+
+失败-非0
+
+- 示例
+
+```python
+>>> oc.connect()
+0
+```
+
+###### 接收数据
+
+> **oc.recv(data_len,data)**
+
+- 参数
+
+| 参数     | 类型   | 说明                                                         |
+| -------- | ------ | ------------------------------------------------------------ |
+| data_len | int    | 期望接受的数据长度(注意此参数根据data的实际长度进行调整，按照data变量的容量和data_len的比较取最小值) |
+| data     | string | 存储接收到的数据                                             |
+
+- 说明
+
+接收数据为16进制字符串，故数据长度必定是偶数。
+
+- 返回值
+
+成功-0
+
+失败-非0
+
+- 示例
+
+```python
+>>> oc.recv(6,data)
+0
+```
+
+###### 发送数据
+
+> **oc.send(data_len,data,type)**
+
+- 参数
+
+| 参数     | 类型   | 说明                                                         |
+| -------- | ------ | ------------------------------------------------------------ |
+| data_len | int    | 期望接受的数据长度(注意此参数根据data的实际长度进行调整，按照data变量的容量和data_len的比较取最小值) |
+| data     | string | 存储接收到的数据                                             |
+| type     | int    | 发送方式:0、1、2为无需响应确认，100、101、102需要响应确认。暂时仅支持0、1、2发送方式。 |
+
+- 说明
+
+发送数据为16进制字符串，数据长度为偶数。
+
+- 返回值
+
+成功-0
+
+失败-非0
+
+- 示例
+
+```python
+>>> print(data)
+bytearray(b'313233')
+>>> oc.send(6,data,0)
+0
+```
+
+###### 关闭连接
+
+- 参数
+
+无
+
+- 返回值
+
+成功-True
+
+失败-False
+
+- 示例
+
+```python
+>>> oc.close()
+True
+```
+
+##### AEP
+
+###### 创建AEP对象
+
+> **aep=AEP(ip,port)**
+
+- 参数
+
+| 参数 | 类型   | 说明                                 |
+| ---- | ------ | ------------------------------------ |
+| ip   | string | 物联网平台的服务器ip地址,最大长度16. |
+| port | string | 物联网平台的服务器端口,最大长度5.    |
+
+- 示例
+
+```python
+>>> from nb import AEP
+>>> aep=AEP("221.229.214.202","5683")
+```
+
+###### 连接AEP云平台
+
+> **aep.connect()**
+
+- 参数
+
+无
+
+- 返回值
+
+成功-0
+
+失败-非0
+
+- 示例
+
+```python
+>>> aep.connect()
+0
+```
+
+###### 接收数据
+
+> **aep.recv(data_len,data)**
+
+- 参数
+
+| 参数     | 类型   | 说明                                                         |
+| -------- | ------ | ------------------------------------------------------------ |
+| data_len | int    | 期望接受的数据长度(注意此参数根据data的实际长度进行调整，按照data变量的容量和data_len的比较取最小值) |
+| data     | string | 存储接收到的数据                                             |
+
+- 说明
+
+接收数据为16进制字符串，故数据长度必定是偶数。
+
+- 返回值
+
+成功-0
+
+失败-非0
+
+- 示例
+
+```python
+>>> aep.recv(6,data)
+0
+```
+
+###### 发送数据
+
+> **aep.send(data_len,data,type)**
+
+- 参数
+
+| 参数     | 类型   | 说明                                                         |
+| -------- | ------ | ------------------------------------------------------------ |
+| data_len | int    | 期望发送的数据长度(注意此参数根据data的实际长度进行调整，按照data变量的容量和data_len的比较取最小值) |
+| data     | string | 待发送数据                                                   |
+| type     | int    | 发送方式:0、1、2为无需响应确认，100、101、102需要响应确认。暂时仅支持0、1、2发送方式。 |
+
+- 说明
+
+发送数据为16进制字符串，数据长度为偶数。
+
+- 返回值
+
+成功-0
+
+失败-非0
+
+- 示例
+
+```python
+>>> print(data)
+bytearray(b'313233')
+>>> aep.send(6,data,0)
+0
+```
+
+###### 关闭连接
+
+- 参数
+
+无
+
+- 返回值
+
+成功-True
+
+失败-False
+
+- 示例
+
+```python
+>>> aep.close()
+True
+```
+
+##### 
