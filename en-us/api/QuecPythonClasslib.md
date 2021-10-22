@@ -307,7 +307,6 @@ Function: Provides base station positioning interface to obtain coordinate infor
 * note
 
   The BC25PA platform does not support this module function.
-  
 ##### Obtain Coordinate Information
 
 > **cellLocator.getLocation(serverAddr, port, token, timeout, profileID)**
@@ -806,7 +805,6 @@ Description：
 * note
 
   The BC25PA platform does not support this method.
-  
 
 Example
 
@@ -1484,7 +1482,6 @@ This function sets APN.
 * note
 
   The BC25PA platform does not support this module function.
-  
 ##### Obtain the Current  APN
 
 > **net.getApn(simid)**
@@ -3996,7 +3993,59 @@ def usb_callback(conn_status):
 usb.setCallback(usb_callback)
 ```
 
+##### USBNET
 
+It provides the USB network adapter function.
+
+NOTE：Currently, only the ASR platform supports it.
+
+###### Setting the USBNET working type (Take effect after restart)
+
+USBNET.set_worktype(type)
+
+- Parameter
+
+  | Parameter | Type | Description                                                  |
+  | --------- | ---- | ------------------------------------------------------------ |
+  | type      | int  | USBNET working type Type_ECM – ECM mode Type_RNDIS – RNDIS mode |
+
+- Return Value
+
+  Return 0 if the setting is successful, otherwise return -1.
+
+###### Open USBNET
+
+USBNET.open()
+
+- Parameter
+
+  None
+
+- Return Value
+
+  Return 0 if the opening is successful, otherwise return -1.
+
+Example
+
+```python
+from misc import USBNET
+from misc import Power
+
+#work on ECM mode default
+USBNET.open()
+
+USBNET.set_worktype(USBNET.Type_RNDIS)
+
+#reset the module
+Power.powerRestart()
+
+
+#After restart
+from misc import USBNET
+
+#work on RNDIS mode
+USBNET.open()
+```
 
 #### modem - Related Device
 
@@ -4332,7 +4381,6 @@ Function: UART serial data transmission
 
 * note
   BC25PA platform, only uart1 is supported
-  
 ###### Constant Description
 
 | Constant   | Sedcription |
@@ -4463,7 +4511,6 @@ Return 0 if the execution is successful, otherwise return -1.。
 * note
 
   The BC25PA platform does not support this method.
-  
 - Example
 
 ```python

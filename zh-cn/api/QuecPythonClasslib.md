@@ -4215,7 +4215,59 @@ def usb_callback(conn_status):
 usb.setCallback(usb_callback)
 ```
 
+##### USBNET
 
+提供USB网卡功能
+
+注意：目前仅ASR平台支持
+
+###### 设置USB网卡工作类型（重启生效）
+
+USBNET.set_worktype(type)
+
+- 参数
+
+  | 参数 | 参数类型 | 参数说明                                                   |
+  | ---- | -------- | ---------------------------------------------------------- |
+  | type | int      | USBNET 工作类型 Type_ECM – ECM 模式 Type_RNDIS – RNDIS模式 |
+
+- 返回值
+
+  设置成功返回整型0，失败返回整型-1。
+
+###### 打开USB网卡
+
+USBNET.open()
+
+- 参数
+
+  无
+
+- 返回值
+
+  打开成功返回整型0，失败返回整型-1。
+
+示例
+
+```
+from misc import USBNET
+from misc import Power
+
+#work on ECM mode default
+USBNET.open()
+
+USBNET.set_worktype(USBNET.Type_RNDIS)
+
+#reset the module
+Power.powerRestart()
+
+
+#After restart
+from misc import USBNET
+
+#work on RNDIS mode
+USBNET.open()
+```
 
 #### modem - 设备相关
 
@@ -4694,7 +4746,6 @@ if __name__ == '__main__':
 * 注意
 
   BC25PA平台不支持此方法。
-  
 - 示例
 
 ```python
@@ -5474,7 +5525,6 @@ if __name__ == '__main__':
 
 * 注意
   BC25PA平台不支持此模块功能。
-  
 ###### 创建LCD对象
 
 > **lcd = LCD()**
@@ -5884,7 +5934,6 @@ if __name__ == '__main__':
 
 * 注意
   BC25PA平台不支持此模块功能。
-  
 > ​	qrcode.show(qrcode_str,magnification,start_x,start_y,Background_color,Foreground_color)
 
 - 参数
@@ -5934,7 +5983,6 @@ if __name__ == '__main__':
 
 * 注意
   BC25PA平台不支持此方法。
-  
 
 ##### 删除wake_lock锁
 
@@ -9451,7 +9499,6 @@ camCaputre.callback(callback)
 
 * 注意
   BC25PA平台不支持模块功能。
-  
 > 暂时只支持EC600U CNLB
 
 ##### 打开GNSS串口，读取并解析GNSS数据
