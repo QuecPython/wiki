@@ -58,6 +58,7 @@ input{
 	margin-top: 0rem !important;
 	margin-bottom: 0rem !important;
 	margin-left: 2rem !important;
+	background-color: #f8f8f8;
 }
 
 .markdown-section code.lang-python, .markdown-section pre{
@@ -66,6 +67,54 @@ input{
 	
 }
 
+.markdown-section code.lang-c, .markdown-section pre{
+	background-color: #333 !important;
+	border-radius: 9px;
+	
+}
+
+.markdown-section code.lang-, .markdown-section pre{
+	background-color: #333 !important;
+	border-radius: 9px;
+	
+}
+
+.docsify-copy-code-button:focus, pre:hover .docsify-copy-code-button{
+	border-radius: 9px;
+	opacity: 0.8 !important;
+	margin-top: 0.2rem;
+	margin-right: 0.2rem;
+}
+
+
 .lang-python{
 	color:white	 !important;
+}
+.lang-c{
+	color:white	 !important;
+}
+.lang-{
+	color:white	 !important;
+}
+
+body.close .sidebar-toggle {
+    background-color: rgba(0, 0, 0, 0);
+    transition: background-color 1s;
+    width: 284px;
+    padding: 10px;
+}
+
+thead > tr{
+	background-color: #dc143c;
+	border: 2px solid #dc143c;
+	color: white;
+	line-height: 1.8rem;
+}
+
+.github-corner{
+	opacity: 0.5 !important;
+}
+
+.github-corner:hover{
+	opacity: 1 !important;
 }
