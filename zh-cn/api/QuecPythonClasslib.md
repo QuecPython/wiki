@@ -3556,7 +3556,7 @@ while 1:
 
 * 注意
 
-  BC25PA平台支持仅不支持重启原因5。
+  BC25PA平台不支持重启原因5。
 
 ###### 获取模块上次关机原因
 
@@ -3586,7 +3586,7 @@ while 1:
 
 * 注意
 
-  BC25PA平台支持仅不支持此方法。
+  BC25PA平台不支持此方法。
 
 
 ###### 获取电池电压
@@ -3689,7 +3689,7 @@ pk.powerKeyEventRegister(pwk_callback)
 
 ##### PWM
 
-注意：BC25PA平台支持仅不支持此模块。
+注意：BC25PA平台不支持此模块。
 
 ###### 常量说明
 
@@ -3891,7 +3891,7 @@ ADC功能初始化。
 
 提供USB插拔检测接口。
 
-注意：BC25PA平台支持仅不支持此模块。
+注意：BC25PA平台不支持此模块。
 
 ###### 创建USB对象
 
@@ -7711,13 +7711,13 @@ bytearray(b'12345678')
 
 #### nb-物联网云平台
 
-模块功能：提供对接物联网云平台功能，提供连接物联网云平台。通过物联网云平台和模块设备的通信功能，目前支持中国电信lot物联网平台、中国电信AEP物联网平台和中国移动onenet物联网平台。
+模块功能：提供对接物联网云平台功能，提供连接物联网云平台。通过物联网云平台和模块设备的通信功能，目前支持中国电信lot物联网平台、中国电信CTwing物联网平台和中国移动onenet物联网平台。
 
 模块名:nb(小写)
 
 支持平台：BC25PA
 
-介绍:其包含了三个子模块OC、AEP。此两个子模块均用lwm2m进行数据的交互。
+介绍:其包含了三个子模块OC、CTwing。此两个子模块均用lwm2m进行数据的交互。
 
 ##### OC
 
@@ -7839,11 +7839,11 @@ bytearray(b'313233')
 True
 ```
 
-##### AEP
+##### CTwing
 
-###### 创建AEP对象
+###### 创建CTwing对象
 
-> **aep=AEP(ip,port)**
+> **ctwing=CTwing(ip,port)**
 
 - 参数
 
@@ -7855,13 +7855,13 @@ True
 - 示例
 
 ```python
->>> from nb import AEP
->>> aep=AEP("221.229.214.202","5683")
+>>> from nb import CTwing
+>>> ctwing=CTwing("221.229.214.202","5683")
 ```
 
-###### 连接AEP云平台
+###### 连接Ctwing云平台
 
-> **aep.connect()**
+> **ctwing.connect()**
 
 - 参数
 
@@ -7876,13 +7876,13 @@ True
 - 示例
 
 ```python
->>> aep.connect()
+>>> ctwing.connect()
 0
 ```
 
 ###### 接收数据
 
-> **aep.recv(data_len,data)**
+> **ctwing.recv(data_len,data)**
 
 - 参数
 
@@ -7904,13 +7904,13 @@ True
 - 示例
 
 ```python
->>> aep.recv(6,data)
+>>> ctwing.recv(6,data)
 0
 ```
 
 ###### 发送数据
 
-> **aep.send(data_len,data,type)**
+> **ctwing.send(data_len,data,type)**
 
 - 参数
 
@@ -7935,7 +7935,7 @@ True
 ```python
 >>> print(data)
 bytearray(b'313233')
->>> aep.send(6,data,0)
+>>> ctwing.send(6,data,0)
 0
 ```
 
@@ -7954,7 +7954,7 @@ bytearray(b'313233')
 - 示例
 
 ```python
->>> aep.close()
+>>> ctwing.close()
 True
 ```
 

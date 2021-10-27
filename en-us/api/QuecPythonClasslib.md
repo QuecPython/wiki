@@ -7760,13 +7760,13 @@ Results:
 
 #### NB Internet of things cloud platform
 
-Module function: it provides the function of connecting to the Internet of things cloud platform and connecting to the Internet of things cloud platform. Through the communication function of IOT cloud platform and module equipment, it currently supports China Telecom lot IOT platform, China Telecom AEP IOT platform and China Mobile onenet IOT platform.
+Module function: it provides the function of connecting to the Internet of things cloud platform and connecting to the Internet of things cloud platform. Through the communication function of IOT cloud platform and module equipment, it currently supports China Telecom lot IOT platform, China Telecom CTwing IOT platform and China Mobile onenet IOT platform.
 
 Module name: nb(lowercase)
 
 Support platform: BC25PA
 
-Introduction: it includes three sub modules OC, AEP. The two sub modules all use lwm2m for data interaction.
+Introduction: it includes three sub modules OC, CTwing. The two sub modules all use lwm2m for data interaction.
 
 ##### OC
 
@@ -7888,11 +7888,11 @@ Failed -False
 True
 ```
 
-##### AEP
+##### CTwing
 
-###### Create AEP object
+###### Create CTwing object
 
-> **aep=AEP(ip,port)**
+> **ctwing=CTwing(ip,port)**
 
 - **Parameter**
 
@@ -7904,13 +7904,13 @@ True
 - Example
 
 ```python
->>> from nb import AEP
->>> aep=AEP("221.229.214.202","5683")
+>>> from nb import CTwing
+>>> ctwing=CTwing("221.229.214.202","5683")
 ```
 
-###### Connect to AEP cloud platform
+###### Connect to CTwing cloud platform
 
-> **aep.connect()**
+> **ctwing.connect()**
 
 - **Parameter**
 
@@ -7925,13 +7925,13 @@ None.
 - Example
 
 ```python
->>> aep.connect()
+>>> ctwing.connect()
 0
 ```
 
 ###### Receive data
 
-> **aep.recv(data_len,data)**
+> **ctwing.recv(data_len,data)**
 
 - **Parameter**
 
@@ -7953,13 +7953,13 @@ Failed - not 0
 - Example
 
 ```python
->>> aep.recv(6,data)
+>>> ctwing.recv(6,data)
 0
 ```
 
 ###### Send data
 
-> **aep.send(data_len,data,type)**
+> **ctwing.send(data_len,data,type)**
 
 - **Parameter**
 
@@ -7984,7 +7984,7 @@ Failed - not 0
 ```python
 >>> print(data)
 bytearray(b'313233')
->>> aep.send(6,data,0)
+>>> ctwing.send(6,data,0)
 0
 ```
 
@@ -8003,7 +8003,7 @@ Failed -False
 - Example
 
 ```python
->>> aep.close()
+>>> ctwing.close()
 True
 ```
 
