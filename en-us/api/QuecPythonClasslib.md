@@ -3592,7 +3592,7 @@ The values returned are explained as follows:
 
 * note
 
-  BC25PA platform only does not support restart reason 5.
+  BC25PA platform does not support restart reason 5 and 6.
 
 ###### Get the Reason for the Last Powering Down of the Module
 
@@ -7847,7 +7847,7 @@ Failed - not 0
 | Parameter | Type   | Description                                                  |
 | --------- | ------ | ------------------------------------------------------------ |
 | data_len  | int    | Expected Send data length (note that this parameter is adjusted according to the actual length of data, and the minimum value is taken according to the comparison between the capacity of data variable and data_len) |
-| data      | string | Data to be sent                                              |
+| data      | string | Data to be sent,The maximum supported data length is 1024 bytes                                   |
 | type      | int    | Sending method: 0, 1 and 2 do not need response confirmation, and 100, 101 and 102 need response confirmation. Only 0, 1 and 2 sending methods are supported temporarily. |
 
 - Note
@@ -7966,7 +7966,7 @@ Failed - not 0
 | Parameter | Type   | Description                                                  |
 | --------- | ------ | ------------------------------------------------------------ |
 | data_len  | int    | Expected Send data length (note that this parameter is adjusted according to the actual length of data, and the minimum value is taken according to the comparison between the capacity of data variable and data_len) |
-| data      | string | Data to be sent                                              |
+| data      | string | Data to be sent,The maximum supported data length is 1024 bytes                                            |
 | type      | int    | Sending method: 0, 1 and 2 do not need response confirmation, and 100, 101 and 102 need response confirmation. Only 0, 1 and 2 sending methods are supported temporarily. |
 
 - Note
