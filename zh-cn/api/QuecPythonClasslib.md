@@ -6153,6 +6153,7 @@ wifi list:(2, [('F0:B4:29:86:95:C7': -79),('44:00:4D:D5:26:E0', -92)])
 * 返回值：
 
 执行成功返回整型0，失败返回整型-1。
+<<<<<<< HEAD
 
 说明：
 
@@ -6165,6 +6166,20 @@ def ble_callback(args):
 	......
 ```
 
+=======
+
+说明：
+
+（1）回调函数的形式
+
+```python
+def ble_callback(args):
+	event_id = args[0]  # 第一个参数固定是 event_id
+	status = args[1] # 第二个参数固定是状态，表示某个操作的执行结果，比如ble开启成功还是失败
+	......
+```
+
+>>>>>>> parent of f6894aa (Merge branch 'quecpython:main' into main)
 （2）回调函数参数说明
 
 ​		args[0] 固定表示event_id，args[1] 固定表示状态，0表示成功，非0表示失败。回调函数的参数个数并不是固定2个，而是根据第一个参数args[0]来决定的，下表中列出了不同事件ID对应的参数个数及说明。
@@ -7272,6 +7287,7 @@ if __name__ == '__main__':
 >>> import camera
 >>> preview = camera.camPreview(0,640,480,176,220,1)
 ```
+<<<<<<< HEAD
 
 
 
@@ -7290,6 +7306,70 @@ if __name__ == '__main__':
 其它：打开失败
 
 
+
+关闭预览功能
+
+**camPreview.close()**
+=======
+
+
+
+###### 打开预览功能
+
+**camPreview.open()**
+
+* 参数
+
+无
+
+* 返回值
+
+0：成功
+
+其它：打开失败
+>>>>>>> parent of f6894aa (Merge branch 'quecpython:main' into main)
+
+关闭预览功能。
+
+<<<<<<< HEAD
+* 参数
+
+无
+
+* 返回值
+
+0：成功
+
+其它：失败
+
+
+
+##### 扫码识别
+
+扫码识别功能。使用该功能前，需要初始化LCD。
+
+###### 创建对象
+
+**import camera**
+**scan= camera.camScandecode(model,decode_level,cam_w,cam_h,perview_level,lcd_w,lcd_h)**
+
+* 参数
+
+| 参数          | 参数类型 | 参数说明                                               |
+| ------------- | -------- | ------------------------------------------------------ |
+| model         | int      | camera型号：<br />*0: gc032a spi*<br />*1: bf3901 spi* |
+| decode_level  | int      | *解码等级[1,2]，等级越高，识别效果越好但资源消耗越大*  |
+| cam_w         | int      | *camera水平分辨率*                                     |
+| *cam_h*       | int      | *camera垂直分辨率*                                     |
+| perview_level | int      | 预览等级[1,2]。等级越高，图像越流畅,消耗资源越大       |
+| *lcd_w*       | int      | *LCD水平分辨率*                                        |
+| *lcd_h*       | int      | *LCD垂直分辨率*                                        |
+
+* 返回值
+
+*-1*；失败
+
+=======
 
 关闭预览功能
 
@@ -7334,6 +7414,7 @@ if __name__ == '__main__':
 
 *-1*；失败
 
+>>>>>>> parent of f6894aa (Merge branch 'quecpython:main' into main)
 若返回对象，则表示创建成功
 
 
