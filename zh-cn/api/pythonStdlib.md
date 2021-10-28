@@ -1812,13 +1812,13 @@ sys 模块中提供了与QuecPython运行环境有关的函数和变量。该模
 
 MicroPython运行的平台。
 
-> **sys.stdin**
+# > **sys.stdin**
 
-标准输入（默认是USB虚拟串口，可选其他串口）。
+# 标准输入（默认是USB虚拟串口，可选其他串口）。
 
-> **sys.stdout**
+# > **sys.stdout**
 
-标准输出（默认是USB虚拟串口，可选其他串口）。
+# 标准输出（默认是USB虚拟串口，可选其他串口）。
 
 > **sys.version**
 
