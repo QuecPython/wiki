@@ -2243,7 +2243,7 @@ Realize the whole process of firmware download and upgrade with one interface
 
 - Return Value
 
-  Return integer value 0 if the download is successful and return integer value -1 if the download fails. Note: on EC600S/EC600N module, the return value only represents the success or failure of the command, and the download status needs to be fed back through the callback.
+  Return integer value 0 if the download is successful and return integer value -1 if the download fails. Note: on EC600S/EC600N/BC25PA module, the return value only represents the success or failure of the command, and the download status needs to be fed back through the callback.
 
 - Example
 
