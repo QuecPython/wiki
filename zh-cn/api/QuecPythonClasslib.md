@@ -2715,7 +2715,7 @@ download_list = [{'url': 'http://www.example.com/app.py', 'file_name': '/usr/app
 | -------- | -------- | ------------------------------------------------------------ |
 | priority | int      | 播放优先级，支持优先级0~4，数值越大优先级越高                |
 | breakin  | int      | 打断模式，0表示不允许被打断，1表示允许被打断                 |
-| mode     | int      | 编码模式，1 - UNICODE16(UTF-16大端模式)，2 - UTF-8，3 - UNICODE16(UTF-16小端模式) |
+| mode     | int      | 低四位：编码模式，1 - UNICODE16(UTF-16大端模式)，2 - UTF-8，3 - UNICODE16(UTF-16小端模式)<br>高四位：WTTS模式（仅600N系列支持VOLTE的版本支持）, wtts_enable - wtts总开关，wtts_ul_enable - wtts上行使能， wtts_dl_enable - wtts下行使能 |
 | str      | string   | 待播放字符串                                                 |
 
 * 返回值
@@ -2773,6 +2773,17 @@ download_list = [{'url': 'http://www.example.com/app.py', 'file_name': '/usr/app
 #播放UTF16LE模式的语音
 >>> tts.play(1,1,3,'226BCE8F7F4F2875FB79DC8F1A90E14F216A57570230')
 0
+
+#支持VOLTE的版本,可以播放tts到远端
+>>> import voiceCall
+>>> voiceCall.callStart('1xxxxxxxxxx')
+0
+
+#待电话接通后
+#播放tts语音至通话远端
+>>> tts.play(1,1,tts.wtts_enable|tts.wtts_ul_enable|2, '12345')
+
+0
 ```
 
 tts播放中文示例：
@@ -2786,6 +2797,81 @@ import audio
 tts = audio.TTS(1)
 str1 = '移联万物，志高行远' 
 tts.play(4, 0, 2, str1)
+```
+
+
+
+tts播放文本标注说明：
+
+如遇TTS播放时不能达到预期的，可以通过文本标注的方式让TTS播放符合预期。
+
+数字播放的方式：
+
+```python
+#格式：[n*] (*=0/1/2)
+#TTS引擎自动决定是以号码形式播放还是以数值的形式播放
+>>> tts.play(1,1,2, '12345')
+0
+
+#TTS引擎以号码形式播放
+>>> tts.play(1,1,2, '[n1]12345')
+0
+
+#TTS引擎以数值形式播放
+>>> tts.play(1,1,2, '[n2]12345')
+0
+```
+
+
+
+语速设置：
+
+```python
+#格式：[s*] (*=0~10)
+#TTS引擎以默认语速5播放语音
+>>> tts.play(1,1,2, '12345')
+0
+
+#TTS引擎以默认语速的一半播放语音
+>>> tts.play(1,1,2, '[s0]12345')
+0
+
+#TTS引擎以默认语速的2倍语速播放语音
+>>> tts.play(1,1,2, '[s10]12345')
+0
+```
+
+
+
+语调设置：
+
+```python
+#格式：[t*] (*=0~10)
+#TTS引擎以默认语调5播放语音
+>>> tts.play(1,1,2, '12345')
+0
+
+#TTS引擎以默认语调基频减64Hz播放语音
+>>> tts.play(1,1,2, '[t0]12345')
+0
+
+#TTS引擎以默认语调基频加128Hz播放语音
+>>> tts.play(1,1,2, '[t10]12345')
+0
+```
+
+
+
+汉字指定拼音：
+
+```python
+#格式：[=*] (*=拼音)
+#汉字：声调用后接一位数字 1~5 分别表示阴平、阳平、上声、去声和轻声 5 个声调。
+>>> tts.play(1,1,2, '乐[=le4]')
+0
+
+>>> tts.play(1,1,2, '乐[=yue4]')
+0
 ```
 
 
