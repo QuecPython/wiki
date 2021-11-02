@@ -2574,7 +2574,7 @@ Audio playback supports priority 0–4, the higher the number, the higher the pr
 | --------- | -------------- | ------------------------------------------------------------ |
 | priority  | int            | Playback priority. Supports Priority 0–4. The higher the number, the higher the priority. |
 | breakin   | int            | Interruption mode. 0 means not allowed to be interrupted; 1 means allowed to be interrupted |
-| mode      | int            | Encoding mode. 1 - UNICODE16 (UTF-16 big-endian), 2 - UTF-8, 3 - UNICODE16 (UTF-16 little-endian) |
+| mode      | int            | Low 4bit:Encoding mode. 1 - UNICODE16 (UTF-16 big-endian), 2 - UTF-8, 3 - UNICODE16 (UTF-16 little-endian)<br>High 4bit:WTTS mode(Only 600N series support VOLTE version support)., wtts_enable - wtts master switch，wtts_ul_enable - wtts up link switch， wtts_dl_enable - wtts down link switch |
 | str       | string         | String to be played                                          |
 
 * Return Value
@@ -2630,6 +2630,17 @@ Audio playback supports priority 0–4, the higher the number, the higher the pr
 
 #Play the voice in UTF-16LE mode
 >>> tts.play(1,1,3,'226BCE8F7F4F2875FB79DC8F1A90E14F216A57570230')
+0
+
+#Support VOLTE version, can play tts to remote
+>>> import voiceCall
+>>> voiceCall.callStart('1xxxxxxxxxx')
+0
+
+#After the call is connected
+#Play tts voice to the far end of the call
+>>> tts.play(1,1,tts.wtts_enable|tts.wtts_ul_enable|2, '12345')
+
 0
 ```
 
@@ -2840,6 +2851,81 @@ None
 0
 >>> tts1.getState() #Execute this interface when the above TTS is playing
 1
+```
+
+
+
+###### tts play text annotation description
+
+If TTS playback fails to meet expectations, you can make TTS playback meet expectations through text annotations.
+
+Set the way of digital playback：
+
+```python
+#Format：[n*] (*=0/1/2)
+#The TTS engine automatically determines whether to play in the form of numbers or in the form of numbers
+>>> tts.play(1,1,2, '12345')
+0
+
+#TTS engine plays in the form of numbers
+>>> tts.play(1,1,2, '[n1]12345')
+0
+
+#TTS engine plays in numerical form
+>>> tts.play(1,1,2, '[n2]12345')
+0
+```
+
+
+
+Speaking rate setting：
+
+```python
+#Format：[s*] (*=0~10)
+#The TTS engine plays the voice at the default speech rate of 5
+>>> tts.play(1,1,2, '12345')
+0
+
+#The TTS engine plays the voice at half the default speech rate
+>>> tts.play(1,1,2, '[s0]12345')
+0
+
+#The TTS engine plays the voice at twice the default speech rate
+>>> tts.play(1,1,2, '[s10]12345')
+0
+```
+
+
+
+Intonation setting：
+
+```python
+#Format：[t*] (*=0~10)
+#The TTS engine plays the voice in the default intonation 5
+>>> tts.play(1,1,2, '12345')
+0
+
+#The TTS engine plays the voice at the base frequency of the default pitch minus 64Hz
+>>> tts.play(1,1,2, '[t0]12345')
+0
+
+#The TTS engine plays the voice with the default pitch base frequency plus 128Hz
+>>> tts.play(1,1,2, '[t10]12345')
+0
+```
+
+
+
+Pinyin for Chinese Characters：
+
+```python
+#Format：[=*] (*=Pinyin)
+#Chinese characters: After the voice call, a number 1~5 are used to represent the 5 tones of even tone, rising tone, entering tong, falling tone and lightly tone respectively.
+>>> tts.play(1,1,2, '乐[=le4]')
+0
+
+>>> tts.play(1,1,2, '乐[=yue4]')
+0
 ```
 
 
