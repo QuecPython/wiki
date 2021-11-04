@@ -355,13 +355,14 @@ if __name__ == '__main__':
 
 > **sim.genericAccess(sim_id, cmd_APDU)**
 
+【该接口仅ASR平台支持】
 将命令APDU通过modem传递给SIM卡，然会返回响应APDU。
 
 * 参数
 
 |  参数   | 参数类型 | 参数说明                                      |
 |  ----   | -------- | --------------------------------------------- |
-| sim_id  |   int    | simid, 范围：0 or 1                             |
+| sim_id  |   int    | simid, 范围：0 or 1                           |
 |  APDU   |  string  | command passed on by the MT to the SIM in the format as described in GSM 51.011 |
 
 * 返回值
@@ -930,7 +931,7 @@ sim.setCallback(cb)
 
 > **voiceCall.startDtmf(dtmf, duration)**
 
-设置回铃音。
+设置DTMF音。
 
 * 参数
 
@@ -1101,6 +1102,8 @@ typedef enum
 ```
 
 *callback函数中args定义如下
+
+1、当event=10,11,12,13,14,15,16时，args释义如下：
 ```
 args[0]:event id(具体释义见上述枚举)
 args[1]:call id(call identification number as described in 3GPP TS 22.030 subclause 4.5.5.1; this number can be used in +CHLD command operations)
@@ -1112,6 +1115,44 @@ args[6]:phone num
 args[7]:num type([129/145],129:Dialing string without international access code “+”,145:Dialing string includes international access code character “+”)
 ```
 
+2、当event=2,3,4,5,6,7,8,9时，args释义如下：
+2.1、event=2,3
+```
+args[0]:event id(具体释义见上述枚举)
+args[1]:call id(call identification number as described in 3GPP TS 22.030 subclause 4.5.5.1; this number can be used in +CHLD command operations)
+args[2]:phone num
+```
+2.2、event=4
+```
+args[0]:event id(具体释义见上述枚举)
+args[1]:call id(call identification number as described in 3GPP TS 22.030 subclause 4.5.5.1; this number can be used in +CHLD command operations)
+args[2]:cause
+```
+2.3、event=6
+```
+args[0]:event id(具体释义见上述枚举)
+args[1]:call id(call identification number as described in 3GPP TS 22.030 subclause 4.5.5.1; this number can be used in +CHLD command operations)
+args[2]:phone num
+args[3]:num type([129/145],129:Dialing string without international access code “+”,145:Dialing string includes international access code character “+”)
+args[4]:CLI状态
+```
+2.3、event=7
+```
+args[0]:event id(具体释义见上述枚举)
+```
+2.3、event=8
+```
+args[0]:event id(具体释义见上述枚举)
+args[1]:call id(call identification number as described in 3GPP TS 22.030 subclause 4.5.5.1; this number can be used in +CHLD command operations)
+args[2]:cause
+args[3]:Indicates if in-band tones are available from network
+```
+2.3、event=9
+```
+args[0]:event id(具体释义见上述枚举)
+args[1]:call id(call identification number as described in 3GPP TS 22.030 subclause 4.5.5.1; this number can be used in +CHLD command operations)
+args[2]:phone num
+```
 
 * 示例
 ```python
@@ -1544,9 +1585,17 @@ PDU解码
 
 * 示例
 
-短信回调函数新老架构的使用方法不同，如下所示，新架构参照示例一，老架构参照示例二
+短信回调函数新老架构的使用方法不同，如下所示，新架构参照示例一，QPY_V0004_EC600N_CNLC_FW_VOLTE(2021-09-09发布)之前发布的版本参照示例二
 
 示例一：
+
+callback中args释义如下：
+```
+args[0]:event id
+args[1]:sms index
+args[2]:sms storage
+```
+
 
 ```python
 import sms
