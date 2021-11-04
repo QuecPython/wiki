@@ -5,7 +5,7 @@
 模块功能：阿里云物联网套件客户端功能,目前的产品节点类型仅支持“设备”，设备认证方式支持“一机一密和“一型一密”。
 
 注意：BC25PA平台不支持模块功能。
-  
+
 > **aLiYun(productKey, productSecret, DeviceName, DeviceSecret)**
 
 配置阿里云物联网套件的产品信息和设备信息。
@@ -279,7 +279,7 @@ if __name__ == '__main__':
 模块功能：腾讯云物联网套件客户端功能,目前的产品节点类型仅支持“设备”，设备认证方式支持“一机一密和“动态注册认证”。
 
 注意：BC25PA平台不支持模块功能。
-  
+
 ##### 配置腾讯云物联网套件的产品信息和设备信息
 
 > **TXyun(productID, devicename, devicePsk, ProductSecret)**
@@ -531,7 +531,7 @@ if __name__ == '__main__':
 模块功能：HTTP客户端的相关功能函数。
 
 注意：BC25PA平台不支持模块功能。
-  
+
 ##### 发送GET请求
 
 > **request.get(url, data, headers,decode,sizeof,ssl_params)**
@@ -786,16 +786,15 @@ Testlog = log.getLogger("TestLog")
 
 ##### 输出debug级别的日志
 
-> **log.debug(tag, msg)**
+> **log.debug(msg)**
 
 输出debug级别的日志。
 
 * 参数
 
-| 参数 | 参数类型 | 说明                         |
-| ---- | -------- | ---------------------------- |
-| tag  | string   | 模块或功能名称，作为日志前缀 |
-| msg  | string   | 可变参数，日志内容           |
+| 参数 | 参数类型 | 说明               |
+| ---- | -------- | ------------------ |
+| msg  | string   | 可变参数，日志内容 |
 
 * 返回值
 
@@ -811,16 +810,15 @@ Testlog.debug("Test message: %d(%s)", 100, "foobar")
 
 ##### 输出info级别的日志
 
-> **log.info(tag,msg)**
+> **log.info(msg)**
 
 输出info级别的日志。
 
 * 参数
 
-| 参数 | 参数类型 | 说明                         |
-| ---- | -------- | ---------------------------- |
-| tag  | string   | 模块或功能名称，作为日志前缀 |
-| msg  | string   | 可变参数，日志内容           |
+| 参数 | 参数类型 | 说明               |
+| ---- | -------- | ------------------ |
+| msg  | string   | 可变参数，日志内容 |
 
 * 返回值
 
@@ -836,16 +834,15 @@ Testlog.info("Test message: %d(%s)", 100, "foobar")
 
 ##### 输出warning级别的日志
 
-> **log.warning(tag,msg)**
+> **log.warning(msg)**
 
 输出warning级别的日志。
 
 * 参数
 
-| 参数 | 参数类型 | 说明                         |
-| ---- | -------- | ---------------------------- |
-| tag  | string   | 模块或功能名称，作为日志前缀 |
-| msg  | string   | 可变参数，日志内容           |
+| 参数 | 参数类型 | 说明               |
+| ---- | -------- | ------------------ |
+| msg  | string   | 可变参数，日志内容 |
 
 * 返回值
 
@@ -861,16 +858,15 @@ Testlog.warning("Test message: %d(%s)", 100, "foobar")
 
 ##### 输出error级别的日志
 
-> **log.error(tag,msg)**
+> **log.error(msg)**
 
 输出error级别的日志。
 
 * 参数
 
-| 参数 | 参数类型 | 说明                         |
-| ---- | -------- | ---------------------------- |
-| tag  | string   | 模块或功能名称，作为日志前缀 |
-| msg  | string   | 可变参数，日志内容           |
+| 参数 | 参数类型 | 说明               |
+| ---- | -------- | ------------------ |
+| msg  | string   | 可变参数，日志内容 |
 
 * 返回值
 
@@ -886,16 +882,15 @@ Testlog.error("Test message: %d(%s)", 100, "foobar")
 
 ##### 输出critical级别的日志
 
-> **log.critical(tag,msg)**
+> **log.critical(msg)**
 
 输出critical级别的日志。
 
 * 参数
 
-| 参数 | 参数类型 | 说明                         |
-| ---- | -------- | ---------------------------- |
-| tag  | string   | 模块或功能名称，作为日志前缀 |
-| msg  | string   | 可变参数，日志内容           |
+| 参数 | 参数类型 | 说明               |
+| ---- | -------- | ------------------ |
+| msg  | string   | 可变参数，日志内容 |
 
 * 返回值
 
@@ -1510,7 +1505,7 @@ if __name__ == '__main__':
 模块功能：该模块用于时间同步。
 
 注意：BC25PA平台不支持模块功能。
-  
+
 ##### 返回当前的ntp服务器
 
 > **ntptime.host**
@@ -1631,7 +1626,7 @@ system.replSetEnable(1)  # 开启交互保护
 
 * 注意
   BC25PA平台不支持模块功能。
-  
+
 ssl加密算法套件支持
 
 |                        算法套件                        |
