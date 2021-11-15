@@ -1254,7 +1254,7 @@ This function reads messages in TEXT mode.
 
 | Parameter | Type | Description                                       |
 | --------- | ---- | ------------------------------------------------- |
-| index     | int  | The index of the message to be read. Range: 0~49. |
+| index     | int  | The index of the message to be read. Range: 0 ~ 49. |
 
 * Return Value
 
@@ -1567,8 +1567,8 @@ The description of the return value for GSM:
 | cid       | Return the cell id of GSM network, 0 means null, range : 0 ~ 65535 |
 | mcc       | Mobile Country Code, 0 ~ 999<br>Note : For modules of the EC100Y/EC600S/EC600N series, the value is expressed in hexadecimal. For example, the decimal number 1120 in the following example is 0x460, indicating the mobile device country code 460. For modules of other models, the value is directly expressed in decimal, such as mobile device country code 460, that's 460 in decimal notation. |
 | mnc       | Mobile Network Code, range : 0 ~ 99                          |
-| lac       | Location Area Code, range : 1~65534                          |
-| arfcn     | Absolute Radio Frequency Channel Number, range : 0~65535     |
+| lac       | Location Area Code, range : 1 ~ 65534                          |
+| arfcn     | Absolute Radio Frequency Channel Number, range : 0 ~ 65535     |
 | bsic      | Base Station Identity Code, range : 0 ~ 255                  |
 | rssi      | On a GSM network, this value represents the received level and describes the received signal strength. 99 indicates unknown or undetected signal. This value is calculated as follows:<br>rssi = RXLEV - 111<br>The unit is dBm, RXLEV range is 0 ~ 63, so the RSSI range is -111 ~ -48 dBm |
 
@@ -1580,7 +1580,7 @@ The description of the return value for UMTS:
 | cid       | Return the Cell identity of UMTS network,  Cell identity = RNC_ID * 65536 + Cell_ID,  the range of Cell identity is 0x0000000 ~ 0xFFFFFFF (28bits), the range of RNC_ID is 0 ~ 4095，the range of Cell_ID is 0 ~ 65535 |
 | lcid      | URA ID, 0 means null, range : 0 ~ 65535                      |
 | mcc       | Mobile Country Code, range : 0 ~ 999                         |
-| mnc       | Mobile Network Code, range : 0 ~99                           |
+| mnc       | Mobile Network Code, range : 0  ~ 99                           |
 | lac       | Location Area Code, range : 1 ~ 65534                        |
 | uarfcn    | Absolute Radio Frequency Channel Number, range : 0 ~ 65535   |
 | psc       | Base Station Identity Code, range : 0 ~ 255                  |
@@ -1591,9 +1591,9 @@ The description of the return value for LTE:
 | Parameter | Description                                                  |
 | --------- | ------------------------------------------------------------ |
 | flag      | 0: present，1: inter，2: intra                               |
-| cid       | Return the Cell identity of LTE network,  Cell identity = RNC_ID * 65536 + Cell_ID,  the range of Cell identity is 0x0000000~0xFFFFFFF (28bits), the range of RNC_ID is 0~4095，the range of Cell_ID is 0~65535 |
+| cid       | Return the Cell identity of LTE network,  Cell identity = RNC_ID * 65536 + Cell_ID,  the range of Cell identity is 0x0000000 ~ 0xFFFFFFF (28bits), the range of RNC_ID is 0 ~ 4095，the range of Cell_ID is 0 ~ 65535 |
 | mcc       | Mobile Country Code, range : 0 ~ 999                         |
-| mnc       | Mobile Network Code, range : 0 ~99                           |
+| mnc       | Mobile Network Code, range : 0  ~ 99                           |
 | pci       | Physical Cell Identifier，range : 0 ~ 503                    |
 | tac       | Tracing area code,  range : 0 ~ 65535                        |
 | earfcn    | Extended Absolute Radio Frequency Channel Number, range : 0-65535. |
@@ -1750,7 +1750,7 @@ GW list：
 
 `rssi` : On a GSM/WCDMA network, this value represents the received level and describes the received signal strength. 99 indicates unknown or undetected signal. This value is calculated as follows:<br>rssi = RXLEV - 111<br>The unit is dBm, RXLEV range is 0 ~ 63, so the range of rssi  is -111 ~ -48 dBm
 
-`bitErrorRate` : Error Rate(BER), range : 0 ~7, 99 indicates unknown or undetected signal
+`bitErrorRate` : Error Rate(BER), range : 0  ~ 7, 99 indicates unknown or undetected signal
 
 `rscp` : Received Signal Code Power, range : -121 ~ -25 dBm, 255 indicates unknown or undetected signal
 
@@ -2918,7 +2918,7 @@ Set the way of digital playback：
 Speaking rate setting：
 
 ```python
-#Format：[s*] (*=0~10)
+#Format：[s*] (*=0 ~ 10)
 #The TTS engine plays the voice at the default speech rate of 5
 >>> tts.play(1,1,2, '12345')
 0
@@ -2937,7 +2937,7 @@ Speaking rate setting：
 Intonation setting：
 
 ```python
-#Format：[t*] (*=0~10)
+#Format：[t*] (*=0 ~ 10)
 #The TTS engine plays the voice in the default intonation 5
 >>> tts.play(1,1,2, '12345')
 0
@@ -2957,7 +2957,7 @@ Pinyin for Chinese Characters：
 
 ```python
 #Format：[=*] (*=Pinyin)
-#Chinese characters: After the voice call, a number 1~5 are used to represent the 5 tones of even tone, rising tone, entering tong, falling tone and lightly tone respectively.
+#Chinese characters: After the voice call, a number 1 ~ 5 are used to represent the 5 tones of even tone, rising tone, entering tong, falling tone and lightly tone respectively.
 >>> tts.play(1,1,2, '乐[=le4]')
 0
 
@@ -4687,7 +4687,7 @@ PROJECT_VERSION = "1.0.0"
         UART2 – MAIN PORT
         UART3 – USB CDC PORT
  * Parameter2: Baud rate
- * Parameter3: data bits  （5~8）
+ * Parameter3: data bits  （5 ~ 8）
  * Parameter4: Parity (0：NONE  1：EVEN  2：ODD) 
  * Parameter5：stop bits (1–2) 
  * Parameter6：flow control (0: FC_NONE  1：FC_HW) 
@@ -4890,7 +4890,7 @@ Timer_Log = log.getLogger("Timer")
 
 num = 0
 state = 1
-# Note: EC100Y-CN module supports Timer0~Timer3
+# Note: EC100Y-CN module supports Timer0 ~ Timer3
 t = Timer(Timer.Timer1)
 
 # Create an execution function and pass in the timer instance
@@ -5062,12 +5062,12 @@ It sets and gets RTC time. When there is no parameter, it gets the time, it sets
 | Parameter   | Type | Description                                                  |
 | ----------- | ---- | ------------------------------------------------------------ |
 | year        | int  | Year                                                         |
-| month       | int  | Month, range: 1~12.                                          |
-| day         | int  | Day, range:1~31.                                             |
+| month       | int  | Month, range: 1 ~ 12.                                          |
+| day         | int  | Day, range:1 ~ 31.                                             |
 | week        | int  | Week, when setting the time, this parameter does not work, reserved; when getting the time, this parameter is valid. |
-| hour        | int  | volume_up hour, range: 0~23.                                 |
-| minute      | int  | *content_copy* minute, range:0~59.                           |
-| second      | int  | Second, range: 0~59.                                         |
+| hour        | int  | volume_up hour, range: 0 ~ 23.                                 |
+| minute      | int  | *content_copy* minute, range:0 ~ 59.                           |
+| second      | int  | Second, range: 0 ~ 59.                                         |
 | microsecond | int  | *share* microsecond, reserved, set to 0 when setting the time. |
 
 * Return Value
@@ -9336,9 +9336,9 @@ Note: The BC25PA platform does not support this module function.
 | :-------- | :--- | ------------------------------------------------------------ |
 | uartn     | int  | UARTn, Range: 0-3: <br />0-UART0 - DEBUG PORT<br />1-UART1 – BT PORT<br />2-UART2 – MAIN PORT<br />3-UART3 – USB CDC PORT |
 | baudrate  | int  | Baud rate. The common baud rate, such as 4800, 9600, 19200, 38400, 57600, 115200, 230400 and so on, are supported. |
-| databits  | int  | Data bit (5~8)                                               |
+| databits  | int  | Data bit (5 ~ 8)                                               |
 | parity    | int  | Parity (0 – NONE，1 – EVEN，2 - ODD)                         |
-| stopbits  | int  | Stop bit (1~2)                                               |
+| stopbits  | int  | Stop bit (1 ~ 2)                                               |
 | flowctl   | int  | Hardware flow control (0 – FC_NONE， 1 – FC_HW)              |
 
 

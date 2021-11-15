@@ -336,7 +336,7 @@ if __name__ == '__main__':
 
 -3 – 密钥长度错误，必须为16字节
 
--4 – 超时时长超出范围，支持的范围（1~300）s
+-4 – 超时时长超出范围，支持的范围（1 ~ 300）s
 
 -5 – 指定的PDP网络未连接，请确认PDP是否正确
 
@@ -708,7 +708,7 @@ sim卡解锁。当多次错误输入 PIN/PIN2 码后，SIM 卡状态为请求 PU
 | 参数     | 参数类型 | 参数说明                                                     |
 | -------- | -------- | ------------------------------------------------------------ |
 | storage  | int      | 需要读取电话号码记录的电话本存储位置，可选参数如下：<br/>0 – DC，1 – EN，2 – FD，3 – LD，4 – MC，5 – ME，6 – MT，7 – ON，<br/>8 – RC，9 – SM，10 – AP，11 – MBDN，12 – MN，13 – SDN，14 – ICI，15 - OCI |
-| index    | int      | 需要写入电话号码记录的在电话簿中的编号，范围1~500            |
+| index    | int      | 需要写入电话号码记录的在电话簿中的编号，范围1 ~ 500            |
 | username | string   | 电话号码的用户名，长度范围不超过30字节，暂不支持中文名       |
 | number   | string   | 电话号码，最大长度不超过20字节                               |
 
@@ -1436,7 +1436,7 @@ if __name__ == '__main__':
 
 | 参数  | 参数类型 | 参数说明                     |
 | ----- | -------- | ---------------------------- |
-| index | int      | 需要获取短信的索引，范围0~49 |
+| index | int      | 需要获取短信的索引，范围0 ~ 49 |
 
 * 返回值
 
@@ -1708,7 +1708,7 @@ sms.setCallback(cb)
 
 成功返回整型的csq信号强度值，失败返回整型值-1，返回值为99表示异常；
 
-信号强度值范围0~31，值越大表示信号强度越好。
+信号强度值范围0 ~ 31，值越大表示信号强度越好。
 
 * 示例
 
@@ -1768,7 +1768,7 @@ LTE网络系统返回值说明
 | 参数   | 参数意义                                                     |
 | ------ | ------------------------------------------------------------ |
 | flag   | 返回 0 - 2， 0：present，1：inter，2：intra                  |
-| cid    | 返回LTE网络下的 Cell identity 信息，Cell identity = RNC_ID * 65536 + Cell_ID，Cell identity范围 0x0000000~0xFFFFFFF（注意这里是28bits）；其中RNC_ID的范围是0 ~ 4095，Cell_ID的范围是0 ~ 65535 |
+| cid    | 返回LTE网络下的 Cell identity 信息，Cell identity = RNC_ID * 65536 + Cell_ID，Cell identity范围 0x0000000 ~ 0xFFFFFFF（注意这里是28bits）；其中RNC_ID的范围是0 ~ 4095，Cell_ID的范围是0 ~ 65535 |
 | mcc    | 移动设备国家代码，范围 0 ~ 999                               |
 | mnc    | 移动设备网络代码，范围 0 ~ 99                                |
 | pci    | 物理层小区标识号，0 ~ 503                                    |
@@ -1846,7 +1846,7 @@ LTE网络系统返回值说明
 
 | 参数    | 参数类型 | 参数说明                             |
 | ------- | -------- | ------------------------------------ |
-| mode    | int      | 网络制式，0~18，详见上述网络制式表格 |
+| mode    | int      | 网络制式，0 ~ 18，详见上述网络制式表格 |
 | roaming | int      | 漫游开关(0：关闭， 1：开启)          |
 
 * 返回值
@@ -2430,7 +2430,7 @@ if __name__ == '__main__':
             #     的拨号接口和获取拨号结果接口；
             # （4）如果手动拨号成功了，但是开机拨号失败，那么可能是默认的apn配置表中没有与当前SIM卡匹配
             #     的apn，用户可通过 sim 模块的 sim.getImsi() 来获取 IMSI 码，确认IMSI的第四和第五			  
-            #     位字符组成的数字是否在 01~13 的范围内，如果不在，说明当前默认apn配置表中无此类SIM卡对
+            #     位字符组成的数字是否在 01 ~ 13 的范围内，如果不在，说明当前默认apn配置表中无此类SIM卡对
             #     应的apn 信息，这种情况下，用户如果希望开机拨号成功，可以使用 dataCall.setApn(...)
             #     接口来设置保存用户自己的apn信息，然后开机重启，就会使用用户设置的apn来进行开机拨号；
             # （5）如果手动拨号也失败，那么请联系我们的FAE反馈问题，最好将相应SIM卡信息，比如哪个运营商
@@ -2775,7 +2775,7 @@ download_list = [{'url': 'http://www.example.com/app.py', 'file_name': '/usr/app
 
 > **tts.play(priority, breakin, mode, str)**
 
-语音播放，支持优先级0~4，数字越大优先级越高，每个优先级组可同时最多加入10个播放任务；播放策略说明如下：
+语音播放，支持优先级0 ~ 4，数字越大优先级越高，每个优先级组可同时最多加入10个播放任务；播放策略说明如下：
 
 1. 如果当前正在播放任务A，并且允许被打断，此时有高优先级播放任务B，那么会打断当前低优先级播放任务A，直接播放高优先级任务B；
 
@@ -2793,7 +2793,7 @@ download_list = [{'url': 'http://www.example.com/app.py', 'file_name': '/usr/app
 
 | 参数     | 参数类型 | 参数说明                                                     |
 | -------- | -------- | ------------------------------------------------------------ |
-| priority | int      | 播放优先级，支持优先级0~4，数值越大优先级越高                |
+| priority | int      | 播放优先级，支持优先级0 ~ 4，数值越大优先级越高                |
 | breakin  | int      | 打断模式，0表示不允许被打断，1表示允许被打断                 |
 | mode     | int      | 低四位：编码模式，1 - UNICODE16(UTF-16大端模式)，2 - UTF-8，3 - UNICODE16(UTF-16小端模式)<br>高四位：WTTS模式（仅600N系列支持VOLTE的版本支持）, wtts_enable - wtts总开关，wtts_ul_enable - wtts上行使能， wtts_dl_enable - wtts下行使能 |
 | str      | string   | 待播放字符串                                                 |
@@ -2907,7 +2907,7 @@ tts播放文本标注说明：
 语速设置：
 
 ```python
-#格式：[s*] (*=0~10)
+#格式：[s*] (*=0 ~ 10)
 #TTS引擎以默认语速5播放语音
 >>> tts.play(1,1,2, '12345')
 0
@@ -2926,7 +2926,7 @@ tts播放文本标注说明：
 语调设置：
 
 ```python
-#格式：[t*] (*=0~10)
+#格式：[t*] (*=0 ~ 10)
 #TTS引擎以默认语调5播放语音
 >>> tts.play(1,1,2, '12345')
 0
@@ -2946,7 +2946,7 @@ tts播放文本标注说明：
 
 ```python
 #格式：[=*] (*=拼音)
-#汉字：声调用后接一位数字 1~5 分别表示阴平、阳平、上声、去声和轻声 5 个声调。
+#汉字：声调用后接一位数字 1 ~ 5 分别表示阴平、阳平、上声、去声和轻声 5 个声调。
 >>> tts.play(1,1,2, '乐[=le4]')
 0
 
@@ -3034,7 +3034,7 @@ tts.play(1, 0, 2, 'QuecPython')
 
 > **tts.getVolume()**
 
-获取当前播放音量大小，音量值为0~9，0表示静音，默认值4。
+获取当前播放音量大小，音量值为0 ~ 9，0表示静音，默认值4。
 
 * 参数
 
@@ -3063,7 +3063,7 @@ tts.play(1, 0, 2, 'QuecPython')
 
 | 参数 | 参数类型 | 参数说明                       |
 | ---- | -------- | ------------------------------ |
-| vol  | int      | 音量值，音量值为0~9，0表示静音 |
+| vol  | int      | 音量值，音量值为0 ~ 9，0表示静音 |
 
 * 返回值
 
@@ -3082,7 +3082,7 @@ tts.play(1, 0, 2, 'QuecPython')
 
 > **tts.getSpeed()**
 
-获取当前播放速度，速度值为0~9，值越大，速度越快，默认值4。
+获取当前播放速度，速度值为0 ~ 9，值越大，速度越快，默认值4。
 
 * 参数
 
@@ -3111,7 +3111,7 @@ tts.play(1, 0, 2, 'QuecPython')
 
 | 参数  | 参数类型 | 参数说明                              |
 | ----- | -------- | ------------------------------------- |
-| speed | int      | 速度值，速度值为0~9，值越大，速度越快 |
+| speed | int      | 速度值，速度值为0 ~ 9，值越大，速度越快 |
 
 * 返回值
 
@@ -3262,13 +3262,13 @@ if __name__ == '__main__':
 
 > **aud.play(priority, breakin, filename)**
 
-音频文件播放，支持mp3、amr和wav格式文件播放。支持优先级0~4，数字越大优先级越高，每个优先级组可同时最多加入10个播放任务，与TTS播放共用同一个播放队列。
+音频文件播放，支持mp3、amr和wav格式文件播放。支持优先级0 ~ 4，数字越大优先级越高，每个优先级组可同时最多加入10个播放任务，与TTS播放共用同一个播放队列。
 
 * 参数
 
 | 参数     | 参数类型 | 参数说明                                      |
 | -------- | -------- | --------------------------------------------- |
-| priority | int      | 播放优先级，支持优先级0~4，数值越大优先级越高 |
+| priority | int      | 播放优先级，支持优先级0 ~ 4，数值越大优先级越高 |
 | breakin  | int      | 打断模式，0表示不允许被打断，1表示允许被打断  |
 | filename | string   | 待播放的文件名称，包含文件存放路径            |
 
@@ -3417,7 +3417,7 @@ aud.play(1, 0, 'U:/test.mp3')
 
 | 参数 | 参数类型 | 参数说明                                   |
 | ---- | -------- | ------------------------------------------ |
-| vol  | int      | 音量等级，范围（1~11），数值越大，音量越大 |
+| vol  | int      | 音量等级，范围（1 ~ 11），数值越大，音量越大 |
 
 * 返回值
 
@@ -4207,13 +4207,13 @@ PROJECT_VERSION = "1.0.0"
 
 '''
 * 参数1：PWM号
-        注：EC100YCN平台，支持PWM0~PWM3，对应引脚如下：
+        注：EC100YCN平台，支持PWM0 ~ PWM3，对应引脚如下：
         PWM0 – 引脚号19
         PWM1 – 引脚号18
         PWM2 – 引脚号23
         PWM3 – 引脚号22
 
-        注：EC600SCN平台，支持PWM0~PWM3，对应引脚如下：
+        注：EC600SCN平台，支持PWM0 ~ PWM3，对应引脚如下：
         PWM0 – 引脚号52
         PWM1 – 引脚号53
         PWM2 – 引脚号70
@@ -4802,9 +4802,9 @@ if __name__ == '__main__':
 | :------- | :--- | ------------------------------------------------------------ |
 | UARTn    | int  | UARTn作用如下：<br />UART0 - DEBUG PORT<br />UART1 – BT PORT<br />UART2 – MAIN PORT<br />UART3 – USB CDC PORT |
 | buadrate | int  | 波特率，常用波特率都支持，如4800、9600、19200、38400、57600、115200、230400等 |
-| databits | int  | 数据位（5~8），展锐平台当前仅支持8位                         |
+| databits | int  | 数据位（5 ~ 8），展锐平台当前仅支持8位                         |
 | parity   | int  | 奇偶校验（0 – NONE，1 – EVEN，2 - ODD）                      |
-| stopbits | int  | 停止位（1~2）                                                |
+| stopbits | int  | 停止位（1 ~ 2）                                                |
 | flowctl  | int  | 硬件控制流（0 – FC_NONE， 1 – FC_HW）                        |
 
 - 引脚对应关系
@@ -4984,9 +4984,9 @@ PROJECT_VERSION = "1.0.0"
         UART2 – MAIN PORT
         UART3 – USB CDC PORT
  * 参数2：波特率
- * 参数3：data bits  （5~8）
+ * 参数3：data bits  （5 ~ 8）
  * 参数4：Parity  （0：NONE  1：EVEN  2：ODD）
- * 参数5：stop bits （1~2）
+ * 参数5：stop bits （1 ~ 2）
  * 参数6：flow control （0: FC_NONE  1：FC_HW）
 '''
 
@@ -5098,7 +5098,7 @@ PS:使用该定时器时需注意：定时器0-3，每个在同一时间内只�
 
 | 参数   | 类型 | 说明                                                         |
 | ------ | ---- | ------------------------------------------------------------ |
-| Timern | int  | 定时器号<br />支持定时器Timer0~Timer3（使用该定时器时需注意：定时器0-3，每个在同一时间内只能执行一件任务，且多个对象不可使用同一个定时器。） |
+| Timern | int  | 定时器号<br />支持定时器Timer0 ~ Timer3（使用该定时器时需注意：定时器0-3，每个在同一时间内只能执行一件任务，且多个对象不可使用同一个定时器。） |
 
 * 示例
 
@@ -5187,7 +5187,7 @@ Timer_Log = log.getLogger("Timer")
 
 num = 0
 state = 1
-# 注：EC100YCN支持定时器Timer0~Timer3
+# 注：EC100YCN支持定时器Timer0 ~ Timer3
 t = Timer(Timer.Timer1)
 
 # 创建一个执行函数，并将timer实例传入
@@ -5391,12 +5391,12 @@ if __name__ == '__main__':
 | 参数        | 类型 | 说明                                                         |
 | ----------- | ---- | ------------------------------------------------------------ |
 | year        | int  | 年                                                           |
-| month       | int  | 月，范围1~12                                                 |
-| day         | int  | 日，范围1~31                                                 |
+| month       | int  | 月，范围1 ~ 12                                                 |
+| day         | int  | 日，范围1 ~ 31                                                 |
 | week        | int  | 星期，范围0 ~ 6，其中0表示周日，1 ~ 6分别表示周一到周六；设置时间时，该参数不起作用，保留；获取时间时该参数有效 |
-| hour        | int  | 时，范围0~23                                                 |
-| minute      | int  | 分，范围0~59                                                 |
-| second      | int  | 秒，范围0~59                                                 |
+| hour        | int  | 时，范围0 ~ 23                                                 |
+| minute      | int  | 分，范围0 ~ 59                                                 |
+| second      | int  | 秒，范围0 ~ 59                                                 |
 | microsecond | int  | 微秒，保留参数，暂未使用，设置时间时该参数写0即可            |
 
 * 返回值
@@ -6681,7 +6681,7 @@ wifi list:(2, [('F0:B4:29:86:95:C7': -79),('44:00:4D:D5:26:E0', -92)])
 
 * 功能：
 
-  开始 wifiScan 扫描功能，扫描结束后直接返回扫描结果，由于是同步接口，所以扫描未结束时，程序会阻塞在该接口中，阻塞时间一般在0~2秒。
+  开始 wifiScan 扫描功能，扫描结束后直接返回扫描结果，由于是同步接口，所以扫描未结束时，程序会阻塞在该接口中，阻塞时间一般在0 ~ 2秒。
 
 * 参数：
 
@@ -6856,7 +6856,7 @@ def ble_callback(args):
 |    1     |    2     | args[0] ：event_id，表示 BT/BLE stop<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败 |
 |    16    |    4     | args[0] ：event_id，表示 BLE connect<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败<br/>args[2] ：connect_id<br/>args[3] ：addr，BT/BLE address，bytearray类型数据 |
 |    17    |    4     | args[0] ：event_id，表示 BLE disconnect<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败<br/>args[2] ：connect_id，<br/>args[3] ：addr，BT/BLE address，bytearray类型数据 |
-|    18    |    7     | args[0] ：event_id，表示 BLE update connection parameter<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败<br/>args[2] ：connect_id<br/>args[3] ：max_interval，最大的间隔，间隔：1.25ms，取值范围：6-3200，时间范围：7.5ms\~4s<br/>args[4] ：min_interval，最小的间隔，间隔：1.25ms，取值范围：6-3200，时间范围：7.5ms\~4s<br/>args[5] ：latency，从机忽略连接状态事件的时间。需满足：（1+latecy)\*max_interval\*2\*1.25<timeout\*10<br/>args[6] ：timeout，没有交互，超时断开时间，间隔：10ms，取值范围：10-3200，时间范围：100ms~32s |
+|    18    |    7     | args[0] ：event_id，表示 BLE update connection parameter<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败<br/>args[2] ：connect_id<br/>args[3] ：max_interval，最大的间隔，间隔：1.25ms，取值范围：6-3200，时间范围：7.5ms\ ~ 4s<br/>args[4] ：min_interval，最小的间隔，间隔：1.25ms，取值范围：6-3200，时间范围：7.5ms\ ~ 4s<br/>args[5] ：latency，从机忽略连接状态事件的时间。需满足：（1+latecy)\*max_interval\*2\*1.25<timeout\*10<br/>args[6] ：timeout，没有交互，超时断开时间，间隔：10ms，取值范围：10-3200，时间范围：100ms ~ 32s |
 |    20    |    4     | args[0] ：event_id，表示 BLE connection mtu<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败<br/>args[2] ：handle<br/>args[3] ：mtu值 |
 |    21    |    7     | args[0] ：event_id，表示 BLE server : when ble client write characteristic value or descriptor,server get the notice<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败<br/>args[2] ：data_len，获取数据的长度<br/>args[3] ：data，一个数组，存放获取的数据<br/>args[4] ：attr_handle，属性句柄，整型值<br/>args[5] ：short_uuid，整型值<br/>args[6] ：long_uuid，一个16字节数组，存放长UUID |
 |    22    |    7     | args[0] ：event_id，表示 server : when ble client read characteristic value or descriptor,server get the notice<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败<br/>args[2] ：data_len，获取数据的长度<br/>args[3] ：data，一个数组，存放获取的数据<br/>args[4] ：attr_handle，属性句柄，整型值<br/>args[5] ：short_uuid，整型值<br/>args[6] ：long_uuid，一个16字节数组，存放长UUID |
@@ -7941,7 +7941,7 @@ def ble_callback(args):
 |    1     |    2     | args[0] ：event_id，表示 BT/BLE stop<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败 |
 |    16    |    4     | args[0] ：event_id，表示 BLE connect<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败<br/>args[2] ：connect_id<br/>args[3] ：addr，BT/BLE address，bytearray类型数据 |
 |    17    |    4     | args[0] ：event_id，表示 BLE disconnect<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败<br/>args[2] ：connect_id，<br/>args[3] ：addr，BT/BLE address，bytearray类型数据 |
-|    18    |    7     | args[0] ：event_id，表示 BLE update connection parameter<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败<br/>args[2] ：connect_id<br/>args[3] ：max_interval，最大的间隔，间隔：1.25ms，取值范围：6-3200，时间范围：7.5ms~4s<br/>args[4] ：min_interval，最小的间隔，间隔：1.25ms，取值范围：6-3200，时间范围：7.5ms~4s<br/>args[5] ：latency，从机忽略连接状态事件的时间。需满足：（1+latecy)\*max_interval\*2\*1.25<timeout\*10<br/>args[6] ：timeout，没有交互，超时断开时间，间隔：10ms，取值范围：10-3200，时间范围：100ms~32s |
+|    18    |    7     | args[0] ：event_id，表示 BLE update connection parameter<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败<br/>args[2] ：connect_id<br/>args[3] ：max_interval，最大的间隔，间隔：1.25ms，取值范围：6-3200，时间范围：7.5ms ~ 4s<br/>args[4] ：min_interval，最小的间隔，间隔：1.25ms，取值范围：6-3200，时间范围：7.5ms ~ 4s<br/>args[5] ：latency，从机忽略连接状态事件的时间。需满足：（1+latecy)\*max_interval\*2\*1.25<timeout\*10<br/>args[6] ：timeout，没有交互，超时断开时间，间隔：10ms，取值范围：10-3200，时间范围：100ms ~ 32s |
 |    19    |    9     | args[0] ：event_id，表示 BLE scan report<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败<br/>args[2] ：event_type<br/>args[3] ：扫描到的设备名称<br/>args[4] ：设备地址类型<br/>args[5] ：设备地址，bytearray类型数据<br/>args[6] ：rssi，信号强度<br/>args[7] ：data_len，扫描的原始数据长度<br/>args[8] ：data，扫描的原始数据 |
 |    20    |    4     | args[0] ：event_id，表示 BLE connection mtu<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败<br/>args[2] ：handle<br/>args[3] ：mtu值 |
 |    23    |    4     | args[0] ：event_id，表示 client recieve notification，即接收通知<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败<br/>args[2] ：data_len，数据长度<br/>args[3] ：data，包含句柄等数据的原始数据，数据格式及解析见最后的综合示例程序 |
@@ -9689,9 +9689,9 @@ camCaputre.callback(callback)
 | :------- | :--- | ------------------------------------------------------------ |
 | uartn    | int  | UARTn范围为0-3：<br />0-UART0 - DEBUG PORT<br />1-UART1 – BT PORT<br />2-UART2 – MAIN PORT<br />3-UART3 – USB CDC PORT |
 | baudrate | int  | 波特率，常用波特率都支持，如4800、9600、19200、38400、57600、115200、230400等 |
-| databits | int  | 数据位（5~8）                                                |
+| databits | int  | 数据位（5 ~ 8）                                                |
 | parity   | int  | 奇偶校验（0 – NONE，1 – EVEN，2 - ODD）                      |
-| stopbits | int  | 停止位（1~2）                                                |
+| stopbits | int  | 停止位（1 ~ 2）                                                |
 | flowctl  | int  | 硬件控制流（0 – FC_NONE， 1 – FC_HW）                        |
 
 
@@ -9795,7 +9795,7 @@ GPS模块定位可见卫星数量
 
 - **返回值**
 
-定位方位角，范围：0~359，以真北为参考平面。
+定位方位角，范围：0 ~ 359，以真北为参考平面。
 
 
 
