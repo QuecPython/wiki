@@ -1577,7 +1577,7 @@ The description of the return value for UMTS:
 | Parameter | Description                                                  |
 | --------- | ------------------------------------------------------------ |
 | flag      | 0: present，1: inter，2: intra                               |
-| cid       | Return the Cell identity of UMTS network,  Cell identity = RNC_ID * 65536 + Cell_ID,  the range of Cell identity is 0x0000000~0xFFFFFFF (28bits), the range of RNC_ID is 0~4095，the range of Cell_ID is 0~65535 |
+| cid       | Return the Cell identity of UMTS network,  Cell identity = RNC_ID * 65536 + Cell_ID,  the range of Cell identity is 0x0000000 ~ 0xFFFFFFF (28bits), the range of RNC_ID is 0 ~ 4095，the range of Cell_ID is 0 ~ 65535 |
 | lcid      | URA ID, 0 means null, range : 0 ~ 65535                      |
 | mcc       | Mobile Country Code, range : 0 ~ 999                         |
 | mnc       | Mobile Network Code, range : 0 ~99                           |

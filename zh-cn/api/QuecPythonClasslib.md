@@ -1754,7 +1754,7 @@ UMTS网络系统返回值说明
 | 参数   | 参数意义                                                     |
 | ------ | ------------------------------------------------------------ |
 | flag   | 返回 0 - 2， 0：present，1：inter，2：intra                  |
-| cid    | 返回UMTS网络下的 Cell identity 信息，Cell identity = RNC_ID * 65536 + Cell_ID，Cell identity范围 0x0000000~0xFFFFFFF（注意这里是28bits）；其中RNC_ID的范围是0~4095，Cell_ID的范围是0 ~ 65535 |
+| cid    | 返回UMTS网络下的 Cell identity 信息，Cell identity = RNC_ID * 65536 + Cell_ID，Cell identity范围 0x0000000 ~ 0xFFFFFFF（注意这里是28bits）；其中RNC_ID的范围是0 ~ 4095，Cell_ID的范围是0 ~ 65535 |
 | lcid   | URA ID，范围 0 ~ 65535，0表示该信息不存在                    |
 | mcc    | 移动设备国家代码，范围 0 ~ 999                               |
 | mnc    | 移动设备网络代码，范围 0 ~ 99                                |
