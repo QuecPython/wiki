@@ -962,6 +962,7 @@ This function sets DTMF.
 ```
 
 
+
 ##### Set FWmode
 
 > **voiceCall.setFw(reason, fwmode, phonenum)**
@@ -985,6 +986,69 @@ Call Forwarding Number and Conditions Control
 * Example
 
 NA
+
+
+
+##### switch voice channel
+
+> **voiceCall.setChannel(device)**
+
+Set the voice output channel during a call. The default channel is channel 0.
+
+* Parameter
+
+| Parameter | Type | Description                                                  |
+| --------- | ---- | ------------------------------------------------------------ |
+| device    | int  | Output channel<br/>0 - handset<br/>1 - earphone<br/>2 - speaker |
+
+* Return Value
+
+0  Successful execution.
+
+-1  Failed execution.
+
+* Example
+
+```python
+>>> voiceCall.setChannel(2) # Switch to the speaker channel
+0
+```
+
+
+
+##### Get Volume
+
+> **voiceCall.getVolume()**
+
+Get the current volume of the voice.
+
+* Parameter
+
+  None
+
+* Return Value
+
+  return volume of the voice.
+
+
+
+##### Set Volume
+
+> **voiceCall.setVolume(vol)**
+
+Set the volume of the voice.
+
+* Parameter
+
+| Parameter | Type | Description                                                  |
+| --------- | ---- | ------------------------------------------------------------ |
+| vol       | int  | Volume. Range : 0–11. The higher the number, the higher the volume. |
+
+* Return Value
+
+  0  Successful execution.
+
+  -1  Failed execution.
 
 
 
