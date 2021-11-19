@@ -4903,7 +4903,7 @@ Return 0 if the execution is successful, otherwise return -1.
 //Note when using this timer: Timer 0–3, each can only perform one task at the same time, and multiple objects cannot use the same timer.
 >>> def fun(args):
         print(“###timer callback function###”)
->>> timer.start(period=1000, mode=timer.PERIODIC, callback=fun)
+>>> timer1.start(period=1000, mode=timer1.PERIODIC, callback=fun)
 0
 ###timer callback function###
 ###timer callback function###
