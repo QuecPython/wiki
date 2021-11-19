@@ -2622,7 +2622,10 @@ Note: The BC25PA platform does not support this module function.
 
 * Parameter 
 
-`device` : Device type. 0 - handset, 1 - earphone, 2 - speaker.
+
+| Parameter | Parameter Type | Description                                                  |
+| --------- | -------------- | ------------------------------------------------------------ |
+| device    | int            | Output channel<br/>0 - handset<br/>1 - earphone<br/>2 - speaker |
 
 * Example
 
