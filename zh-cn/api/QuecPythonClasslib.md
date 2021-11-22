@@ -960,6 +960,7 @@ sim.setCallback(cb)
 ```
 
 
+
 ##### 设置FWmode
 
 > **voiceCall.setFw(reason, fwmode, phonenum)**
@@ -981,6 +982,66 @@ sim.setCallback(cb)
 示例
 
 无
+
+
+
+##### 切换语音通道
+
+> **voiceCall.setChannel(device)**
+
+设置通话时的声音输出通道，默认是通道0，即听筒。
+
+* 参数
+
+| 参数   | 参数类型 | 参数说明                                        |
+| ------ | -------- | ----------------------------------------------- |
+| device | int      | 输出通道<br/>0 - 听筒<br/>1 - 耳机<br/>2 - 喇叭 |
+
+* 返回值
+
+  设置成功返回整型0，设置失败返回整型-1。
+
+* 示例
+
+```python
+>>> voiceCall.setChannel(2) #切换到喇叭通道
+0
+```
+
+
+
+##### 获取音量大小
+
+> **voiceCall.getVolume()**
+
+获取电话当前音量大小。
+
+* 参数
+
+  无
+
+* 返回值
+
+  返回整型音量值。
+
+
+
+##### 设置音量大小
+
+> **voiceCall.setVolume(vol)**
+
+设置电话音量大小。
+
+* 参数
+
+| 参数 | 参数类型 | 参数说明                                     |
+| ---- | -------- | -------------------------------------------- |
+| vol  | int      | 音量等级，范围（0 ~ 11），数值越大，音量越大 |
+
+* 返回值
+
+  设置成功返回整型0，失败返回整型-1。
+
 
 
 
@@ -2744,7 +2805,9 @@ download_list = [{'url': 'http://www.example.com/app.py', 'file_name': '/usr/app
 
 * 参数
 
-  `device` ：设备类型，0 - 听筒，1 - 耳机，2 - 喇叭。
+| 参数   | 参数类型 | 参数说明                                       |
+| ------ | -------- | ---------------------------------------------- |
+| device | int      | 输出通道<br>0 - 听筒<br/>1 - 耳机<br/>2 - 喇叭 |
 
 * 示例
 
@@ -5133,7 +5196,7 @@ PS:使用该定时器时需注意：定时器0-3，每个在同一时间内只�
 // 使用该定时器时需注意：定时器0-3，每个在同一时间内只能执行一件任务，且多个对象不可使用同一个定时器。
 >>> def fun(args):
         print(“###timer callback function###”)
->>> timer.start(period=1000, mode=timer.PERIODIC, callback=fun)
+>>> timer1.start(period=1000, mode=timer1.PERIODIC, callback=fun)
 0
 ###timer callback function###
 ###timer callback function###
