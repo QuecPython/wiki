@@ -598,6 +598,15 @@ if __name__ == '__main__':
 | decode  | bool   | （可选参数）True 将响应的内容解码返回str类型  False 关闭解码返回bytes类型 默认True |      |
 | sizeof  | int    | （可选参数）读取缓冲区的数据块大小 默认255 个字节 数值越大读取的速度越快（如果设置过大可能就会有丢失数据的可能性，建议255-4096） |      |
 
+* Content-Type（内容类型）说明
+
+  当使用POST方法提交数据时，对于提交的数据主要有如下四种形式：
+
+  - application/x-www-form-urlencoded：form表单数据被编码为key/value格式发送到服务器（表单默认的提交数据的格式）
+  - multipart/form-data ： 需要在表单中进行文件上传时，就需要使用该格式
+  - application/json： JSON数据格式
+  - application/octet-stream ： 二进制流数据（如常见的文件下载）
+
 * 示例
 
 ```python
@@ -633,6 +642,40 @@ if __name__ == '__main__':
         http_log.info(response.json())
     else:
         http_log.info('Network connection failed! stagecode = {}, subcode = {}'.format(stagecode, subcode))
+```
+
+##### 文件上传
+
+> **request.post(url, files, headers)**
+
+使用POST方法完成文件上传到FTP，目前仅支持以 “multipart/form-data” 形式上传，headers默认为“multipart/form-data”。
+
+* 参数
+
+| 参数    | 类型   | 说明                                                         |
+| ------- | ------ | ------------------------------------------------------------ |
+| url     | string | 服务地址                                                     |
+| files   | dict   | 该dict类型参数里面需包含“filepath(设备文件路径)”和“filename(文件名)” |
+| headers | dict   | （可选参数）请求头，默认为None，使用上传文件时默认Content-Type为“multipart/form-data”，目前仅支持“multipart/form-data” |
+
+* 示例
+
+```python
+import request
+
+url = ''   # FTP服务地址，需要输入已存在的文件路径，例如：http://upload.file.com/folder
+files = {"filepath":"usr/upload.json", "filename":"upload.json"}
+
+response = request.post(url, files=files)
+
+'''
+也可手动传入headers,但目前上传文件仅支持"multipart/form-data",示例如下
+
+header = {'Content-Type': 'multipart/form-data', 'charset': 'UTF-8'}
+response = post(url, files=files, headers=header)
+print(response.status_code)
+'''
+print(response.status_code)  # 查看状态码
 ```
 
 ##### 发送PUT请求
@@ -694,8 +737,6 @@ print(response.headers)
 | response.text    | 返回文本方式响应内容的生成器对象                       |
 | response.json()  | 返回响应的json编码内容并转为dict类型                   |
 
-
-
 **request使用示例**
 
 ```python
@@ -723,10 +764,24 @@ if __name__ == '__main__':
     stagecode, subcode = checknet.wait_network_connected(30)
     if stagecode == 3 and subcode == 1:
         http_log.info('Network connection successful!')
-
+        '''
+        PS： 
+        1.使用返回的response对象以text/content/json()等方式读取一次数据后无法再次读取
+        2.response.text和response.content方法返回的是一个迭代器对象（可迭代对象（Iterable）：可以使用for循环遍历出所有元素的都可以称为可迭代对			象）,因考虑到请求返回的内容过大所以采用返回迭代器的方式来处理，可使用for循环遍历返回的结果，示例如下
+        '''
+		# response.text
         response = request.get(url)  # 支持ssl
-        for i in response.text:
+        for i in response.text:  # response.text为迭代器对象
             print(i)
+        # response.content
+        response = request.get(url)  # 支持ssl
+        for i in response.content: # response.content为迭代器对象
+            print(i)
+       	# response.json
+        url = "http://httpbin.org/post"
+		data = {"key1": "value1", "key2": "value2", "key3": "value3"}
+        response = request.post(url, data=ujson.dumps(data))   # 发送HTTP POST请求
+        print(response.json())
     else:
         http_log.info('Network connection failed! stagecode = {}, subcode = {}'.format(stagecode, subcode))
 ```
