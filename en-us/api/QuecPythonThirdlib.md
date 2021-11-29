@@ -598,6 +598,15 @@ Send the POST request
 | decode    | bool   | （Optional）True decode the response content and return the str type. False turn off decoding and return bytes type. Default: True. (It is only used with response content). |      |
 | sizeof    | int    | （Optional. Read the data in the buffer. Default: 255. Unit: byte.  The larger the value, the faster the reading speeding. （ It is recommended to 255-4096 bytes because there may be the possibility of data loss if  data setting  is too large.) |      |
 
+* Content-Type explanation:
+
+  When using the POST method to submit data, the submitted data mainly has the following four forms:
+
+  - application/x-www-form-urlencoded：The form data is encoded in key/value format and sent to the server (the default format of the submitted data in the form)
+  - multipart/form-data ： When you need to upload files in the form, you need to use this format
+  - application/json： JSON data format
+  - application/octet-stream ：Binary stream data (such as common file downloads)
+
 * Example
 
 ```python
@@ -633,6 +642,40 @@ if __name__ == '__main__':
         http_log.info(response.json())
     else:
         http_log.info('Network connection failed! stagecode = {}, subcode = {}'.format(stagecode, subcode))
+```
+
+##### File Upload
+
+> **request.post(url, files, headers)**
+
+Use the POST method to upload files to FTP. Currently, only uploads in the form of "multipart/form-data" are supported, and the default headers are "multipart/form-data".
+
+* Parameter
+
+| Parameter | Type   | Description                                                  |
+| --------- | ------ | ------------------------------------------------------------ |
+| url       | string | Service address                                              |
+| files     | dict   | The dict type parameter must contain "filepath (device file path)" and "filename (file name)" |
+| headers   | dict   | (Optional parameter) The request header, the default is None, and the default Content-Type is "multipart/form-data" when uploading files. Currently, only "multipart/form-data" is supported. |
+
+* Example
+
+```python
+import request
+
+url = ''   # FTP service address, you need to enter an existing file path, for example: http://upload.file.com/folder
+files = {"filepath":"usr/upload.json", "filename":"upload.json"}
+
+response = request.post(url, files=files)
+
+'''
+You can also manually pass in headers, but currently upload files only support "multipart/form-data", the example is as follows:
+
+header = {'Content-Type': 'multipart/form-data', 'charset': 'UTF-8'}
+response = post(url, files=files, headers=header)
+print(response.status_code)
+'''
+print(response.status_code)  # status code
 ```
 
 ##### Send PUT Request
@@ -694,8 +737,6 @@ print(response.headers)
 | response.text    | Returns the text content of the response in Unicode.         |
 | response.json()  | Returns the JSON encoded content of the  response and converts it to dict type. |
 
-
-
 **Request example**
 
 ```python
@@ -716,17 +757,31 @@ checknet = checkNet.CheckNetwork(PROJECT_NAME, PROJECT_VERSION)
 # Set the log output level
 log.basicConfig(level=log.INFO)
 http_log = log.getLogger("HTTP SSL")
-# HTTP(s) request
+# https request
 url = "https://myssl.com"
 
 if __name__ == '__main__':
     stagecode, subcode = checknet.wait_network_connected(30)
     if stagecode == 3 and subcode == 1:
         http_log.info('Network connection successful!')
-
-        response = request.get(url)  # Support SSl
-        for i in response.text:
+        '''
+        PS： 
+        1.After using the returned response object to read the data once in text/content/json() etc., it cannot be read again
+        2.The response.text and response.content methods return an iterator object (Iterable: All elements that can be traversed 		   by a for loop can be called an iterable object), because the content returned by the request is considered too So we 		  use the method of returning iterator to deal with, you can use the for loop to traverse the returned results, the 			  example is as follows
+        '''
+		# response.text
+        response = request.get(url)  # Support ssl
+        for i in response.text:  # response.content is an iterator object
             print(i)
+        # response.content
+        response = request.get(url)
+        for i in response.content: # response.content is an iterator object
+            print(i)
+       	# response.json
+        url = "http://httpbin.org/post"
+		data = {"key1": "value1", "key2": "value2", "key3": "value3"}
+        response = request.post(url, data=ujson.dumps(data))   # Send HTTP POST request
+        print(response.json())
     else:
         http_log.info('Network connection failed! stagecode = {}, subcode = {}'.format(stagecode, subcode))
 ```

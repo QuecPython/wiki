@@ -204,11 +204,11 @@ If it failed to obtain the dial-up information, returns -1. If successfully, the
 
 `reconnect`：The reconnection flag.
 
-`ipv4Addr`：IPv4 address.
+`ipv4Addr`：IPv4 address, string type.
 
-`priDns`：Primary DNS.
+`priDns`：Primary DNS, string type.
 
-`secDns`：Secondary DNS.
+`secDns`：Secondary DNS, string type.
 
  If ipType =1, the format of the return value is as follows.
 
@@ -222,11 +222,11 @@ If it failed to obtain the dial-up information, returns -1. If successfully, the
 
 `reconnect`：The reconnection flag.
 
-`ipv6Addr`：IPv6 address.
+`ipv6Addr`：IPv6 address, string type.
 
-`priDns`：Primary DNS.
+`priDns`：Primary DNS, string type.
 
-`secDns`：Secondary DNS.
+`secDns`：Secondary DNS, string type.
 
  If ipType =2, the format of the return value is as follows.
 
@@ -326,7 +326,15 @@ This function obtains coordinate information of the base station.
 
 * Return Value
 
-If obtain the coordinate information successfully, return the information in the format of：`(latitude, longtitude, accuracy)`，`(0.0, 0.0, 0)` indicates it failed to obtain the coordinate information. The error code returned is explained as follows:
+If obtain the coordinate information successfully, return the information in the format of：`(longtitude, latitude, accuracy)`，`(0.0, 0.0, 0)` indicates it failed to obtain the coordinate information. 
+
+`longtitude` : longtitude
+
+`latitude` : latitude
+
+`accuracy` : accuracy, Unit of m
+
+The error code returned is explained as follows:
 
 -1 – Initialization failed 
 
@@ -806,7 +814,6 @@ Description：
 * note
 
   The BC25PA platform does not support this method.
-  
 
 Example
 
@@ -955,6 +962,7 @@ This function sets DTMF.
 ```
 
 
+
 ##### Set FWmode
 
 > **voiceCall.setFw(reason, fwmode, phonenum)**
@@ -978,6 +986,69 @@ Call Forwarding Number and Conditions Control
 * Example
 
 NA
+
+
+
+##### switch voice channel
+
+> **voiceCall.setChannel(device)**
+
+Set the voice output channel during a call. The default channel is channel 0.
+
+* Parameter
+
+| Parameter | Type | Description                                                  |
+| --------- | ---- | ------------------------------------------------------------ |
+| device    | int  | Output channel<br/>0 - handset<br/>1 - earphone<br/>2 - speaker |
+
+* Return Value
+
+0  Successful execution.
+
+-1  Failed execution.
+
+* Example
+
+```python
+>>> voiceCall.setChannel(2) # Switch to the speaker channel
+0
+```
+
+
+
+##### Get Volume
+
+> **voiceCall.getVolume()**
+
+Get the current volume of the voice.
+
+* Parameter
+
+  None
+
+* Return Value
+
+  return volume of the voice.
+
+
+
+##### Set Volume
+
+> **voiceCall.setVolume(vol)**
+
+Set the volume of the voice.
+
+* Parameter
+
+| Parameter | Type | Description                                                  |
+| --------- | ---- | ------------------------------------------------------------ |
+| vol       | int  | Volume. Range : 0–11. The higher the number, the higher the volume. |
+
+* Return Value
+
+  0  Successful execution.
+
+  -1  Failed execution.
 
 
 
@@ -1247,7 +1318,7 @@ This function reads messages in TEXT mode.
 
 | Parameter | Type | Description                                       |
 | --------- | ---- | ------------------------------------------------- |
-| index     | int  | The index of the message to be read. Range: 0~49. |
+| index     | int  | The index of the message to be read. Range: 0 ~ 49. |
 
 * Return Value
 
@@ -1466,14 +1537,14 @@ Function: Provides APIs to query/set network related performance.
 
 > **net.setApn(apn, simid)**
 
-This function sets APN.
+This function sets APN. After setting, you need to restart or switch to mode 0 and then mode 1 through the `net.setmodemFun (mode)` interface for the setting to take effect.
 
 * Parameter
 
-| Parameter | Type   | Description                        |
-| --------- | ------ | ---------------------------------- |
-| apn       | string | apn name                           |
-| simid     | int    | simid (0:SIM card 1 1: SIM card 2) |
+| Parameter | Type   | Description                                 |
+| --------- | ------ | ------------------------------------------- |
+| apn       | string | apn name                                    |
+| simid     | int    | simid<br>0 : SIM card 1<br/>1 :  SIM card 2 |
 
 * Return Value
 
@@ -1485,6 +1556,7 @@ This function sets APN.
 
   The BC25PA platform does not support this module function.
   
+  
 ##### Obtain the Current  APN
 
 > **net.getApn(simid)**
@@ -1493,9 +1565,9 @@ This function obtains the current APN.
 
 * Parameter
 
-| Parameter | Type | Description |
-| --------- | ---- | ----------- |
-| simid     | int  | simid       |
+| Parameter | Type | Description                                  |
+| --------- | ---- | -------------------------------------------- |
+| simid     | int  | simid<br/>0 : SIM card 1<br/>1 :  SIM card 2 |
 
 * Return Value
 
@@ -1506,6 +1578,8 @@ This function obtains the current APN.
 * note
 
   The BC25PA platform does not support this module function.
+  
+  
 
 ##### Obtain CSQ
 
@@ -1551,43 +1625,43 @@ If the execution is failed, -1 is returned.  If the execution is successful, the
 
 The description of the return value for GSM:
 
-| Parameter | Description                             |
-| --------- | --------------------------------------- |
-| flag      | 0: present，1: inter，2: intra          |
-| cid       | Return CID, 0 means null.               |
-| mcc       | Mobile Country Code                     |
-| mnc       | Mobile Network Code                     |
-| lac       | Location Area Code                      |
-| arfcn     | Absolute Radio Frequency Channel Number |
-| bsic      | Base Station Identity Code              |
-| rssi      | Received Signal Strength Indication     |
+| Parameter | Description                                                  |
+| --------- | ------------------------------------------------------------ |
+| flag      | 0: present，1: inter，2: intra                               |
+| cid       | Return the cell id of GSM network, 0 means null, range : 0 ~ 65535 |
+| mcc       | Mobile Country Code, 0 ~ 999<br>Note : For modules of the EC100Y/EC600S/EC600N series, the value is expressed in hexadecimal. For example, the decimal number 1120 in the following example is 0x460, indicating the mobile device country code 460. For modules of other models, the value is directly expressed in decimal, such as mobile device country code 460, that's 460 in decimal notation. |
+| mnc       | Mobile Network Code, range : 0 ~ 99                          |
+| lac       | Location Area Code, range : 1 ~ 65534                          |
+| arfcn     | Absolute Radio Frequency Channel Number, range : 0 ~ 65535     |
+| bsic      | Base Station Identity Code, range : 0 ~ 255                  |
+| rssi      | On a GSM network, this value represents the received level and describes the received signal strength. 99 indicates unknown or undetected signal. This value is calculated as follows:<br>rssi = RXLEV - 111<br>The unit is dBm, RXLEV range is 0 ~ 63, so the RSSI range is -111 ~ -48 dBm |
 
 The description of the return value for UMTS:
 
-| Parameter | Description                             |
-| --------- | --------------------------------------- |
-| flag      | 0: present，1: inter，2: intra          |
-| cid       | Return CID, 0 means null.               |
-| lcid      | Area identification number              |
-| mcc       | Mobile Country Code                     |
-| mnc       | Mobile Network Code                     |
-| lac       | Location Area Code                      |
-| uarfcn    | Absolute Radio Frequency Channel Number |
-| psc       | Base Station Identity Code              |
-| rssi      | Received Signal Strength Indication     |
+| Parameter | Description                                                  |
+| --------- | ------------------------------------------------------------ |
+| flag      | 0: present，1: inter，2: intra                               |
+| cid       | Return the Cell identity of UMTS network,  Cell identity = RNC_ID * 65536 + Cell_ID,  the range of Cell identity is 0x0000000 ~ 0xFFFFFFF (28bits), the range of RNC_ID is 0 ~ 4095，the range of Cell_ID is 0 ~ 65535 |
+| lcid      | URA ID, 0 means null, range : 0 ~ 65535                      |
+| mcc       | Mobile Country Code, range : 0 ~ 999                         |
+| mnc       | Mobile Network Code, range : 0  ~ 99                           |
+| lac       | Location Area Code, range : 1 ~ 65534                        |
+| uarfcn    | Absolute Radio Frequency Channel Number, range : 0 ~ 65535   |
+| psc       | Base Station Identity Code, range : 0 ~ 255                  |
+| rssi      | On a UMTS network, the value indicates the CPICH/PCCPCH receiving power,  unit : dBm, ranges is -5 to 99 |
 
 The description of the return value for LTE:
 
 | Parameter | Description                                                  |
 | --------- | ------------------------------------------------------------ |
 | flag      | 0: present，1: inter，2: intra                               |
-| cid       | Return CID, 0 means null.                                    |
-| mcc       | Mobile Country Code                                          |
-| mnc       | Mobile Network Code                                          |
-| pci       | Physical Cell Identifier                                     |
-| tac       | Tracing area code                                            |
-| earfcn    | Extended Absolute Radio Frequency Channel Number. Range: 0-65535. |
-| rssi      | Received Signal Strength Indication                          |
+| cid       | Return the Cell identity of LTE network,  Cell identity = RNC_ID * 65536 + Cell_ID,  the range of Cell identity is 0x0000000 ~ 0xFFFFFFF (28bits), the range of RNC_ID is 0 ~ 4095，the range of Cell_ID is 0 ~ 65535 |
+| mcc       | Mobile Country Code, range : 0 ~ 999                         |
+| mnc       | Mobile Network Code, range : 0  ~ 99                           |
+| pci       | Physical Cell Identifier，range : 0 ~ 503                    |
+| tac       | Tracing area code,  range : 0 ~ 65535                        |
+| earfcn    | Extended Absolute Radio Frequency Channel Number, range : 0-65535. |
+| rssi      | Received Signal Strength Indication. In LTE network, denotes RSRP quality (negative value), which is converted according to RSRP measurement report value, and the conversion relationship is as follows<br>RSRP quality = RSRP measurement report value - 140, unit : dBm, range : -140 ~ -44 dBm |
 
 * Example
 
@@ -1689,8 +1763,8 @@ If the execution is failed, -1 is returned. If  the execution is successful, a t
 
 The description of the return value:
 `selection_mode` : Selection Mode. 0- Automatic. 1- Manual.
-`mcc` : Mobile Country Code
-`mnc` : Mobile Network Code
+`mcc` : Mobile Country Code, sting type
+`mnc` : Mobile Network Code, sting type
 `act` : ACT mode for the primary RAT
 
 ACT Mode
@@ -1738,21 +1812,21 @@ The description of the return value:
 
 GW list：
 
-`rssi` : Received Signal Strength Indicator
+`rssi` : On a GSM/WCDMA network, this value represents the received level and describes the received signal strength. 99 indicates unknown or undetected signal. This value is calculated as follows:<br>rssi = RXLEV - 111<br>The unit is dBm, RXLEV range is 0 ~ 63, so the range of rssi  is -111 ~ -48 dBm
 
-`bitErrorRate` : Error Rate
+`bitErrorRate` : Error Rate(BER), range : 0  ~ 7, 99 indicates unknown or undetected signal
 
-`rscp` : Received Signal Code Power
+`rscp` : Received Signal Code Power, range : -121 ~ -25 dBm, 255 indicates unknown or undetected signal
 
-`ecno` :   Pilot Channel  
+`ecno` :   Pilot Channel , range : -24 ~ 0, 255 indicates unknown or undetected signal
 
 LTE list：
 
-`rssi` : Received Signal Strength Indicator
+`rssi` : Received Signal Strength Indicator, range : -140 ~ -44 dBm, 99 indicates unknown or undetected signal
 
-`rsrp` : Reference Signal Receiving Power
+`rsrp` : Reference Signal Receiving Power, range : -141 ~ -44 dBm, 99 indicates unknown or undetected signal
 
-`rsrq` : Reference Signal Receiving Quality
+`rsrq` : Reference Signal Receiving Quality, range : -20 ~ -3 dBm, A larger value indicates better signal reception quality
 
 `cqi` : Channel Quality
 
@@ -1769,7 +1843,7 @@ LTE list：
 
 > **net.nitzTime()**
 
-This function obtains the current time of the base station.
+This function obtains the current time of the base station. This time is the time that the base station sends when the module is successfully turned on and plugged into the network.
 
 * Parameter
 
@@ -1781,7 +1855,7 @@ If the execution is failed, -1 is returned. If the execution is successful, a tu
 
 `(date, abs_time, leap_sec)`
 
-`date` : String type. The time of the base station.
+`date` : String type. The time of the base station. The TIME zone of the EC600N series is different from that of the EC200U/EC600U series. For details, see the example. If you need to set and obtain the time zone, use the 'setTimeZone(offset)' and 'getTimeZone()' interfaces of the utime module.
 
 `abs_time` : Integer type. The absolute number of seconds of time.
 
@@ -1790,8 +1864,9 @@ If the execution is failed, -1 is returned. If the execution is successful, a tu
 * Example
 
 ```python
->>> net.nitzTime()
-('20/11/26 02:13:25+32', 1606356805, 0)
+>>> net.nitzTime() 
+('21/10/26 06:08:03 8 0', 1635228483, 0) # EC600N series, the time zone unit is hour, 8 indicates the east 8 region
+('20/11/26 02:13:25 +32 0', 1606356805, 0) # EC200U/EC600U series, the time zone unit is 15 minutes. +32 indicates the east 8 region
 ```
 
 
@@ -1841,7 +1916,7 @@ NA
 
 * Return Value
 
-If the execution is failed, -1 is returned. If the execution is successful, a tuple is returned in the following format:
+If the execution is failed, -1 is returned. If the execution is successful, a tuple is returned in the following format. The tuple contains voice and network registration information. The tuple starting with 'voice\_' indicates voice registration information, and the tuple starting with 'data\_' indicates network registration information:
 
 `([voice_state, voice_lac, voice_cid, voice_rat, voice_reject_cause, voice_psc], [data_state, data _lac, data _cid, data _rat, data _reject_cause, data _psc])`
 
@@ -1849,15 +1924,15 @@ The description of the return value:
 
 `state` : Network registration state.
 
-`lac` : Location Area Code
+`lac` : Location Area Code, range : 1 ~ 65534
 
-`cid` : ID information in integer type
+`cid` : cell id, range : 0x0000000 ~ 0xFFFFFFF
 
-`rat` : RAT
+`rat` : access technology
 
-`reject_cause` : Reject cause
+`reject_cause` : Reject cause. This parameter is reserved on EC200U/EC600U/BC25PA
 
-`psc` ：Primary Scrambling Code
+`psc` ：Primary Scrambling Code. This parameter is reserved on EC200U/EC600U/BC25PA
 
 Network registration state
 
@@ -1876,6 +1951,26 @@ Network registration state
 | 10    | Registered for “CSFB not preferred”, roaming (not applicable). |
 | 11    | Emergency bearer services only.                              |
 
+
+
+access technology
+
+| Value | Description        |
+| ----- | ------------------ |
+| 0     | GSM                |
+| 1     | GSM COMPACT        |
+| 2     | UTRAN              |
+| 3     | GSM wEGPRS         |
+| 4     | UTRAN wHSDPA       |
+| 5     | UTRAN wHSUPA       |
+| 6     | UTRAN wHSDPA HSUPA |
+| 7     | E_UTRAN            |
+| 8     | UTRAN HSPAP        |
+| 9     | E_UTRAN_CA         |
+| 10    | NONE               |
+
+
+
 * Example
 
 ```python
@@ -1889,7 +1984,7 @@ Network registration state
 
 > **net.getCi()**
 
-This function obtains the ID of the Neighbor Cell.
+This function obtains the ID of the Neighbor Cell. The result obtained by this interface is the CID set in the result obtained by the `net.getCellInfo()` interface.
 
 * Parameter
 
@@ -1912,7 +2007,7 @@ If the execution is failed, -1 is returned. If the execution is successful, an a
 
 > **net.getMnc()**
 
-This function obtains the MNC of the neighbor cell.
+This function obtains the MNC of the neighbor cell. The result obtained by this interface is the mnc set in the result obtained by the `net.getCellInfo()` interface.
 
 * Parameter
 
@@ -1935,7 +2030,7 @@ If the execution is failed, -1 is returned. If the execution is successful, an a
 
 > **net.getMcc()**
 
-This function obtains the MCC of the neighbor cell.
+This function obtains the MCC of the neighbor cell. The result obtained by this interface is the mcc set in the result obtained by the `net.getCellInfo()` interface.
 
 * Parameter
 
@@ -1944,6 +2039,8 @@ NA
 * Return Value
 
 If the execution is failed, -1 is returned. If the execution is successful, an array in list type including cell MCC is returned, and the format of this array is `[mcc, ……, mcc]`.
+
+Note : For modules of the EC100Y/EC600S/EC600N series, the value is expressed in hexadecimal. For example, the decimal number 1120 in the following example is 0x460, indicating the mobile device country code 460. For modules of other models, the value is directly expressed in decimal, such as the mobile device country code 460.That's 460 in decimal notation.
 
 * Example
 
@@ -1958,7 +2055,7 @@ If the execution is failed, -1 is returned. If the execution is successful, an a
 
 > **net.getLac()**
 
-This function obtains the LAC of the neighbor cell.
+This function obtains the LAC of the neighbor cell. The result obtained by this interface is the lac set in the result obtained by the `net.getCellInfo()` interface.
 
 * Parameter
 
@@ -2520,11 +2617,15 @@ Note: The BC25PA platform does not support this module function.
 ###### Create the TTS Object
 
 > **import audio**
+>
 > **tts = audio.TTS(device)**
 
 * Parameter 
 
-`device` : Device type. 0 - handset, 1 - earphone, 2 - speaker.
+
+| Parameter | Parameter Type | Description                                                  |
+| --------- | -------------- | ------------------------------------------------------------ |
+| device    | int            | Output channel<br/>0 - handset<br/>1 - earphone<br/>2 - speaker |
 
 * Example
 
@@ -2577,7 +2678,7 @@ Audio playback supports priority 0–4, the higher the number, the higher the pr
 | --------- | -------------- | ------------------------------------------------------------ |
 | priority  | int            | Playback priority. Supports Priority 0–4. The higher the number, the higher the priority. |
 | breakin   | int            | Interruption mode. 0 means not allowed to be interrupted; 1 means allowed to be interrupted |
-| mode      | int            | Encoding mode. 1 - UNICODE16 (UTF-16 big-endian), 2 - UTF-8, 3 - UNICODE16 (UTF-16 little-endian) |
+| mode      | int            | Low 4bit:Encoding mode. 1 - UNICODE16 (UTF-16 big-endian), 2 - UTF-8, 3 - UNICODE16 (UTF-16 little-endian)<br>High 4bit:WTTS mode(Only 600N series support VOLTE version support)., wtts_enable - wtts master switch，wtts_ul_enable - wtts up link switch， wtts_dl_enable - wtts down link switch |
 | str       | string         | String to be played                                          |
 
 * Return Value
@@ -2633,6 +2734,17 @@ Audio playback supports priority 0–4, the higher the number, the higher the pr
 
 #Play the voice in UTF-16LE mode
 >>> tts.play(1,1,3,'226BCE8F7F4F2875FB79DC8F1A90E14F216A57570230')
+0
+
+#Support VOLTE version, can play tts to remote
+>>> import voiceCall
+>>> voiceCall.callStart('1xxxxxxxxxx')
+0
+
+#After the call is connected
+#Play tts voice to the far end of the call
+>>> tts.play(1,1,tts.wtts_enable|tts.wtts_ul_enable|2, '12345')
+
 0
 ```
 
@@ -2847,6 +2959,81 @@ None
 
 
 
+###### tts play text annotation description
+
+If TTS playback fails to meet expectations, you can make TTS playback meet expectations through text annotations.
+
+Set the way of digital playback：
+
+```python
+#Format：[n*] (*=0/1/2)
+#The TTS engine automatically determines whether to play in the form of numbers or in the form of numbers
+>>> tts.play(1,1,2, '12345')
+0
+
+#TTS engine plays in the form of numbers
+>>> tts.play(1,1,2, '[n1]12345')
+0
+
+#TTS engine plays in numerical form
+>>> tts.play(1,1,2, '[n2]12345')
+0
+```
+
+
+
+Speaking rate setting：
+
+```python
+#Format：[s*] (*=0 ~ 10)
+#The TTS engine plays the voice at the default speech rate of 5
+>>> tts.play(1,1,2, '12345')
+0
+
+#The TTS engine plays the voice at half the default speech rate
+>>> tts.play(1,1,2, '[s0]12345')
+0
+
+#The TTS engine plays the voice at twice the default speech rate
+>>> tts.play(1,1,2, '[s10]12345')
+0
+```
+
+
+
+Intonation setting：
+
+```python
+#Format：[t*] (*=0 ~ 10)
+#The TTS engine plays the voice in the default intonation 5
+>>> tts.play(1,1,2, '12345')
+0
+
+#The TTS engine plays the voice at the base frequency of the default pitch minus 64Hz
+>>> tts.play(1,1,2, '[t0]12345')
+0
+
+#The TTS engine plays the voice with the default pitch base frequency plus 128Hz
+>>> tts.play(1,1,2, '[t10]12345')
+0
+```
+
+
+
+Pinyin for Chinese Characters：
+
+```python
+#Format：[=*] (*=Pinyin)
+#Chinese characters: After the voice call, a number 1 ~ 5 are used to represent the 5 tones of even tone, rising tone, entering tong, falling tone and lightly tone respectively.
+>>> tts.play(1,1,2, '乐[=le4]')
+0
+
+>>> tts.play(1,1,2, '乐[=yue4]')
+0
+```
+
+
+
 ###### Example
 
 ```python
@@ -2902,7 +3089,10 @@ if __name__ == '__main__':
 
 * Parameter
 
-`device` : Device type. 0 -handset. 1 - earphone, 2 - speaker.
+
+| Parameter | Parameter Type | Description                                                  |
+| --------- | -------------- | ------------------------------------------------------------ |
+| device    | int            | Output channel<br/>0 - handset<br/>1 - earphone<br/>2 - speaker |
 
 * Example
 
@@ -3167,7 +3357,7 @@ Start recording.
 
   -3	The file is in use
 
-  -4	Channel setting error ( Set to 0 or 1 only)
+  -4	Channel setting error 
 
   -5	Request for timer resource failed
 
@@ -3197,7 +3387,9 @@ None
 
 * Return Value
 
-None
+0 	Successful execution
+
+-1	Failed execution
 
 * Example
 
@@ -3215,13 +3407,13 @@ Read storage path of the recording file.
 
 * Parameter
 
-  *file\_name*: 
-
-  String type. Name of the recording file.
+| Parameter | Parameter Type | Description                |
+| --------- | -------------- | -------------------------- |
+| file_name | str            | Name of the recording file |
 
 * Return Value
 
-  String: Path of the recording file
+  If the file is successfully executed, the path of the recording file is returned, string type. If the target file does not exist, integer -1 is returned. If the file name length is 0, integer -2 is returned.
 
 * Example
 
@@ -3247,6 +3439,8 @@ Read the recording data.
 
 * Return Value
 
+  Return the data of record if it is executed successfully, bytearray type.
+
   -1	Error reading data
 
   -2	File open failed
@@ -3262,8 +3456,6 @@ Read the recording data.
   -7	 Less than 10 K of memory
 
   -8	 The file does not belong to the object
-
-  bytes	Return data
 
 * Example
 
@@ -3285,8 +3477,6 @@ Read recording file size.
 | --------- | -------------- | -------------------------- |
 | file_name | str            | File name of the recording |
 
-
-
 * Return Value
 
   Return the file size if it is executed successfully.
@@ -3301,7 +3491,7 @@ Read recording file size.
 
   *-3*	The file is in use
 
-  -4	The file does not belong to the object
+  -4	The length of file name is 0
 
 * Example
 
@@ -3324,6 +3514,10 @@ Delete the recording file.
 String type. The file name of the recording.
 
 Note: When the parameter is empty, delete all recording files in the object
+
+| Parameter | Parameter Type | Description                                                  |
+| --------- | -------------- | ------------------------------------------------------------ |
+| file_name | str            | File name of the recording. When the parameter is empty, delete all recording files in the object |
 
 * Return Value
 
@@ -3396,7 +3590,7 @@ record_test.isBusy()
 
 
 
-###### 注册录音结束回调Register the Callback of Recording End
+###### Register the Callback of Recording End
 
 > **record.end_callback(callback)**
 
@@ -3404,9 +3598,9 @@ Set the callback of recording end
 
 * Parameter
 
-| Parameter | Parameter Type | Description  |
-| --------- | -------------- | ------------ |
-| callback  | api            | Callback API |
+| Parameter | Parameter Type | Description       |
+| --------- | -------------- | ----------------- |
+| callback  | funciton       | Callback function |
 
 * Return Value
 
@@ -3424,6 +3618,14 @@ def record_callback(para):
     # Return recording state -1: error, 0: start, 3: success 
 record_test.end_callback(record_callback)
 ```
+
+
+
+| para[2] | Description          |
+| ------- | -------------------- |
+| -1      | error                |
+| 0       | Start the recording  |
+| 3       | End of the recording |
 
 
 
@@ -3599,7 +3801,7 @@ The values returned are explained as follows:
 
 * note
 
-  BC25PA platform only does not support restart reason 5.
+  BC25PA platform does not support restart reason 5 and 6.
 
 ###### Get the Reason for the Last Powering Down of the Module
 
@@ -3996,7 +4198,59 @@ def usb_callback(conn_status):
 usb.setCallback(usb_callback)
 ```
 
+##### USBNET
 
+It provides the USB network adapter function.
+
+NOTE：Currently, only the ASR platform supports it.
+
+###### Setting the USBNET working type (Take effect after restart)
+
+USBNET.set_worktype(type)
+
+- Parameter
+
+  | Parameter | Type | Description                                                  |
+  | --------- | ---- | ------------------------------------------------------------ |
+  | type      | int  | USBNET working type Type_ECM – ECM mode Type_RNDIS – RNDIS mode |
+
+- Return Value
+
+  Return 0 if the setting is successful, otherwise return -1.
+
+###### Open USBNET
+
+USBNET.open()
+
+- Parameter
+
+  None
+
+- Return Value
+
+  Return 0 if the opening is successful, otherwise return -1.
+
+Example
+
+```python
+from misc import USBNET
+from misc import Power
+
+#work on ECM mode default
+USBNET.open()
+
+USBNET.set_worktype(USBNET.Type_RNDIS)
+
+#reset the module
+Power.powerRestart()
+
+
+#After restart
+from misc import USBNET
+
+#work on RNDIS mode
+USBNET.open()
+```
 
 #### modem - Related Device
 
@@ -4500,7 +4754,7 @@ PROJECT_VERSION = "1.0.0"
         UART2 – MAIN PORT
         UART3 – USB CDC PORT
  * Parameter2: Baud rate
- * Parameter3: data bits  （5~8）
+ * Parameter3: data bits  （5 ~ 8）
  * Parameter4: Parity (0：NONE  1：EVEN  2：ODD) 
  * Parameter5：stop bits (1–2) 
  * Parameter6：flow control (0: FC_NONE  1：FC_HW) 
@@ -4649,7 +4903,7 @@ Return 0 if the execution is successful, otherwise return -1.
 //Note when using this timer: Timer 0–3, each can only perform one task at the same time, and multiple objects cannot use the same timer.
 >>> def fun(args):
         print(“###timer callback function###”)
->>> timer.start(period=1000, mode=timer.PERIODIC, callback=fun)
+>>> timer1.start(period=1000, mode=timer1.PERIODIC, callback=fun)
 0
 ###timer callback function###
 ###timer callback function###
@@ -4703,7 +4957,7 @@ Timer_Log = log.getLogger("Timer")
 
 num = 0
 state = 1
-# Note: EC100Y-CN module supports Timer0~Timer3
+# Note: EC100Y-CN module supports Timer0 ~ Timer3
 t = Timer(Timer.Timer1)
 
 # Create an execution function and pass in the timer instance
@@ -4875,12 +5129,12 @@ It sets and gets RTC time. When there is no parameter, it gets the time, it sets
 | Parameter   | Type | Description                                                  |
 | ----------- | ---- | ------------------------------------------------------------ |
 | year        | int  | Year                                                         |
-| month       | int  | Month, range: 1~12.                                          |
-| day         | int  | Day, range:1~31.                                             |
+| month       | int  | Month, range: 1 ~ 12.                                          |
+| day         | int  | Day, range:1 ~ 31.                                             |
 | week        | int  | Week, when setting the time, this parameter does not work, reserved; when getting the time, this parameter is valid. |
-| hour        | int  | volume_up hour, range: 0~23.                                 |
-| minute      | int  | *content_copy* minute, range:0~59.                           |
-| second      | int  | Second, range: 0~59.                                         |
+| hour        | int  | volume_up hour, range: 0 ~ 23.                                 |
+| minute      | int  | *content_copy* minute, range:0 ~ 59.                           |
+| second      | int  | Second, range: 0 ~ 59.                                         |
 | microsecond | int  | *share* microsecond, reserved, set to 0 when setting the time. |
 
 * Return Value
@@ -6217,16 +6471,118 @@ wifi list:(2, [('F0:B4:29:86:95:C7': -79),('44:00:4D:D5:26:E0', -92)])
 
 #### ble - Bluetooth Low Energy
 
-Module function: provide function of BLE GATT Server. Currently only 200U/600U modules support BLE.
-Note: The BC25PA platform does not support this module function.
+Module function: provide function of BLE GATT Server（slave） and BLE GATT Client（master）,  using BLE 4.2 protocol.  Currently only 200U/600U modules support BLE.
 
-##### Initialize BLE and Register Callback Function
+##### Start  BLE GATT Function
+
+> **ble.gattStart()**
+
+* Function:
+
+  Start BLE GATT fucntion.
+
+* Parameter:
+
+  None
+
+* Return Value:
+
+  0	 Successful execution
+
+  -1	Failed execution
+
+* Example:
+
+```python
+See comprehensive example
+```
+
+
+
+##### Stop BLE GATT Function
+
+> **ble.gattStop()**
+
+* Function:
+
+  Stop BLE GATT function.
+
+* Parameter:
+
+  None
+
+* Return Value:
+
+  0	 Successful execution
+
+  -1	Failed execution
+
+* Example:
+
+```python
+See comprehensive example
+```
+
+
+
+##### Get BLE Status
+
+* Function:
+
+  Get  the status of BLE.
+
+* Parameter:
+
+  None
+
+* Return Value:
+
+  0	BLE has been stopped
+
+  1	BLE has been started
+
+  -1	Get BLE status failed
+
+* Example:
+
+  None
+
+
+
+##### Get BLE Public Address
+
+* Function:
+
+  Gets the BLE public address.This interface can be called only after BLE has been initialized and started successfully, for example, after receiving an event with event_id 0 in the callback.
+
+* Parameter:
+
+  None
+
+* Return Value:
+
+  The BLE address of type bytearray (6 bytes) is returned on success, and integer -1 is returned on failure.
+
+* Example:
+
+  ```python
+  >>> addr = ble.getPublicAddr()
+  >>> print(addr)
+  b'\xdb3\xf5\x1ek\xac'
+  >>> mac = '{:02x}:{:02x}:{:02x}:{:02x}:{:02x}:{:02x}'.format(addr[5], addr[4], addr[3], addr[2], addr[1], addr[0])
+  >>> print('mac = [{}]'.format(mac))
+  mac = [ac:6b:1e:f5:33:db]
+  ```
+
+  
+
+##### BLE Server - Initialize BLE and Register Callback Function
 
 > **ble.serverInit(user_cb)**
 
 * Function：
 
-Initialize BLE SERVER and register callback function.
+  Initialize BLE Server and register callback function.
 
 * Parameter：
 
@@ -6236,9 +6592,9 @@ Initialize BLE SERVER and register callback function.
 
 * Return Value：
 
-0	 Successful execution
+  0	 Successful execution
 
--1	Failed execution
+  -1	Failed execution
 
 Description：
 
@@ -6247,7 +6603,7 @@ Description：
 ```python
 def ble_callback(args):
 	event_id = args[0]  # The first parameter is fixed as event_id
-	status = args[1] # The second parameter is fixed as status which indicates the execution result of an operation, such as BLE 						is enabled successfully or unsuccessfully.
+	status = args[1] # The second parameter is fixed as status which indicates the execution result of an operation, such as BLE is enabled successfully or unsuccessfully.
 	......
 ```
 
@@ -6371,13 +6727,13 @@ ble.serverInit(ble_callback)
 
 
 
-##### Release BLE SERVER Resources 
+##### BLE Server - Release BLE Server Resources 
 
 > **ble.serverRelease()**
 
 * Function:
 
-  Release BLE SERVER resources.
+  Release BLE Server resources.
 
 * Parameter:
 
@@ -6397,59 +6753,7 @@ See comprehensive example
 
 
 
-##### Start  BLE GATT Function
-
-> **ble.gattStart()**
-
-* Function:
-
-  Start BLE GATT fucntion.
-
-* Parameter:
-
-  None
-
-* Return Value:
-
-  0	 Successful execution
-
-  -1	Failed execution
-
-* Example:
-
-```python
-See comprehensive example
-```
-
-
-
-##### Stop BLE GATT Function
-
-> **ble.gattStop()**
-
-* Function:
-
-  Stop BLE GATT function.
-
-* Parameter:
-
-  None
-
-* Return Value:
-
-  0	 Successful execution
-
-  -1	Failed execution
-
-* Example:
-
-```python
-See comprehensive example
-```
-
-
-
-##### Set BLE Local Name
+##### BLE Server - Set BLE Local Name
 
 > **ble.setLocalName(code, name)**
 
@@ -6479,7 +6783,7 @@ See comprehensive example
 
 
 
-##### Set Advertising Parameter
+##### BLE Server - Set Advertising Parameter
 
 > **ble.setAdvParam(min_adv,max_adv,adv_type,addr_type,channel,filter_policy,discov_mode,no_br_edr,enable_adv)**
 
@@ -6497,7 +6801,7 @@ See comprehensive example
   | addr_type     | Unsigned integer type | Local address type.  <br>0 - Public address<br>1 - Random address |
   | channel       | Unsigned integer type | Advertising channel. <br>1 - Advertising channel 37<br>2 - Advertising channel 38<br>4 - Advertising channel 39<br>7 - Advertising channel 37 and 38 and 39, default |
   | filter_policy | Unsigned integer type | Advertising filter policy.<br>0 - Process scan and connection requests from all devices<br/>1 - Process connection requests from all devices and scan requests from only white list devices<br/>2 - Process scan requests from all devices and connection requests from only white list devices<br/>3 - Process connection and scan requests from only white list devices |
-  | discov_mode   | Unsigned integer type | Discovery mode. Used by GAP protocol and the default is 1 (normal discovery mode) |
+  | discov_mode   | Unsigned integer type | Discovery mode. Used by GAP protocol and the default is 2 .<br/>1 - Limited Discoverable Mode<br/>2 - General Discoverable Mode |
   | no_br_edr     | Unsigned integer type | No use of BR/EDR. The default is 1. The value is 0 if BR/EDR is used. |
   | enable_adv    | Unsigned integer type | Enable advertising. The default is 1. The value is 0 if advertising is disabled. |
 
@@ -6530,7 +6834,7 @@ def ble_gatt_set_param():
 
 
 
-##### Set Advertising Data
+##### BLE Server - Set Advertising Data
 
 > **ble.setAdvData(data)**
 
@@ -6542,7 +6846,7 @@ def ble_gatt_set_param():
 
   | Parameter | Type  | Description                                                  |
   | --------- | ----- | ------------------------------------------------------------ |
-  | data      | Array | Advertising data which is no more than 31 octets. Pay attention to the type of this parameter. The advertising data is organized in the program and it needs to be converted through bytearray() before it can be passed in to the API. As shown in below example.<br>Format of advertising data:<br>The content of advertising data. The format is the combination of length+type+data. An advertising data can contain multiple combinations in this format. For example, there are 2 combinations in the example below. The first one is "0x02, 0x01, 0x05". 0x02 means that there are 2 data - 0x01 and 0x05. 0x01 is the type; 0x05 is the specific data. The second one consists of  the length obtained by the length of BLE name plus 1 (1 octet needs to be added as it contains the data that represents type), type 0x09 and the data represented by the corresponding specific encoded value of name.<br>For detailed information of type value, please refer to the following link:<br/>https://www.bluetooth.com/specifications/assigned-numbers/generic-access-profile/ |
+  | data      | Array | Advertising data which is no more than 31 octets. Pay attention to the type of this parameter. The advertising data is organized in the program and it needs to be converted through bytearray() before it can be passed in to the API. As shown in below example.<br>Format of advertising data:<br>The content of advertising data. The format is the combination of length+type+data. An advertising data can contain multiple combinations in this format. For example, there are 2 combinations in the example below. The first one is "0x02, 0x01, 0x05". 0x02 means that there are 2 data - 0x01 and 0x05. 0x01 is the type; 0x05 is the specific data. The second one consists of  the length obtained by the length of BLE name plus 1 (1 octet needs to be added as it contains the data that represents type), type 0x09 and the data represented by the corresponding specific encoded value of name.<br>For detailed information of type value, please refer to the following link:<br/>[Generic Access Pfofile](https://btprodspecificationrefs.blob.core.windows.net/assigned-numbers/Assigned Number Types/Generic Access Profile.pdf) |
 
 * Return Value:
 
@@ -6574,7 +6878,7 @@ def ble_gatt_set_data():
 
 
 
-##### Set Scan Response Data
+##### BLE Server - Set Scan Response Data
 
 > **ble.setAdvRspData(data)**
 
@@ -6618,7 +6922,7 @@ def ble_gatt_set_rsp_data():
 
 
 
-##### Add a Service
+##### BLE Server - Add a Service
 
 > **ble.addService(primary, server_id, uuid_type, uuid_s, uuid_l)**
 
@@ -6661,7 +6965,7 @@ def ble_gatt_add_service():
 
 
 
-##### Add a Characteristic 
+##### BLE Server - Add a Characteristic 
 
 > **ble.addChara(server_id, chara_id, chara_prop, uuid_type, uuid_s, uuid_l)**
 
@@ -6706,7 +7010,7 @@ def ble_gatt_add_characteristic():
 
 
 
-##### Add a Characteristic Value
+##### BLE Server - Add a Characteristic Value
 
 > **ble.addCharaValue(server_id, chara_id, permission, uuid_type, uuid_s, uuid_l, value)**
 
@@ -6756,7 +7060,7 @@ def ble_gatt_add_characteristic_value():
 
 
 
-##### Add a Characteristic Descriptor
+##### BLE Server - Add a Characteristic Descriptor
 
 > **ble.addCharaDesc(server_id, chara_id, permission, uuid_type, uuid_s, uuid_l, value)**
 
@@ -6786,7 +7090,7 @@ def ble_gatt_add_characteristic_value():
 
 ```python
 def ble_gatt_add_characteristic_desc():
-    data = [0x00, 0x00, 0x00, 0x00]
+    data = [0x00, 0x00]
     server_id = 0x01
     chara_id = 0x01
     permission = 0x0001 | 0x0002
@@ -6804,7 +7108,7 @@ def ble_gatt_add_characteristic_desc():
 
 
 
-##### Complete Addition of Services or Clear the Added Services
+##### BLE Server - Complete Addition of Services or Delete the Services
 
 > **ble.addOrClearService(option, mode)**
 
@@ -6833,7 +7137,7 @@ See comprehensive example
 
 
 
-##### Send Notification
+##### BLE Server - Send Notification
 
 > **ble.sendNotification(connect_id, attr_handle, value)**
 
@@ -6863,7 +7167,7 @@ See comprehensive example
 
 
 
-##### Send Indication
+##### BLE Server - Send Indication
 
 > **ble.sendIndication(connect_id, attr_handle, value)**
 
@@ -6893,7 +7197,7 @@ See comprehensive example
 
 
 
-##### Start Advertising
+##### BLE Server - Start Advertising
 
 > **ble.advStart()**
 
@@ -6911,30 +7215,38 @@ See comprehensive example
 
   -1	Failed execution
 
+* Example:
+
+  None
+
+  
 
 
-
-##### Stop Advertising
+##### BLE Server - Stop Advertising
 
 > **ble.advStop()**
 
-Function:
+* Function:
 
-Stop advertising.
+  Stop advertising.
 
-Parameter:
+* Parameter:
 
-None
+  None
 
-Return Value:
+* Return Value:
 
-0	 Successful execution
+  0	 Successful execution
 
--1	Failed execution
+  -1	Failed execution
+
+* Example:
+
+  None
 
 
 
-##### Comprehensive Example:
+##### BLE Server - Comprehensive Example:
 
 ```python
 # -*- coding: UTF-8 -*-
@@ -6943,10 +7255,35 @@ import ble
 import utime
 
 
-BLE_GATT_SYS_SERVICE = 0  # 0-delete the default system GAP and GATT services  1-retain the default system GAP and GATT services
+BLE_GATT_SYS_SERVICE = 0  # 0-Delete the default GAP and GATT services  1-Retain the default GAP and GATT services
 BLE_SERVER_HANDLE = 0
-_BLE_NAME = "Quectel_ble_test"
-# _BLE_NAME = "bluetooth_ble"
+_BLE_NAME = "Quectel_ble"
+
+
+event_dict = {
+    'BLE_START_STATUS_IND': 0,  # ble start
+    'BLE_STOP_STATUS_IND': 1,   # ble stop
+    'BLE_CONNECT_IND': 16,  # ble connect
+    'BLE_DISCONNECT_IND': 17,   # ble disconnect
+    'BLE_UPDATE_CONN_PARAM_IND': 18,    # ble update connection parameter
+    'BLE_SCAN_REPORT_IND': 19,  # ble gatt client scan and report other devices
+    'BLE_GATT_MTU': 20, # ble connection mtu
+    'BLE_GATT_RECV_WRITE_IND': 21, # when ble client write characteristic value or descriptor,server get the notice
+    'BLE_GATT_RECV_READ_IND': 22, # when ble client read characteristic value or descriptor,server get the notice
+    'BLE_GATT_RECV_NOTIFICATION_IND': 23,   # client receive notification
+    'BLE_GATT_RECV_INDICATION_IND': 24, # client receive indication
+    'BLE_GATT_SEND_END': 25, # server send notification,and receive send end notice
+}
+
+class EVENT(dict):
+    def __getattr__(self, item):
+        return self[item]
+
+    def __setattr__(self, key, value):
+        raise ValueError("{} is read-only.".format(key))
+
+
+event = EVENT(event_dict)
 
 
 def ble_callback(args):
@@ -6956,9 +7293,13 @@ def ble_callback(args):
     status = args[1]
     print('[ble_callback]: event_id={}, status={}'.format(event_id, status))
 
-    if event_id == 0:  # ble start
+    if event_id == event.BLE_START_STATUS_IND:  # ble start
         if status == 0:
             print('[callback] BLE start success.')
+            mac = ble.getPublicAddr()
+            if mac != -1 and len(mac) == 6:
+                addr = '{:02x}:{:02x}:{:02x}:{:02x}:{:02x}:{:02x}'.format(mac[5], mac[4], mac[3], mac[2], mac[1], mac[0])
+                print('BLE public addr : {}'.format(addr))
             ret = ble_gatt_set_name()
             if ret != 0:
                 ble_gatt_close()
@@ -7005,19 +7346,19 @@ def ble_callback(args):
                 return
         else:
             print('[callback] BLE start failed.')
-    elif event_id == 1:  # ble stop
+    elif event_id == event.BLE_STOP_STATUS_IND:  # ble stop
         if status == 0:
             print('[callback] ble stop successful.')
         else:
             print('[callback] ble stop failed.')
-    elif event_id == 16:  # ble connect
+    elif event_id == event.BLE_CONNECT_IND:  # ble connect
         if status == 0:
             print('[callback] ble connect successful.')
             connect_id = args[2]
-            ble_addr = args[3]
-            print('[callback] connect_id = {}, addr = {}'.format(connect_id, ble_addr))
+            addr = args[3]
+            addr_str = '{:02x}:{:02x}:{:02x}:{:02x}:{:02x}:{:02x}'.format(addr[0], addr[1], addr[2], addr[3], addr[4], addr[5])
+            print('[callback] connect_id = {}, addr = {}'.format(connect_id, addr_str))
 
-            # utime.sleep(3)
             ret = ble_gatt_send_notification()
             if ret == 0:
                 print('[callback] ble_gatt_send_notification successful.')
@@ -7027,17 +7368,19 @@ def ble_callback(args):
                 return
         else:
             print('[callback] ble connect failed.')
-    elif event_id == 17:  # ble disconnect
+    elif event_id == event.BLE_DISCONNECT_IND:  # ble disconnect
         if status == 0:
             print('[callback] ble disconnect successful.')
             connect_id = args[2]
-            ble_addr = args[3]
-            print('[callback] connect_id = {}, addr = {}'.format(connect_id, ble_addr))
+            addr = args[3]
+            addr_str = '{:02x}:{:02x}:{:02x}:{:02x}:{:02x}:{:02x}'.format(addr[0], addr[1], addr[2], addr[3], addr[4], addr[5])
+            ble_gatt_close()
+            print('[callback] connect_id = {}, addr = {}'.format(connect_id, addr_str))
         else:
             print('[callback] ble disconnect failed.')
             ble_gatt_close()
             return
-    elif event_id == 18:  # ble update connection parameter
+    elif event_id == event.BLE_UPDATE_CONN_PARAM_IND:  # ble update connection parameter
         if status == 0:
             print('[callback] ble update parameter successful.')
             connect_id = args[2]
@@ -7050,49 +7393,49 @@ def ble_callback(args):
             print('[callback] ble update parameter failed.')
             ble_gatt_close()
             return
-    elif event_id == 20:  # ble connection mtu
+    elif event_id == event.BLE_GATT_MTU:  # ble connection mtu
         if status == 0:
             print('[callback] ble connect mtu successful.')
             handle = args[2]
             ble_mtu = args[3]
-            print('[callback] handle = {}, ble_mtu = {}'.format(handle, ble_mtu))
+            print('[callback] handle = {:#06x}, ble_mtu = {}'.format(handle, ble_mtu))
         else:
             print('[callback] ble connect mtu failed.')
             ble_gatt_close()
             return
-    elif event_id == 21:  # server:when ble client write characteristic value or descriptor,server get the notice
+    elif event_id == event.BLE_GATT_RECV_WRITE_IND:
         if status == 0:
             print('[callback] ble recv successful.')
             data_len = args[2]
-            data = args[3]  # this is a bytearray
+            data = args[3]  # this is bytearray
             attr_handle = args[4]
             short_uuid = args[5]
-            long_uuid = args[6]  # this is a bytearray
+            long_uuid = args[6]  # this is bytearray
             print('len={}, data:{}'.format(data_len, data))
-            print('attr_handle = {}'.format(attr_handle))
-            print('short uuid = {}'.format(short_uuid))
+            print('attr_handle = {:#06x}'.format(attr_handle))
+            print('short uuid = {:#06x}'.format(short_uuid))
             print('long uuid = {}'.format(long_uuid))
         else:
             print('[callback] ble recv failed.')
             ble_gatt_close()
             return
-    elif event_id == 22:  # server:when ble client read characteristic value or descriptor,server get the notice
+    elif event_id == event.BLE_GATT_RECV_READ_IND:
         if status == 0:
             print('[callback] ble recv read successful.')
             data_len = args[2]
-            data = args[3]  # this is a bytearray
+            data = args[3]  # this is bytearray
             attr_handle = args[4]
             short_uuid = args[5]
-            long_uuid = args[6]  # this is a bytearray
+            long_uuid = args[6]  # this is bytearray
             print('len={}, data:{}'.format(data_len, data))
-            print('attr_handle = {}'.format(attr_handle))
-            print('short uuid = {}'.format(short_uuid))
+            print('attr_handle = {:#06x}'.format(attr_handle))
+            print('short uuid = {:#06x}'.format(short_uuid))
             print('long uuid = {}'.format(long_uuid))
         else:
             print('[callback] ble recv read failed.')
             ble_gatt_close()
             return
-    elif event_id == 25:  # server send notification,and recieve send end notice
+    elif event_id == event.BLE_GATT_SEND_END:
         if status == 0:
             print('[callback] ble send data successful.')
         else:
@@ -7151,10 +7494,10 @@ def ble_gatt_set_name():
 def ble_gatt_set_param():
     min_adv = 0x300
     max_adv = 0x320
-    adv_type = 0  # CONNECTABLE UNDIRECTED, default 
+    adv_type = 0  # Connectable and undirected broadcast, selected by default
     addr_type = 0  # public address
     channel = 0x07
-    filter_strategy = 0  # process scan and connection requests from all devices
+    filter_strategy = 0  # Process scanning and connection requests for all devices
     discov_mode = 2
     no_br_edr = 1
     enable_adv = 1
@@ -7253,7 +7596,7 @@ def ble_gatt_add_characteristic_value():
 
 
 def ble_gatt_add_characteristic_desc():
-    data = [0x00, 0x00, 0x00, 0x00]
+    data = [0x00, 0x00]
     server_id = 0x01
     chara_id = 0x01
     permission = 0x0001 | 0x0002
@@ -7271,7 +7614,7 @@ def ble_gatt_add_characteristic_desc():
 
 def ble_gatt_send_notification():
     global BLE_SERVER_HANDLE
-    data = [0x39, 0x39, 0x39, 0x39, 0x39]  # send any data
+    data = [0x39, 0x39, 0x39, 0x39, 0x39]  # test data
     conn_id = 0
     attr_handle = BLE_SERVER_HANDLE + 2
     value = bytearray(data)
@@ -7330,7 +7673,7 @@ def main():
     else:
         return -1
     count = 0
-    while 1:
+    while True:
         utime.sleep(1)
         count += 1
         if count % 5 == 0:
@@ -7340,8 +7683,1479 @@ def main():
             print('!!!!! stop BLE now !!!!!')
             ble_gatt_close()
             ble_gatt_server_release()
-            break
+            return 0
 
+
+if __name__ == '__main__':
+    main()
+
+```
+
+
+
+##### BLE Client - Initialize BLE and Register Callback Function
+
+> **ble.clientInit(user_cb)**
+
+* Function：
+
+  Initialize BLE Client and register callback function.
+
+* Parameter：
+
+| Parameter | Tpye     | Description       |
+| --------- | -------- | ----------------- |
+| user_cb   | function | Callback function |
+
+* Return Value：
+
+  0	 Successful execution
+
+  -1	Failed execution
+
+Description：
+
+（1）Format of callback function
+
+```python
+def ble_callback(args):
+	event_id = args[0]  # The first parameter is fixed as event_id
+	status = args[1] # The second parameter is fixed as status which indicates the execution result of an operation, such as BLE is enabled successfully or unsuccessfully.
+	......
+```
+
+（2）Description of callback function parameter 
+
+​		args[0] is fixed to represent event_id; args[1] is fixed to represent status. 0 indicates a success; non-0 indicates a failure. The number of callback function parameter is not fixed as 2; instead it is determined by the first parameter args[0]. The number of parameters and descriptions corresponding to the different event IDs are as follows.
+
+| event_id | Number of Parameter | Parameter Description                                        |
+| :------: | :-----------------: | ------------------------------------------------------------ |
+|    0     |          2          | args[0]: event_id, which indicates BT/BLE starts<br/>args[1]: status, which indicates the operation state. 0 - Successful execution; non-0 - Failed execution |
+|    1     |          2          | args[0]: event_id, which indicates BT/BLE stops<br/>args[1]: status, which indicates the operation state. 0 - Successful execution; non-0 - Failed execution |
+|    16    |          4          | args[0]: event_id, which indicates BLE connect<br/>args[1]: status, which indicates the operation state. 0 - Successful execution; non-0 - Failed execution<br/>args[2]: connect_id<br/>args[3]: addr, BT/BLE address, data type is bytearray |
+|    17    |          4          | args[0] ：event_id, which indicates BLE disconnect<br/>args[1] ：status, which indicates the operation state. 0 - Successful execution; non-0 - Failed execution<br/>args[2] ：connect_id<br/>args[3] ：addr，BT/BLE address，data type is bytearray |
+|    18    |          7          | args[0]: event_id, which indicates BLE update connection parameter<br/>args[1]: status, which indicates the operation state. 0 - Successful execution; non-0 - Failed execution<br/>args[2]: connect_id<br/>args[3]: max_interval, maximum interval. Interval: 1.25ms. Range: 6–3200. Time Range: 7.5ms–4s<br/>args[4]: min_interval, maximum interval. Interval: 1.25ms. Range: 6–3200. Time Range: 7.5ms–4s<br/>args[5]: latency, the time during which the slave ignores the connection state events. It needs to meet the formula（1+latecy)\*max_interval\*2\*1.25<timeout\*10<br/>args[6]: timeout,  the disconnection timeout period when there is no interaction, interval:10ms. Range: 10–3200. Time range: 100ms–32s. |
+|    19    |          9          | args[0] ：event_id, which indicates BLE scan report<br/>args[1] ：status, which indicates the operation state. 0 - Successful execution; non-0 - Failed execution<br/>args[2] ：event_type<br/>args[3] ：Name of the scanned devices<br/>args[4] ：address type<br/>args[5] ：device's address, bytearray<br/>args[6] ：rssi, Signal strength<br/>args[7] ：data_len, the length of data<br/>args[8] ：data, Raw data scanned |
+|    20    |          4          | args[0] ：event_id, which indicates BLE connection mtu<br/>args[1] ：status, which indicates the operation state. 0 - Successful execution; non-0 - Failed execution<br/>args[2] ：handle<br/>args[3] ：mtu value |
+|    23    |          4          | args[0] ：event_id, which indicates client recieve notification<br/>args[1] ：status, which indicates the operation state. 0 - Successful execution; non-0 - Failed execution<br/>args[2] ：data_len, the length of data<br/>args[3] ：data, Raw data scanned, The data format and parsing are shown in the final comprehensive sample program |
+|    24    |          4          | args[0] ：event_id, which indicates client recieve indication<br/>args[1] ：status, which indicates the operation state. 0 - Successful execution; non-0 - Failed execution<br/>args[2] ：data_len, the length of data<br/>args[3] ：data, Raw data scanned, The data format and parsing are shown in the final comprehensive sample program |
+|    26    |          2          | args[0] ：event_id, which indicates start discovering  service<br/>args[1] ：status, which indicates the operation state. 0 - Successful execution; non-0 - Failed execution |
+|    27    |          5          | args[0] ：event_id, which indicates discovered service<br/>args[1] ：status, which indicates the operation state. 0 - Successful execution; non-0 - Failed execution<br/>args[2] ：start_handle, which indicates the start handle of the service<br/>args[3] ：end_handle, which indicates the end handle of the service<br/>args[4] ：UUID, which indicates the UUID of the service (short UUID) |
+|    28    |          4          | args[0] ：event_id, which indicates discover characteristic<br/>args[1] ：status, which indicates the operation state. 0 - Successful execution; non-0 - Failed execution<br/>args[2] ：data_len, the length of data<br/>args[3] ：data, Contain handle, attribute, UUID and other data of the raw data, data format and parsing see the last comprehensive example program |
+|    29    |          4          | args[0] ：event_id, which indicates discover characteristic descriptor<br/>args[1] ：status, which indicates the operation state. 0 - Successful execution; non-0 - Failed execution<br/>args[2] ：data_len, the length of data<br/>args[3] ：data, Contain handle, UUID and other data of the raw data, data format and parsing see the last comprehensive example program |
+|    30    |          2          | args[0] ：event_id, which indicates write characteristic value and require link layer confirmation<br/>args[1] ：status, which indicates the operation state. 0 - Successful execution; non-0 - Failed execution |
+|    31    |          2          | args[0] ：event_id, which indicates write characteristic value without response<br/>args[1] ：status, which indicates the operation state. 0 - Successful execution; non-0 - Failed execution |
+|    32    |          4          | args[0] ：event_id, which indicates read characteristic value by handle<br/>args[1] ：status, which indicates the operation state. 0 - Successful execution; non-0 - Failed execution<br/>args[2] ：data_len, the length of data<br/>args[3] ：data, Raw data |
+|    33    |          4          | args[0] ：event_id, which indicates read characteristic value by uuid<br/>args[1] ：status, which indicates the operation state. 0 - Successful execution; non-0 - Failed execution<br/>args[2] ：data_len, the length of data<br/>args[3] ：data, Raw data |
+|    34    |          4          | args[0] ：event_id, which indicates read miltiple characteristic value<br/>args[1] ：status, which indicates the operation state. 0 - Successful execution; non-0 - Failed execution<br/>args[2] ：data_len, the length of data<br/>args[3] ：data, Raw data |
+|    35    |          2          | args[0] ：event_id, which indicates wirte characteristic descriptor and require link layer confirmation<br/>args[1] ：status, which indicates the operation state. 0 - Successful execution; non-0 - Failed execution |
+|    36    |          4          | args[0] ：event_id, which indicates read characteristic descriptor<br/>args[1] ：status, which indicates the operation state. 0 - Successful execution; non-0 - Failed execution<br/>args[2] ：data_len, the length of data<br/>args[3] ：data, Raw data |
+|    37    |          3          | args[0] ：event_id, which indicates attribute error<br/>args[1] ：status, which indicates the operation state. 0 - Successful execution; non-0 - Failed execution<br/>args[2] ：error code |
+
+Example：
+
+```
+See comprehensive example
+```
+
+
+
+##### BLE Client - Release BLE Client Resources 
+
+> **ble.clientRelease()**
+
+* Function:
+
+  Release BLE Client resources.
+
+* Parameter:
+
+  None
+
+* Return Value:
+
+  0	 Successful execution
+
+  -1	Failed execution
+
+* Example：
+
+```python
+See comprehensive example
+```
+
+
+
+##### BLE Client - Set Scan Parameters
+
+> **ble.setScanParam(scan_mode, interval, scan_window, filter_policy, addr_type)**
+
+* Function:
+
+  Set scan parameters.
+
+* Parameter:
+
+| Parameter     | Type                  | Description                                                  |
+| ------------- | --------------------- | ------------------------------------------------------------ |
+| scan_mode     | Unsigned integer type | Scan mode,  Active scan by default:<br>0 - Negative scan<br/>1 -Active scan. In this mode, the scan-reply data set by the broadcast end is meaningful |
+| interval      | Unsigned integer type | Scanning interval, range : 0x0004-0x4000, the calculation is as follows:<br/>time interval = interval \* 0.625,  unit : ms |
+| scan_window   | Unsigned integer type | The time of one scan, range : 0x0004-0x4000, the calculation is as follows:<br/>scan_time = scan_window\* 0.625，单位ms |
+| filter_policy | Unsigned integer type | Scan filtering policy, default 0：<br/>0 - All broadcast packets except for directional broadcasts that are not from the device<br/>1 - Whitelisted broadcast packets of devices except for directed broadcasts that are not of the device<br/>2 - Undirectional broadcast, directional broadcast directed to the device or directional broadcast using Resolvable private address<br/>3 - Whitelist device non-directional broadcast, directional broadcast to the device or directional broadcast using Resolvable private address |
+| addr_type     | Unsigned integer type | Local address type, range:<br/>0 - Public address<br/>1 - Random address |
+
+* Notice:
+
+  Something to note about the interval and scan_window parameters : Scan time scan_window cannot be longer than the scan interval. If they are equal, it indicates continuous scanning. In this case, the BLE Controller runs continuous scanning, occupying system resources and therefore cannot perform other tasks. It is not recommended to set the time too short, the more frequent the scan, the higher the power consumption.
+
+* Return Value:
+
+  0	 Successful execution
+
+  -1	Failed execution
+
+* Example：
+
+```python
+See comprehensive example
+```
+
+
+
+##### BLE Client - Start Scanning
+
+> **ble.scanStart()**
+
+* Function:
+
+  Start scanning.
+
+* Parameter:
+
+  None
+
+* Return Value:
+
+  0	 Successful execution
+
+  -1	Failed execution
+
+* Example：
+
+```python
+See comprehensive example
+```
+
+
+
+##### BLE Client - Stop Scanning
+
+> **ble.scanStop()**
+
+* Function:
+
+  Stop scanning.
+
+* Parameter:
+
+  None
+
+* Return Value:
+
+  0	 Successful execution
+
+  -1	Failed execution
+
+* Example：
+
+```python
+See comprehensive example
+```
+
+
+
+##### BLE Client - Scan filter switch
+
+> **ble.setScanFilter(act)**
+
+* Function:
+
+  Turn on or off the scan filter switch. If this parameter is enabled, the broadcast data of the same device is reported only once when scanning the broadcast data of the device. If disabled, all broadcast data on the same device will be reported.The filtering function is enabled by default.
+
+* Parameter:
+
+  | Parameter | Type                  | Description                                                  |
+  | --------- | --------------------- | ------------------------------------------------------------ |
+  | act       | Unsigned integer type | 0 - Turn off the scan filter switch<br/>1 - Turn on the scan filter switch |
+
+* Return Value:
+
+  0	 Successful execution
+
+  -1	Failed execution
+
+* Example:
+
+```python
+See comprehensive example
+```
+
+
+
+##### BLE Client - Establish a connection
+
+> **ble.connect(addr_type, addr)**
+
+* Function:
+
+  Connect to the device based on the specified device address.
+
+* Parameter:
+
+  | Parameter | Type                  | Description                                                  |
+  | --------- | --------------------- | ------------------------------------------------------------ |
+  | addr_type | Unsigned integer type | Address type, range:<br/>0 - Public address<br/>1 - Random address |
+  | addr      | bytearray type        | device address, 6 bytes                                      |
+
+* Return Value:
+
+  0	 Successful execution
+
+  -1	Failed execution
+
+* Example:
+
+```python
+See comprehensive example
+```
+
+
+
+##### BLE Client - Cancels the connection being established
+
+> **ble.cancelConnect(addr)**
+
+* Function:
+
+  Cancels the connection being established.
+
+* Parameter:
+
+  | Parameter | Type           | Description             |
+  | --------- | -------------- | ----------------------- |
+  | addr      | bytearray type | device address, 6 bytes |
+
+* Return Value:
+
+  0	 Successful execution
+
+  -1	Failed execution
+
+* Example:
+
+```python
+None
+```
+
+
+
+##### BLE Client - Disconnect the connection
+
+> **ble.disconnect(connect_id)**
+
+* Function:
+
+  Disconnect an established connection.
+
+* Parameter:
+
+  | Parameter  | Type                  | Description                                                  |
+  | ---------- | --------------------- | ------------------------------------------------------------ |
+  | connect_id | Unsigned integer type | Connection ID, the connection ID obtained when establishing the connection |
+
+* Return Value:
+
+  0	 Successful execution
+
+  -1	Failed execution
+
+* Example:
+
+```python
+See comprehensive example
+```
+
+
+
+##### BLE Client - Scan all services
+
+> **ble.discoverAllService(connect_id)**
+
+* Function:
+
+  Scan all services of the device.
+
+* Parameter:
+
+  | Parameter  | Type                  | Description                                                  |
+  | ---------- | --------------------- | ------------------------------------------------------------ |
+  | connect_id | Unsigned integer type | Connection ID, the connection ID obtained when establishing the connection |
+
+* Return Value:
+
+  0	 Successful execution
+
+  -1	Failed execution
+
+* Example:
+
+```python
+See comprehensive example
+```
+
+
+
+##### BLE Client - Scans services by  UUID
+
+> **ble.discoverByUUID(connect_id, uuid_type, uuid_s, uuid_l)**
+
+* Function:
+
+  Scans services by  UUID.
+
+* Parameter:
+
+  | Parameter  | Type                  | Description                                                  |
+  | ---------- | --------------------- | ------------------------------------------------------------ |
+  | connect_id | Unsigned integer type | Connection ID, the connection ID obtained when establishing the connection |
+  | uuid_type  | Unsigned integer type | uuid type<br>0 - long UUID, 128bit<br>1 - short UUID, 16bit  |
+  | uuid_s     | Unsigned integer type | short UUID, 2 bytes(16bit), When uuid_type is 0, this value is 0 |
+  | uuid_l     | bytearray type        | long UUID，16 bytes(128bit),When uuid_type is 1, this value is  bytearray([0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]) |
+
+* Return Value:
+
+  0	 Successful execution
+
+  -1	Failed execution
+
+* Example:
+
+```python
+See comprehensive example
+```
+
+
+
+##### BLE Client - Scans all includes
+
+> **ble.discoverAllIncludes(connect_id, start_handle, end_handle)**
+
+* Function:
+
+  Scan all includes. Start_handle and end_handle belong to the same service.
+
+* Parameter:
+
+  | Parameter    | Type                  | Description                                                  |
+  | ------------ | --------------------- | ------------------------------------------------------------ |
+  | connect_id   | Unsigned integer type | Connection ID, the connection ID obtained when establishing the connection |
+  | start_handle | Unsigned integer type | Start handle from which to start looking for includes        |
+  | end_handle   | Unsigned integer type | end handle from which to start looking for includes          |
+
+* Return Value:
+
+  0	 Successful execution
+
+  -1	Failed execution
+
+* Example:
+
+```python
+None
+```
+
+
+
+##### BLE Client - Scans all characteristics
+
+> **ble.discoverAllChara(connect_id, start_handle, end_handle)**
+
+* Function:
+
+  Scans all characteristics. Start_handle and end_handle belong to the same service.
+
+* Parameter:
+
+  | Parameter    | Type                  | Description                                                  |
+  | ------------ | --------------------- | ------------------------------------------------------------ |
+  | connect_id   | Unsigned integer type | Connection ID, the connection ID obtained when establishing the connection |
+  | start_handle | Unsigned integer type | Start handle from which to start looking for characteristics |
+  | end_handle   | Unsigned integer type | end handle from which to start looking for characteristics   |
+
+* Return Value:
+
+  0	 Successful execution
+
+  -1	Failed execution
+
+* Example:
+
+```python
+See comprehensive example
+```
+
+
+
+##### BLE Client - Scan the description of all characteristics
+
+> **ble.discoverAllCharaDesc(connect_id, start_handle, end_handle)**
+
+* Function:
+
+  Scan the description of all characteristics. Start_handle and end_handle belong to the same service.
+
+* Parameter:
+
+  | Parameter    | Type                  | Description                                                  |
+  | ------------ | --------------------- | ------------------------------------------------------------ |
+  | connect_id   | Unsigned integer type | Connection ID, the connection ID obtained when establishing the connection |
+  | start_handle | Unsigned integer type | Start handle from which to start looking for characteristic description |
+  | end_handle   | Unsigned integer type | end handle from which to start looking for characteristic description |
+
+* Return Value:
+
+  0	 Successful execution
+
+  -1	Failed execution
+
+* Example:
+
+```python
+See comprehensive example
+```
+
+
+
+##### BLE Client - Reads the characteristic value by the specified UUID
+
+> **ble.readCharaByUUID(connect_id, start_handle, end_handle, uuid_type, uuid_s, uuid_l)**
+
+* Function:
+
+  Scan the description of all characteristics. Start_handle and end_handle must contain a characteristic value  handle.
+
+* Parameter:
+
+  | Parameter    | Type                  | Description                                                  |
+  | ------------ | --------------------- | ------------------------------------------------------------ |
+  | connect_id   | Unsigned integer type | Connection ID, the connection ID obtained when establishing the connection |
+  | start_handle | Unsigned integer type | The start handle must belong to the same characteristic handle |
+  | end_handle   | Unsigned integer type | The end handle must belong to the same characteristic handle |
+  | uuid_type    | Unsigned integer type | uuid type<br/>0 - long UUID, 128bit<br/>1 - short UUID, 16bit |
+  | uuid_s       | Unsigned integer type | short UUID, 2 bytes(16bit), When uuid_type is 0, this value is 0 |
+  | uuid_l       | bytearray type        | long UUID，16 bytes(128bit),When uuid_type is 1, this value is  bytearray([0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]) |
+
+* Return Value:
+
+  0	 Successful execution
+
+  -1	Failed execution
+
+* Example:
+
+```python
+See comprehensive example
+```
+
+
+
+##### BLE Client - Reads the characteristic value by the specified handle
+
+> **ble.readCharaByHandle(connect_id, handle, offset, is_long)**
+
+* Function:
+
+  Reads the characteristic value by the specified handle.
+
+* Parameter:
+
+  | Parameter  | Type                  | Description                                                  |
+  | ---------- | --------------------- | ------------------------------------------------------------ |
+  | connect_id | Unsigned integer type | Connection ID, the connection ID obtained when establishing the connection |
+  | handle     | Unsigned integer type | the handle of characteristic value                           |
+  | offset     | Unsigned integer type | offset                                                       |
+  | is_long    | Unsigned integer type | Long characteristic value flag<br/>0 - Short characteristic value, It can be read all at once<br/>1 - Long characteristic value, It needs to be read multiple times |
+
+* Return Value:
+
+  0	 Successful execution
+
+  -1	Failed execution
+
+* Example:
+
+```python
+See comprehensive example
+```
+
+
+
+##### BLE Client - Reads the characteristic description 
+
+> **ble.readCharaDesc(connect_id, handle, is_long)**
+
+* Function:
+
+  Reads the characteristic description.
+
+* Parameter:
+
+  | Parameter  | Type                  | Description                                                  |
+  | ---------- | --------------------- | ------------------------------------------------------------ |
+  | connect_id | Unsigned integer type | Connection ID, the connection ID obtained when establishing the connection |
+  | handle     | Unsigned integer type | the handle of characteristic description                     |
+  | is_long    | Unsigned integer type | Long characteristic descriptionflag<br/>0 - Short characteristic description<br/>1 - Long characteristic description |
+
+* Return Value:
+
+  0	 Successful execution
+
+  -1	Failed execution
+
+* Example:
+
+```python
+See comprehensive example
+```
+
+
+
+##### BLE Client - Writes the characteristic value(require link layer response)
+
+> **ble.writeChara(connect_id, handle, offset, is_long, data)**
+
+* Function:
+
+  Writes the characteristic value  and require link layer response.
+
+* Parameter:
+
+  | Parameter  | Type                  | Description                                                  |
+  | ---------- | --------------------- | ------------------------------------------------------------ |
+  | connect_id | Unsigned integer type | Connection ID, the connection ID obtained when establishing the connection |
+  | handle     | Unsigned integer type | the handle of characteristic value                           |
+  | offset     | Unsigned integer type | offset                                                       |
+  | is_long    | Unsigned integer type | Long characteristic value flag<br/>0 - Short characteristic value, It can be read all at once<br/>1 - Long characteristic value, It needs to be read multiple times |
+  | data       | bytearray type        | the data of characteristic value                             |
+
+* Return Value:
+
+  0	 Successful execution
+
+  -1	Failed execution
+
+* Example:
+
+```python
+None
+```
+
+
+
+##### BLE Client - Writes the characteristic value(Without link layer response)
+
+> **ble.writeCharaNoRsp(connect_id, handle, data)**
+
+* Function:
+
+  Writes the characteristic value  without link layer response.
+
+* Parameter:
+
+  | Parameter  | Type                  | Description                                                  |
+  | ---------- | --------------------- | ------------------------------------------------------------ |
+  | connect_id | Unsigned integer type | Connection ID, the connection ID obtained when establishing the connection |
+  | handle     | Unsigned integer type | the handle of characteristic value                           |
+  | data       | bytearray type        | the data of characteristic value                             |
+
+* Return Value:
+
+  0	 Successful execution
+
+  -1	Failed execution
+
+* Example:
+
+```python
+None
+```
+
+
+
+##### BLE Client - Writes the characteristic description 
+
+> **ble.writeCharaDesc(connect_id, handle, data)**
+
+* Function:
+
+  Writes the characteristic description.
+
+* Parameter:
+
+  | Parameter  | Type                  | Description                                                  |
+  | ---------- | --------------------- | ------------------------------------------------------------ |
+  | connect_id | Unsigned integer type | Connection ID, the connection ID obtained when establishing the connection |
+  | handle     | Unsigned integer type | the handle of characteristic description                     |
+  | data       | bytearray type        | the data of characteristic description                       |
+
+* Return Value:
+
+  0	 Successful execution
+
+  -1	Failed execution
+
+* Example:
+
+```python
+See comprehensive example
+```
+
+
+
+##### BLE Client- Comprehensive Example:
+
+```python
+# -*- coding: UTF-8 -*-
+
+import ble
+import utime
+import _thread
+import checkNet
+from queue import Queue
+
+PROJECT_NAME = "QuecPython_BLE_Client_Example"
+PROJECT_VERSION = "1.0.0"
+checknet = checkNet.CheckNetwork(PROJECT_NAME, PROJECT_VERSION)
+
+event_dict = {
+    'BLE_START_STATUS_IND': 0,  # ble start
+    'BLE_STOP_STATUS_IND': 1,   # ble stop
+    'BLE_CONNECT_IND': 16,  # ble connect
+    'BLE_DISCONNECT_IND': 17,   # ble disconnect
+    'BLE_UPDATE_CONN_PARAM_IND': 18,    # ble update connection parameter
+    'BLE_SCAN_REPORT_IND': 19,  # ble gatt client scan and report other devices
+    'BLE_GATT_MTU': 20, # ble connection mtu
+    'BLE_GATT_RECV_NOTIFICATION_IND': 23,   # client receive notification
+    'BLE_GATT_RECV_INDICATION_IND': 24, # client receive indication
+    'BLE_GATT_START_DISCOVER_SERVICE_IND': 26,  # start discover service
+    'BLE_GATT_DISCOVER_SERVICE_IND': 27,    # discover service
+    'BLE_GATT_DISCOVER_CHARACTERISTIC_DATA_IND': 28,    # discover characteristic
+    'BLE_GATT_DISCOVER_CHARA_DESC_IND': 29, # discover characteristic descriptor
+    'BLE_GATT_CHARA_WRITE_WITH_RSP_IND': 30,    # write characteristic value with response
+    'BLE_GATT_CHARA_WRITE_WITHOUT_RSP_IND': 31, # write characteristic value without response
+    'BLE_GATT_CHARA_READ_IND': 32,  # read characteristic value by handle
+    'BLE_GATT_CHARA_READ_BY_UUID_IND': 33,  # read characteristic value by uuid
+    'BLE_GATT_CHARA_MULTI_READ_IND': 34,    # read multiple characteristic value
+    'BLE_GATT_DESC_WRITE_WITH_RSP_IND': 35, # write characteristic descriptor
+    'BLE_GATT_DESC_READ_IND': 36,   # read characteristic descriptor
+    'BLE_GATT_ATT_ERROR_IND': 37,   # attribute error
+}
+
+gatt_status_dict = {
+    'BLE_GATT_IDLE' : 0,
+    'BLE_GATT_DISCOVER_SERVICE': 1,
+    'BLE_GATT_DISCOVER_INCLUDES': 2,
+    'BLE_GATT_DISCOVER_CHARACTERISTIC': 3,
+    'BLE_GATT_WRITE_CHARA_VALUE': 4,
+    'BLE_GATT_WRITE_CHARA_DESC': 5,
+    'BLE_GATT_READ_CHARA_VALUE': 6,
+    'BLE_GATT_READ_CHARA_DESC': 7,
+}
+
+class EVENT(dict):
+    def __getattr__(self, item):
+        return self[item]
+
+    def __setattr__(self, key, value):
+        raise ValueError("{} is read-only.".format(key))
+
+
+class BleClient(object):
+    def __init__(self):
+        self.ble_server_name = 'Quectel_ble' # Ble name of the target device
+        self.connect_id = 0
+        self.connect_addr = 0
+        self.gatt_statue = 0
+        self.discover_service_mode = 0 # 0-discover all service, 1-discover service by uuid
+
+        self.scan_param = {
+            'scan_mode' : 1, # Active scanning
+            'interval' : 0x100,
+            'scan_window' : 0x50,
+            'filter_policy' : 0,
+            'local_addr_type' : 0,
+        }
+
+        self.scan_report_info = {
+            'event_type' : 0,
+            'name' : '',
+            'addr_type' : 0,
+            'addr' : 0,
+            'rssi' : 0,
+            'data_len' : 0,
+            'raw_data' : 0,
+        }
+
+        self.target_service = {
+            'start_handle' : 0,
+            'end_handle' : 0,
+            'uuid_type' : 1, # short uuid
+            'short_uuid' : 0x180F, # Battery power service
+            'long_uuid' : bytearray([0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00])
+        }
+
+        self.characteristic_list = []
+        self.descriptor_list = []
+        self.characteristic_count = 0   # ql_ble_gatt_chara_count
+        self.chara_descriptor_count = 0 # ql_ble_gatt_chara_desc_count
+        self.characteristic_index = 0   # ql_ble_gatt_chara_desc_index
+        self.current_chara_index = 0    # ql_ble_gatt_cur_chara
+        self.current_desc_index = 0     # ql_ble_gatt_chara_cur_desc
+        self.ble_short_uuid_pair_len = 7
+        self.ble_long_uuid_pair_len = 21
+
+        ret = ble.clientInit(self.ble_client_callback)
+        if ret != 0:
+            print('ble client initialize failed.')
+            raise ValueError("BLE Client Init failed.")
+        else:
+            print('ble client initialize successful.')
+        print('')
+
+    @staticmethod
+    def gatt_open():
+        ret = ble.gattStart()
+        if ret != 0:
+            print('ble open failed.')
+        else:
+            print('ble open successful.')
+        print('')
+        return ret
+
+    @staticmethod
+    def gatt_close():
+        ret = ble.gattStop()
+        if ret != 0:
+            print('ble close failed.')
+        else:
+            print('ble close successful.')
+        print('')
+        return ret
+
+    @staticmethod
+    def gatt_get_status():
+        return ble.getStatus()
+
+    @staticmethod
+    def release():
+        ret = ble.clientRelease()
+        if ret != 0:
+            print('ble client release failed.')
+        else:
+            print('ble client release successful.')
+        print('')
+        return ret
+
+    def set_scan_param(self):
+        scan_mode = self.scan_param['scan_mode']
+        interval = self.scan_param['interval']
+        scan_time = self.scan_param['scan_window']
+        filter_policy = self.scan_param['filter_policy']
+        local_addr_type = self.scan_param['local_addr_type']
+        ret = ble.setScanParam(scan_mode, interval, scan_time, filter_policy, local_addr_type)
+        if ret != 0:
+            print('ble client set scan-parameters failed.')
+        else:
+            print('ble client set scan-parameters successful.')
+        print('')
+        return ret
+
+    @staticmethod
+    def start_scan():
+        ret = ble.scanStart()
+        if ret != 0:
+            print('ble client scan failed.')
+        else:
+            print('ble client scan successful.')
+        print('')
+        return ret
+
+    @staticmethod
+    def stop_scan():
+        ret = ble.scanStop()
+        if ret != 0:
+            print('ble client failed to stop scanning.')
+        else:
+            print('ble client scan stopped successfully.')
+        print('')
+        return ret
+
+    def connect(self):
+        print('start to connect.....')
+        addr_type = self.scan_report_info['addr_type']
+        addr = self.scan_report_info['addr']
+        if addr != 0 and len(addr) == 6:
+            addr_str = '{:02x}:{:02x}:{:02x}:{:02x}:{:02x}:{:02x}'.format(addr[0], addr[1], addr[2], addr[3], addr[4], addr[5])
+            print('addr_type : {}, addr : {}'.format(addr_type, addr_str))
+            ret = ble.connect(addr_type, addr)
+            if ret != 0:
+                print('ble client connect failed.')
+            else:
+                print('ble client connect successful.')
+            print('')
+            return ret
+
+    def cancel_connect(self):
+        ret = ble.cancelConnect(self.scan_report_info['addr'])
+        if ret != 0:
+            print('ble client cancel connect failed.')
+        else:
+            print('ble client cancel connect successful.')
+        print('')
+        return ret
+
+    def disconnect(self):
+        ret = ble.disconnect(self.connect_id)
+        if ret != 0:
+            print('ble client disconnect failed.')
+        else:
+            print('ble client disconnect successful.')
+        print('')
+        return ret
+
+    def discover_all_service(self):
+        ret = ble.discoverAllService(self.connect_id)
+        if ret != 0:
+            print('ble client discover all service failed.')
+        else:
+            print('ble client discover all service successful.')
+        print('')
+        return ret
+
+    def discover_service_by_uuid(self):
+        connect_id = self.connect_id
+        uuid_type = self.target_service['uuid_type']
+        short_uuid = self.target_service['short_uuid']
+        long_uuid = self.target_service['long_uuid']
+        ret = ble.discoverByUUID(connect_id, uuid_type, short_uuid, long_uuid)
+        if ret != 0:
+            print('ble client discover service by uuid failed.')
+        else:
+            print('ble client discover service by uuid successful.')
+        print('')
+        return ret
+
+    def discover_all_includes(self):
+        connect_id = self.connect_id
+        start_handle = self.target_service['start_handle']
+        end_handle = self.target_service['end_handle']
+        ret = ble.discoverAllIncludes(connect_id, start_handle, end_handle)
+        if ret != 0:
+            print('ble client discover all includes failed.')
+        else:
+            print('ble client discover all includes successful.')
+        print('')
+        return ret
+
+    def discover_all_characteristic(self):
+        connect_id = self.connect_id
+        start_handle = self.target_service['start_handle']
+        end_handle = self.target_service['end_handle']
+        ret = ble.discoverAllChara(connect_id, start_handle, end_handle)
+        if ret != 0:
+            print('ble client discover all characteristic failed.')
+        else:
+            print('ble client discover all characteristic successful.')
+        print('')
+        return ret
+
+    def discover_all_characteristic_descriptor(self):
+        connect_id = self.connect_id
+        index = self.characteristic_index
+        start_handle = self.characteristic_list[index]['value_handle'] + 1
+
+        if self.characteristic_index == (self.characteristic_count - 1):
+            end_handle = self.target_service['end_handle']
+            print('[1]start_handle = {:#06x}, end_handle = {:#06x}'.format(start_handle - 1, end_handle))
+            ret = ble.discoverAllCharaDesc(connect_id, start_handle, end_handle)
+        else:
+            end_handle = self.characteristic_list[index+1]['handle'] - 1
+            print('[2]start_handle = {:#06x}, end_handle = {:#06x}'.format(start_handle - 1, end_handle))
+            ret = ble.discoverAllCharaDesc(connect_id, start_handle, end_handle)
+        self.characteristic_index += 1
+        if ret != 0:
+            print('ble client discover all characteristic descriptor failed.')
+        else:
+            print('ble client discover all characteristic descriptor successful.')
+        print('')
+        return ret
+
+    def read_characteristic_by_uuid(self):
+        connect_id = self.connect_id
+        index = self.current_chara_index   # Change this value as needed
+        start_handle = self.characteristic_list[index]['handle']
+        end_handle = self.characteristic_list[index]['value_handle']
+        uuid_type = 1
+        short_uuid = self.characteristic_list[index]['short_uuid']
+        long_uuid = bytearray([0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00])
+
+        ret = ble.readCharaByUUID(connect_id, start_handle, end_handle, uuid_type, short_uuid, long_uuid)
+        if ret != 0:
+            print('ble client read characteristic by uuid failed.')
+        else:
+            print('ble client read characteristic by uuid successful.')
+        print('')
+        return ret
+
+    def read_characteristic_by_handle(self):
+        connect_id = self.connect_id
+        index = self.current_chara_index  # Change this value as needed
+        handle = self.characteristic_list[index]['value_handle']
+        offset = 0
+        is_long = 0
+
+        ret = ble.readCharaByHandle(connect_id, handle, offset, is_long)
+        if ret != 0:
+            print('ble client read characteristic by handle failed.')
+        else:
+            print('ble client read characteristic by handle successful.')
+        print('')
+        return ret
+
+    def read_characteristic_descriptor(self):
+        connect_id = self.connect_id
+        index = self.current_desc_index  # Change this value as needed
+        handle = self.descriptor_list[index]['handle']
+        print('handle = {:#06x}'.format(handle))
+        is_long = 0
+        ret = ble.readCharaDesc(connect_id, handle, is_long)
+        if ret != 0:
+            print('ble client read characteristic descriptor failed.')
+        else:
+            print('ble client read characteristic descriptor successful.')
+        print('')
+        return ret
+
+    def write_characteristic(self):
+        connect_id = self.connect_id
+        index = self.current_chara_index  # Change this value as needed
+        handle = self.characteristic_list[index]['value_handle']
+        offset = 0
+        is_long = 0
+        data = bytearray([0x40, 0x00])
+        print('value_handle = {:#06x}, uuid = {:#06x}'.format(handle, self.characteristic_list[index]['short_uuid']))
+        ret = ble.writeChara(connect_id, handle, offset, is_long, data)
+        if ret != 0:
+            print('ble client write characteristic failed.')
+        else:
+            print('ble client read characteristic successful.')
+        print('')
+        return ret
+
+    def write_characteristic_no_rsp(self):
+        connect_id = self.connect_id
+        index = self.current_chara_index  # Change this value as needed
+        handle = self.characteristic_list[index]['value_handle']
+        data = bytearray([0x20, 0x00])
+        print('value_handle = {:#06x}, uuid = {:#06x}'.format(handle, self.characteristic_list[index]['short_uuid']))
+        ret = ble.writeCharaNoRsp(connect_id, handle, data)
+        if ret != 0:
+            print('ble client write characteristic no rsp failed.')
+        else:
+            print('ble client read characteristic no rsp successful.')
+        print('')
+        return ret
+
+    def write_characteristic_descriptor(self):
+        connect_id = self.connect_id
+        index = self.current_desc_index  # Change this value as needed
+        handle = self.descriptor_list[index]['handle']
+        data = bytearray([0x01, 0x02])
+        print('handle = {:#06x}'.format(handle))
+
+        ret = ble.writeCharaDesc(connect_id, handle, data)
+        if ret != 0:
+            print('ble client write characteristic descriptor failed.')
+        else:
+            print('ble client read characteristic descriptor successful.')
+        print('')
+        return ret
+
+    @staticmethod
+    def ble_client_callback(args):
+        global msg_queue
+        msg_queue.put(args)
+
+
+def ble_gatt_client_event_handler():
+    global msg_queue
+    old_time = 0
+
+    while True:
+        cur_time = utime.localtime()
+        timestamp = "{:02d}:{:02d}:{:02d}".format(cur_time[3], cur_time[4], cur_time[5])
+        if cur_time[5] != old_time and cur_time[5] % 5 == 0:
+            old_time = cur_time[5]
+            print('[{}]event handler running.....'.format(timestamp))
+            print('')
+        msg = msg_queue.get()  # It's blocked here when there's no message
+        # print('msg : {}'.format(msg))
+        event_id = msg[0]
+        status = msg[1]
+
+        if event_id == event.BLE_START_STATUS_IND:
+            print('')
+            print('event_id : BLE_START_STATUS_IND, status = {}'.format(status))
+            if status == 0:
+                print('BLE start successful.')
+                ble_status = ble_client.gatt_get_status()
+                if ble_status == 0:
+                    print('BLE Status : stopped.')
+                    break
+                elif ble_status == 1:
+                    print('BLE Status : started.')
+                else:
+                    print('get ble status error.')
+                    ble_client.gatt_close()
+                    break
+
+                ret = ble_client.set_scan_param()
+                if ret != 0:
+                    ble_client.gatt_close()
+                    break
+                ret = ble_client.start_scan()
+                if ret != 0:
+                    ble_client.gatt_close()
+                    break
+            else:
+                print('BLE start failed.')
+                break
+        elif event_id == event.BLE_STOP_STATUS_IND:
+            print('')
+            print('event_id : BLE_STOP_STATUS_IND, status = {}'.format(status))
+            if status == 0:
+                print('ble stop successful.')
+            else:
+                print('ble stop failed.')
+                break
+        elif event_id == event.BLE_CONNECT_IND:
+            print('')
+            print('event_id : BLE_CONNECT_IND, status = {}'.format(status))
+            if status == 0:
+                ble_client.connect_id = msg[2]
+                ble_client.connect_addr = msg[3]
+                addr = ble_client.connect_addr
+                addr_str = '{:02x}:{:02x}:{:02x}:{:02x}:{:02x}:{:02x}'.format(addr[0], addr[1], addr[2], addr[3], addr[4], addr[5])
+                print('connect_id : {:#x}, connect_addr : {}'.format(ble_client.connect_id, addr_str))
+            else:
+                print('ble connect failed.')
+                break
+        elif event_id == event.BLE_DISCONNECT_IND:
+            print('')
+            print('event_id : BLE_DISCONNECT_IND, status = {}'.format(status))
+            if status == 0:
+                ble_client.connect_id = msg[2]
+                ble_client.connect_addr = msg[3]
+                addr = ble_client.connect_addr
+                addr_str = '{:02x}:{:02x}:{:02x}:{:02x}:{:02x}:{:02x}'.format(addr[0], addr[1], addr[2], addr[3], addr[4], addr[5])
+                print('connect_id : {:#x}, connect_addr : {}'.format(ble_client.connect_id, addr_str))
+            else:
+                print('ble disconnect failed.')
+            ble_client.gatt_close()
+            break
+        elif event_id == event.BLE_UPDATE_CONN_PARAM_IND:
+            print('')
+            print('event_id : BLE_UPDATE_CONN_PARAM_IND, status = {}'.format(status))
+            if status == 0:
+                connect_id = msg[2]
+                max_interval = msg[3]
+                min_interval = msg[4]
+                latency = msg[5]
+                timeout = msg[6]
+                print('connect_id={},max_interval={},min_interval={},latency={},timeout={}'.format(connect_id,max_interval,min_interval,latency,timeout))
+            else:
+                print('ble update parameter failed.')
+                ble_client.gatt_close()
+                break
+        elif event_id == event.BLE_SCAN_REPORT_IND:
+            if status == 0:
+                # print(' ble scan successful.')
+
+                ble_client.scan_report_info['event_type'] = msg[2]
+                ble_client.scan_report_info['name'] = msg[3]
+                ble_client.scan_report_info['addr_type'] = msg[4]
+                ble_client.scan_report_info['addr'] = msg[5]
+                ble_client.scan_report_info['rssi'] = msg[6]
+                ble_client.scan_report_info['data_len'] = msg[7]
+                ble_client.scan_report_info['raw_data'] = msg[8]
+
+                device_name = ble_client.scan_report_info['name']
+                addr = ble_client.scan_report_info['addr']
+                rssi = ble_client.scan_report_info['rssi']
+                addr_type = ble_client.scan_report_info['addr_type']
+                addr_str = '{:02x}:{:02x}:{:02x}:{:02x}:{:02x}:{:02x}'.format(addr[0], addr[1], addr[2], addr[3], addr[4], addr[5])
+                if device_name != '' and rssi != 0:
+                    print('name: {}, addr: {}, rssi: {}, addr_type: {}'.format(device_name, addr_str, rssi, addr_type))
+                    print('raw_data: {}'.format(ble_client.scan_report_info['raw_data']))
+
+                if device_name == ble_client.ble_server_name: # Stop scanning when the target device is detected
+                    ret = ble_client.stop_scan()
+                    if ret != 0:
+                        ble_client.gatt_close()
+                        break
+
+                    ret = ble_client.connect()
+                    if ret != 0:
+                        ble_client.gatt_close()
+                        break
+            else:
+                print('ble scan failed.')
+                ret = ble_client.stop_scan()
+                if ret != 0:
+                    ble_client.gatt_close()
+                    break
+        elif event_id == event.BLE_GATT_MTU:
+            print('')
+            print('event_id : BLE_GATT_MTU, status = {}'.format(status))
+            if status == 0:
+                handle = msg[2]
+                ble_mtu = msg[3]
+                print('handle = {:#06x}, ble_mtu = {}'.format(handle, ble_mtu))
+            else:
+                print('ble connect mtu failed.')
+                ble_client.gatt_close()
+                break
+        elif event_id == event.BLE_GATT_RECV_NOTIFICATION_IND:
+            print('')
+            print('event_id : BLE_GATT_RECV_NOTIFICATION_IND, status = {}'.format(status))
+            if status == 0:
+                data_len = msg[2]
+                data = msg[3]
+                print('len={}, data:{}'.format(data_len, data))
+                handle = (data[1] << 8) | data[0]
+                print('handle = {:#06x}'.format(handle))
+            else:
+                print('ble receive notification failed.')
+                break
+        elif event_id == event.BLE_GATT_RECV_INDICATION_IND:
+            print('')
+            print('event_id : BLE_GATT_RECV_INDICATION_IND, status = {}'.format(status))
+            if status == 0:
+                data_len = msg[2]
+                data = msg[3]
+                print('len={}, data:{}'.format(data_len, data))
+            else:
+                print('ble receive indication failed.')
+                break
+        elif event_id == event.BLE_GATT_START_DISCOVER_SERVICE_IND:
+            print('')
+            print('event_id : BLE_GATT_START_DISCOVER_SERVICE_IND, status = {}'.format(status))
+            if status == 0:
+                ble_client.characteristic_count = 0
+                ble_client.chara_descriptor_count = 0
+                ble_client.characteristic_index = 0
+                ble_client.gatt_statue = gatt_status.BLE_GATT_DISCOVER_SERVICE
+
+                if ble_client.discover_service_mode == 0:
+                    print('execute the function discover_all_service.')
+                    ret = ble_client.discover_all_service()
+                else:
+                    print('execute the function discover_service_by_uuid.')
+                    ret = ble_client.discover_service_by_uuid()
+                if ret != 0:
+                    print('Execution result: Failed.')
+                    ble_client.gatt_close()
+                    break
+            else:
+                print('ble start discover service failed.')
+                ble_client.gatt_close()
+                break
+        elif event_id == event.BLE_GATT_DISCOVER_SERVICE_IND:
+            print('')
+            print('event_id : BLE_GATT_DISCOVER_SERVICE_IND, status = {}'.format(status))
+            if status == 0:
+                start_handle = msg[2]
+                end_handle = msg[3]
+                short_uuid = msg[4]
+                print('start_handle = {:#06x}, end_handle = {:#06x}, short_uuid = {:#06x}'.format(start_handle, end_handle, short_uuid))
+                if ble_client.discover_service_mode == 0: # discover service all
+                    if ble_client.target_service['short_uuid'] == short_uuid: # After all services are found, searches for characteristic values based on the specified UUID
+                        ble_client.target_service['start_handle'] = start_handle
+                        ble_client.target_service['end_handle'] = end_handle
+                        ble_client.gatt_statue = gatt_status.BLE_GATT_DISCOVER_CHARACTERISTIC
+                        print('execute the function discover_all_characteristic.')
+                        ret = ble_client.discover_all_characteristic()
+                        if ret != 0:
+                            print('Execution result: Failed.')
+                            ble_client.gatt_close()
+                            break
+                else:
+                    ble_client.target_service['start_handle'] = start_handle
+                    ble_client.target_service['end_handle'] = end_handle
+                    ble_client.gatt_statue = gatt_status.BLE_GATT_DISCOVER_CHARACTERISTIC
+                    print('execute the function discover_all_characteristic.')
+                    ret = ble_client.discover_all_characteristic()
+                    if ret != 0:
+                        print('Execution result: Failed.')
+                        ble_client.gatt_close()
+                        break
+            else:
+                print('ble discover service failed.')
+                ble_client.gatt_close()
+                break
+        elif event_id == event.BLE_GATT_DISCOVER_CHARACTERISTIC_DATA_IND:
+            print('')
+            print('event_id : BLE_GATT_DISCOVER_CHARACTERISTIC_DATA_IND, status = {}'.format(status))
+            if status == 0:
+                data_len = msg[2]
+                data = msg[3]
+                pair_len = data[0]
+                print('pair_len={}, len={}, data:{}'.format(pair_len, data_len, data))
+                if data_len > 0:
+                    if ble_client.gatt_statue == gatt_status.BLE_GATT_DISCOVER_CHARACTERISTIC:
+                        i = 0
+                        while i < (data_len - 1) / pair_len:
+                            chara_dict = {
+                                'handle': (data[i * pair_len + 2] << 8) | data[i * pair_len + 1],
+                                'properties': data[i * pair_len + 3],
+                                'value_handle': (data[i * pair_len + 5] << 8) | data[i * pair_len + 4],
+                                'uuid_type': 0,
+                                'short_uuid': 0x0000,
+                                'long_uuid': bytearray([0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00])
+                            }
+                            print('handle={:#06x}, properties={:#x}, value_handle={:#06x}'.format(chara_dict['handle'], chara_dict['properties'], chara_dict['value_handle']))
+                            if pair_len == ble_client.ble_short_uuid_pair_len:
+                                chara_dict['uuid_type'] = 1
+                                chara_dict['short_uuid'] = (data[i * pair_len + 7] << 8) | data[i * pair_len + 6]
+                                print('short_uuid:{:#06x}'.format(chara_dict['short_uuid']))
+                            elif pair_len == ble_client.ble_long_uuid_pair_len:
+                                start_index = i * pair_len + 6
+                                end_index = start_index + 16
+                                chara_dict['uuid_type'] = 0
+                                chara_dict['long_uuid'] = data[start_index : end_index]
+                                print('long_uuid:{}'.format(chara_dict['long_uuid']))
+                            i += 1
+                            if ble_client.characteristic_count < 5:
+                                ble_client.characteristic_list.append(chara_dict)
+                                ble_client.characteristic_count = len(ble_client.characteristic_list)
+                            print('characteristic_list len = {}'.format(ble_client.characteristic_count))
+                    elif ble_client.gatt_statue == gatt_status.BLE_GATT_READ_CHARA_VALUE:
+                        print('data_len = {}'.format(data_len))
+                        print('pay_load = {:02x},{:02x},{:02x},{:02x}'.format(data[0], data[1], data[2], data[3]))
+            else:
+                print('ble discover characteristic failed.')
+                ble_client.gatt_close()
+                break
+        elif event_id == event.BLE_GATT_DISCOVER_CHARA_DESC_IND:
+            print('')
+            print('event_id : BLE_GATT_DISCOVER_CHARA_DESC_IND, status = {}'.format(status))
+            if status == 0:
+                data_len = msg[2]
+                data = msg[3]
+                fmt = data[0]
+                print('fmt={}, len={}, data:{}'.format(fmt, data_len, data))
+                if data_len > 0:
+                    i = 0
+                    if fmt == 1:  # 16 bit uuid
+                        while i < (data_len - 1) / 4:
+                            descriptor_dict = {
+                                'handle': (data[i * 4 + 2] << 8) | data[i * 4 + 1],
+                                'short_uuid': (data[i * 4 + 4] << 8) | data[i * 4 + 3],
+                            }
+                            print('handle={:#06x}, uuid={:#06x}'.format(descriptor_dict['handle'], descriptor_dict['short_uuid']))
+                            i += 1
+                            if ble_client.chara_descriptor_count < 5:
+                                ble_client.descriptor_list.append(descriptor_dict)
+                                ble_client.chara_descriptor_count = len(ble_client.descriptor_list)
+                            print('descriptor_list len = {}'.format(ble_client.chara_descriptor_count))
+                if ble_client.characteristic_index == ble_client.characteristic_count:
+                    print('execute the function read_characteristic_by_uuid.')
+                    # ble_client.gatt_statue = gatt_status.BLE_GATT_WRITE_CHARA_VALUE
+                    # ret = ble_client.write_characteristic()
+                    # ret = ble_client.write_characteristic_no_rsp()
+
+                    ble_client.gatt_statue = gatt_status.BLE_GATT_READ_CHARA_VALUE
+                    ret = ble_client.read_characteristic_by_uuid()
+                    # ret = ble_client.read_characteristic_by_handle()
+
+                    # ble_client.gatt_statue = gatt_status.BLE_GATT_READ_CHARA_DESC
+                    # ret = ble_client.read_characteristic_descriptor()
+
+                    # ble_client.gatt_statue = gatt_status.BLE_GATT_WRITE_CHARA_DESC
+                    # ret = ble_client.write_characteristic_descriptor()
+                else:
+                    print('execute the function discover_all_characteristic_descriptor.')
+                    ret = ble_client.discover_all_characteristic_descriptor()
+                if ret != 0:
+                    print('Execution result: Failed.')
+                    ble_client.gatt_close()
+                    break
+            else:
+                print('ble discover characteristic descriptor failed.')
+                ble_client.gatt_close()
+                break
+        elif event_id == event.BLE_GATT_CHARA_WRITE_WITH_RSP_IND:
+            print('')
+            print('event_id : BLE_GATT_CHARA_WRITE_WITH_RSP_IND, status = {}'.format(status))
+            if status == 0:
+                if ble_client.gatt_statue == gatt_status.BLE_GATT_WRITE_CHARA_VALUE:
+                    pass
+                elif ble_client.gatt_statue == gatt_status.BLE_GATT_WRITE_CHARA_DESC:
+                    pass
+            else:
+                print('ble write characteristic with response failed.')
+                break
+        elif event_id == event.BLE_GATT_CHARA_WRITE_WITHOUT_RSP_IND:
+            print('')
+            print('event_id : BLE_GATT_CHARA_WRITE_WITHOUT_RSP_IND, status = {}'.format(status))
+            if status == 0:
+                print('write characteristic value without response successful.')
+            else:
+                print('write characteristic value without response failed.')
+                break
+        elif event_id == event.BLE_GATT_CHARA_READ_IND:
+            print('')
+            # read characteristic value by handle
+            print('event_id : BLE_GATT_CHARA_READ_IND, status = {}'.format(status))
+            if status == 0:
+                data_len = msg[2]
+                data = msg[3]
+                print('data_len = {}, data : {}'.format(data_len, data))
+                if ble_client.gatt_statue == gatt_status.BLE_GATT_READ_CHARA_VALUE:
+                    # print('read characteristic value by handle.')
+                    pass
+            else:
+                print('ble read characteristic failed.')
+                break
+        elif event_id == event.BLE_GATT_CHARA_READ_BY_UUID_IND:
+            print('')
+            # read characteristic value by uuid
+            print('event_id : BLE_GATT_CHARA_READ_BY_UUID_IND, status = {}'.format(status))
+            if status == 0:
+                data_len = msg[2]
+                data = msg[3]
+                print('data_len = {}, data : {}'.format(data_len, data))
+                handle = (data[2] << 8) | data[1]
+                print('handle = {:#06x}'.format(handle))
+            else:
+                print('ble read characteristic by uuid failed.')
+                break
+        elif event_id == event.BLE_GATT_CHARA_MULTI_READ_IND:
+            print('')
+            # read multiple characteristic value
+            print('event_id : BLE_GATT_CHARA_MULTI_READ_IND, status = {}'.format(status))
+            if status == 0:
+                data_len = msg[2]
+                data = msg[3]
+                print('data_len = {}, data : {}'.format(data_len, data))
+            else:
+                print('ble read multiple characteristic by uuid failed.')
+                break
+        elif event_id == event.BLE_GATT_DESC_WRITE_WITH_RSP_IND:
+            print('')
+            print('event_id : BLE_GATT_DESC_WRITE_WITH_RSP_IND, status = {}'.format(status))
+            if status == 0:
+                if ble_client.gatt_statue == gatt_status.BLE_GATT_WRITE_CHARA_VALUE:
+                    pass
+                elif ble_client.gatt_statue == gatt_status.BLE_GATT_WRITE_CHARA_DESC:
+                    pass
+            else:
+                print('ble write characteristic descriptor failed.')
+                break
+        elif event_id == event.BLE_GATT_DESC_READ_IND:
+            print('')
+            # read characteristic descriptor
+            print('event_id : BLE_GATT_DESC_READ_IND, status = {}'.format(status))
+            if status == 0:
+                data_len = msg[2]
+                data = msg[3]
+                print('data_len = {}, data : {}'.format(data_len, data))
+                if ble_client.gatt_statue == gatt_status.BLE_GATT_READ_CHARA_DESC:
+                    # print('read characteristic descriptor.')
+                    pass
+            else:
+                print('ble read characteristic descriptor failed.')
+                break
+        elif event_id == event.BLE_GATT_ATT_ERROR_IND:
+            print('')
+            print('event_id : BLE_GATT_ATT_ERROR_IND, status = {}'.format(status))
+            if status == 0:
+                errcode = msg[2]
+                print('errcode = {:#06x}'.format(errcode))
+                if ble_client.gatt_statue == gatt_status.BLE_GATT_DISCOVER_INCLUDES:
+                    ble_client.gatt_statue = gatt_status.BLE_GATT_DISCOVER_CHARACTERISTIC
+                    print('execute the function discover_all_characteristic.')
+                    ret = ble_client.discover_all_characteristic()
+                    if ret != 0:
+                        print('Execution result: Failed.')
+                        ble_client.gatt_close()
+                        break
+                elif ble_client.gatt_statue == gatt_status.BLE_GATT_DISCOVER_CHARACTERISTIC:
+                    ble_client.gatt_statue = gatt_status.BLE_GATT_IDLE
+                    print('execute the function discover_all_characteristic_descriptor.')
+                    ret = ble_client.discover_all_characteristic_descriptor()
+                    if ret != 0:
+                        print('Execution result: Failed.')
+                        ble_client.gatt_close()
+                        break
+            else:
+                print('ble attribute error.')
+                ble_client.gatt_close()
+                break
+        else:
+            print('unknown event id : {}.'.format(event_id))
+
+    # ble_client.release()
+
+
+event = EVENT(event_dict)
+gatt_status = EVENT(gatt_status_dict)
+msg_queue = Queue(50)
+ble_client = BleClient()
+
+
+def main():
+    checknet.poweron_print_once()
+    print('create client event handler task.')
+    _thread.start_new_thread(ble_gatt_client_event_handler, ())
+    # ble.setScanFilter(0) # Disable the scan filtering function
+    ret = ble_client.gatt_open()
+    if ret != 0:
+        return -1
+
+    count = 0
+    while True:
+        utime.sleep(1)
+        count += 1
+        cur_time = utime.localtime()
+        timestamp = "{:02d}:{:02d}:{:02d}".format(cur_time[3], cur_time[4], cur_time[5])
+        if count % 5 == 0:
+            print('[{}] BLE Client running, count = {}......'.format(timestamp, count))
+            print('')
+        if count > 130: # Here set the count is to run the program for a while to exit, convenient test, according to the actual needs of the user to deal with
+            count = 0
+            print('!!!!! stop BLE Client now !!!!!')
+            ble_status = ble_client.gatt_get_status()
+            if ble_status == 1:
+                ble_client.gatt_close()
+            ble_client.release()
+            break
+        else:
+            ble_status = ble_client.gatt_get_status()
+            if ble_status == 0: # stopped
+                print('BLE connection has been disconnected.')
+                ble_client.release()
+                break
 
 if __name__ == '__main__':
     main()
@@ -7589,9 +9403,9 @@ Note: The BC25PA platform does not support this module function.
 | :-------- | :--- | ------------------------------------------------------------ |
 | uartn     | int  | UARTn, Range: 0-3: <br />0-UART0 - DEBUG PORT<br />1-UART1 – BT PORT<br />2-UART2 – MAIN PORT<br />3-UART3 – USB CDC PORT |
 | baudrate  | int  | Baud rate. The common baud rate, such as 4800, 9600, 19200, 38400, 57600, 115200, 230400 and so on, are supported. |
-| databits  | int  | Data bit (5~8)                                               |
+| databits  | int  | Data bit (5 ~ 8)                                               |
 | parity    | int  | Parity (0 – NONE，1 – EVEN，2 - ODD)                         |
-| stopbits  | int  | Stop bit (1~2)                                               |
+| stopbits  | int  | Stop bit (1 ~ 2)                                               |
 | flowctl   | int  | Hardware flow control (0 – FC_NONE， 1 – FC_HW)              |
 
 
@@ -7854,7 +9668,7 @@ Failed - not 0
 | Parameter | Type   | Description                                                  |
 | --------- | ------ | ------------------------------------------------------------ |
 | data_len  | int    | Expected Send data length (note that this parameter is adjusted according to the actual length of data, and the minimum value is taken according to the comparison between the capacity of data variable and data_len) |
-| data      | string | Data to be sent                                              |
+| data      | string | Data to be sent,The maximum supported data length is 1024 bytes                                   |
 | type      | int    | Sending method: 0, 1 and 2 do not need response confirmation, and 100, 101 and 102 need response confirmation. Only 0, 1 and 2 sending methods are supported temporarily. |
 
 - Note
@@ -7973,7 +9787,7 @@ Failed - not 0
 | Parameter | Type   | Description                                                  |
 | --------- | ------ | ------------------------------------------------------------ |
 | data_len  | int    | Expected Send data length (note that this parameter is adjusted according to the actual length of data, and the minimum value is taken according to the comparison between the capacity of data variable and data_len) |
-| data      | string | Data to be sent                                              |
+| data      | string | Data to be sent,The maximum supported data length is 1024 bytes                                            |
 | type      | int    | Sending method: 0, 1 and 2 do not need response confirmation, and 100, 101 and 102 need response confirmation. Only 0, 1 and 2 sending methods are supported temporarily. |
 
 - Note
