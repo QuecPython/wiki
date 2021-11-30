@@ -126,6 +126,42 @@ myprint()
 
 
 
+##### 获取用户apn
+
+> **dataCall.getApn(simid, profileIdx)**
+
+获取用户APN（可变参函数）
+默认最少有一个参数-simid，最多两个参数-simid,pid
+当只有一个参数simid时，获取的是默认承载的APN，当有两个参数时，获取的是对应pid的APN
+
+* 参数
+
+| 参数       | 参数类型 | 参数说明                                                     |
+| ---------- | -------- | ------------------------------------------------------------ |
+| simid      | int      | simid,范围：0/1|
+| profileIdx | int      | PDP索引，ASR平台范围1-8，展锐平台范围1-7|
+
+* 返回值
+
+成功返回相应APN，失败返回整型值-1。
+
+* 注意
+
+仅展锐和ASR平台支持该接口。
+
+* 示例
+
+```python
+>>> import dataCall
+>>> dataCall.getApn(0)
+'cmnet'
+
+>>> dataCall.getApn(0,2)
+'hhhnet'
+```
+
+
+
 ##### 注册回调函数
 
 > **dataCall.setCallback(usrFun)**
@@ -935,7 +971,7 @@ sim.setCallback(cb)
 
 
 
-##### 设置回铃音
+##### 设置DTMF音
 
 > **voiceCall.startDtmf(dtmf, duration)**
 
@@ -971,7 +1007,7 @@ sim.setCallback(cb)
 
 | 参数      | 参数类型 | 参数说明                                              |
 | --------  | -------- | ----------------------------------------------------- |
-| reason    | int      | 呼叫转移的条件/原因:<br/>0 : 无条件的<br/>1 : 移动忙<br/>2 : 没有回复<br/>3 : 不可以<br/>4 : 所有呼叫转移(参考3GPP TS 22.030)<br/>5 : 所有条件调用转发(参考3GPP TS 22.030) |
+| reason    | int      | 呼叫转移的条件/原因:<br/>0 : unconditional<br/>1 : mobile busy<br/>2 : no reply<br/>3 : not reachable<br/>4 : all call forwarding (refer 3GPP TS 22.030)<br/>5 : all conditional call forwarding (refer 3GPP TS 22.030 ) |
 | fwmode    | int      | 对呼叫转移的控制:<br/>0 : 禁用<br/>1 : 启用<br/>2 : 查询状态<br/>3 : 注册<br/>4 : 擦除 |
 | phonenum  | string   | 呼叫转移的目标电话                                    |
 
@@ -1124,6 +1160,81 @@ sim.setCallback(cb)
 
 ```python
 >>> voiceCall.stopRecord()
+0
+```
+
+
+
+##### 开始录音（流形式）
+
+> **voiceCall.startRecordStream(record_type, record_mode, record_cb)**
+
+开始录音接口（流形式）。
+
+注：1、非volte版本无该接口
+    2、录音流第一包数据均是对应格式文件的文件头
+	3、wav格式录音流第一包数据不包含文件大小，需结束录音后自行计算
+
+* 参数
+
+| 参数         | 参数类型 | 参数说明                                              |
+| --------     | -------- | ----------------------------------------------------- |
+| record_type  | int      | 录音流类型。范围：【0/1】；  0：AMR  1:WAV                |
+| record_mode  | int      | mode。        范围：【0/1/2】；0：RX   1:TX    2:MIX                |
+| record_cb    | function | 回调函数。                |
+
+* 返回值
+
+设置成功返回整型0，设置失败返回整型-1, 不支持该接口返回字符串"NOT SUPPORT"。
+
+示例
+
+*callback函数中args定义如下
+```
+args[0]:stream data
+args[1]:stream data len
+args[2]:states
+
+states取值如下：
+typedef enum
+{
+	HELIOS_VC_AUD_REC_ERROR = -1,
+	HELIOS_VC_AUD_REC_START = 0,
+	HELIOS_VC_AUD_REC_DATA,
+	HELIOS_VC_AUD_REC_PAUSE,
+	HELIOS_VC_AUD_REC_FINISHED,
+	HELIOS_VC_AUD_REC_DISK_FULL,
+}HELIOS_VC_AUD_REC_STATE;
+```
+
+```python
+>>> import voiceCall
+>>> import audio
+
+>>> f=open('usr/mia.amr','w')
+
+>>> def cb(para):
+...     if(para[2] == 1):
+...         read_buf = bytearray(para[1])
+...         voiceCall.readRecordStream(read_buf,para[1])
+...         f.write(read_buf,para[1])
+...         del read_buf
+...     elif(para[2] == 3):
+...         f.close()
+...         
+...         
+... 
+>>> voiceCall.callStart('13855169092')
+0
+>>> voiceCall.startRecordStream(0,2,cb)
+0
+//此处挂断电话(MO/MT侧挂断都可以)
+>>> uos.listdir('usr')
+['system_config.json', 'mia.amr']
+>>> aud=audio.Audio(0)
+>>> aud.setVolume(11)
+0
+>>> aud.play(2,1,'U:/mia.amr')
 0
 ```
 
@@ -1716,6 +1827,12 @@ sms.setCallback(cb)
 
 设置APN，设置后需要重启或者通过 net.setModemFun(mode) 接口先切换到模式0，再切换到模式1才能生效。 
 
+*注意
+
+该接口和datacall模块的设置APN接口是不相关的：
+datacall模块设置APN是用入参的APN和PID去拨号，并记录到json文件中，下次再开机会用首先用这一路去拨号；
+net模块的设置APN主要使用场景是专网卡设定特定APN才能注网，但是这个得重启生效
+
 * 参数
 
 | 参数  | 参数类型 | 参数说明                      |
@@ -1732,6 +1849,8 @@ sms.setCallback(cb)
   BC25PA平台不支持此方法。
   
   
+
+
 
 ##### 获取当前APN
 
@@ -1754,6 +1873,8 @@ sms.setCallback(cb)
   BC25PA平台不支持此方法。
   
   
+
+
 
 ##### 获取csq信号强度
 
