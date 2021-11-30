@@ -1,5 +1,5 @@
 .sidebar {
- background-color: rgb(245, 247, 250);
+ background-color: #f8f8f8;
 }
 .sidebar-toggle{
  background-color: rgba(245, 247, 250, 0);
@@ -17,4 +17,106 @@ input{
  -webkit-animation: neon2 1.5s ease-in-out infinite alternate;
  -moz-animation: neon2 1.5s ease-in-out infinite alternate;
  animation: neon2 1.5s ease-in-out infinite alternate;
+}
+
+.sidebar ul li > ul li > a{
+	padding-left: 5px;
+	border-left: 2px solid rgba(164, 166, 168, 0.3);
+}
+
+
+.sidebar ul li.active > a{
+	border-left: 4px solid;
+	color: var(--theme-color,#42b983) !important;
+	border-right: 0px solid !important;
+	background-color: rgba(255, 163, 163, 0.1);
+	text-indent: 5px;
+}
+
+.markdown-section   h1  {
+	padding-top: 70px;
+}
+
+.markdown-section   h2  {
+	padding-top: 60px;
+}
+
+.markdown-section   h3  {
+	padding-top: 50px;
+}
+
+.markdown-section   h4  {
+	padding-top: 40px;
+}
+
+.markdown-section   h5  {
+	padding-top: 30px;
+	margin-bottom: 0rem !important;
+}
+
+.markdown-section blockquote{
+	margin-top: 0rem !important;
+	margin-bottom: 0rem !important;
+	margin-left: 2rem !important;
+	background-color: #f8f8f8;
+}
+
+.markdown-section code.lang-python, .markdown-section pre{
+	background-color: #333 !important;
+	border-radius: 9px;
+	
+}
+
+.markdown-section code.lang-c, .markdown-section pre{
+	background-color: #333 !important;
+	border-radius: 9px;
+	
+}
+
+.markdown-section code.lang-, .markdown-section pre{
+	background-color: #333 !important;
+	border-radius: 9px;
+	
+}
+
+.docsify-copy-code-button:focus, pre:hover .docsify-copy-code-button{
+	border-radius: 9px;
+	opacity: 0.8 !important;
+	margin-top: 0.2rem;
+	margin-right: 0.2rem;
+}
+
+.token.punctuation{
+	color:#B0E0E6;
+}
+.lang-python{
+	color:white	 !important;
+}
+.lang-c{
+	color:white	 !important;
+}
+.lang-{
+	color:white	 !important;
+}
+
+body.close .sidebar-toggle {
+    background-color: rgba(0, 0, 0, 0);
+    transition: background-color 1s;
+    width: 284px;
+    padding: 10px;
+}
+
+thead > tr{
+	background-color: #dc143c;
+	border: 2px solid #dc143c;
+	color: white;
+	line-height: 1.8rem;
+}
+
+.github-corner{
+	opacity: 0.5 !important;
+}
+
+.github-corner:hover{
+	opacity: 1 !important;
 }

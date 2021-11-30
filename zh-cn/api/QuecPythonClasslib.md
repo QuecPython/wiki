@@ -54,6 +54,8 @@ myprint()
 
 模块功能：提供数据拨号相关接口。
 
+注意：当前仅EC600S/EC600N/EC800N/EC200U/EC600U平台支持该功能。
+
 ##### 拨号
 
 > **dataCall.start(profileIdx, ipType, apn, username, password, authType)**
@@ -234,11 +236,11 @@ ipType =0，返回值格式如下：
 
 `reconnect`：重拨标志
 
-`ipv4Addr`：ipv4地址
+`ipv4Addr`：ipv4地址，string类型
 
-`priDns`：dns信息
+`priDns`：dns信息，string类型
 
-`secDns`：dns信息
+`secDns`：dns信息，string类型
 
 ipType =1，返回值格式如下：
 
@@ -252,11 +254,11 @@ ipType =1，返回值格式如下：
 
 `reconnect`：重拨标志
 
-`ipv6Addr`：ipv6地址
+`ipv6Addr`：ipv6地址，string类型
 
-`priDns`：dns信息
+`priDns`：dns信息，string类型
 
-`secDns`：dns信息
+`secDns`：dns信息，string类型
 
 ipType =2，返回值格式如下：
 
@@ -334,9 +336,7 @@ if __name__ == '__main__':
 
 模块功能：提供基站定位接口，获取坐标信息。
 
-* 注意
-
-  BC25PA平台不支持此模块。
+注意：当前仅EC600S/EC600N/EC800N/EC200U/EC600U平台支持该功能。
 
 ##### 获取坐标
 
@@ -356,7 +356,15 @@ if __name__ == '__main__':
 
 * 返回值
 
-功返回度格式经纬度坐标信息，返回格式：`(latitude, longtitude, accuracy)`，`(0.0, 0.0, 0)`表示未获取到有效坐标信息；失败返回错误码说明如下：
+功返回度格式经纬度坐标信息，返回格式：`(longtitude, latitude, accuracy)`，`(0.0, 0.0, 0)`表示未获取到有效坐标信息；
+
+`longtitude` ： 经度
+
+`latitude` ：纬度
+
+`accuracy` ：精确度，单位米
+
+失败返回错误码说明如下：
 
 -1 – 初始化失败
 
@@ -364,7 +372,7 @@ if __name__ == '__main__':
 
 -3 – 密钥长度错误，必须为16字节
 
--4 – 超时时长超出范围，支持的范围（1~300）s
+-4 – 超时时长超出范围，支持的范围（1 ~ 300）s
 
 -5 – 指定的PDP网络未连接，请确认PDP是否正确
 
@@ -736,7 +744,7 @@ sim卡解锁。当多次错误输入 PIN/PIN2 码后，SIM 卡状态为请求 PU
 | 参数     | 参数类型 | 参数说明                                                     |
 | -------- | -------- | ------------------------------------------------------------ |
 | storage  | int      | 需要读取电话号码记录的电话本存储位置，可选参数如下：<br/>0 – DC，1 – EN，2 – FD，3 – LD，4 – MC，5 – ME，6 – MT，7 – ON，<br/>8 – RC，9 – SM，10 – AP，11 – MBDN，12 – MN，13 – SDN，14 – ICI，15 - OCI |
-| index    | int      | 需要写入电话号码记录的在电话簿中的编号，范围1~500            |
+| index    | int      | 需要写入电话号码记录的在电话簿中的编号，范围1 ~ 500            |
 | username | string   | 电话号码的用户名，长度范围不超过30字节，暂不支持中文名       |
 | number   | string   | 电话号码，最大长度不超过20字节                               |
 
@@ -988,6 +996,7 @@ sim.setCallback(cb)
 ```
 
 
+
 ##### 设置FWmode
 
 > **voiceCall.setFw(reason, fwmode, phonenum)**
@@ -1009,6 +1018,66 @@ sim.setCallback(cb)
 示例
 
 无
+
+
+
+##### 切换语音通道
+
+> **voiceCall.setChannel(device)**
+
+设置通话时的声音输出通道，默认是通道0，即听筒。
+
+* 参数
+
+| 参数   | 参数类型 | 参数说明                                        |
+| ------ | -------- | ----------------------------------------------- |
+| device | int      | 输出通道<br/>0 - 听筒<br/>1 - 耳机<br/>2 - 喇叭 |
+
+* 返回值
+
+  设置成功返回整型0，设置失败返回整型-1。
+
+* 示例
+
+```python
+>>> voiceCall.setChannel(2) #切换到喇叭通道
+0
+```
+
+
+
+##### 获取音量大小
+
+> **voiceCall.getVolume()**
+
+获取电话当前音量大小。
+
+* 参数
+
+  无
+
+* 返回值
+
+  返回整型音量值。
+
+
+
+##### 设置音量大小
+
+> **voiceCall.setVolume(vol)**
+
+设置电话音量大小。
+
+* 参数
+
+| 参数 | 参数类型 | 参数说明                                     |
+| ---- | -------- | -------------------------------------------- |
+| vol  | int      | 音量等级，范围（0 ~ 11），数值越大，音量越大 |
+
+* 返回值
+
+  设置成功返回整型0，失败返回整型-1。
+
 
 
 
@@ -1539,7 +1608,7 @@ if __name__ == '__main__':
 
 | 参数  | 参数类型 | 参数说明                     |
 | ----- | -------- | ---------------------------- |
-| index | int      | 需要获取短信的索引，范围0~49 |
+| index | int      | 需要获取短信的索引，范围0 ~ 49 |
 
 * 返回值
 
@@ -1756,7 +1825,7 @@ sms.setCallback(cb)
 
 > **net.setApn(apn, simid)**
 
-设置APN。
+设置APN，设置后需要重启或者通过 net.setModemFun(mode) 接口先切换到模式0，再切换到模式1才能生效。 
 
 *注意
 
@@ -1766,10 +1835,10 @@ net模块的设置APN主要使用场景是专网卡设定特定APN才能注网�
 
 * 参数
 
-| 参数    | 参数类型 | 参数说明                             |
-| ------- | -------- | ------------------------------------ |
-| apn     | string   | apn name                             |
-| simid   | int      | simid (0:卡1 1:卡2)                  |
+| 参数  | 参数类型 | 参数说明                      |
+| ----- | -------- | ----------------------------- |
+| apn   | string   | apn name                      |
+| simid | int      | simid<br> 0 - 卡1<br> 1 - 卡2 |
 
 * 返回值
 
@@ -1778,6 +1847,8 @@ net模块的设置APN主要使用场景是专网卡设定特定APN才能注网�
 * 注意
 
   BC25PA平台不支持此方法。
+  
+  
 
 
 
@@ -1789,9 +1860,9 @@ net模块的设置APN主要使用场景是专网卡设定特定APN才能注网�
 
 * 参数
 
-| 参数    | 参数类型 | 参数说明                             |
-| ------- | -------- | ------------------------------------ |
-| simid   | int      | simid                                |
+| 参数  | 参数类型 | 参数说明                        |
+| ----- | -------- | ------------------------------- |
+| simid | int      | simid<br/> 0 - 卡1<br/> 1 - 卡2 |
 
 * 返回值
 
@@ -1800,6 +1871,8 @@ net模块的设置APN主要使用场景是专网卡设定特定APN才能注网�
 * 注意
 
   BC25PA平台不支持此方法。
+  
+  
 
 
 
@@ -1817,7 +1890,7 @@ net模块的设置APN主要使用场景是专网卡设定特定APN才能注网�
 
 成功返回整型的csq信号强度值，失败返回整型值-1，返回值为99表示异常；
 
-信号强度值范围0~31，值越大表示信号强度越好。
+信号强度值范围0 ~ 31，值越大表示信号强度越好。
 
 * 示例
 
@@ -1847,43 +1920,43 @@ net模块的设置APN主要使用场景是专网卡设定特定APN才能注网�
 
 GSM网络系统返回值说明
 
-| 参数  | 参数意义                                    |
-| ----- | ------------------------------------------- |
-| flag  | 返回 0 - 2， 0：present，1：inter，2：intra |
-| cid   | 返回cid信息，0则为空                        |
-| mcc   | 移动设备国家代码                            |
-| mnc   | 移动设备网络代码                            |
-| lac   | 位置区码                                    |
-| arfcn | 无线频道编号                                |
-| bsic  | 基站识别码                                  |
-| rssi  | 接收的信号强度                              |
+| 参数  | 参数意义                                                     |
+| ----- | ------------------------------------------------------------ |
+| flag  | 返回 0 - 2， 0：present，1：inter，2：intra                  |
+| cid   | 返回GSM网络下的cell id信息，0则为空，范围0 ~ 65535           |
+| mcc   | 移动设备国家代码，范围 0 ~ 999<br>注意：EC100Y/EC600S/EC600N系列的模组，该值是用十六进制来表示，比如下面示例中的十进制数1120，用十六进制表示为0x460，表示移动设备国家代码460，其他型号模组，该值直接用十进制表示，比如移动设备国家代码460，就是用十进制的460来表示。 |
+| mnc   | 移动设备网络代码，范围 0 ~ 99                                |
+| lac   | 位置区码，范围 1 ~ 65534                                     |
+| arfcn | 无线频道编号，范围 0 ~ 65535                                 |
+| bsic  | 基站识别码，范围 0 ~ 255                                     |
+| rssi  | GSM网络下，该值表示接收电平，描述接收到信号强度，99表示未知或者无法检测到，该值的计算方式如下<br/>rssi = RXLEV - 111，单位dBm，RXLEV 的范围是 0 ~ 63，所以rssi范围是 -111 ~ -48 dBm； |
 
 UMTS网络系统返回值说明
 
-| 参数   | 参数意义                                    |
-| ------ | ------------------------------------------- |
-| flag   | 返回 0 - 2， 0：present，1：inter，2：intra |
-| cid    | 返回cid信息，0则为空                        |
-| lcid   | 区域标识号                                  |
-| mcc    | 移动设备国家代码                            |
-| mnc    | 移动设备网络代码                            |
-| lac    | 位置区码u                                   |
-| uarfcn | 无线频道编号                                |
-| psc    | 基站识别码                                  |
-| rssi   | 接收的信号强度                              |
+| 参数   | 参数意义                                                     |
+| ------ | ------------------------------------------------------------ |
+| flag   | 返回 0 - 2， 0：present，1：inter，2：intra                  |
+| cid    | 返回UMTS网络下的 Cell identity 信息，Cell identity = RNC_ID * 65536 + Cell_ID，Cell identity范围 0x0000000 ~ 0xFFFFFFF（注意这里是28bits）；其中RNC_ID的范围是0 ~ 4095，Cell_ID的范围是0 ~ 65535 |
+| lcid   | URA ID，范围 0 ~ 65535，0表示该信息不存在                    |
+| mcc    | 移动设备国家代码，范围 0 ~ 999                               |
+| mnc    | 移动设备网络代码，范围 0 ~ 99                                |
+| lac    | 位置区码，范围 1 ~ 65534                                     |
+| uarfcn | 无线频道编号，范围 0 ~ 65535                                 |
+| psc    | 基站识别码，范围 0 ~ 255                                     |
+| rssi   | UMTS网络下，该值表示 CPICH/PCCPCH 接收信号码功率，范围 -5 ~ 99，单位dBm |
 
 LTE网络系统返回值说明
 
-| 参数   | 参数意义                                    |
-| ------ | ------------------------------------------- |
-| flag   | 返回 0 - 2， 0：present，1：inter，2：intra |
-| cid    | 返回cid信息，0则为空                        |
-| mcc    | 移动设备国家代码                            |
-| mnc    | 移动设备网络代码                            |
-| pci    | 小区标识                                    |
-| tac    | Tracing area code                           |
-| earfcn | 无线频道编号 范围: 0 - 65535                |
-| rssi   | 接收的信号强度                              |
+| 参数   | 参数意义                                                     |
+| ------ | ------------------------------------------------------------ |
+| flag   | 返回 0 - 2， 0：present，1：inter，2：intra                  |
+| cid    | 返回LTE网络下的 Cell identity 信息，Cell identity = RNC_ID * 65536 + Cell_ID，Cell identity范围 0x0000000 ~ 0xFFFFFFF（注意这里是28bits）；其中RNC_ID的范围是0 ~ 4095，Cell_ID的范围是0 ~ 65535 |
+| mcc    | 移动设备国家代码，范围 0 ~ 999                               |
+| mnc    | 移动设备网络代码，范围 0 ~ 99                                |
+| pci    | 物理层小区标识号，0 ~ 503                                    |
+| tac    | 跟踪区域码，0 ~ 65535                                        |
+| earfcn | 无线频道编号，范围 0 ~ 65535                                 |
+| rssi   | 接收的信号强度，在LTE网络下，表示RSRP质量（负值），是根据RSRP测量报告值换算而来，换算关系如下：<br>RSRP质量（负数）= RSRP测量报告值 - 140，单位dBm，范围 -140 ~ -44 dBm |
 
 * 示例
 
@@ -1895,6 +1968,8 @@ LTE网络系统返回值说明
 
 
 ##### 获取网络制式及漫游配置
+
+注意：BC25PA平台不支持此方法。
 
 > **net.getConfig()**
 
@@ -1932,10 +2007,6 @@ LTE网络系统返回值说明
 | 17   | UMTS_LTE, dual link. not supported in EC100Y and EC200S      |
 | 18   | GSM_UMTS_LTE, dual link. not supported in EC100Y and EC200S  |
 
-* 注意
-
-  BC25PA平台不支持此方法。
-
 * 示例
 
 ```python
@@ -1947,6 +2018,8 @@ LTE网络系统返回值说明
 
 ##### 设置网络制式及漫游配置
 
+注意：BC25PA平台不支持此方法。
+
 > **net.setConfig(mode, roaming)**
 
 设置网络模式、漫游配置。
@@ -1955,16 +2028,14 @@ LTE网络系统返回值说明
 
 | 参数    | 参数类型 | 参数说明                             |
 | ------- | -------- | ------------------------------------ |
-| mode    | int      | 网络制式，0~18，详见上述网络制式表格 |
+| mode    | int      | 网络制式，0 ~ 18，详见上述网络制式表格 |
 | roaming | int      | 漫游开关(0：关闭， 1：开启)          |
 
 * 返回值
 
 设置成功返回整型值0，设置失败返回整型值-1。
 
-* 注意
 
-  BC25PA平台不支持此方法。
 
 
 ##### 获取网络配置模式
@@ -1983,8 +2054,8 @@ LTE网络系统返回值说明
 
 返回值参数说明：
 `selection_mode` ：方式，0 - 自动，1 - 手动
-`mcc` ：移动设备国家代码
-`mnc` ：移动设备网络代码
+`mcc` ：移动设备国家代码，string类型
+`mnc` ：移动设备网络代码，string类型
 `act` ：首选网络的ACT模式
 
 ACT模式
@@ -2032,21 +2103,21 @@ ACT模式
 
 GW list：
 
-`rssi` ：接收的信号强度
+`rssi` ：<br>GSM和WCDMA网络下，该值表示接收电平，描述接收到信号强度，99表示未知或者无法检测到，该值的计算方式如下<br>rssi = RXLEV - 111，单位dBm，RXLEV 的范围是 0 ~ 63；
 
-`bitErrorRate` ：误码率
+`bitErrorRate` ：误码率，范围 0 ~ 7，99表示未知或者无法检测到
 
-`rscp` ：接收信号码功率
+`rscp` ：接收信号码功率，范围 -121 ~ -25 dBm，255表示未知或者无法检测到
 
-`ecno` ：导频信道
+`ecno` ：导频信道，范围 -24 ~ 0，255表示未知或者无法检测到
 
 LTE list：
 
-`rssi` ：接收的信号强度
+`rssi` ：接收的信号强度，范围 -140 ~ -44 dBm，99表示未知或者无法检测到
 
-`rsrp` ：下行参考信号的接收功率
+`rsrp` ：下行参考信号的接收功率，范围 -141 ~ -44 dBm，99表示未知或者无法检测到
 
-`rsrq` ：下行特定小区参考信号的接收质量
+`rsrq` ：下行特定小区参考信号的接收质量，范围 -20 ~ -3 dBm，值越大越好
 
 `cqi` ：信道质量
 
@@ -2063,7 +2134,7 @@ LTE list：
 
 > **net.nitzTime()**
 
-获取当前基站时间。
+获取当前基站时间。这个时间是基站在模块开机注网成功时下发的时间。
 
 * 参数
 
@@ -2075,7 +2146,7 @@ LTE list：
 
 `(date, abs_time, leap_sec)`
 
-`date` ：基站时间，string类型
+`date` ：基站时间，string类型，其中关于时区的部分，EC600N/EC800N系列与EC200U/EC600U系列有所区别，具体见示例。如果需要设置和获取时区，请使用utime模块的`setTimeZone(offset)`和`getTimeZone()`接口，不同平台，这两个接口的单位都是小时，具体参考utime模块的说明。
 
 `abs_time` ：基站时间的绝对秒数表示，整型
 
@@ -2084,8 +2155,9 @@ LTE list：
 * 示例
 
 ```python
->>> net.nitzTime()
-('20/11/26 02:13:25+32', 1606356805, 0)
+>>> net.nitzTime() 
+('21/10/26 06:08:03 8 0', 1635228483, 0) # EC600N/EC800N系列的返回值，时区单位小时，这里8即表示东八区
+('20/11/26 02:13:25 +32 0', 1606356805, 0) # EC200U/EC600U系列返回值，时区单位15分钟，这里+32即表示东八区
 ```
 
 
@@ -2135,7 +2207,7 @@ LTE list：
 
 * 返回值
 
-失败返回整型值-1，成功返回一个元组，包含注网的网络注册信息，格式为：
+失败返回整型值-1，成功返回一个元组，包含电话和网络注册信息，元组中voice开头的表示电话注册信息，data开头的表示网络注册信息，格式为：
 
 `([voice_state, voice_lac, voice_cid, voice_rat, voice_reject_cause, voice_psc], [data_state, data _lac, data _cid, data _rat, data _reject_cause, data _psc])`
 
@@ -2143,17 +2215,17 @@ LTE list：
 
 `state` ：网络注册状态
 
-`lac` ：位置区码
+`lac` ：位置区码，范围 1 ~ 65534
 
-`cid` ：int类型id信息
+`cid` ：cell id，范围 0x00000000 ~ 0x0FFFFFFF
 
-`rat` ：注网制式
+`rat` ：access technology，即接入技术
 
-`reject_cause` ：注册被拒绝的原因
+`reject_cause` ：注册被拒绝的原因，EC200U/EC600U/BC25PA平台该参数保留，不作为有效参数
 
-`psc` ：Primary Scrambling Code
+`psc` ：主扰码，Primary Scrambling Code，EC200U/EC600U/BC25PA平台该参数保留，不作为有效参数
 
-网络注册状态
+网络注册状态` state`
 
 | 值   | 状态说明                                                     |
 | ---- | ------------------------------------------------------------ |
@@ -2170,6 +2242,22 @@ LTE list：
 | 10   | registered for “CSFB not preferred”, roaming (not applicable) |
 | 11   | emergency bearer services only                               |
 
+接入技术 access technology 值说明
+
+| 值   | 说明               |
+| ---- | ------------------ |
+| 0    | GSM                |
+| 1    | GSM COMPACT        |
+| 2    | UTRAN              |
+| 3    | GSM wEGPRS         |
+| 4    | UTRAN wHSDPA       |
+| 5    | UTRAN wHSUPA       |
+| 6    | UTRAN wHSDPA HSUPA |
+| 7    | E_UTRAN            |
+| 8    | UTRAN HSPAP        |
+| 9    | E_UTRAN_CA         |
+| 10   | NONE               |
+
 * 示例
 
 ```python
@@ -2183,7 +2271,7 @@ LTE list：
 
 > **net.getCi()**
 
-获取附近小区ID。
+获取附近小区ID。该接口获取结果即为`net.getCellInfo()`接口获取结果中的cid集合。
 
 * 参数
 
@@ -2208,7 +2296,7 @@ LTE list：
 
 > **net.getMnc()**
 
-获取附近小区的mnc。
+获取附近小区的mnc。该接口获取结果即为`net.getCellInfo()`接口获取结果中的mnc集合。
 
 * 参数
 
@@ -2233,7 +2321,7 @@ LTE list：
 
 > **net.getMcc()**
 
-获取附近小区的mcc。
+获取附近小区的mcc。该接口获取结果即为`net.getCellInfo()`接口获取结果中的mcc集合。
 
 * 参数
 
@@ -2244,6 +2332,8 @@ LTE list：
 成功返回一个list类型的数组，包含小区mcc，格式为：`[mcc, ……, mcc]`。数组成员数量并非固定不变，位置不同、信号强弱不同等都可能导致获取的结果不一样。
 
 失败返回整型值-1。
+
+注意：EC100Y/EC600S/EC600N系列的模组，该值是用十六进制来表示，比如下面示例中的十进制数1120，十六进制即0x460，表示移动设备国家代码460，其他型号模组，该值直接用十进制表示，比如移动设备国家代码460，就是用十进制的460来表示。
 
 * 示例
 
@@ -2258,7 +2348,7 @@ LTE list：
 
 > **net.getLac()**
 
-获取附近小区的Lac。
+获取附近小区的Lac。该接口获取结果即为`net.getCellInfo()`接口获取结果中的lac集合。
 
 * 参数
 
@@ -2340,7 +2430,7 @@ LTE list：
 
 模块功能：checkNet模块主要用于【开机自动运行】的用户脚本程序，该模块提供API用来阻塞等待网络就绪，如果超时或者其他异常退出会返回错误码，所以如果用户的程序中有涉及网络相关的操作，那么在用户程序的开始应该调用 checkNet 模块中的方法以等待网络就绪。当然，用户也可以自己实现这个模块的功能。
 
-注意：BC25PA平台不支持此模块。
+注意：当前仅EC600S/EC600N/EC800N/EC200U/EC600U平台支持该功能。
 
 ##### 创建checkNet对象
 
@@ -2521,7 +2611,8 @@ if __name__ == '__main__':
             # （3）手动调用拨号接口尝试拨号，看看能否拨号成功，可参考官方Wiki文档中的 dataCall 模块
             #     的拨号接口和获取拨号结果接口；
             # （4）如果手动拨号成功了，但是开机拨号失败，那么可能是默认的apn配置表中没有与当前SIM卡匹配
-            #     的apn，用户可通过 sim 模块的 sim.getImsi() 来获取 IMSI 码，确认IMSI的第四和第五			  #     位字符组成的数字是否在 01~13 的范围内，如果不在，说明当前默认apn配置表中无此类SIM卡对
+            #     的apn，用户可通过 sim 模块的 sim.getImsi() 来获取 IMSI 码，确认IMSI的第四和第五			  
+            #     位字符组成的数字是否在 01 ~ 13 的范围内，如果不在，说明当前默认apn配置表中无此类SIM卡对
             #     应的apn 信息，这种情况下，用户如果希望开机拨号成功，可以使用 dataCall.setApn(...)
             #     接口来设置保存用户自己的apn信息，然后开机重启，就会使用用户设置的apn来进行开机拨号；
             # （5）如果手动拨号也失败，那么请联系我们的FAE反馈问题，最好将相应SIM卡信息，比如哪个运营商
@@ -2556,7 +2647,7 @@ if __name__ == '__main__':
 
 - 返回值
 
-  下载成功返回整形值0，下载失败返回整形值-1。注：EC600S/EC600N平台，返回值只代表指令下发成功、失败，下载状态需通过回调反馈。
+  下载成功返回整形值0，下载失败返回整形值-1。注：EC600S/EC600N平台，返回值只代表指令下发成功、失败，下载状态需通过回调反馈。BC25PA平台返回值只代表创建下载任务成功,下载过程和结果需要回调反馈。
 
 - 示例
 
@@ -2830,11 +2921,14 @@ download_list = [{'url': 'http://www.example.com/app.py', 'file_name': '/usr/app
 ###### 创建TTS对象
 
 > **import audio**
+>
 > **tts = audio.TTS(device)**
 
 * 参数
 
-`device` ：设备类型，0 - 听筒，1 - 耳机，2 - 喇叭。
+| 参数   | 参数类型 | 参数说明                                       |
+| ------ | -------- | ---------------------------------------------- |
+| device | int      | 输出通道<br>0 - 听筒<br/>1 - 耳机<br/>2 - 喇叭 |
 
 * 示例
 
@@ -2853,11 +2947,11 @@ download_list = [{'url': 'http://www.example.com/app.py', 'file_name': '/usr/app
 
 * 参数
 
-无
+  无
 
 * 返回值
 
-成功返回整型0，失败返回整型-1。
+  成功返回整型0，失败返回整型-1。
 
 
 
@@ -2865,7 +2959,7 @@ download_list = [{'url': 'http://www.example.com/app.py', 'file_name': '/usr/app
 
 > **tts.play(priority, breakin, mode, str)**
 
-语音播放，支持优先级0~4，数字越大优先级越高，每个优先级组可同时最多加入10个播放任务；播放策略说明如下：
+语音播放，支持优先级0 ~ 4，数字越大优先级越高，每个优先级组可同时最多加入10个播放任务；播放策略说明如下：
 
 1. 如果当前正在播放任务A，并且允许被打断，此时有高优先级播放任务B，那么会打断当前低优先级播放任务A，直接播放高优先级任务B；
 
@@ -2883,20 +2977,20 @@ download_list = [{'url': 'http://www.example.com/app.py', 'file_name': '/usr/app
 
 | 参数     | 参数类型 | 参数说明                                                     |
 | -------- | -------- | ------------------------------------------------------------ |
-| priority | int      | 播放优先级，支持优先级0~4，数值越大优先级越高                |
+| priority | int      | 播放优先级，支持优先级0 ~ 4，数值越大优先级越高                |
 | breakin  | int      | 打断模式，0表示不允许被打断，1表示允许被打断                 |
-| mode     | int      | 编码模式，1 - UNICODE16(UTF-16大端模式)，2 - UTF-8，3 - UNICODE16(UTF-16小端模式) |
+| mode     | int      | 低四位：编码模式，1 - UNICODE16(UTF-16大端模式)，2 - UTF-8，3 - UNICODE16(UTF-16小端模式)<br>高四位：WTTS模式（仅600N系列支持VOLTE的版本支持）, wtts_enable - wtts总开关，wtts_ul_enable - wtts上行使能， wtts_dl_enable - wtts下行使能 |
 | str      | string   | 待播放字符串                                                 |
 
 * 返回值
 
-播放成功返回整型0；
+  播放成功返回整型0；
 
-播放失败返回整型-1；
+  播放失败返回整型-1；
 
-无法立即播放，加入播放队列，返回整型1；
+  无法立即播放，加入播放队列，返回整型1；
 
-无法立即播放，且该请求的优先级组队列任务已达上限，无法加入播放队列，返回整型-2。
+  无法立即播放，且该请求的优先级组队列任务已达上限，无法加入播放队列，返回整型-2。
 
 * 示例
 
@@ -2943,6 +3037,17 @@ download_list = [{'url': 'http://www.example.com/app.py', 'file_name': '/usr/app
 #播放UTF16LE模式的语音
 >>> tts.play(1,1,3,'226BCE8F7F4F2875FB79DC8F1A90E14F216A57570230')
 0
+
+#支持VOLTE的版本,可以播放tts到远端
+>>> import voiceCall
+>>> voiceCall.callStart('1xxxxxxxxxx')
+0
+
+#待电话接通后
+#播放tts语音至通话远端
+>>> tts.play(1,1,tts.wtts_enable|tts.wtts_ul_enable|2, '12345')
+
+0
 ```
 
 tts播放中文示例：
@@ -2960,6 +3065,81 @@ tts.play(4, 0, 2, str1)
 
 
 
+tts播放文本标注说明：
+
+如遇TTS播放时不能达到预期的，可以通过文本标注的方式让TTS播放符合预期。
+
+数字播放的方式：
+
+```python
+#格式：[n*] (*=0/1/2)
+#TTS引擎自动决定是以号码形式播放还是以数值的形式播放
+>>> tts.play(1,1,2, '12345')
+0
+
+#TTS引擎以号码形式播放
+>>> tts.play(1,1,2, '[n1]12345')
+0
+
+#TTS引擎以数值形式播放
+>>> tts.play(1,1,2, '[n2]12345')
+0
+```
+
+
+
+语速设置：
+
+```python
+#格式：[s*] (*=0 ~ 10)
+#TTS引擎以默认语速5播放语音
+>>> tts.play(1,1,2, '12345')
+0
+
+#TTS引擎以默认语速的一半播放语音
+>>> tts.play(1,1,2, '[s0]12345')
+0
+
+#TTS引擎以默认语速的2倍语速播放语音
+>>> tts.play(1,1,2, '[s10]12345')
+0
+```
+
+
+
+语调设置：
+
+```python
+#格式：[t*] (*=0 ~ 10)
+#TTS引擎以默认语调5播放语音
+>>> tts.play(1,1,2, '12345')
+0
+
+#TTS引擎以默认语调基频减64Hz播放语音
+>>> tts.play(1,1,2, '[t0]12345')
+0
+
+#TTS引擎以默认语调基频加128Hz播放语音
+>>> tts.play(1,1,2, '[t10]12345')
+0
+```
+
+
+
+汉字指定拼音：
+
+```python
+#格式：[=*] (*=拼音)
+#汉字：声调用后接一位数字 1 ~ 5 分别表示阴平、阳平、上声、去声和轻声 5 个声调。
+>>> tts.play(1,1,2, '乐[=le4]')
+0
+
+>>> tts.play(1,1,2, '乐[=yue4]')
+0
+```
+
+
+
 ###### 停止TTS播放
 
 > **tts.stop()**
@@ -2968,11 +3148,11 @@ tts.play(4, 0, 2, str1)
 
 * 参数
 
-无
+  无
 
 * 返回值
 
-成功返回整型0，失败返回整型-1。
+  成功返回整型0，失败返回整型-1。
 
 
 
@@ -2984,11 +3164,11 @@ tts.play(4, 0, 2, str1)
 
 * 参数
 
-无
+  无
 
 * 返回值
 
-成功返回整型0，失败返回整型-1。
+  成功返回整型0，失败返回整型-1。
 
 
 
@@ -3006,7 +3186,7 @@ tts.play(4, 0, 2, str1)
 
 * 返回值
 
-注册成功返回整型0，失败返回整型-1。
+  注册成功返回整型0，失败返回整型-1。
 
 * 示例
 
@@ -3038,15 +3218,15 @@ tts.play(1, 0, 2, 'QuecPython')
 
 > **tts.getVolume()**
 
-获取当前播放音量大小，音量值为0~9，0表示静音，默认值4。
+获取当前播放音量大小，音量值为0 ~ 9，0表示静音，默认值4。
 
 * 参数
 
-无
+  无
 
 * 返回值
 
-成功返回整型音量大小值，失败返回整型-1。
+  成功返回整型音量大小值，失败返回整型-1。
 
 * 示例
 
@@ -3067,11 +3247,11 @@ tts.play(1, 0, 2, 'QuecPython')
 
 | 参数 | 参数类型 | 参数说明                       |
 | ---- | -------- | ------------------------------ |
-| vol  | int      | 音量值，音量值为0~9，0表示静音 |
+| vol  | int      | 音量值，音量值为0 ~ 9，0表示静音 |
 
 * 返回值
 
-成功返回0，失败返回整型-1。
+  成功返回0，失败返回整型-1。
 
 * 示例
 
@@ -3086,15 +3266,15 @@ tts.play(1, 0, 2, 'QuecPython')
 
 > **tts.getSpeed()**
 
-获取当前播放速度，速度值为0~9，值越大，速度越快，默认值4。
+获取当前播放速度，速度值为0 ~ 9，值越大，速度越快，默认值4。
 
 * 参数
 
-无
+  无
 
 * 返回值
 
-成功返回当前播放速度，失败返回整型-1。
+  成功返回当前播放速度，失败返回整型-1。
 
 * 示例
 
@@ -3115,11 +3295,11 @@ tts.play(1, 0, 2, 'QuecPython')
 
 | 参数  | 参数类型 | 参数说明                              |
 | ----- | -------- | ------------------------------------- |
-| speed | int      | 速度值，速度值为0~9，值越大，速度越快 |
+| speed | int      | 速度值，速度值为0 ~ 9，值越大，速度越快 |
 
 * 返回值
 
-成功返回整型0，失败返回整型-1。
+  成功返回整型0，失败返回整型-1。
 
 * 示例
 
@@ -3138,13 +3318,13 @@ tts.play(1, 0, 2, 'QuecPython')
 
 * 参数
 
-无
+  无
 
 * 返回值
 
-0 – 整型值，表示当前无tts播放；
+  0 – 整型值，表示当前无tts播放；
 
-1 – 整型值，表示当前有tts正在播放。
+  1 – 整型值，表示当前有tts正在播放。
 
 * 示例
 
@@ -3215,7 +3395,9 @@ if __name__ == '__main__':
 
 * 参数
 
-`device` ：设备类型，0 - 听筒，1 - 耳机，2 - 喇叭。
+| 参数   | 参数类型 | 参数说明                                       |
+| ------ | -------- | ---------------------------------------------- |
+| device | int      | 输出通道<br>0 - 听筒<br/>1 - 耳机<br/>2 - 喇叭 |
 
 * 示例
 
@@ -3240,9 +3422,9 @@ if __name__ == '__main__':
 
 - 返回值
 
-设置成功返回整数1;
+  设置成功返回整数1;
 
-设置失败返回整数0;
+  设置失败返回整数0;
 
 - 示例
 
@@ -3264,25 +3446,25 @@ if __name__ == '__main__':
 
 > **aud.play(priority, breakin, filename)**
 
-音频文件播放，支持mp3、amr和wav格式文件播放。支持优先级0~4，数字越大优先级越高，每个优先级组可同时最多加入10个播放任务，与TTS播放共用同一个播放队列。
+音频文件播放，支持mp3、amr和wav格式文件播放。支持优先级0 ~ 4，数字越大优先级越高，每个优先级组可同时最多加入10个播放任务，与TTS播放共用同一个播放队列。
 
 * 参数
 
 | 参数     | 参数类型 | 参数说明                                      |
 | -------- | -------- | --------------------------------------------- |
-| priority | int      | 播放优先级，支持优先级0~4，数值越大优先级越高 |
+| priority | int      | 播放优先级，支持优先级0 ~ 4，数值越大优先级越高 |
 | breakin  | int      | 打断模式，0表示不允许被打断，1表示允许被打断  |
 | filename | string   | 待播放的文件名称，包含文件存放路径            |
 
 * 返回值
 
-播放成功返回整型0；
+  播放成功返回整型0；
 
-播放失败返回整型-1；
+  播放失败返回整型-1；
 
-无法立即播放，加入播放队列，返回整型1；
+  无法立即播放，加入播放队列，返回整型1；
 
-无法立即播放，且该请求的优先级组队列任务已达上限，无法加入播放队列，返回整型-2。
+  无法立即播放，且该请求的优先级组队列任务已达上限，无法加入播放队列，返回整型-2。
 
 * 示例
 
@@ -3300,7 +3482,7 @@ if __name__ == '__main__':
 
 * 说明
 
-由于TTS和音频文件播放共用同一个播放队列，所以TTS中设置的播放优先级、打断模式不仅仅是和其他TTS播放任务比较，还会和音频文件播放任务的优先级和打断模式比较，反之，音频文件播放中设置的播放优先级与打断模式对TTS任务同样是有效的。
+  由于TTS和音频文件播放共用同一个播放队列，所以TTS中设置的播放优先级、打断模式不仅仅是和其他TTS播放任务比较，还会和音频文件播放任务的优先级和打断模式比较，反之，音频文件播放中设置的播放优先级与打断模式对TTS任务同样是有效的。
 
 
 
@@ -3312,11 +3494,11 @@ if __name__ == '__main__':
 
 * 参数
 
-无
+  无
 
 * 返回值
 
-成功返回整型0，失败返回整型-1。
+  成功返回整型0，失败返回整型-1。
 
 
 
@@ -3328,11 +3510,11 @@ if __name__ == '__main__':
 
 * 参数
 
-无
+  无
 
 * 返回值
 
-成功返回整型0，失败返回整型-1。
+  成功返回整型0，失败返回整型-1。
 
 
 
@@ -3350,7 +3532,7 @@ if __name__ == '__main__':
 
 * 返回值
 
-注册成功返回整型0，失败返回整型-1。
+  注册成功返回整型0，失败返回整型-1。
 
 * 示例
 
@@ -3385,11 +3567,11 @@ aud.play(1, 0, 'U:/test.mp3')
 
 * 参数
 
-无
+  无
 
 * 返回值
 
-audio初始化未完成返回整型值-1，初始化完成返回整型值0。
+  audio初始化未完成返回整型值-1，初始化完成返回整型值0。
 
 
 
@@ -3401,11 +3583,11 @@ audio初始化未完成返回整型值-1，初始化完成返回整型值0。
 
 * 参数
 
-无
+  无
 
 * 返回值
 
-返回整型音量值。
+  返回整型音量值。
 
 
 
@@ -3419,11 +3601,11 @@ audio初始化未完成返回整型值-1，初始化完成返回整型值0。
 
 | 参数 | 参数类型 | 参数说明                                   |
 | ---- | -------- | ------------------------------------------ |
-| vol  | int      | 音量等级，范围（1~11），数值越大，音量越大 |
+| vol  | int      | 音量等级，范围（1 ~ 11），数值越大，音量越大 |
 
 * 返回值
 
-设置成功返回整型0，失败返回整型-1。
+  设置成功返回整型0，失败返回整型-1。
 
 * 示例
 
@@ -3454,7 +3636,7 @@ audio初始化未完成返回整型值-1，初始化完成返回整型值0。
 
 * 返回值
 
-返回 *-1* 表示创建失败 ; 若返回对象 ,则表示创建成功 。
+  返回 *-1* 表示创建失败； 若返回对象，则表示创建成功 。
 
 * 示例
 
@@ -3480,19 +3662,19 @@ record_test = audio.Record()
 
 * 返回值
 
- 0： 成功
+   0： 成功
 
--1:  文件覆盖失败
+  -1:  文件覆盖失败
 
--2：文件打开失败
+  -2：文件打开失败
 
--3: 文件正在使用
+  -3: 文件正在使用
 
--4：通道设置错误（只能设置0或1）
+  -4：通道设置错误
 
--5：定时器资源申请失败
+  -5：定时器资源申请失败
 
--6 ：音频格式检测错误
+  -6 ：音频格式检测错误
 
 * 示例
 
@@ -3512,11 +3694,11 @@ record_test.start(“test”,40)	#录制amr格式
 
 * 参数
 
-无
+  无
 
 * 返回值
 
-无
+  成功返回整型0，失败返回整型-1。
 
 * 示例
 
@@ -3534,13 +3716,13 @@ record_test.stop()
 
 * 参数
 
-  *file\_name*： 
-
-  字符串 ,录音文件名 。
+| 参数      | 参数类型 | 参数说明   |
+| --------- | -------- | ---------- |
+| file_name | str      | 录音文件名 |
 
 * 返回值
 
-String：录音文件的路径
+  成功返回string类型的录音文件路径，目标文件不存在返回整型-1，文件名长度为0返回整型-2。
 
 * 示例
 
@@ -3558,31 +3740,31 @@ record_test.getFilePath(“test.wav”)
 
 * 参数
 
-| 参数      | 参数类型 | 参数说明             |
-| --------- | -------- | -------------------- |
-| file_name | str      | 录音文件名           |
-| offset    | int      | 读取数据的偏移量     |
-| size      | int      | 读取大小 ：需小于10K |
+| 参数      | 参数类型 | 参数说明                       |
+| --------- | -------- | ------------------------------ |
+| file_name | str      | 录音文件名                     |
+| offset    | int      | 读取数据的偏移量               |
+| size      | int      | 读取大小，单位字节 ：需小于10K |
 
 * 返回值
 
--1：读取数据错误
+  成功返回录音数据，bytearray类型；
 
--2：文件打开失败
+  失败返回值说明如下：
 
--3：偏移量设置错误
+  -1：读取数据错误
 
--4：文件正在使用
+  -2：文件打开失败
 
--5：设置超出文件大小（offset+size > file_size）
+  -3：偏移量设置错误
 
--6：读取size 大于10K
+  -4：文件正在使用
 
--7： 内存不足10K
+  -5：设置超出文件大小（offset+size > file_size）
 
+  -6：读取size 大于10K
 
-
-bytes:返回数据
+  -7： 内存不足10K
 
 * 示例
 
@@ -3604,23 +3786,23 @@ record_test.getData(“test.amr”,0, 44)
 | --------- | -------- | ---------- |
 | file_name | str      | 录音文件名 |
 
-
-
 * 返回值
 
-若获取成功,返回文件大小 ，
+  若获取成功,返回文件大小 ，单位字节：
 
-wav格式时，此值会比返回callback返回值大44 bytes（44 bytes为文件头）；
+  wav格式时，此值会比返回callback返回值大44 bytes（44 bytes为文件头）；
 
-amr格式时，此值会比返回callback返回值大6 bytes（6 bytes为文件头）；否则 
+  amr格式时，此值会比返回callback返回值大6 bytes（6 bytes为文件头）；
 
-*-1*  获取文件 大小 失败 ； 
+  失败返回值如下： 
 
-*-2*  文件打开失败 ； 
+  -1：获取文件大小失败 ； 
 
-*-3*  文件正在使用 ；
+  -2：文件打开失败 ； 
 
+  -3：文件正在使用 ；
 
+  -4：文件名长度为0；
 
 * 示例
 
@@ -3638,19 +3820,17 @@ record_test.getSize(“test.amr”)
 
 * 参数
 
-*file\_name*： 
-
-字符串 ,录音文件名 。
-
-注意：当无参数传入时，删除该对象下所有录音文件
+| 参数      | 参数类型 | 参数说明                                                     |
+| --------- | -------- | ------------------------------------------------------------ |
+| file_name | str类型  | 文件名，可选参数，传入该参数表示删除指定文件名的文件，不传该参数，表示删除该对象下所有录音文件 |
 
 * 返回值
 
- 0：成功
+   0：成功
 
--1：文件不存在 
+  -1：文件不存在 
 
--2：文件正在使用
+  -2：文件正在使用
 
 * 示例
 
@@ -3675,11 +3855,11 @@ record_test.Delete()
 
 * 返回值
 
-true：   文件存在
+  true：文件存在
 
-false：  文件不存在
+  false：文件不存在
 
--1 文件不属于该对象
+  -1：文件名长度为0
 
 * 示例
 
@@ -3697,13 +3877,13 @@ record_test.exists(“test.amr”)
 
 * 参数
 
-无
+  无
 
 * 返回值
 
-0： idle
+  0：idle
 
-1:  busy
+  1：busy
 
 * 示例
 
@@ -3723,13 +3903,11 @@ record_test.isBusy()
 
 | 参数     | 参数类型 | 参数说明 |
 | -------- | -------- | -------- |
-| callback | api      | 回调api  |
+| callback | function | 回调函数 |
 
 * 返回值
 
-0： 成功
-
-other: 失败  
+  设置成功返回整型0，失败返回整型-1。
 
 * 示例
 
@@ -3742,9 +3920,19 @@ def record_callback(para):
 record_test.end_callback(record_callback)
 ```
 
+关于录音回调函数中para[2]，即录音状态的说明：
+
+| event | 说明     |
+| ----- | -------- |
+| -1    | 发生错误 |
+| 0     | 录音开始 |
+| 3     | 录音结束 |
+
 
 
 ###### 设置录音增益
+
+目前仅600N/800N平台支持该功能。
 
 > **record.gain(code_gain,dsp_gain)**
 
@@ -3759,7 +3947,7 @@ record_test.end_callback(record_callback)
 
 * 返回值
 
-0: 成功
+  设置成功返回整型0，失败返回整型-1。
 
 * 示例
 
@@ -3767,9 +3955,11 @@ record_test.end_callback(record_callback)
 record_test.gain(4,12)
 ```
 
+
+
 ###### 录音流
 
-目前适用于EC600U EC200U平台
+目前仅EC200U/EC600U平台支持。
 
 > **record.stream_start(format, samplerate, time)**
 
@@ -3785,9 +3975,7 @@ record_test.gain(4,12)
 
 * 返回值
 
-0：成功
-
-其它：失败
+  成功返回整型0，失败返回整型-1。
 
 * 示例
 
@@ -3797,9 +3985,11 @@ record_test.stream_start(record_test.AMRNB, 8000, 5)
 
 注意：录制音频流的同时，应及时读取音频流。目前是采用循环buf,不及时读取，会导致数据丢失
 
+
+
 ###### 读取录音流
 
-目前适用于展锐平台
+目前仅EC200U/EC600U平台支持。
 
 > **record.stream_read(read_buf, len)**
 
@@ -3814,9 +4004,7 @@ record_test.stream_start(record_test.AMRNB, 8000, 5)
 
 * 返回值
 
--1：读取失败
-
-大于0：实际读取的个数
+  成功返回实际读取的字节数，失败返回整型-1。
 
 * 示例
 
@@ -3891,7 +4079,7 @@ def record_callback(args):
     if record_sta == 3:
         print('The recording is over, play it')
         tts.play(1, 0, 2, '录音结束,准备播放录音文件')
-        aud.play(1, 0, record.getFilePath())
+        aud.play(1, 0, record.getFilePath(path))
         flag = 0
     elif record_sta == -1:
         print('The recording failure.')
@@ -3984,7 +4172,7 @@ while 1:
 
 * 注意
 
-  BC25PA平台支持仅不支持重启原因5。
+  BC25PA平台不支持重启原因5、6。
 
 ###### 获取模块上次关机原因
 
@@ -4014,7 +4202,7 @@ while 1:
 
 * 注意
 
-  BC25PA平台支持仅不支持此方法。
+  BC25PA平台不支持此方法。
 
 
 ###### 获取电池电压
@@ -4117,16 +4305,16 @@ pk.powerKeyEventRegister(pwk_callback)
 
 ##### PWM
 
-注意：BC25PA平台支持仅不支持此模块。
+注意：BC25PA平台不支持此模块。
 
 ###### 常量说明
 
-| 常量     | 说明 | 使用平台                               |
-| -------- | ---- | -------------------------------------- |
-| PWM.PWM0 | PWM0 | EC600S / EC600N / EC100Y/EC600U/EC200U |
-| PWM.PWM1 | PWM1 | EC600S / EC600N / EC100Y               |
-| PWM.PWM2 | PWM2 | EC600S / EC600N / EC100Y               |
-| PWM.PWM3 | PWM3 | EC600S / EC600N / EC100Y               |
+| 常量     | 说明 | 使用平台                                      |
+| -------- | ---- | --------------------------------------------- |
+| PWM.PWM0 | PWM0 | EC600S / EC600N / EC100Y/EC600U/EC200U/EC800N |
+| PWM.PWM1 | PWM1 | EC600S / EC600N / EC100Y/EC800N               |
+| PWM.PWM2 | PWM2 | EC600S / EC600N / EC100Y/EC800N               |
+| PWM.PWM3 | PWM3 | EC600S / EC600N / EC100Y/EC800N               |
 
 
 
@@ -4140,8 +4328,8 @@ pk.powerKeyEventRegister(pwk_callback)
 
 | 参数      | 参数类型 | 参数说明                                                     |
 | --------- | -------- | ------------------------------------------------------------ |
-| PWMn      | int      | PWM号<br/>注：EC100YCN平台，支持PWM0-PWM3，对应引脚如下：<br/>PWM0 – 引脚号19<br/>PWM1 – 引脚号18<br/>PWM2 – 引脚号23<br/>PWM3 – 引脚号22<br/>注：EC600SCN/EC600N平台，支持PWM0-PWM3，对应引脚如下：<br/>PWM0 – 引脚号52<br/>PWM1 – 引脚号53<br/>PWM2 – 引脚号70<br/>PWM3 – 引脚号69<br />注：EC200UCN平台，支持PWM0，对应引脚如下：<br />PWM0 – 引脚号135<br />注：EC600UCN平台，支持PWM0，对应引脚如下：<br />PWM0 – 引脚号70<br /> |
-| ABOVE_xx  | int      | PWM.ABOVE_MS				ms级取值范围：(0,1023]<br/>PWM.ABOVE_1US				us级取值范围：(0,157]<br/>PWM.ABOVE_10US				us级取值范围：(1,1575]<br/>PWM.ABOVE_BELOW_US			ns级 取值(0,1024] |
+| PWMn      | int      | PWM号<br/>注：EC100YCN平台，支持PWM0-PWM3，对应引脚如下：<br/>PWM0 – 引脚号19<br/>PWM1 – 引脚号18<br/>PWM2 – 引脚号23<br/>PWM3 – 引脚号22<br/>注：EC600SCN/EC600N平台，支持PWM0-PWM3，对应引脚如下：<br/>PWM0 – 引脚号52<br/>PWM1 – 引脚号53<br/>PWM2 – 引脚号70<br/>PWM3 – 引脚号69<br />注：EC800N平台，支持PWM0-PWM3，对应引脚如下：<br/>PWM0 – 引脚号79<br/>PWM1 – 引脚号78<br/>PWM2 – 引脚号16<br/>PWM3 – 引脚号49<br />注：EC200UCN平台，支持PWM0，对应引脚如下：<br />PWM0 – 引脚号135<br />注：EC600UCN平台，支持PWM0，对应引脚如下：<br />PWM0 – 引脚号70<br /> |
+| ABOVE_xx  | int      | EC600SCN/EC600N/EC800N平台:<br />PWM.ABOVE_MS				ms级取值范围：(0,1023]<br/>PWM.ABOVE_1US				us级取值范围：(0,157]<br/>PWM.ABOVE_10US				us级取值范围：(1,1575]<br/>PWM.ABOVE_BELOW_US			ns级 取值(0,1024]<br />EC200U/EC600U平台:<br />PWM.ABOVE_MS				ms级取值范围：(0,10]<br/>PWM.ABOVE_1US				us级取值范围：(0,10000]<br/>PWM.ABOVE_10US				us级取值范围：(0,10000]<br/>PWM.ABOVE_BELOW_US			ns级 取值[100,65535] |
 | highTime  | int      | ms级时，单位为ms<br/>us级时，单位为us<br/>ns级别：需要使用者计算<br/>               频率 = 13Mhz / cycleTime<br/>               占空比 = highTime/ cycleTime |
 | cycleTime | int      | ms级时，单位为ms<br/>us级时，单位为us<br/>ns级别：需要使用者计算<br/>             频率 = 13Mhz / cycleTime<br/>             占空比 = highTime/ cycleTime |
 
@@ -4203,13 +4391,13 @@ PROJECT_VERSION = "1.0.0"
 
 '''
 * 参数1：PWM号
-        注：EC100YCN平台，支持PWM0~PWM3，对应引脚如下：
+        注：EC100YCN平台，支持PWM0 ~ PWM3，对应引脚如下：
         PWM0 – 引脚号19
         PWM1 – 引脚号18
         PWM2 – 引脚号23
         PWM3 – 引脚号22
 
-        注：EC600SCN平台，支持PWM0~PWM3，对应引脚如下：
+        注：EC600SCN平台，支持PWM0 ~ PWM3，对应引脚如下：
         PWM0 – 引脚号52
         PWM1 – 引脚号53
         PWM2 – 引脚号70
@@ -4236,7 +4424,7 @@ if __name__ == '__main__':
 
 | 常量     | 说明     | 适用平台                                  |
 | -------- | -------- | ----------------------------------------- |
-| ADC.ADC0 | ADC通道0 | EC600S/EC600N/EC100Y/EC600U/EC200U/BC25PA |
+| ADC.ADC0 | ADC通道0 | EC600S/EC600N/EC100Y/EC600U/EC200U/BC25PA/EC800N |
 | ADC.ADC1 | ADC通道1 | EC600S/EC600N/EC600U/EC200U               |
 | ADC.ADC2 | ADC通道2 | EC600U/EC200U                             |
 | ADC.ADC3 | ADC通道3 | EC600U                                    |
@@ -4284,7 +4472,7 @@ ADC功能初始化。
 
 | 参数 | 参数类型 | 参数说明                                                     |
 | ---- | -------- | ------------------------------------------------------------ |
-| ADCn | int      | ADC通道<br/>EC100Y平台对应引脚如下<br/>ADC0 – 引脚号39<br/>ADC1 – 引脚号81<br/>EC600S/EC600N平台对应引脚如下<br/>ADC0 – 引脚号19<br/>EC600U平台对应引脚如下<br />ADC0 – 引脚号19<br/>ADC1 – 引脚号20<br />ADC2 – 引脚号113<br />ADC3 – 引脚号114<br />EC200U平台对应引脚如下<br />ADC0 – 引脚号45<br/>ADC1 – 引脚号44<br />ADC2 – 引脚号43<br /> |
+| ADCn | int      | ADC通道<br/>EC100Y平台对应引脚如下<br/>ADC0 – 引脚号39<br/>ADC1 – 引脚号81<br/>EC600S/EC600N平台对应引脚如下<br/>ADC0 – 引脚号19<br/>EC800N平台对应引脚如下<br/>ADC0 – 引脚号9<br/>EC600U平台对应引脚如下<br />ADC0 – 引脚号19<br/>ADC1 – 引脚号20<br />ADC2 – 引脚号113<br />ADC3 – 引脚号114<br />EC200U平台对应引脚如下<br />ADC0 – 引脚号45<br/>ADC1 – 引脚号44<br />ADC2 – 引脚号43<br /> |
 
 * 返回值
 
@@ -4319,7 +4507,7 @@ ADC功能初始化。
 
 提供USB插拔检测接口。
 
-注意：BC25PA平台支持仅不支持此模块。
+注意：BC25PA平台不支持此模块。
 
 ###### 创建USB对象
 
@@ -4385,7 +4573,59 @@ def usb_callback(conn_status):
 usb.setCallback(usb_callback)
 ```
 
+##### USBNET
 
+提供USB网卡功能
+
+注意：目前仅ASR平台支持
+
+###### 设置USB网卡工作类型（重启生效）
+
+USBNET.set_worktype(type)
+
+- 参数
+
+  | 参数 | 参数类型 | 参数说明                                                   |
+  | ---- | -------- | ---------------------------------------------------------- |
+  | type | int      | USBNET 工作类型 Type_ECM – ECM 模式 Type_RNDIS – RNDIS模式 |
+
+- 返回值
+
+  设置成功返回整型0，失败返回整型-1。
+
+###### 打开USB网卡
+
+USBNET.open()
+
+- 参数
+
+  无
+
+- 返回值
+
+  打开成功返回整型0，失败返回整型-1。
+
+示例
+
+```
+from misc import USBNET
+from misc import Power
+
+#work on ECM mode default
+USBNET.open()
+
+USBNET.set_worktype(USBNET.Type_RNDIS)
+
+#reset the module
+Power.powerRestart()
+
+
+#After restart
+from misc import USBNET
+
+#work on RNDIS mode
+USBNET.open()
+```
 
 #### modem - 设备相关
 
@@ -4519,35 +4759,47 @@ usb.setCallback(usb_callback)
 
 | 常量             | 适配平台                   | 说明      |
 | ---------------- | ------------------------ | -------- |
-| Pin.GPIO1        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO1    |
-| Pin.GPIO2        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO2    |
-| Pin.GPIO3        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO3    |
-| Pin.GPIO4        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO4    |
-| Pin.GPIO5        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO5    |
-| Pin.GPIO6        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO6    |
-| Pin.GPIO7        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO7    |
-| Pin.GPIO8        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO8    |
-| Pin.GPIO9        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO9    |
-| Pin.GPIO10       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO10   |
-| Pin.GPIO11       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO11   |
-| Pin.GPIO12       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO12   |
-| Pin.GPIO13       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO13   |
-| Pin.GPIO14       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO14   |
-| Pin.GPIO15       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO15   |
-| Pin.GPIO16       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO16   |
-| Pin.GPIO17       | EC600S / EC600N / EC100Y | GPIO17   |
-| Pin.GPIO18       | EC600S / EC600N / EC100Y | GPIO18   |
-| Pin.GPIO19       | EC600S / EC600N / EC100Y | GPIO19   |
-| Pin.GPIO20       | EC600S / EC600N          | GPIO20   |
-| Pin.GPIO21       | EC600S / EC600N          | GPIO21   |
-| Pin.GPIO22       | EC600S / EC600N          | GPIO22   |
-| Pin.GPIO23       | EC600S / EC600N          | GPIO23   |
-| Pin.GPIO24       | EC600S / EC600N          | GPIO24   |
-| Pin.GPIO25       | EC600S / EC600N          | GPIO25   |
-| Pin.GPIO26       | EC600S / EC600N          | GPIO26   |
-| Pin.GPIO27       | EC600S / EC600N          | GPIO27   |
-| Pin.GPIO28       | EC600S / EC600N          | GPIO28   |
-| Pin.GPIO29       | EC600S / EC600N          | GPIO29   |
+| Pin.GPIO1        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA/EC800N | GPIO1    |
+| Pin.GPIO2        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA/EC800N | GPIO2    |
+| Pin.GPIO3        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA/EC800N | GPIO3    |
+| Pin.GPIO4        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA/EC800N | GPIO4    |
+| Pin.GPIO5        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA/EC800N | GPIO5    |
+| Pin.GPIO6        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA/EC800N | GPIO6    |
+| Pin.GPIO7        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA/EC800N | GPIO7    |
+| Pin.GPIO8        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA/EC800N | GPIO8    |
+| Pin.GPIO9        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA/EC800N | GPIO9    |
+| Pin.GPIO10       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA/EC800N | GPIO10   |
+| Pin.GPIO11       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA/EC800N | GPIO11   |
+| Pin.GPIO12       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA/EC800N | GPIO12   |
+| Pin.GPIO13       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA/EC800N | GPIO13   |
+| Pin.GPIO14       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA/EC800N | GPIO14   |
+| Pin.GPIO15       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA/EC800N | GPIO15   |
+| Pin.GPIO16       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA/EC800N | GPIO16   |
+| Pin.GPIO17       | EC600S / EC600N / EC100Y/EC800N | GPIO17   |
+| Pin.GPIO18       | EC600S / EC600N / EC100Y/EC800N | GPIO18   |
+| Pin.GPIO19       | EC600S / EC600N / EC100Y/EC800N | GPIO19   |
+| Pin.GPIO20       | EC600S / EC600N/EC800N   | GPIO20   |
+| Pin.GPIO21       | EC600S / EC600N/EC800N   | GPIO21   |
+| Pin.GPIO22       | EC600S / EC600N/EC800N   | GPIO22   |
+| Pin.GPIO23       | EC600S / EC600N/EC800N   | GPIO23   |
+| Pin.GPIO24       | EC600S / EC600N/EC800N   | GPIO24   |
+| Pin.GPIO25       | EC600S / EC600N/EC800N   | GPIO25   |
+| Pin.GPIO26       | EC600S / EC600N/EC800N   | GPIO26   |
+| Pin.GPIO27       | EC600S / EC600N/EC800N   | GPIO27   |
+| Pin.GPIO28       | EC600S / EC600N/EC800N   | GPIO28   |
+| Pin.GPIO29       | EC600S / EC600N/EC800N   | GPIO29   |
+| Pin.GPIO30 | EC600S / EC600N/EC800N | GPIO30 |
+| Pin.GPIO31 | EC600S / EC600N/EC800N | GPIO31 |
+| Pin.GPIO32 | EC600S / EC600N/EC800N | GPIO32 |
+| Pin.GPIO33 | EC600S / EC600N/EC800N | GPIO33 |
+| Pin.GPIO34 | EC600S / EC600N/EC800N | GPIO34 |
+| Pin.GPIO35 | EC600S / EC600N/EC800N | GPIO35 |
+| Pin.GPIO36 | EC600S / EC600N/EC800N | GPIO36 |
+| Pin.GPIO37 | EC600S / EC600N/EC800N | GPIO37 |
+| Pin.GPIO38 | EC600S / EC600N | GPIO38 |
+| Pin.GPIO39 | EC600S / EC600N | GPIO39 |
+| Pin.GPIO40 | EC600S / EC600N | GPIO40 |
+| Pin.GPIO41 | EC600S / EC600N | GPIO41 |
 | Pin.IN           | --                       | 输入模式 |
 | Pin.OUT          | --                       | 输出模式 |
 | Pin.PULL_DISABLE | --                       | 浮空模式 |
@@ -4568,7 +4820,7 @@ usb.setCallback(usb_callback)
 
 | 参数      | 类型 | 说明                                                         |
 | :-------- | :--- | ------------------------------------------------------------ |
-| GPIOn     | int  | 引脚号<br />EC100YCN平台引脚对应关系如下（引脚号为外部引脚编号）：<br />GPIO1 – 引脚号22<br />GPIO2 – 引脚号23<br />GPIO3 – 引脚号38<br />GPIO4 – 引脚号53<br />GPIO5 – 引脚号54<br />GPIO6 – 引脚号104<br />GPIO7 – 引脚号105<br />GPIO8 – 引脚号106<br />GPIO9 – 引脚号107<br />GPIO10 – 引脚号178<br />GPIO11 – 引脚号195<br />GPIO12 – 引脚号196<br />GPIO13 – 引脚号197<br />GPIO14 – 引脚号198<br />GPIO15 – 引脚号199<br />GPIO16 – 引脚号203<br />GPIO17 – 引脚号204<br />GPIO18 – 引脚号214<br />GPIO19 – 引脚号215<br />EC600SCN/EC600NCN平台引脚对应关系如下（引脚号为模块外部引脚编号）：<br />GPIO1 – 引脚号10<br />GPIO2 – 引脚号11<br />GPIO3 – 引脚号12<br />GPIO4 – 引脚号13<br />GPIO5 – 引脚号14<br />GPIO6 – 引脚号15<br />GPIO7 – 引脚号16<br />GPIO8 – 引脚号39<br />GPIO9 – 引脚号40<br />GPIO10 – 引脚号48<br />GPIO11 – 引脚号58<br />GPIO12 – 引脚号59<br />GPIO13 – 引脚号60<br />GPIO14 – 引脚号61<br />GPIO15 – 引脚号62<br/>GPIO16 – 引脚号63<br/>GPIO17 – 引脚号69<br/>GPIO18 – 引脚号70<br/>GPIO19 – 引脚号1<br/>GPIO20 – 引脚号3<br/>GPIO21 – 引脚号49<br/>GPIO22 – 引脚号50<br/>GPIO23 – 引脚号51<br/>GPIO24 – 引脚号52<br/>GPIO25 – 引脚号53<br/>GPIO26 – 引脚号54<br/>GPIO27 – 引脚号55<br/>GPIO28 – 引脚号56<br/>GPIO29 – 引脚号57<br />EC600UCN平台引脚对应关系如下（引脚号为模块外部引脚编号）<br />GPIO1 – 引脚号61<br />GPIO2 – 引脚号58<br />GPIO3 – 引脚号34<br />GPIO4 – 引脚号60<br />GPIO5 – 引脚号69<br />GPIO6 – 引脚号70<br />GPIO7 – 引脚号123<br />GPIO8 – 引脚号118<br />GPIO9 – 引脚号9<br />GPIO10 – 引脚号1<br />GPIO11 – 引脚号4<br />GPIO12 – 引脚号3<br />GPIO13 – 引脚号2<br />GPIO14 – 引脚号54<br />GPIO15 – 引脚号57<br/>GPIO16 – 引脚号56<br/>EC200UCN平台引脚对应关系如下（引脚号为模块外部引脚编号）<br />GPIO1 – 引脚号27<br />GPIO2 – 引脚号26<br />GPIO3 – 引脚号24<br />GPIO4 – 引脚号25<br />GPIO5 – 引脚号13<br />GPIO6 – 引脚号135<br />GPIO7 – 引脚号136<br />GPIO8 – 引脚号133<br />GPIO9 – 引脚号3<br />GPIO10 – 引脚号40<br />GPIO11 – 引脚号37<br />GPIO12 – 引脚号38<br />GPIO13 – 引脚号39<br />GPIO14 – 引脚号5<br />GPIO15 – 引脚号141<br/>GPIO16 – 引脚号142<br/>BC25PA平台引脚对应关系如下（引脚号为模块外部引脚编号）<br />GPIO1 – 引脚号3<br />GPIO2 – 引脚号4<br />GPIO3 – 引脚号5<br />GPIO4 – 引脚号6<br />GPIO5 – 引脚号16<br />GPIO6 – 引脚号20<br />GPIO7 – 引脚号21<br />GPIO8 – 引脚号22<br />GPIO9 – 引脚号23<br />GPIO10 – 引脚号25<br />GPIO11 – 引脚号28<br />GPIO12 – 引脚号29<br />GPIO13 – 引脚号30<br />GPIO14 – 引脚号31<br />GPIO15 – 引脚号32<br/>GPIO16 – 引脚号33<br/> |
+| GPIOn     | int  | 引脚号<br />EC100YCN平台引脚对应关系如下（引脚号为外部引脚编号）：<br />GPIO1 – 引脚号22<br />GPIO2 – 引脚号23<br />GPIO3 – 引脚号38<br />GPIO4 – 引脚号53<br />GPIO5 – 引脚号54<br />GPIO6 – 引脚号104<br />GPIO7 – 引脚号105<br />GPIO8 – 引脚号106<br />GPIO9 – 引脚号107<br />GPIO10 – 引脚号178<br />GPIO11 – 引脚号195<br />GPIO12 – 引脚号196<br />GPIO13 – 引脚号197<br />GPIO14 – 引脚号198<br />GPIO15 – 引脚号199<br />GPIO16 – 引脚号203<br />GPIO17 – 引脚号204<br />GPIO18 – 引脚号214<br />GPIO19 – 引脚号215<br />EC600SCN/EC600NCN平台引脚对应关系如下（引脚号为模块外部引脚编号）：<br />GPIO1 – 引脚号10<br />GPIO2 – 引脚号11<br />GPIO3 – 引脚号12<br />GPIO4 – 引脚号13<br />GPIO5 – 引脚号14<br />GPIO6 – 引脚号15<br />GPIO7 – 引脚号16<br />GPIO8 – 引脚号39<br />GPIO9 – 引脚号40<br />GPIO10 – 引脚号48<br />GPIO11 – 引脚号58<br />GPIO12 – 引脚号59<br />GPIO13 – 引脚号60<br />GPIO14 – 引脚号61<br />GPIO15 – 引脚号62<br/>GPIO16 – 引脚号63<br/>GPIO17 – 引脚号69<br/>GPIO18 – 引脚号70<br/>GPIO19 – 引脚号1<br/>GPIO20 – 引脚号3<br/>GPIO21 – 引脚号49<br/>GPIO22 – 引脚号50<br/>GPIO23 – 引脚号51<br/>GPIO24 – 引脚号52<br/>GPIO25 – 引脚号53<br/>GPIO26 – 引脚号54<br/>GPIO27 – 引脚号55<br/>GPIO28 – 引脚号56<br/>GPIO29 – 引脚号57<br />GPIO30 – 引脚号2<br />GPIO31 – 引脚号66<br />GPIO32 – 引脚号65<br />GPIO33 – 引脚号67<br />GPIO34 – 引脚号64<br />GPIO35 – 引脚号4<br />GPIO36 – 引脚号31<br />GPIO37 – 引脚号32<br />GPIO38 – 引脚号33<br />GPIO39 – 引脚号34<br />GPIO40 – 引脚号71<br />GPIO41 – 引脚号72<br />EC600UCN平台引脚对应关系如下（引脚号为模块外部引脚编号）<br />GPIO1 – 引脚号61<br />GPIO2 – 引脚号58<br />GPIO3 – 引脚号34<br />GPIO4 – 引脚号60<br />GPIO5 – 引脚号69<br />GPIO6 – 引脚号70<br />GPIO7 – 引脚号123<br />GPIO8 – 引脚号118<br />GPIO9 – 引脚号9<br />GPIO10 – 引脚号1<br />GPIO11 – 引脚号4<br />GPIO12 – 引脚号3<br />GPIO13 – 引脚号2<br />GPIO14 – 引脚号54<br />GPIO15 – 引脚号57<br/>GPIO16 – 引脚号56<br/>EC200UCN平台引脚对应关系如下（引脚号为模块外部引脚编号）<br />GPIO1 – 引脚号27<br />GPIO2 – 引脚号26<br />GPIO3 – 引脚号24<br />GPIO4 – 引脚号25<br />GPIO5 – 引脚号13<br />GPIO6 – 引脚号135<br />GPIO7 – 引脚号136<br />GPIO8 – 引脚号133<br />GPIO9 – 引脚号3<br />GPIO10 – 引脚号40<br />GPIO11 – 引脚号37<br />GPIO12 – 引脚号38<br />GPIO13 – 引脚号39<br />GPIO14 – 引脚号5<br />GPIO15 – 引脚号141<br/>GPIO16 – 引脚号142<br/>EC800NCN平台引脚对应关系如下（引脚号为模块外部引脚编号）<br />GPIO1 – 引脚号30<br />GPIO2 – 引脚号31<br />GPIO3 – 引脚号32<br />GPIO4 – 引脚号33<br />GPIO5 – 引脚号49<br />GPIO6 – 引脚号50<br />GPIO7 – 引脚号51<br />GPIO8 – 引脚号52<br />GPIO9 – 引脚号53<br />GPIO10 – 引脚号54<br />GPIO11 – 引脚号55<br />GPIO12 – 引脚号56<br />GPIO13 – 引脚号57<br />GPIO14 – 引脚号58<br />GPIO15 – 引脚号80<br/>GPIO16 – 引脚号81<br/>GPIO17 – 引脚号76<br/>GPIO18 – 引脚号77<br/>GPIO19 – 引脚号82<br/>GPIO20 – 引脚号83<br/>GPIO21 – 引脚号86<br/>GPIO22 – 引脚号87<br/>GPIO23 – 引脚号66<br/>GPIO24 – 引脚号67<br/>GPIO25 – 引脚号17<br/>GPIO26 – 引脚号18<br/>GPIO27 – 引脚号19<br/>GPIO28 – 引脚号20<br/>GPIO29 – 引脚号21<br />GPIO30 – 引脚号22<br />GPIO31 – 引脚号23<br />GPIO32 – 引脚号28<br />GPIO33 – 引脚号29<br />GPIO34 – 引脚号38<br />GPIO35 – 引脚号39<br />GPIO36 – 引脚号16<br />GPIO37 – 引脚号78<br />BC25PA平台引脚对应关系如下（引脚号为模块外部引脚编号）<br />GPIO1 – 引脚号3<br />GPIO2 – 引脚号4<br />GPIO3 – 引脚号5<br />GPIO4 – 引脚号6<br />GPIO5 – 引脚号16<br />GPIO6 – 引脚号20<br />GPIO7 – 引脚号21<br />GPIO8 – 引脚号22<br />GPIO9 – 引脚号23<br />GPIO10 – 引脚号25<br />GPIO11 – 引脚号28<br />GPIO12 – 引脚号29<br />GPIO13 – 引脚号30<br />GPIO14 – 引脚号31<br />GPIO15 – 引脚号32<br/>GPIO16 – 引脚号33<br/> |
 | direction | int  | IN – 输入模式，OUT – 输出模式                                |
 | pullMode  | int  | PULL_DISABLE – 浮空模式<br />PULL_PU – 上拉模式<br />PULL_PD – 下拉模式 |
 | level     | int  | 0 - 设置引脚为低电平, 1- 设置引脚为高电平                    |
@@ -4625,7 +4877,46 @@ PIN脚电平，0-低电平，1-高电平。
 1
 ```
 
+###### 设置输入输出模式
 
+> **Pin.set_dir(value)**
+
+设置PIN脚GPIO的输入输出模式。
+
+* 参数
+
+| 参数  | 类型 | 说明                                                         |
+| ----- | ---- | ------------------------------------------------------------ |
+| value | int  | 0 - (Pin.IN)设置为输入模式;  <br />1 - (Pin.OUT)设置为输出模式 |
+
+* 返回值
+
+设置成功返回整型值0，设置失败返回其它。
+
+* 示例
+
+```python
+>>> from machine import Pin
+>>> gpio1 = Pin(Pin.GPIO1, Pin.OUT, Pin.PULL_DISABLE, 0)
+>>> gpio1.write(1)
+0
+>>> gpio1.set_dir(Pin.IN)
+0
+```
+
+###### 获取输入输出模式
+
+> **Pin.get_dir()**
+
+获取pin脚的输入输出模式。
+
+* 参数 
+
+无
+
+* 返回值
+
+PIN模式，0-输入模式，1-输出模式。
 
 ###### 使用示例
 
@@ -4642,70 +4933,6 @@ import utime
 PROJECT_NAME = "QuecPython_Pin_example"
 PROJECT_VERSION = "1.0.0"
 
-'''
-* 参数1：引脚号
-        EC100YCN平台引脚对应关系如下：
-        GPIO1 – 引脚号22
-        GPIO2 – 引脚号23
-        GPIO3 – 引脚号38
-        GPIO4 – 引脚号53
-        GPIO5 – 引脚号54
-        GPIO6 – 引脚号104
-        GPIO7 – 引脚号105
-        GPIO8 – 引脚号106
-        GPIO9 – 引脚号107
-        GPIO10 – 引脚号178
-        GPIO11 – 引脚号195
-        GPIO12 – 引脚号196
-        GPIO13 – 引脚号197
-        GPIO14 – 引脚号198
-        GPIO15 – 引脚号199
-        GPIO16 – 引脚号203
-        GPIO17 – 引脚号204
-        GPIO18 – 引脚号214
-        GPIO19 – 引脚号215
-
-        EC600SCN/EC600NCN平台引脚对应关系如下：
-        GPIO1 – 引脚号10
-        GPIO2 – 引脚号11
-        GPIO3 – 引脚号12
-        GPIO4 – 引脚号13
-        GPIO5 – 引脚号14
-        GPIO6 – 引脚号15
-        GPIO7 – 引脚号16
-        GPIO8 – 引脚号39
-        GPIO9 – 引脚号40
-        GPIO10 – 引脚号48
-        GPIO11 – 引脚号58
-        GPIO12 – 引脚号59
-        GPIO13 – 引脚号60
-        GPIO14 – 引脚号61
-        GPIO15 – 引脚号62
-        GPIO16 – 引脚号63
-        GPIO17 – 引脚号69
-        GPIO18 – 引脚号70
-        GPIO19 – 引脚号1
-        GPIO20 – 引脚号3
-        GPIO21 – 引脚号49
-        GPIO22 – 引脚号50
-        GPIO23 – 引脚号51
-        GPIO24 – 引脚号52
-        GPIO25 – 引脚号53
-        GPIO26 – 引脚号54
-        GPIO27 – 引脚号55
-        GPIO28 – 引脚号56
-        GPIO29 – 引脚号57
-* 参数2：direction
-        IN – 输入模式
-        OUT – 输出模式
-* 参数3：pull
-        PULL_DISABLE – 禁用模式
-        PULL_PU – 上拉模式
-        PULL_PD – 下拉模式
-* 参数4：level
-        0 设置引脚为低电平
-        1 设置引脚为高电平
-'''
 gpio1 = Pin(Pin.GPIO1, Pin.OUT, Pin.PULL_DISABLE, 0)
 
 if __name__ == '__main__':
@@ -4746,9 +4973,9 @@ if __name__ == '__main__':
 | :------- | :--- | ------------------------------------------------------------ |
 | UARTn    | int  | UARTn作用如下：<br />UART0 - DEBUG PORT<br />UART1 – BT PORT<br />UART2 – MAIN PORT<br />UART3 – USB CDC PORT |
 | buadrate | int  | 波特率，常用波特率都支持，如4800、9600、19200、38400、57600、115200、230400等 |
-| databits | int  | 数据位（5~8），展锐平台当前仅支持8位                         |
+| databits | int  | 数据位（5 ~ 8），展锐平台当前仅支持8位                         |
 | parity   | int  | 奇偶校验（0 – NONE，1 – EVEN，2 - ODD）                      |
-| stopbits | int  | 停止位（1~2）                                                |
+| stopbits | int  | 停止位（1 ~ 2）                                                |
 | flowctl  | int  | 硬件控制流（0 – FC_NONE， 1 – FC_HW）                        |
 
 - 引脚对应关系
@@ -4759,6 +4986,7 @@ if __name__ == '__main__':
 | EC200U        | uart1:<br />TX: 引脚号138<br />RX: 引脚号137<br />uart2:<br />TX:引脚号67<br />RX:引脚号68 |
 | EC600S/EC600N | uart0:<br />TX: 引脚号71<br />RX: 引脚号72<br />uart1:<br />TX: 引脚号3<br />RX: 引脚号2<br />uart2:<br />TX:引脚号32<br />RX:引脚号31 |
 | EC100Y        | uart0:<br />TX: 引脚号21<br />RX: 引脚号20<br />uart1:<br />TX: 引脚号27<br />RX: 引脚号28<br />uart2:<br />TX:引脚号50<br />RX:引脚号49 |
+| EC800N        | uart0:<br />TX: 引脚号39<br />RX: 引脚号38<br />uart1:<br />TX: 引脚号50<br />RX: 引脚号51<br />uart2:<br />TX:引脚号18<br />RX:引脚号17 |
 
 * 示例
 
@@ -4864,7 +5092,6 @@ if __name__ == '__main__':
 * 注意
 
   BC25PA平台不支持此方法。
-  
 - 示例
 
 ```python
@@ -4929,9 +5156,9 @@ PROJECT_VERSION = "1.0.0"
         UART2 – MAIN PORT
         UART3 – USB CDC PORT
  * 参数2：波特率
- * 参数3：data bits  （5~8）
+ * 参数3：data bits  （5 ~ 8）
  * 参数4：Parity  （0：NONE  1：EVEN  2：ODD）
- * 参数5：stop bits （1~2）
+ * 参数5：stop bits （1 ~ 2）
  * 参数6：flow control （0: FC_NONE  1：FC_HW）
 '''
 
@@ -5043,7 +5270,7 @@ PS:使用该定时器时需注意：定时器0-3，每个在同一时间内只�
 
 | 参数   | 类型 | 说明                                                         |
 | ------ | ---- | ------------------------------------------------------------ |
-| Timern | int  | 定时器号<br />支持定时器Timer0~Timer3（使用该定时器时需注意：定时器0-3，每个在同一时间内只能执行一件任务，且多个对象不可使用同一个定时器。） |
+| Timern | int  | 定时器号<br />支持定时器Timer0 ~ Timer3（使用该定时器时需注意：定时器0-3，每个在同一时间内只能执行一件任务，且多个对象不可使用同一个定时器。） |
 
 * 示例
 
@@ -5078,7 +5305,7 @@ PS:使用该定时器时需注意：定时器0-3，每个在同一时间内只�
 // 使用该定时器时需注意：定时器0-3，每个在同一时间内只能执行一件任务，且多个对象不可使用同一个定时器。
 >>> def fun(args):
         print(“###timer callback function###”)
->>> timer.start(period=1000, mode=timer.PERIODIC, callback=fun)
+>>> timer1.start(period=1000, mode=timer1.PERIODIC, callback=fun)
 0
 ###timer callback function###
 ###timer callback function###
@@ -5132,7 +5359,7 @@ Timer_Log = log.getLogger("Timer")
 
 num = 0
 state = 1
-# 注：EC100YCN支持定时器Timer0~Timer3
+# 注：EC100YCN支持定时器Timer0 ~ Timer3
 t = Timer(Timer.Timer1)
 
 # 创建一个执行函数，并将timer实例传入
@@ -5157,44 +5384,7 @@ if __name__ == '__main__':
 
 类功能：用于配置I/O引脚在发生外部事件时中断。
 
-###### 常量说明
 
-| 常量             | 适配平台                                      | 说明     |
-| ---------------- | --------------------------------------------- | -------- |
-| Pin.GPIO1        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO1    |
-| Pin.GPIO2        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO2    |
-| Pin.GPIO3        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO3    |
-| Pin.GPIO4        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO4    |
-| Pin.GPIO5        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO5    |
-| Pin.GPIO6        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO6    |
-| Pin.GPIO7        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO7    |
-| Pin.GPIO8        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO8    |
-| Pin.GPIO9        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO9    |
-| Pin.GPIO10       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO10   |
-| Pin.GPIO11       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO11   |
-| Pin.GPIO12       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO12   |
-| Pin.GPIO13       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO13   |
-| Pin.GPIO14       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO14   |
-| Pin.GPIO15       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO15   |
-| Pin.GPIO16       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO16   |
-| Pin.GPIO17       | EC600S / EC600N / EC100Y                      | GPIO17   |
-| Pin.GPIO18       | EC600S / EC600N / EC100Y                      | GPIO18   |
-| Pin.GPIO19       | EC600S / EC600N / EC100Y                      | GPIO19   |
-| Pin.GPIO20       | EC600S / EC600N                               | GPIO20   |
-| Pin.GPIO21       | EC600S / EC600N                               | GPIO21   |
-| Pin.GPIO22       | EC600S / EC600N                               | GPIO22   |
-| Pin.GPIO23       | EC600S / EC600N                               | GPIO23   |
-| Pin.GPIO24       | EC600S / EC600N                               | GPIO24   |
-| Pin.GPIO25       | EC600S / EC600N                               | GPIO25   |
-| Pin.GPIO26       | EC600S / EC600N                               | GPIO26   |
-| Pin.GPIO27       | EC600S / EC600N                               | GPIO27   |
-| Pin.GPIO28       | EC600S / EC600N                               | GPIO28   |
-| Pin.GPIO29       | EC600S / EC600N                               | GPIO29   |
-| Pin.IN           | --                                            | 输入模式 |
-| Pin.OUT          | --                                            | 输出模式 |
-| Pin.PULL_DISABLE | --                                            | 浮空模式 |
-| Pin.PULL_PU      | --                                            | 上拉模式 |
-| Pin.PULL_PD      | --                                            | 下拉模式 |
 
 ###### 创建ExtInt对象
 
@@ -5204,7 +5394,7 @@ if __name__ == '__main__':
 
 | 参数     | 类型 | 说明                                                         |
 | :------- | :--- | ------------------------------------------------------------ |
-| GPIOn    | int  | 引脚号<br />EC100YCN平台引脚对应关系如下（引脚号为外部引脚编号）：<br />GPIO1 – 引脚号22<br />GPIO2 – 引脚号23<br />GPIO3 – 引脚号38<br />GPIO4 – 引脚号53<br />GPIO5 – 引脚号54<br />GPIO6 – 引脚号104<br />GPIO7 – 引脚号105<br />GPIO8 – 引脚号106<br />GPIO9 – 引脚号107<br />GPIO10 – 引脚号178<br />GPIO11 – 引脚号195<br />GPIO12 – 引脚号196<br />GPIO13 – 引脚号197<br />GPIO14 – 引脚号198<br />GPIO15 – 引脚号199<br />GPIO16 – 引脚号203<br />GPIO17 – 引脚号204<br />GPIO18 – 引脚号214<br />GPIO19 – 引脚号215<br />EC600SCN/EC600NCN平台引脚对应关系如下（引脚号为模块外部引脚编号）：<br />GPIO1 – 引脚号10<br />GPIO2 – 引脚号11<br />GPIO3 – 引脚号12<br />GPIO4 – 引脚号13<br />GPIO5 – 引脚号14<br />GPIO6 – 引脚号15<br />GPIO7 – 引脚号16<br />GPIO8 – 引脚号39<br />GPIO9 – 引脚号40<br />GPIO10 – 引脚号48<br />GPIO11 – 引脚号58<br />GPIO12 – 引脚号59<br />GPIO13 – 引脚号60<br />GPIO14 – 引脚号61<br />GPIO15 – 引脚号62<br/>GPIO16 – 引脚号63<br/>GPIO17 – 引脚号69<br/>GPIO18 – 引脚号70<br/>GPIO19 – 引脚号1<br/>GPIO20 – 引脚号3<br/>GPIO21 – 引脚号49<br/>GPIO22 – 引脚号50<br/>GPIO23 – 引脚号51<br/>GPIO24 – 引脚号52<br/>GPIO25 – 引脚号53<br/>GPIO26 – 引脚号54<br/>GPIO27 – 引脚号55<br/>GPIO28 – 引脚号56<br/>GPIO29 – 引脚号57<br />EC600UCN平台引脚对应关系如下（引脚号为模块外部引脚编号）<br />GPIO1 – 引脚号61<br />GPIO2 – 引脚号58<br />GPIO3 – 引脚号34<br />GPIO4 – 引脚号60<br />GPIO5 – 引脚号69<br />GPIO6 – 引脚号70<br />GPIO7 – 引脚号123<br />GPIO8 – 引脚号118<br />GPIO9 – 引脚号9<br />GPIO10 – 引脚号1<br />GPIO11 – 引脚号4<br />GPIO12 – 引脚号3<br />GPIO13 – 引脚号2<br />GPIO14 – 引脚号54<br />GPIO15 – 引脚号57<br/>GPIO16 – 引脚号56<br/>EC200UCN平台引脚对应关系如下（引脚号为模块外部引脚编号）<br />GPIO1 – 引脚号27<br />GPIO2 – 引脚号26<br />GPIO3 – 引脚号24<br />GPIO4 – 引脚号25<br />GPIO5 – 引脚号13<br />GPIO6 – 引脚号135<br />GPIO7 – 引脚号136<br />GPIO8 – 引脚号133<br />GPIO9 – 引脚号3<br />GPIO10 – 引脚号40<br />GPIO11 – 引脚号37<br />GPIO12 – 引脚号38<br />GPIO13 – 引脚号39<br />GPIO14 – 引脚号5<br />GPIO15 – 引脚号141<br/>GPIO16 – 引脚号142<br/>BC25PA平台引脚对应关系如下（引脚号为模块外部引脚编号）<br />GPIO1 – 引脚号3<br />GPIO2 – 引脚号4<br />GPIO3 – 引脚号5<br />GPIO4 – 引脚号6<br />GPIO5 – 引脚号16<br />GPIO6 – 引脚号20<br />GPIO7 – 引脚号21<br />GPIO8 – 引脚号22<br />GPIO9 – 引脚号23<br />GPIO10 – 引脚号25<br />GPIO11 – 引脚号28<br />GPIO12 – 引脚号29<br />GPIO13 – 引脚号30<br />GPIO14 – 引脚号31<br />GPIO15 – 引脚号32<br/>GPIO16 – 引脚号33<br/> |
+| GPIOn    | int  | 需要控制的GPIO引脚号，参照Pin模块的定义                      |
 | mode     | int  | 设置触发方式<br /> IRQ_RISING – 上升沿触发<br /> IRQ_FALLING – 下降沿触发<br /> IRQ_RISING_FALLING – 上升和下降沿触发 |
 | pull     | int  | PULL_DISABLE – 浮空模式<br />PULL_PU – 上拉模式 <br />PULL_PD  – 下拉模式 |
 | callback | int  | 中断触发回调函数                                             |
@@ -5272,7 +5462,7 @@ if __name__ == '__main__':
 ```python
 >>> extint = ExtInt(ExtInt.GPIO1, ExtInt.IRQ_FALLING, ExtInt.PULL_PU, fun)
 >>> extint.line()
-32
+1
 ```
 
 ###### 读取中断数
@@ -5336,12 +5526,12 @@ if __name__ == '__main__':
 | 参数        | 类型 | 说明                                                         |
 | ----------- | ---- | ------------------------------------------------------------ |
 | year        | int  | 年                                                           |
-| month       | int  | 月，范围1~12                                                 |
-| day         | int  | 日，范围1~31                                                 |
+| month       | int  | 月，范围1 ~ 12                                                 |
+| day         | int  | 日，范围1 ~ 31                                                 |
 | week        | int  | 星期，范围0 ~ 6，其中0表示周日，1 ~ 6分别表示周一到周六；设置时间时，该参数不起作用，保留；获取时间时该参数有效 |
-| hour        | int  | 时，范围0~23                                                 |
-| minute      | int  | 分，范围0~59                                                 |
-| second      | int  | 秒，范围0~59                                                 |
+| hour        | int  | 时，范围0 ~ 23                                                 |
+| minute      | int  | 分，范围0 ~ 59                                                 |
+| second      | int  | 秒，范围0 ~ 59                                                 |
 | microsecond | int  | 微秒，保留参数，暂未使用，设置时间时该参数写0即可            |
 
 * 返回值
@@ -5375,7 +5565,7 @@ if __name__ == '__main__':
 
 | 常量              |                   | 适用平台                      |
 | ----------------- | ----------------- | ----------------------------- |
-| I2C.I2C0          | i2c 通路索引号: 0 | EC100Y/EC600U/EC200U/BC25PA          |
+| I2C.I2C0          | i2c 通路索引号: 0 | EC100Y/EC600U/EC200U/BC25PA/EC800N   |
 | I2C.I2C1          | i2c 通路索引号: 1 | EC600S/EC600N/EC600U/EC200U/BC25PA  |
 | I2C.STANDARD_MODE | 标准模式 |                  |
 | I2C.FAST_MODE | 快速模式      |                               |
@@ -5404,7 +5594,9 @@ if __name__ == '__main__':
 | EC600S/EC600N | I2C1:<br />SCL:引脚号57<br />SDA:引脚号56                    |
 | EC100Y        | I2C0:<br />SCL:引脚号57<br />SDA:引脚号56                    |
 | BC25PA        | I2C0:<br />SCL: 引脚号23<br />SDA: 引脚号22<br />I2C1:<br />SCL:引脚号20<br />SDA:引脚号21 |
-|- 示例||
+| EC800N        | I2C0:<br />SCL:引脚号67<br />SDA:引脚号66                    |
+
+- 示例
 
 ```python
 from machine import I2C
@@ -5528,6 +5720,7 @@ if __name__ == '__main__':
 | EC200U        | port0:<br />CS:引脚号134<br />CLK:引脚号133<br />MOSI:引脚号132<br />MISO:引脚号131<br />port1:<br />CS:引脚号26<br />CLK:引脚号27<br />MOSI:引脚号24<br />MISO:引脚号25 |
 | EC600S/EC600N | port0:<br />CS:引脚号58<br />CLK:引脚号61<br />MOSI:引脚号60<br />MISO:引脚号59<br />port1:<br />CS:引脚号4<br />CLK:引脚号1<br />MOSI:引脚号3<br />MISO:引脚号2 |
 | EC100Y        | port0:<br />CS:引脚号25<br />CLK:引脚号26<br />MOSI:引脚号27<br />MISO:引脚号28<br />port1:<br />CS:引脚号105<br />CLK:引脚号104<br />MOSI:引脚号107<br />MISO:引脚号106 |
+| EC800N        | port0:<br />CS:引脚号31<br />CLK:引脚号30<br />MOSI:引脚号32<br />MISO:引脚号33<br />port1:<br />CS:引脚号52<br />CLK:引脚号53<br />MOSI:引脚号50<br />MISO:引脚号51 |
 | BC25PA        | port0:<br />CS:引脚号6<br />CLK:引脚号5<br />MOSI:引脚号4<br />MISO:引脚号3|
 
 - 示例
@@ -5644,7 +5837,6 @@ if __name__ == '__main__':
 
 * 注意
   BC25PA平台不支持此模块功能。
-  
 ###### 创建LCD对象
 
 > **lcd = LCD()**
@@ -6054,7 +6246,6 @@ if __name__ == '__main__':
 
 * 注意
   BC25PA平台不支持此模块功能。
-  
 > ​	qrcode.show(qrcode_str,magnification,start_x,start_y,Background_color,Foreground_color)
 
 - 参数
@@ -6104,7 +6295,6 @@ if __name__ == '__main__':
 
 * 注意
   BC25PA平台不支持此方法。
-  
 
 ##### 删除wake_lock锁
 
@@ -6517,10 +6707,10 @@ True
   | 返回值        | 类型 | 说明                                                         |
   | ------------- | ---- | ------------------------------------------------------------ |
   | timeout       | 整型 | 该超时时间参数是上层应用的超时，当触发超时会主动上报已扫描到的热点信息，若在超时前扫描到设置的热点个数或达到底层扫频超时时间会自动上报热点信息。该参数设置范围为4-255秒。 |
-  | round         | 整型 | 该参数是wifi扫描轮，达到扫描轮数后，会结束扫描并获取扫描结果。该参数设置范围为1-3轮次。 |
-  | max_bssid_num | 整型 | 该参数是wifi扫描热点最大个，若底层扫描热点个数达到设置的最大个数，会结束扫描并获取扫描结果。该参数设置范围为4-30个。 |
-  | scan_timeout  | 整型 | 该参数是底层wifi扫描热点超时时间，若底层扫描热点时间达到设置的超时时间，会结束扫描并获取扫描结果。该参数设置范围为1-255秒。 |
-  | priority      | 整型 | 该参数是wifi扫描业务优先级设置，0为ps优先，1为wifi优先。ps优先时，当有数据业务发起时会中断wifi扫描。Wifi优先时，当有数据业务发起时，不会建立RRC连接，保障wifi扫描正常执行，扫描结束后才会建立RRC连接。 |
+  | round         | 整型 | 该参数是Wi-Fi扫描轮，达到扫描轮数后，会结束扫描并获取扫描结果。该参数设置范围为1-3轮次。 |
+  | max_bssid_num | 整型 | 该参数是Wi-Fi扫描热点最大个，若底层扫描热点个数达到设置的最大个数，会结束扫描并获取扫描结果。该参数设置范围为4-30个。 |
+  | scan_timeout  | 整型 | 该参数是底层Wi-Fi扫描热点超时时间，若底层扫描热点时间达到设置的超时时间，会结束扫描并获取扫描结果。该参数设置范围为1-255秒。 |
+  | priority      | 整型 | 该参数是Wi-Fi扫描业务优先级设置，0为ps优先，1为Wi-Fi优先。ps优先时，当有数据业务发起时会中断Wi-Fi扫描。Wi-Fi优先时，当有数据业务发起时，不会建立RRC连接，保障Wi-Fi扫描正常执行，扫描结束后才会建立RRC连接。 |
 
 * 示例：
 
@@ -6629,7 +6819,7 @@ wifi list:(2, [('F0:B4:29:86:95:C7': -79),('44:00:4D:D5:26:E0', -92)])
 
 * 功能：
 
-  开始 wifiScan 扫描功能，扫描结束后直接返回扫描结果，由于是同步接口，所以扫描未结束时，程序会阻塞在该接口中，阻塞时间一般在0~2秒。
+  开始 wifiScan 扫描功能，扫描结束后直接返回扫描结果，由于是同步接口，所以扫描未结束时，程序会阻塞在该接口中，阻塞时间一般在0 ~ 2秒。
 
 * 参数：
 
@@ -6643,7 +6833,7 @@ wifi list:(2, [('F0:B4:29:86:95:C7': -79),('44:00:4D:D5:26:E0', -92)])
 
   | 参数      | 类型   | 说明                |
   | --------- | ------ | ------------------- |
-  | wifi_nums | 整型   | 搜索到的 wifi 数量  |
+  | wifi_nums | 整型   | 搜索到的 Wi-Fi 数量  |
   | mac       | 字符串 | 无线接入点的MAC地址 |
   | rssi      | 整型   | 信号强度            |
 
@@ -6658,7 +6848,9 @@ wifi list:(2, [('F0:B4:29:86:95:C7': -79),('44:00:4D:D5:26:E0', -92)])
 
 #### ble - 蓝牙低功耗
 
-模块功能：提供 BLE GATT Server 端（做从机）与 Client 端（做主机）功能，使用的是BLE 4.2版本协议。当前仅200U/600U模块支持BLE功能。
+模块功能：提供 BLE GATT Server 端（做从机）与 Client 端（做主机）功能，使用的是BLE 4.2版本协议。
+
+注意：当前仅200U/600U模块支持BLE功能。
 
 ##### 开启 BLE GATT 功能
 
@@ -6802,7 +6994,7 @@ def ble_callback(args):
 |    1     |    2     | args[0] ：event_id，表示 BT/BLE stop<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败 |
 |    16    |    4     | args[0] ：event_id，表示 BLE connect<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败<br/>args[2] ：connect_id<br/>args[3] ：addr，BT/BLE address，bytearray类型数据 |
 |    17    |    4     | args[0] ：event_id，表示 BLE disconnect<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败<br/>args[2] ：connect_id，<br/>args[3] ：addr，BT/BLE address，bytearray类型数据 |
-|    18    |    7     | args[0] ：event_id，表示 BLE update connection parameter<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败<br/>args[2] ：connect_id<br/>args[3] ：max_interval，最大的间隔，间隔：1.25ms，取值范围：6-3200，时间范围：7.5ms~4s<br/>args[4] ：min_interval，最小的间隔，间隔：1.25ms，取值范围：6-3200，时间范围：7.5ms~4s<br/>args[5] ：latency，从机忽略连接状态事件的时间。需满足：（1+latecy)\*max_interval\*2\*1.25<timeout\*10<br/>args[6] ：timeout，没有交互，超时断开时间，间隔：10ms，取值范围：10-3200，时间范围：100ms~32s |
+|    18    |    7     | args[0] ：event_id，表示 BLE update connection parameter<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败<br/>args[2] ：connect_id<br/>args[3] ：max_interval，最大的间隔，间隔：1.25ms，取值范围：6-3200，时间范围：7.5ms\ ~ 4s<br/>args[4] ：min_interval，最小的间隔，间隔：1.25ms，取值范围：6-3200，时间范围：7.5ms\ ~ 4s<br/>args[5] ：latency，从机忽略连接状态事件的时间。需满足：（1+latecy)\*max_interval\*2\*1.25<timeout\*10<br/>args[6] ：timeout，没有交互，超时断开时间，间隔：10ms，取值范围：10-3200，时间范围：100ms ~ 32s |
 |    20    |    4     | args[0] ：event_id，表示 BLE connection mtu<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败<br/>args[2] ：handle<br/>args[3] ：mtu值 |
 |    21    |    7     | args[0] ：event_id，表示 BLE server : when ble client write characteristic value or descriptor,server get the notice<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败<br/>args[2] ：data_len，获取数据的长度<br/>args[3] ：data，一个数组，存放获取的数据<br/>args[4] ：attr_handle，属性句柄，整型值<br/>args[5] ：short_uuid，整型值<br/>args[6] ：long_uuid，一个16字节数组，存放长UUID |
 |    22    |    7     | args[0] ：event_id，表示 server : when ble client read characteristic value or descriptor,server get the notice<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败<br/>args[2] ：data_len，获取数据的长度<br/>args[3] ：data，一个数组，存放获取的数据<br/>args[4] ：attr_handle，属性句柄，整型值<br/>args[5] ：short_uuid，整型值<br/>args[6] ：long_uuid，一个16字节数组，存放长UUID |
@@ -7887,7 +8079,7 @@ def ble_callback(args):
 |    1     |    2     | args[0] ：event_id，表示 BT/BLE stop<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败 |
 |    16    |    4     | args[0] ：event_id，表示 BLE connect<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败<br/>args[2] ：connect_id<br/>args[3] ：addr，BT/BLE address，bytearray类型数据 |
 |    17    |    4     | args[0] ：event_id，表示 BLE disconnect<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败<br/>args[2] ：connect_id，<br/>args[3] ：addr，BT/BLE address，bytearray类型数据 |
-|    18    |    7     | args[0] ：event_id，表示 BLE update connection parameter<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败<br/>args[2] ：connect_id<br/>args[3] ：max_interval，最大的间隔，间隔：1.25ms，取值范围：6-3200，时间范围：7.5ms~4s<br/>args[4] ：min_interval，最小的间隔，间隔：1.25ms，取值范围：6-3200，时间范围：7.5ms~4s<br/>args[5] ：latency，从机忽略连接状态事件的时间。需满足：（1+latecy)\*max_interval\*2\*1.25<timeout\*10<br/>args[6] ：timeout，没有交互，超时断开时间，间隔：10ms，取值范围：10-3200，时间范围：100ms~32s |
+|    18    |    7     | args[0] ：event_id，表示 BLE update connection parameter<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败<br/>args[2] ：connect_id<br/>args[3] ：max_interval，最大的间隔，间隔：1.25ms，取值范围：6-3200，时间范围：7.5ms ~ 4s<br/>args[4] ：min_interval，最小的间隔，间隔：1.25ms，取值范围：6-3200，时间范围：7.5ms ~ 4s<br/>args[5] ：latency，从机忽略连接状态事件的时间。需满足：（1+latecy)\*max_interval\*2\*1.25<timeout\*10<br/>args[6] ：timeout，没有交互，超时断开时间，间隔：10ms，取值范围：10-3200，时间范围：100ms ~ 32s |
 |    19    |    9     | args[0] ：event_id，表示 BLE scan report<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败<br/>args[2] ：event_type<br/>args[3] ：扫描到的设备名称<br/>args[4] ：设备地址类型<br/>args[5] ：设备地址，bytearray类型数据<br/>args[6] ：rssi，信号强度<br/>args[7] ：data_len，扫描的原始数据长度<br/>args[8] ：data，扫描的原始数据 |
 |    20    |    4     | args[0] ：event_id，表示 BLE connection mtu<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败<br/>args[2] ：handle<br/>args[3] ：mtu值 |
 |    23    |    4     | args[0] ：event_id，表示 client recieve notification，即接收通知<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败<br/>args[2] ：data_len，数据长度<br/>args[3] ：data，包含句柄等数据的原始数据，数据格式及解析见最后的综合示例程序 |
@@ -9621,7 +9813,6 @@ camCaputre.callback(callback)
 
 * 注意
   BC25PA平台不支持模块功能。
-  
 > 暂时只支持EC600U CNLB
 
 ##### 打开GNSS串口，读取并解析GNSS数据
@@ -9636,9 +9827,9 @@ camCaputre.callback(callback)
 | :------- | :--- | ------------------------------------------------------------ |
 | uartn    | int  | UARTn范围为0-3：<br />0-UART0 - DEBUG PORT<br />1-UART1 – BT PORT<br />2-UART2 – MAIN PORT<br />3-UART3 – USB CDC PORT |
 | baudrate | int  | 波特率，常用波特率都支持，如4800、9600、19200、38400、57600、115200、230400等 |
-| databits | int  | 数据位（5~8）                                                |
+| databits | int  | 数据位（5 ~ 8）                                                |
 | parity   | int  | 奇偶校验（0 – NONE，1 – EVEN，2 - ODD）                      |
-| stopbits | int  | 停止位（1~2）                                                |
+| stopbits | int  | 停止位（1 ~ 2）                                                |
 | flowctl  | int  | 硬件控制流（0 – FC_NONE， 1 – FC_HW）                        |
 
 
@@ -9742,7 +9933,7 @@ GPS模块定位可见卫星数量
 
 - **返回值**
 
-定位方位角，范围：0~359，以真北为参考平面。
+定位方位角，范围：0 ~ 359，以真北为参考平面。
 
 
 
@@ -9818,13 +10009,13 @@ SecureData.Store(index,databuf,len)
 - **参数**
 | 参数    | 类型      | 说明                                                         |
 | :------ | :-------- | ------------------------------------------------------------ |
-| index   | int       | index范围为1-16：<br />1 - 8 最大存储50字节数据<br />9 - 12 最大存储100字节数据<br />13 - 14 最大存储500字节数据<br />15 - 16 最大存储1000字节数据 |
+| index   | int       | index范围为1-16：<br />1 - 8 最大存储52字节数据<br />9 - 12 最大存储100字节数据<br />13 - 14 最大存储500字节数据<br />15 - 16 最大存储1000字节数据 |
 | databuf | bytearray | 待存储的数据数组                                             |
 | len     | int       | 要写入数据的长度                                             |
-存储时按照databuf和len两者中长度较小的进行存储
-**返回值**
--1: 参数有误 
-0: 执行正常
+|存储时按照databuf和len两者中长度较小的进行存储|||
+|**返回值**|||
+|-1: 参数有误 |||
+|0: 执行正常|||
 ##### 数据读取
 SecureData.Read(index,databuf,len)
 - **参数**
@@ -9954,7 +10145,7 @@ bytearray(b'12345678')
 | 参数     | 类型   | 说明                                                         |
 | -------- | ------ | ------------------------------------------------------------ |
 | data_len | int    | 期望接受的数据长度(注意此参数根据data的实际长度进行调整，按照data变量的容量和data_len的比较取最小值) |
-| data     | string | 存储接收到的数据                                             |
+| data     | string | 存储接收到的数据,最大支持1024字节数据。                                             |
 | type     | int    | 发送方式:0、1、2为无需响应确认，100、101、102需要响应确认。暂时仅支持0、1、2发送方式。 |
 
 - 说明
@@ -10045,7 +10236,7 @@ True
 | 参数     | 类型   | 说明                                                         |
 | -------- | ------ | ------------------------------------------------------------ |
 | data_len | int    | 期望接受的数据长度(注意此参数根据data的实际长度进行调整，按照data变量的容量和data_len的比较取最小值) |
-| data     | string | 存储接收到的数据                                             |
+| data     | string | 存储接收到的数据。                                           |
 
 - 说明
 
@@ -10073,7 +10264,7 @@ True
 | 参数     | 类型   | 说明                                                         |
 | -------- | ------ | ------------------------------------------------------------ |
 | data_len | int    | 期望发送的数据长度(注意此参数根据data的实际长度进行调整，按照data变量的容量和data_len的比较取最小值) |
-| data     | string | 待发送数据                                                   |
+| data     | string | 待发送数据，最大支持1024字节数据。                                               |
 | type     | int    | 发送方式:0、1、2为无需响应确认，100、101、102需要响应确认。暂时仅支持0、1、2发送方式。 |
 
 - 说明

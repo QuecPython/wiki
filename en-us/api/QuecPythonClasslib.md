@@ -242,11 +242,11 @@ If it failed to obtain the dial-up information, returns -1. If successfully, the
 
 `reconnect`：The reconnection flag.
 
-`ipv4Addr`：IPv4 address.
+`ipv4Addr`：IPv4 address, string type.
 
-`priDns`：Primary DNS.
+`priDns`：Primary DNS, string type.
 
-`secDns`：Secondary DNS.
+`secDns`：Secondary DNS, string type.
 
  If ipType =1, the format of the return value is as follows.
 
@@ -260,11 +260,11 @@ If it failed to obtain the dial-up information, returns -1. If successfully, the
 
 `reconnect`：The reconnection flag.
 
-`ipv6Addr`：IPv6 address.
+`ipv6Addr`：IPv6 address, string type.
 
-`priDns`：Primary DNS.
+`priDns`：Primary DNS, string type.
 
-`secDns`：Secondary DNS.
+`secDns`：Secondary DNS, string type.
 
  If ipType =2, the format of the return value is as follows.
 
@@ -364,7 +364,15 @@ This function obtains coordinate information of the base station.
 
 * Return Value
 
-If obtain the coordinate information successfully, return the information in the format of：`(latitude, longtitude, accuracy)`，`(0.0, 0.0, 0)` indicates it failed to obtain the coordinate information. The error code returned is explained as follows:
+If obtain the coordinate information successfully, return the information in the format of：`(longtitude, latitude, accuracy)`，`(0.0, 0.0, 0)` indicates it failed to obtain the coordinate information. 
+
+`longtitude` : longtitude
+
+`latitude` : latitude
+
+`accuracy` : accuracy, Unit of m
+
+The error code returned is explained as follows:
 
 -1 – Initialization failed 
 
@@ -844,7 +852,6 @@ Description：
 * note
 
   The BC25PA platform does not support this method.
-  
 
 Example
 
@@ -993,6 +1000,7 @@ This function sets DTMF.
 ```
 
 
+
 ##### Set FWmode
 
 > **voiceCall.setFw(reason, fwmode, phonenum)**
@@ -1016,6 +1024,7 @@ Call Forwarding Number and Conditions Control
 * Example
 
 NA
+
 
 
 
@@ -1073,12 +1082,32 @@ note：The non-Volte version does not have this interface
 -1: Failed execution.
 "NOT SUPPORT": The interface is not supported.
 
+##### switch voice channel
+
+> **voiceCall.setChannel(device)**
+
+Set the voice output channel during a call. The default channel is channel 0.
+
+* Parameter
+
+| Parameter | Type | Description                                                  |
+| --------- | ---- | ------------------------------------------------------------ |
+| device    | int  | Output channel<br/>0 - handset<br/>1 - earphone<br/>2 - speaker |
+
+* Return Value
+
+0  Successful execution.
+
+-1  Failed execution.
+
+
 * Example
 
 ```python
 >>> voiceCall.startRecord(0,2,'U:/test.amr')
 0
 ```
+
 
 
 
@@ -1181,6 +1210,41 @@ typedef enum
 >>> aud.play(2,1,'U:/mia.amr')
 0
 ```
+
+##### Get Volume
+
+> **voiceCall.getVolume()**
+
+Get the current volume of the voice.
+
+* Parameter
+
+  None
+
+* Return Value
+
+  return volume of the voice.
+
+
+
+##### Set Volume
+
+> **voiceCall.setVolume(vol)**
+
+Set the volume of the voice.
+
+* Parameter
+
+| Parameter | Type | Description                                                  |
+| --------- | ---- | ------------------------------------------------------------ |
+| vol       | int  | Volume. Range : 0–11. The higher the number, the higher the volume. |
+
+* Return Value
+
+  0  Successful execution.
+
+  -1  Failed execution.
+
 
 
 
@@ -1450,7 +1514,7 @@ This function reads messages in TEXT mode.
 
 | Parameter | Type | Description                                       |
 | --------- | ---- | ------------------------------------------------- |
-| index     | int  | The index of the message to be read. Range: 0~49. |
+| index     | int  | The index of the message to be read. Range: 0 ~ 49. |
 
 * Return Value
 
@@ -1669,14 +1733,14 @@ Function: Provides APIs to query/set network related performance.
 
 > **net.setApn(apn, simid)**
 
-This function sets APN.
+This function sets APN. After setting, you need to restart or switch to mode 0 and then mode 1 through the `net.setmodemFun (mode)` interface for the setting to take effect.
 
 * Parameter
 
-| Parameter | Type   | Description                        |
-| --------- | ------ | ---------------------------------- |
-| apn       | string | apn name                           |
-| simid     | int    | simid (0:SIM card 1 1: SIM card 2) |
+| Parameter | Type   | Description                                 |
+| --------- | ------ | ------------------------------------------- |
+| apn       | string | apn name                                    |
+| simid     | int    | simid<br>0 : SIM card 1<br/>1 :  SIM card 2 |
 
 * Return Value
 
@@ -1688,6 +1752,7 @@ This function sets APN.
 
   The BC25PA platform does not support this module function.
   
+  
 ##### Obtain the Current  APN
 
 > **net.getApn(simid)**
@@ -1696,9 +1761,9 @@ This function obtains the current APN.
 
 * Parameter
 
-| Parameter | Type | Description |
-| --------- | ---- | ----------- |
-| simid     | int  | simid       |
+| Parameter | Type | Description                                  |
+| --------- | ---- | -------------------------------------------- |
+| simid     | int  | simid<br/>0 : SIM card 1<br/>1 :  SIM card 2 |
 
 * Return Value
 
@@ -1709,6 +1774,8 @@ This function obtains the current APN.
 * note
 
   The BC25PA platform does not support this module function.
+  
+  
 
 ##### Obtain CSQ
 
@@ -1754,43 +1821,43 @@ If the execution is failed, -1 is returned.  If the execution is successful, the
 
 The description of the return value for GSM:
 
-| Parameter | Description                             |
-| --------- | --------------------------------------- |
-| flag      | 0: present，1: inter，2: intra          |
-| cid       | Return CID, 0 means null.               |
-| mcc       | Mobile Country Code                     |
-| mnc       | Mobile Network Code                     |
-| lac       | Location Area Code                      |
-| arfcn     | Absolute Radio Frequency Channel Number |
-| bsic      | Base Station Identity Code              |
-| rssi      | Received Signal Strength Indication     |
+| Parameter | Description                                                  |
+| --------- | ------------------------------------------------------------ |
+| flag      | 0: present，1: inter，2: intra                               |
+| cid       | Return the cell id of GSM network, 0 means null, range : 0 ~ 65535 |
+| mcc       | Mobile Country Code, 0 ~ 999<br>Note : For modules of the EC100Y/EC600S/EC600N series, the value is expressed in hexadecimal. For example, the decimal number 1120 in the following example is 0x460, indicating the mobile device country code 460. For modules of other models, the value is directly expressed in decimal, such as mobile device country code 460, that's 460 in decimal notation. |
+| mnc       | Mobile Network Code, range : 0 ~ 99                          |
+| lac       | Location Area Code, range : 1 ~ 65534                          |
+| arfcn     | Absolute Radio Frequency Channel Number, range : 0 ~ 65535     |
+| bsic      | Base Station Identity Code, range : 0 ~ 255                  |
+| rssi      | On a GSM network, this value represents the received level and describes the received signal strength. 99 indicates unknown or undetected signal. This value is calculated as follows:<br>rssi = RXLEV - 111<br>The unit is dBm, RXLEV range is 0 ~ 63, so the RSSI range is -111 ~ -48 dBm |
 
 The description of the return value for UMTS:
 
-| Parameter | Description                             |
-| --------- | --------------------------------------- |
-| flag      | 0: present，1: inter，2: intra          |
-| cid       | Return CID, 0 means null.               |
-| lcid      | Area identification number              |
-| mcc       | Mobile Country Code                     |
-| mnc       | Mobile Network Code                     |
-| lac       | Location Area Code                      |
-| uarfcn    | Absolute Radio Frequency Channel Number |
-| psc       | Base Station Identity Code              |
-| rssi      | Received Signal Strength Indication     |
+| Parameter | Description                                                  |
+| --------- | ------------------------------------------------------------ |
+| flag      | 0: present，1: inter，2: intra                               |
+| cid       | Return the Cell identity of UMTS network,  Cell identity = RNC_ID * 65536 + Cell_ID,  the range of Cell identity is 0x0000000 ~ 0xFFFFFFF (28bits), the range of RNC_ID is 0 ~ 4095，the range of Cell_ID is 0 ~ 65535 |
+| lcid      | URA ID, 0 means null, range : 0 ~ 65535                      |
+| mcc       | Mobile Country Code, range : 0 ~ 999                         |
+| mnc       | Mobile Network Code, range : 0  ~ 99                           |
+| lac       | Location Area Code, range : 1 ~ 65534                        |
+| uarfcn    | Absolute Radio Frequency Channel Number, range : 0 ~ 65535   |
+| psc       | Base Station Identity Code, range : 0 ~ 255                  |
+| rssi      | On a UMTS network, the value indicates the CPICH/PCCPCH receiving power,  unit : dBm, ranges is -5 to 99 |
 
 The description of the return value for LTE:
 
 | Parameter | Description                                                  |
 | --------- | ------------------------------------------------------------ |
 | flag      | 0: present，1: inter，2: intra                               |
-| cid       | Return CID, 0 means null.                                    |
-| mcc       | Mobile Country Code                                          |
-| mnc       | Mobile Network Code                                          |
-| pci       | Physical Cell Identifier                                     |
-| tac       | Tracing area code                                            |
-| earfcn    | Extended Absolute Radio Frequency Channel Number. Range: 0-65535. |
-| rssi      | Received Signal Strength Indication                          |
+| cid       | Return the Cell identity of LTE network,  Cell identity = RNC_ID * 65536 + Cell_ID,  the range of Cell identity is 0x0000000 ~ 0xFFFFFFF (28bits), the range of RNC_ID is 0 ~ 4095，the range of Cell_ID is 0 ~ 65535 |
+| mcc       | Mobile Country Code, range : 0 ~ 999                         |
+| mnc       | Mobile Network Code, range : 0  ~ 99                           |
+| pci       | Physical Cell Identifier，range : 0 ~ 503                    |
+| tac       | Tracing area code,  range : 0 ~ 65535                        |
+| earfcn    | Extended Absolute Radio Frequency Channel Number, range : 0-65535. |
+| rssi      | Received Signal Strength Indication. In LTE network, denotes RSRP quality (negative value), which is converted according to RSRP measurement report value, and the conversion relationship is as follows<br>RSRP quality = RSRP measurement report value - 140, unit : dBm, range : -140 ~ -44 dBm |
 
 * Example
 
@@ -1892,8 +1959,8 @@ If the execution is failed, -1 is returned. If  the execution is successful, a t
 
 The description of the return value:
 `selection_mode` : Selection Mode. 0- Automatic. 1- Manual.
-`mcc` : Mobile Country Code
-`mnc` : Mobile Network Code
+`mcc` : Mobile Country Code, sting type
+`mnc` : Mobile Network Code, sting type
 `act` : ACT mode for the primary RAT
 
 ACT Mode
@@ -1941,21 +2008,21 @@ The description of the return value:
 
 GW list：
 
-`rssi` : Received Signal Strength Indicator
+`rssi` : On a GSM/WCDMA network, this value represents the received level and describes the received signal strength. 99 indicates unknown or undetected signal. This value is calculated as follows:<br>rssi = RXLEV - 111<br>The unit is dBm, RXLEV range is 0 ~ 63, so the range of rssi  is -111 ~ -48 dBm
 
-`bitErrorRate` : Error Rate
+`bitErrorRate` : Error Rate(BER), range : 0  ~ 7, 99 indicates unknown or undetected signal
 
-`rscp` : Received Signal Code Power
+`rscp` : Received Signal Code Power, range : -121 ~ -25 dBm, 255 indicates unknown or undetected signal
 
-`ecno` :   Pilot Channel  
+`ecno` :   Pilot Channel , range : -24 ~ 0, 255 indicates unknown or undetected signal
 
 LTE list：
 
-`rssi` : Received Signal Strength Indicator
+`rssi` : Received Signal Strength Indicator, range : -140 ~ -44 dBm, 99 indicates unknown or undetected signal
 
-`rsrp` : Reference Signal Receiving Power
+`rsrp` : Reference Signal Receiving Power, range : -141 ~ -44 dBm, 99 indicates unknown or undetected signal
 
-`rsrq` : Reference Signal Receiving Quality
+`rsrq` : Reference Signal Receiving Quality, range : -20 ~ -3 dBm, A larger value indicates better signal reception quality
 
 `cqi` : Channel Quality
 
@@ -1972,7 +2039,7 @@ LTE list：
 
 > **net.nitzTime()**
 
-This function obtains the current time of the base station.
+This function obtains the current time of the base station. This time is the time that the base station sends when the module is successfully turned on and plugged into the network.
 
 * Parameter
 
@@ -1984,7 +2051,7 @@ If the execution is failed, -1 is returned. If the execution is successful, a tu
 
 `(date, abs_time, leap_sec)`
 
-`date` : String type. The time of the base station.
+`date` : String type. The time of the base station. The TIME zone of the EC600N series is different from that of the EC200U/EC600U series. For details, see the example. If you need to set and obtain the time zone, use the 'setTimeZone(offset)' and 'getTimeZone()' interfaces of the utime module.
 
 `abs_time` : Integer type. The absolute number of seconds of time.
 
@@ -1993,8 +2060,9 @@ If the execution is failed, -1 is returned. If the execution is successful, a tu
 * Example
 
 ```python
->>> net.nitzTime()
-('20/11/26 02:13:25+32', 1606356805, 0)
+>>> net.nitzTime() 
+('21/10/26 06:08:03 8 0', 1635228483, 0) # EC600N series, the time zone unit is hour, 8 indicates the east 8 region
+('20/11/26 02:13:25 +32 0', 1606356805, 0) # EC200U/EC600U series, the time zone unit is 15 minutes. +32 indicates the east 8 region
 ```
 
 
@@ -2044,7 +2112,7 @@ NA
 
 * Return Value
 
-If the execution is failed, -1 is returned. If the execution is successful, a tuple is returned in the following format:
+If the execution is failed, -1 is returned. If the execution is successful, a tuple is returned in the following format. The tuple contains voice and network registration information. The tuple starting with 'voice\_' indicates voice registration information, and the tuple starting with 'data\_' indicates network registration information:
 
 `([voice_state, voice_lac, voice_cid, voice_rat, voice_reject_cause, voice_psc], [data_state, data _lac, data _cid, data _rat, data _reject_cause, data _psc])`
 
@@ -2052,15 +2120,15 @@ The description of the return value:
 
 `state` : Network registration state.
 
-`lac` : Location Area Code
+`lac` : Location Area Code, range : 1 ~ 65534
 
-`cid` : ID information in integer type
+`cid` : cell id, range : 0x0000000 ~ 0xFFFFFFF
 
-`rat` : RAT
+`rat` : access technology
 
-`reject_cause` : Reject cause
+`reject_cause` : Reject cause. This parameter is reserved on EC200U/EC600U/BC25PA
 
-`psc` ：Primary Scrambling Code
+`psc` ：Primary Scrambling Code. This parameter is reserved on EC200U/EC600U/BC25PA
 
 Network registration state
 
@@ -2079,6 +2147,26 @@ Network registration state
 | 10    | Registered for “CSFB not preferred”, roaming (not applicable). |
 | 11    | Emergency bearer services only.                              |
 
+
+
+access technology
+
+| Value | Description        |
+| ----- | ------------------ |
+| 0     | GSM                |
+| 1     | GSM COMPACT        |
+| 2     | UTRAN              |
+| 3     | GSM wEGPRS         |
+| 4     | UTRAN wHSDPA       |
+| 5     | UTRAN wHSUPA       |
+| 6     | UTRAN wHSDPA HSUPA |
+| 7     | E_UTRAN            |
+| 8     | UTRAN HSPAP        |
+| 9     | E_UTRAN_CA         |
+| 10    | NONE               |
+
+
+
 * Example
 
 ```python
@@ -2092,7 +2180,7 @@ Network registration state
 
 > **net.getCi()**
 
-This function obtains the ID of the Neighbor Cell.
+This function obtains the ID of the Neighbor Cell. The result obtained by this interface is the CID set in the result obtained by the `net.getCellInfo()` interface.
 
 * Parameter
 
@@ -2115,7 +2203,7 @@ If the execution is failed, -1 is returned. If the execution is successful, an a
 
 > **net.getMnc()**
 
-This function obtains the MNC of the neighbor cell.
+This function obtains the MNC of the neighbor cell. The result obtained by this interface is the mnc set in the result obtained by the `net.getCellInfo()` interface.
 
 * Parameter
 
@@ -2138,7 +2226,7 @@ If the execution is failed, -1 is returned. If the execution is successful, an a
 
 > **net.getMcc()**
 
-This function obtains the MCC of the neighbor cell.
+This function obtains the MCC of the neighbor cell. The result obtained by this interface is the mcc set in the result obtained by the `net.getCellInfo()` interface.
 
 * Parameter
 
@@ -2147,6 +2235,8 @@ NA
 * Return Value
 
 If the execution is failed, -1 is returned. If the execution is successful, an array in list type including cell MCC is returned, and the format of this array is `[mcc, ……, mcc]`.
+
+Note : For modules of the EC100Y/EC600S/EC600N series, the value is expressed in hexadecimal. For example, the decimal number 1120 in the following example is 0x460, indicating the mobile device country code 460. For modules of other models, the value is directly expressed in decimal, such as the mobile device country code 460.That's 460 in decimal notation.
 
 * Example
 
@@ -2161,7 +2251,7 @@ If the execution is failed, -1 is returned. If the execution is successful, an a
 
 > **net.getLac()**
 
-This function obtains the LAC of the neighbor cell.
+This function obtains the LAC of the neighbor cell. The result obtained by this interface is the lac set in the result obtained by the `net.getCellInfo()` interface.
 
 * Parameter
 
@@ -2723,11 +2813,15 @@ Note: The BC25PA platform does not support this module function.
 ###### Create the TTS Object
 
 > **import audio**
+>
 > **tts = audio.TTS(device)**
 
 * Parameter 
 
-`device` : Device type. 0 - handset, 1 - earphone, 2 - speaker.
+
+| Parameter | Parameter Type | Description                                                  |
+| --------- | -------------- | ------------------------------------------------------------ |
+| device    | int            | Output channel<br/>0 - handset<br/>1 - earphone<br/>2 - speaker |
 
 * Example
 
@@ -2780,7 +2874,7 @@ Audio playback supports priority 0–4, the higher the number, the higher the pr
 | --------- | -------------- | ------------------------------------------------------------ |
 | priority  | int            | Playback priority. Supports Priority 0–4. The higher the number, the higher the priority. |
 | breakin   | int            | Interruption mode. 0 means not allowed to be interrupted; 1 means allowed to be interrupted |
-| mode      | int            | Encoding mode. 1 - UNICODE16 (UTF-16 big-endian), 2 - UTF-8, 3 - UNICODE16 (UTF-16 little-endian) |
+| mode      | int            | Low 4bit:Encoding mode. 1 - UNICODE16 (UTF-16 big-endian), 2 - UTF-8, 3 - UNICODE16 (UTF-16 little-endian)<br>High 4bit:WTTS mode(Only 600N series support VOLTE version support)., wtts_enable - wtts master switch，wtts_ul_enable - wtts up link switch， wtts_dl_enable - wtts down link switch |
 | str       | string         | String to be played                                          |
 
 * Return Value
@@ -2836,6 +2930,17 @@ Audio playback supports priority 0–4, the higher the number, the higher the pr
 
 #Play the voice in UTF-16LE mode
 >>> tts.play(1,1,3,'226BCE8F7F4F2875FB79DC8F1A90E14F216A57570230')
+0
+
+#Support VOLTE version, can play tts to remote
+>>> import voiceCall
+>>> voiceCall.callStart('1xxxxxxxxxx')
+0
+
+#After the call is connected
+#Play tts voice to the far end of the call
+>>> tts.play(1,1,tts.wtts_enable|tts.wtts_ul_enable|2, '12345')
+
 0
 ```
 
@@ -3050,6 +3155,81 @@ None
 
 
 
+###### tts play text annotation description
+
+If TTS playback fails to meet expectations, you can make TTS playback meet expectations through text annotations.
+
+Set the way of digital playback：
+
+```python
+#Format：[n*] (*=0/1/2)
+#The TTS engine automatically determines whether to play in the form of numbers or in the form of numbers
+>>> tts.play(1,1,2, '12345')
+0
+
+#TTS engine plays in the form of numbers
+>>> tts.play(1,1,2, '[n1]12345')
+0
+
+#TTS engine plays in numerical form
+>>> tts.play(1,1,2, '[n2]12345')
+0
+```
+
+
+
+Speaking rate setting：
+
+```python
+#Format：[s*] (*=0 ~ 10)
+#The TTS engine plays the voice at the default speech rate of 5
+>>> tts.play(1,1,2, '12345')
+0
+
+#The TTS engine plays the voice at half the default speech rate
+>>> tts.play(1,1,2, '[s0]12345')
+0
+
+#The TTS engine plays the voice at twice the default speech rate
+>>> tts.play(1,1,2, '[s10]12345')
+0
+```
+
+
+
+Intonation setting：
+
+```python
+#Format：[t*] (*=0 ~ 10)
+#The TTS engine plays the voice in the default intonation 5
+>>> tts.play(1,1,2, '12345')
+0
+
+#The TTS engine plays the voice at the base frequency of the default pitch minus 64Hz
+>>> tts.play(1,1,2, '[t0]12345')
+0
+
+#The TTS engine plays the voice with the default pitch base frequency plus 128Hz
+>>> tts.play(1,1,2, '[t10]12345')
+0
+```
+
+
+
+Pinyin for Chinese Characters：
+
+```python
+#Format：[=*] (*=Pinyin)
+#Chinese characters: After the voice call, a number 1 ~ 5 are used to represent the 5 tones of even tone, rising tone, entering tong, falling tone and lightly tone respectively.
+>>> tts.play(1,1,2, '乐[=le4]')
+0
+
+>>> tts.play(1,1,2, '乐[=yue4]')
+0
+```
+
+
+
 ###### Example
 
 ```python
@@ -3105,7 +3285,10 @@ if __name__ == '__main__':
 
 * Parameter
 
-`device` : Device type. 0 -handset. 1 - earphone, 2 - speaker.
+
+| Parameter | Parameter Type | Description                                                  |
+| --------- | -------------- | ------------------------------------------------------------ |
+| device    | int            | Output channel<br/>0 - handset<br/>1 - earphone<br/>2 - speaker |
 
 * Example
 
@@ -3370,7 +3553,7 @@ Start recording.
 
   -3	The file is in use
 
-  -4	Channel setting error ( Set to 0 or 1 only)
+  -4	Channel setting error 
 
   -5	Request for timer resource failed
 
@@ -3400,7 +3583,9 @@ None
 
 * Return Value
 
-None
+0 	Successful execution
+
+-1	Failed execution
 
 * Example
 
@@ -3418,13 +3603,13 @@ Read storage path of the recording file.
 
 * Parameter
 
-  *file\_name*: 
-
-  String type. Name of the recording file.
+| Parameter | Parameter Type | Description                |
+| --------- | -------------- | -------------------------- |
+| file_name | str            | Name of the recording file |
 
 * Return Value
 
-  String: Path of the recording file
+  If the file is successfully executed, the path of the recording file is returned, string type. If the target file does not exist, integer -1 is returned. If the file name length is 0, integer -2 is returned.
 
 * Example
 
@@ -3450,6 +3635,8 @@ Read the recording data.
 
 * Return Value
 
+  Return the data of record if it is executed successfully, bytearray type.
+
   -1	Error reading data
 
   -2	File open failed
@@ -3465,8 +3652,6 @@ Read the recording data.
   -7	 Less than 10 K of memory
 
   -8	 The file does not belong to the object
-
-  bytes	Return data
 
 * Example
 
@@ -3488,8 +3673,6 @@ Read recording file size.
 | --------- | -------------- | -------------------------- |
 | file_name | str            | File name of the recording |
 
-
-
 * Return Value
 
   Return the file size if it is executed successfully.
@@ -3504,7 +3687,7 @@ Read recording file size.
 
   *-3*	The file is in use
 
-  -4	The file does not belong to the object
+  -4	The length of file name is 0
 
 * Example
 
@@ -3527,6 +3710,10 @@ Delete the recording file.
 String type. The file name of the recording.
 
 Note: When the parameter is empty, delete all recording files in the object
+
+| Parameter | Parameter Type | Description                                                  |
+| --------- | -------------- | ------------------------------------------------------------ |
+| file_name | str            | File name of the recording. When the parameter is empty, delete all recording files in the object |
 
 * Return Value
 
@@ -3599,7 +3786,7 @@ record_test.isBusy()
 
 
 
-###### 注册录音结束回调Register the Callback of Recording End
+###### Register the Callback of Recording End
 
 > **record.end_callback(callback)**
 
@@ -3607,9 +3794,9 @@ Set the callback of recording end
 
 * Parameter
 
-| Parameter | Parameter Type | Description  |
-| --------- | -------------- | ------------ |
-| callback  | api            | Callback API |
+| Parameter | Parameter Type | Description       |
+| --------- | -------------- | ----------------- |
+| callback  | funciton       | Callback function |
 
 * Return Value
 
@@ -3627,6 +3814,14 @@ def record_callback(para):
     # Return recording state -1: error, 0: start, 3: success 
 record_test.end_callback(record_callback)
 ```
+
+
+
+| para[2] | Description          |
+| ------- | -------------------- |
+| -1      | error                |
+| 0       | Start the recording  |
+| 3       | End of the recording |
 
 
 
@@ -3802,7 +3997,7 @@ The values returned are explained as follows:
 
 * note
 
-  BC25PA platform only does not support restart reason 5.
+  BC25PA platform does not support restart reason 5 and 6.
 
 ###### Get the Reason for the Last Powering Down of the Module
 
@@ -4199,7 +4394,59 @@ def usb_callback(conn_status):
 usb.setCallback(usb_callback)
 ```
 
+##### USBNET
 
+It provides the USB network adapter function.
+
+NOTE：Currently, only the ASR platform supports it.
+
+###### Setting the USBNET working type (Take effect after restart)
+
+USBNET.set_worktype(type)
+
+- Parameter
+
+  | Parameter | Type | Description                                                  |
+  | --------- | ---- | ------------------------------------------------------------ |
+  | type      | int  | USBNET working type Type_ECM – ECM mode Type_RNDIS – RNDIS mode |
+
+- Return Value
+
+  Return 0 if the setting is successful, otherwise return -1.
+
+###### Open USBNET
+
+USBNET.open()
+
+- Parameter
+
+  None
+
+- Return Value
+
+  Return 0 if the opening is successful, otherwise return -1.
+
+Example
+
+```python
+from misc import USBNET
+from misc import Power
+
+#work on ECM mode default
+USBNET.open()
+
+USBNET.set_worktype(USBNET.Type_RNDIS)
+
+#reset the module
+Power.powerRestart()
+
+
+#After restart
+from misc import USBNET
+
+#work on RNDIS mode
+USBNET.open()
+```
 
 #### modem - Related Device
 
@@ -4703,7 +4950,7 @@ PROJECT_VERSION = "1.0.0"
         UART2 – MAIN PORT
         UART3 – USB CDC PORT
  * Parameter2: Baud rate
- * Parameter3: data bits  （5~8）
+ * Parameter3: data bits  （5 ~ 8）
  * Parameter4: Parity (0：NONE  1：EVEN  2：ODD) 
  * Parameter5：stop bits (1–2) 
  * Parameter6：flow control (0: FC_NONE  1：FC_HW) 
@@ -4852,7 +5099,7 @@ Return 0 if the execution is successful, otherwise return -1.
 //Note when using this timer: Timer 0–3, each can only perform one task at the same time, and multiple objects cannot use the same timer.
 >>> def fun(args):
         print(“###timer callback function###”)
->>> timer.start(period=1000, mode=timer.PERIODIC, callback=fun)
+>>> timer1.start(period=1000, mode=timer1.PERIODIC, callback=fun)
 0
 ###timer callback function###
 ###timer callback function###
@@ -4906,7 +5153,7 @@ Timer_Log = log.getLogger("Timer")
 
 num = 0
 state = 1
-# Note: EC100Y-CN module supports Timer0~Timer3
+# Note: EC100Y-CN module supports Timer0 ~ Timer3
 t = Timer(Timer.Timer1)
 
 # Create an execution function and pass in the timer instance
@@ -5078,12 +5325,12 @@ It sets and gets RTC time. When there is no parameter, it gets the time, it sets
 | Parameter   | Type | Description                                                  |
 | ----------- | ---- | ------------------------------------------------------------ |
 | year        | int  | Year                                                         |
-| month       | int  | Month, range: 1~12.                                          |
-| day         | int  | Day, range:1~31.                                             |
+| month       | int  | Month, range: 1 ~ 12.                                          |
+| day         | int  | Day, range:1 ~ 31.                                             |
 | week        | int  | Week, when setting the time, this parameter does not work, reserved; when getting the time, this parameter is valid. |
-| hour        | int  | volume_up hour, range: 0~23.                                 |
-| minute      | int  | *content_copy* minute, range:0~59.                           |
-| second      | int  | Second, range: 0~59.                                         |
+| hour        | int  | volume_up hour, range: 0 ~ 23.                                 |
+| minute      | int  | *content_copy* minute, range:0 ~ 59.                           |
+| second      | int  | Second, range: 0 ~ 59.                                         |
 | microsecond | int  | *share* microsecond, reserved, set to 0 when setting the time. |
 
 * Return Value
@@ -9352,9 +9599,9 @@ Note: The BC25PA platform does not support this module function.
 | :-------- | :--- | ------------------------------------------------------------ |
 | uartn     | int  | UARTn, Range: 0-3: <br />0-UART0 - DEBUG PORT<br />1-UART1 – BT PORT<br />2-UART2 – MAIN PORT<br />3-UART3 – USB CDC PORT |
 | baudrate  | int  | Baud rate. The common baud rate, such as 4800, 9600, 19200, 38400, 57600, 115200, 230400 and so on, are supported. |
-| databits  | int  | Data bit (5~8)                                               |
+| databits  | int  | Data bit (5 ~ 8)                                               |
 | parity    | int  | Parity (0 – NONE，1 – EVEN，2 - ODD)                         |
-| stopbits  | int  | Stop bit (1~2)                                               |
+| stopbits  | int  | Stop bit (1 ~ 2)                                               |
 | flowctl   | int  | Hardware flow control (0 – FC_NONE， 1 – FC_HW)              |
 
 
@@ -9617,7 +9864,7 @@ Failed - not 0
 | Parameter | Type   | Description                                                  |
 | --------- | ------ | ------------------------------------------------------------ |
 | data_len  | int    | Expected Send data length (note that this parameter is adjusted according to the actual length of data, and the minimum value is taken according to the comparison between the capacity of data variable and data_len) |
-| data      | string | Data to be sent                                              |
+| data      | string | Data to be sent,The maximum supported data length is 1024 bytes                                   |
 | type      | int    | Sending method: 0, 1 and 2 do not need response confirmation, and 100, 101 and 102 need response confirmation. Only 0, 1 and 2 sending methods are supported temporarily. |
 
 - Note
@@ -9736,7 +9983,7 @@ Failed - not 0
 | Parameter | Type   | Description                                                  |
 | --------- | ------ | ------------------------------------------------------------ |
 | data_len  | int    | Expected Send data length (note that this parameter is adjusted according to the actual length of data, and the minimum value is taken according to the comparison between the capacity of data variable and data_len) |
-| data      | string | Data to be sent                                              |
+| data      | string | Data to be sent,The maximum supported data length is 1024 bytes                                            |
 | type      | int    | Sending method: 0, 1 and 2 do not need response confirmation, and 100, 101 and 102 need response confirmation. Only 0, 1 and 2 sending methods are supported temporarily. |
 
 - Note
