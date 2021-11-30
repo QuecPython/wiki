@@ -1758,6 +1758,12 @@ sms.setCallback(cb)
 
 设置APN。
 
+*注意
+
+该接口和datacall模块的设置APN接口是不相关的：
+datacall模块设置APN是用入参的APN和PID去拨号，并记录到json文件中，下次再开机会用首先用这一路去拨号；
+net模块的设置APN主要使用场景是专网卡设定特定APN才能注网，但是这个得重启生效
+
 * 参数
 
 | 参数    | 参数类型 | 参数说明                             |
@@ -1772,6 +1778,8 @@ sms.setCallback(cb)
 * 注意
 
   BC25PA平台不支持此方法。
+
+
 
 ##### 获取当前APN
 
@@ -1792,6 +1800,8 @@ sms.setCallback(cb)
 * 注意
 
   BC25PA平台不支持此方法。
+
+
 
 ##### 获取csq信号强度
 
