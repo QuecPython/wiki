@@ -331,6 +331,60 @@ if __name__ == '__main__':
 
 
 
+#### wifilocator - wifi定位
+
+模块功能：提供WIFI定位接口，获取坐标信息。
+
+注意：当前仅EC600S/EC600N/EC800N/EC200U/EC600U平台支持该功能。
+
+> **wifilocator(token)**
+
+配置wifi定位套件token信息
+
+* 参数
+
+| 参数  | 参数类型 | 参数说明                     |
+| ----- | -------- | ---------------------------- |
+| token | string   | 密钥，16位字符组成，需要申请 |
+
+* 返回值
+
+成功返回WIFI定位对象。
+
+
+
+> **wifilocator.getwifilocator()**
+
+获取坐标信息。
+
+成功返回度格式经纬度坐标信息，返回格式：`(longtitude, latitude, accuracy)`；
+
+`longtitude` ： 经度
+
+`latitude` ：纬度
+
+`accuracy` ：精确度，单位米
+
+失败返回错误码说明如下：
+
+-1 – 当前网络异常，请确认拨号是否正常
+
+-2 – 密钥长度错误，必须为16字节
+
+-3 – 获取坐标出错
+
+* 示例
+
+  ```python
+  >>> from wifilocator import wifilocator
+  >>> wifilocator = wifilocator("xxxxxxxxxxxxxxxx")
+  >>> wifilocator.getwifilocator()
+  (117.1152877807617, 31.82142066955567, 100)
+  # 上面使用的密钥"xxxxxxxxxxxxxxxx"指代token，具体需要向移远申请
+  ```
+
+
+
 #### sim - SIM卡
 
 模块功能：提供sim卡操作相关API，如查询sim卡状态、iccid、imsi等。
