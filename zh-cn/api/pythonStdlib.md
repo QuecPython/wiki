@@ -1271,17 +1271,27 @@ socket.bind(addr)
 
 设置套接字选项的值。
 
-* `level` ：套接字选项级别
+`level ` :套接字选项级别
 
-* `optname` ：socket选项
+* usocket.SOL_SOCKET
 
-* `value` ：既可以是一个整数，也可以是一个表示缓冲区的bytes类对象
+`optname`:socket选项
+
+* usocket.SO_REUSEADDR //设置端口复用允许。
+
+* usocket.TCP_KEEPALIVE //设置TCP保活包间隔时间。
+
+value ：既可以是一个整数，也可以是一个表示缓冲区的bytes类对象
 
 示例：
 
 ```
+#设置端口复用允许
 socket.setsockopt(usocket.SOL_SOCKET, usocket.SO_REUSEADDR, 1)
+#设置TCP保活包间隔时间，value 单位为分钟，范围：1-120
+socket.setsockopt(usocket.SOL_SOCKET, usocket.TCP_KEEPALIVE, 1)
 ```
+
 
 
 
