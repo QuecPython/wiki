@@ -3850,6 +3850,34 @@ record_test.gain(4,12)
 
 
 
+###### Switch amr recording DTX function
+
+Currently only 600N/800N platforms support this function.
+
+> **record.amrEncDtx_enable(on_off)**
+
+Switch amr recording DTX function
+
+- Parameter
+
+| Parameter | Parameter Type | Description                                                  |
+| --------- | -------------- | ------------------------------------------------------------ |
+| on_off    | int            | 1: open DTX <br>0: close DTX   <br>No parameters：Get current configuration |
+
+- Return Value
+
+  No parameters：Get current configuration
+
+  with parameters：If the parameter is correct, there is no return, if the parameter is wrong, an exception will be thrown.
+
+- Example
+
+```python
+record_test.amrEncDtx_enable(1)
+```
+
+
+
 ###### Read the List of Recording Files
 
 > **record.list_file()**
