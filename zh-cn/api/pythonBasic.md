@@ -1,6 +1,4 @@
-### Python基础属性
-
-#### 内置函数
+### 内置函数
 
 Python 解释器内置了很多函数和类型，您可以在任何时候使用它们，以下按字母表顺序列出它们。更多信息请参阅CPython文档：[Built-in Functions](https://docs.python.org/3.5/library/functions.html)
 
@@ -19,7 +17,7 @@ Python 解释器内置了很多函数和类型，您可以在任何时候使用�
 
 
 
-#### 内置常量
+### 内置常量
 
 有少数的常量存在与内置命名空间中，如下表所示。更多信息请参阅阅CPython文档：[Built-in Constants](https://docs.python.org/3.5/library/constants.html)
 
@@ -34,7 +32,7 @@ Python 解释器内置了很多函数和类型，您可以在任何时候使用�
 
 
 
-#### 内置类型
+### 内置类型
 
 下表列出内置的数据类型，更多详情请参阅阅CPython文档：[Built-in Types](https://docs.python.org/3.5/library/stdtypes.html)
 
