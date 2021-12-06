@@ -1269,19 +1269,31 @@ socket = usocket.socket(usocket.AF_INET, usocket.SOCK_DGRAM)
 
 设置套接字选项的值。
 
-* `level` ：套接字选项级别
+`level ` :套接字选项级别
 
-* `optname` ：socket选项
 
-* `value` ：既可以是一个整数，也可以是一个表示缓冲区的bytes类对象
+* usocket.SOL_SOCKET
+
+`optname`:socket选项
+
+* usocket.SO_REUSEADDR //设置端口复用允许。
+
+* usocket.TCP_KEEPALIVE //设置TCP保活包间隔时间。
+
+value ：既可以是一个整数，也可以是一个表示缓冲区的bytes类对象
 
 示例：
 
 ```
+#设置端口复用允许
 socket.setsockopt(usocket.SOL_SOCKET, usocket.SO_REUSEADDR, 1)
+#设置TCP保活包间隔时间，value 单位为分钟，范围：1-120
+socket.setsockopt(usocket.SOL_SOCKET, usocket.TCP_KEEPALIVE, 1)
 ```
 
 ##### 设置套接字为阻塞模式或者非阻塞模式
+
+
 
 > **socket.setblocking(flag)**
 
@@ -1812,13 +1824,13 @@ sys 模块中提供了与QuecPython运行环境有关的函数和变量。该模
 
 MicroPython运行的平台。
 
-# > **sys.stdin**
+ > **sys.stdin**
 
-# 标准输入（默认是USB虚拟串口，可选其他串口）。
+ 标准输入（默认是USB虚拟串口，可选其他串口）。
 
-# > **sys.stdout**
+ > **sys.stdout**
 
-# 标准输出（默认是USB虚拟串口，可选其他串口）。
+ 标准输出（默认是USB虚拟串口，可选其他串口）。
 
 > **sys.version**
 

@@ -127,6 +127,44 @@ After calling this interface, the user_apn.json will be created in the user part
 
 
 
+##### get APN Information
+
+> **dataCall.getApn(simid, profileIdx)**
+
+get APN Information(Variable parameter function)
+By default, there is at least one parameter(simid) and a maximum of two parameters(simid,pid);
+When there is only one parameter simID, the APN loaded by default is obtained; when there are two parameters, the APN of the corresponding PID is obtained  
+
+* Parameter
+
+| Parameter  | Type | Description                                                     |
+| ---------- | -------- | ------------------------------------------------------------ |
+| simid      | int      | simid,range：0/1|
+| profileIdx | int      | PDP context index. Range for ASR: 1-8,range for 8910:1-7|
+
+* Return Value
+
+APN  Successful execution.
+
+-1  Failed execution.
+
+* NOTE
+
+The 8910 and ASR platform support this method.
+
+* Example
+
+```python
+>>> import dataCall
+>>> dataCall.getApn(0)
+'cmnet'
+
+>>> dataCall.getApn(0,2)
+'hhhnet'
+```
+
+
+
 ##### Register Callback Function
 
 > **dataCall.setCallback(usrFun)**
@@ -989,6 +1027,61 @@ NA
 
 
 
+
+##### enable automatic recording api
+
+> **voiceCall.setAutoRecord(enable, record_type, record_mode, filename)**
+
+enable automatic recording api.(The automatic recording function is disabled by default)
+
+note：The non-Volte version does not have this interface
+
+* Parameter
+
+| Parameter    | Type     | Description                                              |
+| --------     | -------- | -------------------------------------------------------- |
+| enable       | int      | enable switch.        range:【0/1】:  0：Disable the automatic recording function 1：enable the automatic recording function     |
+| record_type  | int      | Recording File Type.  range:【0/1】:  0：AMR  1:WAV                |
+| record_mode  | int      | mode.                 range:【0/1/2】:0：RX   1:TX    2:MIX                |
+| filename     | string   | file name.                |
+
+* Return Value
+
+0 : Successful execution.
+-1: Failed execution.
+"NOT SUPPORT": The interface is not supported.
+
+* Example
+
+```python
+>>> voiceCall.setAutoRecord(1,0,2,'U:/test.amr')
+0
+```
+
+
+
+##### Start the recording
+
+> **voiceCall.startRecord(record_type, record_mode, filename)**
+
+Start the recording api.
+
+note：The non-Volte version does not have this interface
+
+* Parameter
+
+| Parameter    | Type     | Description                                           |
+| --------     | -------- | ----------------------------------------------------- |
+| record_type  | int      | Recording File Type.  range:【0/1】;   0:AMR  1:WAV                |
+| record_mode  | int      | mode                  range:【0/1/2】; 0:RX   1:TX    2:MIX                |
+| filename     | string   | file name                |
+
+* Return Value
+
+0 : Successful execution.
+-1: Failed execution.
+"NOT SUPPORT": The interface is not supported.
+
 ##### switch voice channel
 
 > **voiceCall.setChannel(device)**
@@ -1007,14 +1100,116 @@ Set the voice output channel during a call. The default channel is channel 0.
 
 -1  Failed execution.
 
+
 * Example
 
 ```python
->>> voiceCall.setChannel(2) # Switch to the speaker channel
+>>> voiceCall.startRecord(0,2,'U:/test.amr')
 0
 ```
 
 
+
+
+##### End Current Recording
+
+> **voiceCall.stopRecord()**
+
+End Current Recording
+
+note：The non-Volte version does not have this interface
+
+* Parameter
+
+NA
+
+* Return Value
+
+0 : Successful execution.
+-1: Failed execution.
+"NOT SUPPORT": The interface is not supported.
+
+* Example
+
+```python
+>>> voiceCall.stopRecord()
+0
+```
+
+
+
+##### Start the recording(stream)
+
+> **voiceCall.startRecordStream(record_type, record_mode, record_cb)**
+
+Start the recording(stream)
+
+note：The non-Volte version does not have this interface
+
+* Parameter
+
+| Parameter    | Type     | Description                                              |
+| --------     | -------- | ----------------------------------------------------- |
+| record_type  | int      | Recording File Type.  range:【0/1】;   0:AMR  1:WAV                |
+| record_mode  | int      | mode                  range:【0/1/2】; 0:RX   1:TX    2:MIX               |
+| record_cb    | function | callback function                |
+
+* Return Value
+
+0 : Successful execution.
+-1: Failed execution.
+"NOT SUPPORT": The interface is not supported.
+
+* Example
+
+*The return value of the callback function is defined as follows
+```
+args[0]:stream data
+args[1]:stream data len
+args[2]:states
+
+states values：
+typedef enum
+{
+	HELIOS_VC_AUD_REC_ERROR = -1,
+	HELIOS_VC_AUD_REC_START = 0,
+	HELIOS_VC_AUD_REC_DATA,
+	HELIOS_VC_AUD_REC_PAUSE,
+	HELIOS_VC_AUD_REC_FINISHED,
+	HELIOS_VC_AUD_REC_DISK_FULL,
+}HELIOS_VC_AUD_REC_STATE;
+```
+
+```python
+>>> import voiceCall
+>>> import audio
+
+>>> f=open('usr/mia.amr','w')
+
+>>> def cb(para):
+...     if(para[2] == 1):
+...         read_buf = bytearray(para[1])
+...         voiceCall.readRecordStream(read_buf,para[1])
+...         f.write(read_buf,para[1])
+...         del read_buf
+...     elif(para[2] == 3):
+...         f.close()
+...         
+...         
+... 
+>>> voiceCall.callStart('13855169092')
+0
+>>> voiceCall.startRecordStream(0,2,cb)
+0
+// Hang up the phone here (MO/MT hanging up can be done)
+>>> uos.listdir('usr')
+['system_config.json', 'mia.amr']
+>>> aud=audio.Audio(0)
+>>> aud.setVolume(11)
+0
+>>> aud.play(2,1,'U:/mia.amr')
+0
+```
 
 ##### Get Volume
 
@@ -1049,6 +1244,7 @@ Set the volume of the voice.
   0  Successful execution.
 
   -1  Failed execution.
+
 
 
 
@@ -3650,6 +3846,34 @@ Set recording gain.
 
 ```python
 record_test.gain(4,12)
+```
+
+
+
+###### Switch amr recording DTX function
+
+Currently only 600N/800N platforms support this function.
+
+> **record.amrEncDtx_enable(on_off)**
+
+Switch amr recording DTX function
+
+- Parameter
+
+| Parameter | Parameter Type | Description                                                  |
+| --------- | -------------- | ------------------------------------------------------------ |
+| on_off    | int            | 1: open DTX <br>0: close DTX   <br>No parameters：Get current configuration |
+
+- Return Value
+
+  No parameters：Get current configuration
+
+  with parameters：If the parameter is correct, there is no return, if the parameter is wrong, an exception will be thrown.
+
+- Example
+
+```python
+record_test.amrEncDtx_enable(1)
 ```
 
 

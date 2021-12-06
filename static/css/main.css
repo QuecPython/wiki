@@ -86,7 +86,9 @@ input{
 	margin-right: 0.2rem;
 }
 
-
+.token.punctuation{
+	color:#B0E0E6;
+}
 .lang-python{
 	color:white	 !important;
 }
