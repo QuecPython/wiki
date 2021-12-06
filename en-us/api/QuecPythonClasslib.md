@@ -5832,8 +5832,121 @@ if __name__ == '__main__':
     # wdt.stop()
 
 ```
+##### KeyPad
+
+Module function: provide matrix keyboard interface and support platform ec600scn_ LB/EC800N_ CN_ LA/EC600NCNLC
+
+###### Create keypad object
+
+> **keypad=machine.KeyPad()**
+>
+> ```python
+> >>>import machine
+> >>>keypad=machine.KeyPad()
+> ```
+>
+> 
+
+###### Initialize keypad
+
+> **keypad.init()**
+
+Initialize keypad settings.
+
+* Parameters
+
+nothing
+
+Return value
+
+0 is returned for success and - 1 is returned for failure.
+
+###### Set callback function
+
+> **keypad.set_ callback(usrFun)**
+
+After the key is connected to the module, press and release the key to trigger the callback function setting.
+
+* Parameters
+
+| Parameter   | parameter type | parameter description                                   |
+| ------ | -------- | ------------------------------------------ |
+| usrFun | function | callback function. This function will be triggered when the external keyboard key is pressed and placed |
 
 
+Note: the usrfun parameter is list.
+
+List contains five parameters. It has the following meanings:
+
+list[0] - 90 means press and non-90 means lift
+
+list[1] - row
+
+list[2] - col
+
+List [3] - reserved, 0 by default, not used for the time being
+
+List [4] - the bottom layer outputs the key value, which is generally not used.
+
+* Return value
+
+0
+
+###### Set pin reuse
+
+> **keypad.setMuliKeyen(enbale)**
+
+* Parameters
+
+| Parameter   | parameter type | parameter description                            |
+| ------ | -------- | ----------------------------------- |
+| Enbale | int      | 1-enable multi-function keys, 0-ignore multi-function keys |
+
+* Return value
+
+0
+
+###### Uninitialization
+
+> **keypad.deinit()**
+
+Release the initialized resource and callback function settings.
+
+* Parameters
+
+nothing
+
+* Return value
+
+0 is returned for success and - 1 is returned for failure.
+
+###### Use example
+```python
+import machine
+import utime
+is_loop = 1
+keypad=machine.KeyPad()  
+keypad.init()
+def userfun(l_list):
+    global is_loop 
+    if  l_list[0] != 90 and l_list[1] == 4 and l_list[2] == 4 :
+        is_loop = 0
+        print('will exit')
+    print(l_list)
+    
+keypad.setMuliKeyen(1)
+keypad.set_callback(userfun)
+loop_num = 0
+
+while is_loop == 1 and loop_num < 10:
+    utime.sleep(5)
+    loop_num = loop_num +1
+    print(" running..... ",is_loop,loop_num)
+
+keypad.setMuliKeyen(0)
+keypad.deinit()
+print('exit!')
+```
 
 #### qrcode- QR Code Display 
 
@@ -9667,9 +9780,9 @@ Failed - not 0
 
 | Parameter | Type   | Description                                                  |
 | --------- | ------ | ------------------------------------------------------------ |
-| data_len  | int    | Expected Send data length (note that this parameter is adjusted according to the actual length of data, and the minimum value is taken according to the comparison between the capacity of data variable and data_len) |
+| data_len  | int    | Expected Send data length (note that this parameter is adjusted according to the actual length of data, and the minimum value is taken according to the comparison between the capacity of data variable and data_len),Non blocking|
 | data      | string | Data to be sent,The maximum supported data length is 1024 bytes                                   |
-| type      | int    | Sending method: 0, 1 and 2 do not need response confirmation, and 100, 101 and 102 need response confirmation. Only 0, 1 and 2 sending methods are supported temporarily. |
+| type      | int    | Indicates that the core network releases the RRC connection with the module: 0 - no indication. 1 - indicates that no further uplink or downlink data is expected after the packet uplink data, and the core network can release it immediately. 2 - indicates that a single downlink packet with a corresponding reply is expected in the uplink data of the packet, and the core network will release it immediately after distribution. |
 
 - Note
 
@@ -9786,9 +9899,9 @@ Failed - not 0
 
 | Parameter | Type   | Description                                                  |
 | --------- | ------ | ------------------------------------------------------------ |
-| data_len  | int    | Expected Send data length (note that this parameter is adjusted according to the actual length of data, and the minimum value is taken according to the comparison between the capacity of data variable and data_len) |
+| data_len  | int    | Expected Send data length (note that this parameter is adjusted according to the actual length of data, and the minimum value is taken according to the comparison between the capacity of data variable and data_len),Non blocking|
 | data      | string | Data to be sent,The maximum supported data length is 1024 bytes                                            |
-| type      | int    | Sending method: 0, 1 and 2 do not need response confirmation, and 100, 101 and 102 need response confirmation. Only 0, 1 and 2 sending methods are supported temporarily. |
+| type      | int    | Indicates that the core network releases the RRC connection with the module: 0 - no indication. 1 - indicates that no further uplink or downlink data is expected after the packet uplink data, and the core network can release it immediately. 2 - indicates that a single downlink packet with a corresponding reply is expected in the uplink data of the packet, and the core network will release it immediately after distribution. |
 
 - Note
 
@@ -9822,15 +9935,174 @@ Success -True
 Failed -False
 
 - Example
-
+Sample model[Download address](https://python.quectel.com/wiki/#/static-file/Ctwing_Object_model/aep_example.json)
 ```python
->>> aep.close()
-True
+from nb import AEP
+import utime
+import ustruct
+
+#以下5个函数需要判断如果机器是大端格式数据就不转
+def aep_htons(source):
+    return source & 0xffff
+def aep_htoni(source):
+    return source & 0xffffffff
+
+
+def aep_htonl(source):
+    return source & 0xffffffffffffffff
+
+def aep_htonf(source):
+    return ustruct.unpack('<I', ustruct.pack('<f', source))[0]
+
+def aep_htond(source):
+    return ustruct.unpack('Q', ustruct.pack('d', source))[0]
+
+def HexToStr(source, t=None):
+    if t:
+        if not isinstance(t, int):
+            raise Exception("{} is not int type".format(t))
+        fmt = "%0" + str(t*2)+"x"
+        return fmt%source
+    else:
+        if not source >> 8:
+            return "%02x" % source
+        elif not source >> 16:
+            return "%04x" % source
+        elif not source >> 32:
+            return "%08x" % source
+        else:
+            return "%016x" % source
+
+
+def StrToHex(source):
+    return int(source)
+
+#对照物模型定义，打包解包根据相应的服务id中的属性进行解析
+serid_dict={'阀门开关控制':8001,
+            '故障上报':1001,
+            '设备信息上报':3,
+            '阀门开关控制响应':9001,
+            '信号数据上报':2,
+            '电池低电压告警':1002,
+            '业务数据上报':1
+           }
+dict_cmd={'数据上报':0x02,
+          '事件上报':0x07,
+          '无线参数上报':0x03,
+          '下行指令固定':0x06,
+          '指令响应':0x86
+         }
+send_type={
+	'RAI_NONE':0,
+	'RAI_1':1,
+	'RAI_2':1
+}
+servcei_info={
+    'ip':"221.229.214.202",
+    'port':"5683"
+}
+
+def aep_pack_cmdtype02(service_id,data_in):
+    data=HexToStr(dict_cmd['数据上报'],1)
+    data+=HexToStr(service_id,2)    			#serviceid转成字符串
+    if service_id == 1:
+        data+=HexToStr(4,2)	                    #发送数据8.14，float类型四个字节长度,此处只举例一个情况
+        data+=HexToStr(aep_htonf(data_in),4)    #float数据转成字符串
+    else:
+        print('not support')                    #
+    return data
+ 
+def aep_pack(cmdtype,service_id,data):
+    if cmdtype == dict_cmd['数据上报']:                            #数据上报-0x02，此处只举例一个情况
+        return aep_pack_cmdtype02(service_id,data)
+    else:
+        print('not support')
+
+def aep_unpack_cmdtype06(data_in):
+    print('-------------------unpack recv data before  ------------------')
+    print(data_in)
+    print(data_in[0:4])
+    print(data_in[4:8])
+    print(data_in[8:12])
+    print(data_in[12:])
+    print('-------------------unpack recv data before------------------')
+    service_id  = int(str(data_in.decode()[0:4]),16)
+    service_id  = aep_htons(service_id)
+    task_id     = data_in[4:8]
+    payload_len = int(str(data_in.decode()[8:12]),16)
+    payload_len = aep_htons(payload_len)
+    value = 0
+    if service_id == serid_dict['阀门开关控制']:                 #物模型下发属性id=15,两个16进制字节,枚举型,0或者1
+       value = int(str(data_in.decode()[12:14]),16)
+       value = aep_htons(value)
+    if service_id == serid_dict['故障上报']:
+        pass
+    if service_id == serid_dict['设备信息上报']:
+        pass
+    if service_id == serid_dict['阀门开关控制响应']:
+        pass
+    if service_id == serid_dict['信号数据上报']:
+        pass
+    print('-------------------unpack recv data after------------------')
+    print("service_id ",service_id)
+    print("task_id ",task_id)
+    print("payload_len ",payload_len)
+    print("payload ",value)
+    print('-------------------unpack recv data after------------------')
+    
+def aep_unpack(data_in):
+    cmdtype=StrToHex(str(data_in.decode()[:2]))
+    data=data_in[2:]
+    if cmdtype == dict_cmd['下行指令固定']:
+        aep_unpack_cmdtype06(data)
+    else:
+        print('not support')
+
+aep=AEP(servcei_info['ip'],servcei_info['port'])
+
+def recv():
+    data=bytearray(20)	
+    ret=aep.recv(18,data)
+    if ret == -1:
+        return
+    aep_unpack(data)    
+    return ret
+
+def connect():
+    ret = aep.connect()
+    print('connect ',ret)
+
+def send():
+    water_flow_value=8.14
+    data=aep_pack(dict_cmd['数据上报'],serid_dict['业务数据上报'],water_flow_value)
+    print('send: ',data)
+    print('len: ',len(data))
+    data_len=len(data)
+    ret = aep.send(data_len,data,send_type['RAI_NONE'])
+    print('send ',ret)
+
+def close():
+    ret = aep.close()
+    print('close ',ret)
+    
+loop_num = 0
+
+def do_task():
+    connect()
+    send()
+    global loop_num
+    while loop_num < 10:
+        loop_num=loop_num+1
+        utime.sleep(3)
+        ret = recv()
+        if ret == 0:
+            break
+    close()
+
+if __name__ == '__main__':
+    do_task()
+
 ```
-
-##### 
-
-###### 
 
 
 

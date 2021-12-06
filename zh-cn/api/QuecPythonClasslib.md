@@ -4506,6 +4506,8 @@ from misc import USBNET
 USBNET.open()
 ```
 
+
+
 #### modem - 设备相关
 
 模块功能：设备信息获取。
@@ -5647,7 +5649,8 @@ if __name__ == '__main__':
 | EC600S/EC600N | port0:<br />CS:引脚号58<br />CLK:引脚号61<br />MOSI:引脚号60<br />MISO:引脚号59<br />port1:<br />CS:引脚号4<br />CLK:引脚号1<br />MOSI:引脚号3<br />MISO:引脚号2 |
 | EC100Y        | port0:<br />CS:引脚号25<br />CLK:引脚号26<br />MOSI:引脚号27<br />MISO:引脚号28<br />port1:<br />CS:引脚号105<br />CLK:引脚号104<br />MOSI:引脚号107<br />MISO:引脚号106 |
 | BC25PA        | port0:<br />CS:引脚号6<br />CLK:引脚号5<br />MOSI:引脚号4<br />MISO:引脚号3|
-
+* 注意
+  BC25PA平台仅不支持1、2模式。
 - 示例
 
 ```python
@@ -6161,6 +6164,122 @@ if __name__ == '__main__':
 
     # wdt.stop()
 
+```
+
+##### KeyPad
+
+模块功能:提供矩阵键盘接口，支持平台EC600SCN_LB/EC800N_CN_LA/EC600NCNLC
+
+###### 创建keypad对象
+
+> **keypad=machine.KeyPad()**
+>
+> ```python
+> >>>import machine
+> >>>keypad=machine.KeyPad()
+> ```
+>
+> 
+
+###### 初始化keypad
+
+> **keypad.init()**
+
+初始化keypad设置。
+
+* 参数
+
+无
+
+* 返回值
+
+成功返回0，失败返回-1。
+
+###### 设置回调函数
+
+> **keypad.set_callback(usrFun)**
+
+按键接入模组后，按放按键后触发回调函数设置。
+
+* 参数
+
+| 参数   | 参数类型 | 参数说明                                   |
+| ------ | -------- | ------------------------------------------ |
+| usrFun | function | 回调函数，当外接键盘按键按放会触发此函数。 |
+
+注意:usrFun参数为list。
+
+list包含五个参数。其含义如下：
+
+list[0]	- 90表示按下，非90表示抬起
+
+list[1]    - row
+
+list[2]    - col
+
+list[3]    - 预留，默认0，暂时不用
+
+list[4]    - 底层输出按键值，一般不用。
+
+* 返回值
+
+0
+
+###### 设置引脚复用
+
+> **keypad.setMuliKeyen(enbale)**
+
+* 参数
+
+| 参数   | 参数类型 | 参数说明                            |
+| ------ | -------- | ----------------------------------- |
+| enbale | int      | 1-使能多功能按键,0-忽略多功能按键。 |
+
+* 返回值
+
+0
+
+###### 解除初始化
+
+> **keypad.deinit()**
+
+释放初始化的资源和回调函数设置。
+
+* 参数
+
+无
+
+* 返回值
+
+成功返回0，失败返回-1。
+
+###### 使用示例
+
+```python
+import machine
+import utime
+is_loop = 1
+keypad=machine.KeyPad()  
+keypad.init()
+def userfun(l_list):
+    global is_loop 
+    if  l_list[0] != 90 and l_list[1] == 4 and l_list[2] == 4 :
+        is_loop = 0
+        print('will exit')
+    print(l_list)
+    
+keypad.setMuliKeyen(1)
+keypad.set_callback(userfun)
+loop_num = 0
+
+while is_loop == 1 and loop_num < 10:
+    utime.sleep(5)
+    loop_num = loop_num +1
+    print(" running..... ",is_loop,loop_num)
+
+keypad.setMuliKeyen(0)
+keypad.deinit()
+print('exit!')
 ```
 
 
@@ -10070,8 +10189,8 @@ bytearray(b'12345678')
 | 参数     | 类型   | 说明                                                         |
 | -------- | ------ | ------------------------------------------------------------ |
 | data_len | int    | 期望接受的数据长度(注意此参数根据data的实际长度进行调整，按照data变量的容量和data_len的比较取最小值) |
-| data     | string | 存储接收到的数据,最大支持1024字节数据。                                             |
-| type     | int    | 发送方式:0、1、2为无需响应确认，100、101、102需要响应确认。暂时仅支持0、1、2发送方式。 |
+| data     | string | 存储接收到的数据,最大支持1024字节数据。                      |
+| type     | int    | 表示核心网释放与模块的RRC连接：0-无指示。1-指示该包上行数据后不期望有进一步的上行或者下行数据，核心网可立即释放  。2-指示该包上行数据后期望有对应回复的单个下行数据包，核心网在下发后立即释放  。 |
 
 - 说明
 
@@ -10119,10 +10238,10 @@ True
 
 - 参数
 
-| 参数 | 类型   | 说明                                 |
-| ---- | ------ | ------------------------------------ |
-| ip   | string | 物联网平台的服务器ip地址,最大长度16. |
-| port | string | 物联网平台的服务器端口,最大长度5.    |
+| 参数 | 类型   | 说明                                          |
+| ---- | ------ | --------------------------------------------- |
+| ip   | string | 物联网平台的服务器ip地址,最大长度16,合法ipv4. |
+| port | string | 物联网平台的服务器端口,最大长度5,范围0~65536. |
 
 - 示例
 
@@ -10160,12 +10279,12 @@ True
 
 | 参数     | 类型   | 说明                                                         |
 | -------- | ------ | ------------------------------------------------------------ |
-| data_len | int    | 期望接受的数据长度(注意此参数根据data的实际长度进行调整，按照data变量的容量和data_len的比较取最小值) |
+| data_len | int    | 期望接受的数据长度(注意此参数根据data的实际长度进行调整，按照data变量的容量和data_len的比较取最小值),非阻塞。 |
 | data     | string | 存储接收到的数据。                                           |
 
 - 说明
 
-接收数据为16进制字符串，故数据长度必定是偶数。
+接收数据为16进制字符串，故数据长度必定是偶数,非阻塞，如果无数据读取返回失败。
 
 - 返回值
 
@@ -10188,13 +10307,15 @@ True
 
 | 参数     | 类型   | 说明                                                         |
 | -------- | ------ | ------------------------------------------------------------ |
-| data_len | int    | 期望发送的数据长度(注意此参数根据data的实际长度进行调整，按照data变量的容量和data_len的比较取最小值) |
-| data     | string | 待发送数据，最大支持1024字节数据。                                               |
-| type     | int    | 发送方式:0、1、2为无需响应确认，100、101、102需要响应确认。暂时仅支持0、1、2发送方式。 |
+| data_len | int    | 期望发送的数据长度(注意此参数根据data的实际长度进行调整，按照data变量的容量和data_len的比较取最小值)，非阻塞 |
+| data     | string | 待发送数据，最大支持1024字节数据。                           |
+| type     | int    | 表示核心网释放与模块的RRC连接：0-无指示。1-指示该包上行数据后不期望有进一步的上行或者下行数据，核心网可立即释放  。2-指示该包上行数据后期望有对应回复的单个下行数据包，核心网在下发后立即释放  。 |
+
+
 
 - 说明
 
-发送数据为16进制字符串，数据长度为偶数。
+发送数据为16进制字符串，数据长度为偶数，非阻塞,返回成功表示发送指令执行成功,不表示数据已经发送到云平台。
 
 - 返回值
 
@@ -10231,3 +10352,176 @@ True
 ```
 
 ##### 
+
+###### 使用示例
+
+示例物模型[下载地址](https://python.quectel.com/wiki/#/static-file/Ctwing_Object_model/aep_example.json)
+
+```python
+from nb import AEP
+import utime
+import ustruct
+
+#以下5个函数需要判断如果机器是大端格式数据就不转
+def aep_htons(source):
+    return source & 0xffff
+def aep_htoni(source):
+    return source & 0xffffffff
+
+
+def aep_htonl(source):
+    return source & 0xffffffffffffffff
+
+def aep_htonf(source):
+    return ustruct.unpack('<I', ustruct.pack('<f', source))[0]
+
+def aep_htond(source):
+    return ustruct.unpack('Q', ustruct.pack('d', source))[0]
+
+def HexToStr(source, t=None):
+    if t:
+        if not isinstance(t, int):
+            raise Exception("{} is not int type".format(t))
+        fmt = "%0" + str(t*2)+"x"
+        return fmt%source
+    else:
+        if not source >> 8:
+            return "%02x" % source
+        elif not source >> 16:
+            return "%04x" % source
+        elif not source >> 32:
+            return "%08x" % source
+        else:
+            return "%016x" % source
+
+
+def StrToHex(source):
+    return int(source)
+
+#对照物模型定义，打包解包根据相应的服务id中的属性进行解析
+serid_dict={'阀门开关控制':8001,
+            '故障上报':1001,
+            '设备信息上报':3,
+            '阀门开关控制响应':9001,
+            '信号数据上报':2,
+            '电池低电压告警':1002,
+            '业务数据上报':1
+           }
+dict_cmd={'数据上报':0x02,
+          '事件上报':0x07,
+          '无线参数上报':0x03,
+          '下行指令固定':0x06,
+          '指令响应':0x86
+         }
+send_type={
+	'RAI_NONE':0,
+	'RAI_1':1,
+	'RAI_2':1
+}
+servcei_info={
+    'ip':"221.229.214.202",
+    'port':"5683"
+}
+
+def aep_pack_cmdtype02(service_id,data_in):
+    data=HexToStr(dict_cmd['数据上报'],1)
+    data+=HexToStr(service_id,2)    			#serviceid转成字符串
+    if service_id == 1:
+        data+=HexToStr(4,2)	                    #发送数据8.14，float类型四个字节长度,此处只举例一个情况
+        data+=HexToStr(aep_htonf(data_in),4)    #float数据转成字符串
+    else:
+        print('not support')                    #
+    return data
+ 
+def aep_pack(cmdtype,service_id,data):
+    if cmdtype == dict_cmd['数据上报']:                            #数据上报-0x02，此处只举例一个情况
+        return aep_pack_cmdtype02(service_id,data)
+    else:
+        print('not support')
+
+def aep_unpack_cmdtype06(data_in):
+    print('-------------------unpack recv data before  ------------------')
+    print(data_in)
+    print(data_in[0:4])
+    print(data_in[4:8])
+    print(data_in[8:12])
+    print(data_in[12:])
+    print('-------------------unpack recv data before------------------')
+    service_id  = int(str(data_in.decode()[0:4]),16)
+    service_id  = aep_htons(service_id)
+    task_id     = data_in[4:8]
+    payload_len = int(str(data_in.decode()[8:12]),16)
+    payload_len = aep_htons(payload_len)
+    value = 0
+    if service_id == serid_dict['阀门开关控制']:                 #物模型下发属性id=15,两个16进制字节,枚举型,0或者1
+       value = int(str(data_in.decode()[12:14]),16)
+       value = aep_htons(value)
+    if service_id == serid_dict['故障上报']:
+        pass
+    if service_id == serid_dict['设备信息上报']:
+        pass
+    if service_id == serid_dict['阀门开关控制响应']:
+        pass
+    if service_id == serid_dict['信号数据上报']:
+        pass
+    print('-------------------unpack recv data after------------------')
+    print("service_id ",service_id)
+    print("task_id ",task_id)
+    print("payload_len ",payload_len)
+    print("payload ",value)
+    print('-------------------unpack recv data after------------------')
+    
+def aep_unpack(data_in):
+    cmdtype=StrToHex(str(data_in.decode()[:2]))
+    data=data_in[2:]
+    if cmdtype == dict_cmd['下行指令固定']:
+        aep_unpack_cmdtype06(data)
+    else:
+        print('not support')
+
+aep=AEP(servcei_info['ip'],servcei_info['port'])
+
+def recv():
+    data=bytearray(20)	
+    ret=aep.recv(18,data)
+    if ret == -1:
+        return
+    aep_unpack(data)    
+    return ret
+
+def connect():
+    ret = aep.connect()
+    print('connect ',ret)
+
+def send():
+    water_flow_value=8.14
+    data=aep_pack(dict_cmd['数据上报'],serid_dict['业务数据上报'],water_flow_value)
+    print('send: ',data)
+    print('len: ',len(data))
+    data_len=len(data)
+    ret = aep.send(data_len,data,send_type['RAI_NONE'])
+    print('send ',ret)
+
+def close():
+    ret = aep.close()
+    print('close ',ret)
+    
+loop_num = 0
+
+def do_task():
+    connect()
+    send()
+    global loop_num
+    while loop_num < 10:
+        loop_num=loop_num+1
+        utime.sleep(3)
+        ret = recv()
+        if ret == 0:
+            break
+    close()
+
+if __name__ == '__main__':
+    do_task()
+
+```
+
