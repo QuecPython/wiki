@@ -1916,13 +1916,13 @@ net模块的设置APN主要使用场景是专网卡设定特定APN才能注网�
 
 失败返回整型值-1，成功返回包含三种网络系统（GSM、UMTS、LTE）的信息的list，如果对应网络系统信息为空，则返回空的List。返回值格式如下：
 
-`([(flag, cid, mcc, mnc, lac, arfcn, bsic, rssi)], [(flag, cid, licd, mcc, mnc, lac, arfcn, bsic, rssi)], [(flag, cid, mcc, mnc, pci, tac, earfcn, rssi),...])`
+`([(flag, cid, mcc, mnc, lac, arfcn, bsic, rssi)], [(flag, cid, licd, mcc, mnc, lac, arfcn, bsic, rssi)], [(flag, cid, mcc, mnc, pci, tac, earfcn, rssi, rsrq),...])`
 
 GSM网络系统返回值说明
 
 | 参数  | 参数意义                                                     |
 | ----- | ------------------------------------------------------------ |
-| flag  | 返回 0 - 2， 0：present，1：inter，2：intra                  |
+| flag  | 返回 0 - 3， 0：present，1：neighbor，2：neighbor_intra 3：neighbor_inter                 |
 | cid   | 返回GSM网络下的cell id信息，0则为空，范围0 ~ 65535           |
 | mcc   | 移动设备国家代码，范围 0 ~ 999<br>注意：EC100Y/EC600S/EC600N系列的模组，该值是用十六进制来表示，比如下面示例中的十进制数1120，用十六进制表示为0x460，表示移动设备国家代码460，其他型号模组，该值直接用十进制表示，比如移动设备国家代码460，就是用十进制的460来表示。 |
 | mnc   | 移动设备网络代码，范围 0 ~ 99                                |
@@ -1935,7 +1935,7 @@ UMTS网络系统返回值说明
 
 | 参数   | 参数意义                                                     |
 | ------ | ------------------------------------------------------------ |
-| flag   | 返回 0 - 2， 0：present，1：inter，2：intra                  |
+| flag   | 返回 0 - 3， 0：present，1：neighbor，2：neighbor_intra 3：neighbor_inter                   |
 | cid    | 返回UMTS网络下的 Cell identity 信息，Cell identity = RNC_ID * 65536 + Cell_ID，Cell identity范围 0x0000000 ~ 0xFFFFFFF（注意这里是28bits）；其中RNC_ID的范围是0 ~ 4095，Cell_ID的范围是0 ~ 65535 |
 | lcid   | URA ID，范围 0 ~ 65535，0表示该信息不存在                    |
 | mcc    | 移动设备国家代码，范围 0 ~ 999                               |
@@ -1949,7 +1949,7 @@ LTE网络系统返回值说明
 
 | 参数   | 参数意义                                                     |
 | ------ | ------------------------------------------------------------ |
-| flag   | 返回 0 - 2， 0：present，1：inter，2：intra                  |
+| flag   | 返回 0 - 3， 0：present，1：neighbor，2：neighbor_intra 3：neighbor_inter                   |
 | cid    | 返回LTE网络下的 Cell identity 信息，Cell identity = RNC_ID * 65536 + Cell_ID，Cell identity范围 0x0000000 ~ 0xFFFFFFF（注意这里是28bits）；其中RNC_ID的范围是0 ~ 4095，Cell_ID的范围是0 ~ 65535 |
 | mcc    | 移动设备国家代码，范围 0 ~ 999                               |
 | mnc    | 移动设备网络代码，范围 0 ~ 99                                |
@@ -1957,12 +1957,14 @@ LTE网络系统返回值说明
 | tac    | 跟踪区域码，0 ~ 65535                                        |
 | earfcn | 无线频道编号，范围 0 ~ 65535                                 |
 | rssi   | 接收的信号强度，在LTE网络下，表示RSRP质量（负值），是根据RSRP测量报告值换算而来，换算关系如下：<br>RSRP质量（负数）= RSRP测量报告值 - 140，单位dBm，范围 -140 ~ -44 dBm |
+| rsrq  |(Reference Signal Receiving Quality):LTE参考信号接收质量(仅ASR平台数据有意义，其余平台默认0)，范围 -20 ~ -3  注：理论上rsrq的范围应该是-19.5~-3，但由于计算方法问题，目前能给出的是-20~-3|
 
 * 示例
 
 ```python
 >>> net.getCellInfo()
-([], [], [(0, 14071232, 1120, 0, 123, 21771, 1300, -69), (3, 0, 0, 0, 65535, 0, 40936, -140), (3, 0, 0, 0, 65535, 0, 3590, -140), (3, 0, 0, 0, 63, 0, 40936, -112)])
+([], [], [(0, 232301375, 1120, 17, 378, 26909, 1850, -66, -8), (3, 110110494, 1120, 17, 10, 26909, 2452, -87, -17), (3, 94542859, 1120, 1, 465, 56848, 1650, -75, -10), 
+(3, 94472037, 1120, 1, 369, 56848, 3745, -84, -20)])
 ```
 
 
