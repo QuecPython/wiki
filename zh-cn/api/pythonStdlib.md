@@ -1271,6 +1271,7 @@ socket = usocket.socket(usocket.AF_INET, usocket.SOCK_DGRAM)
 
 `level ` :套接字选项级别
 
+
 * usocket.SOL_SOCKET
 
 `optname`:socket选项
@@ -1291,6 +1292,7 @@ socket.setsockopt(usocket.SOL_SOCKET, usocket.TCP_KEEPALIVE, 1)
 ```
 
 ##### 设置套接字为阻塞模式或者非阻塞模式
+
 
 
 > **socket.setblocking(flag)**
