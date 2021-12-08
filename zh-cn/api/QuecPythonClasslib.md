@@ -10215,11 +10215,18 @@ SecureData.Store(index,databuf,len)
 | index   | int       | index范围为1-16：<br />1 - 8 最大存储52字节数据<br />9 - 12 最大存储100字节数据<br />13 - 14 最大存储500字节数据<br />15 - 16 最大存储1000字节数据 |
 | databuf | bytearray | 待存储的数据数组                                             |
 | len     | int       | 要写入数据的长度                                             |
-|存储时按照databuf和len两者中长度较小的进行存储|||
-|**返回值**|||
-|-1: 参数有误 |||
-|0: 执行正常|||
+
+
+存储时按照databuf和len两者中长度较小的进行存储
+
+**返回值**
+
+-1: 参数有误
+
+0: 执行正常
+
 ##### 数据读取
+
 SecureData.Read(index,databuf,len)
 - **参数**
 | 参数    | 类型      | 说明                                            |
@@ -10510,11 +10517,383 @@ bytearray(b'313233')
 True
 ```
 
-##### 
+
 
 ###### 使用示例
 
-示例物模型[下载地址](https://python.quectel.com/wiki/#/static-file/Ctwing_Object_model/aep_example.json)
+示例物模型
+
+```json
+{
+  "productInfo": {
+    "productId": 15082482
+  },
+  "properties": [
+    {
+      "propertyId": 1,
+      "identifier": "ecl",
+      "propertyName": "无线信号覆盖等级",
+      "description": null,
+      "dataType": "integer",
+      "dataSchema": "\"unit\":\"null\",\"min\":\"-32768\",\"len\":4,\"unitName\":\"\",\"max\":\"32767\""
+    },
+    {
+      "propertyId": 2,
+      "identifier": "pci",
+      "propertyName": "物理小区标识",
+      "description": null,
+      "dataType": "integer",
+      "dataSchema": "\"unit\":\"null\",\"min\":\"-32768\",\"len\":4,\"unitName\":\"\",\"max\":\"32767\""
+    },
+    {
+      "propertyId": 3,
+      "identifier": "IMEI",
+      "propertyName": "IMEI",
+      "description": null,
+      "dataType": "vary-string",
+      "dataSchema": "\"len\":0,\"unit\":\"null\",\"unitName\":\"\""
+    },
+    {
+      "propertyId": 4,
+      "identifier": "rsrp",
+      "propertyName": "参考信号接收功率",
+      "description": null,
+      "dataType": "integer",
+      "dataSchema": "\"unit\":\"null\",\"min\":\"-32768\",\"len\":4,\"unitName\":\"\",\"max\":\"32767\""
+    },
+    {
+      "propertyId": 5,
+      "identifier": "sinr",
+      "propertyName": "信号与干扰加噪声比",
+      "description": null,
+      "dataType": "integer",
+      "dataSchema": "\"unit\":\"null\",\"min\":\"-32768\",\"len\":4,\"unitName\":\"\",\"max\":\"32767\""
+    },
+    {
+      "propertyId": 6,
+      "identifier": "time",
+      "propertyName": "当前时间",
+      "description": null,
+      "dataType": "timestamp",
+      "dataSchema": "\"len\":8"
+    },
+    {
+      "propertyId": 7,
+      "identifier": "ICCID",
+      "propertyName": "ICCID",
+      "description": null,
+      "dataType": "vary-string",
+      "dataSchema": "\"len\":0,\"unit\":\"null\",\"unitName\":\"\""
+    },
+    {
+      "propertyId": 8,
+      "identifier": "cell_id",
+      "propertyName": "小区位置信息",
+      "description": null,
+      "dataType": "integer",
+      "dataSchema": "\"unit\":\"null\",\"min\":\"-2147483648\",\"len\":4,\"unitName\":\"\",\"max\":\"2147483647\""
+    },
+    {
+      "propertyId": 9,
+      "identifier": "velocity",
+      "propertyName": "水流速",
+      "description": null,
+      "dataType": "float",
+      "dataSchema": "\"unit\":\"m/s\",\"min\":\"0\",\"len\":4,\"unitName\":\"米每秒\",\"max\":\"100\""
+    },
+    {
+      "propertyId": 10,
+      "identifier": "act_result",
+      "propertyName": "指令执行结果",
+      "description": null,
+      "dataType": "enum",
+      "dataSchema": "\"len\":1,\"enumDetail\":{\"0\":\"执行成功\",\"1\":\"执行失败\"}"
+    },
+    {
+      "propertyId": 11,
+      "identifier": "error_code",
+      "propertyName": "故障",
+      "description": null,
+      "dataType": "enum",
+      "dataSchema": "\"len\":1,\"enumDetail\":{\"0\":\"正常\",\"1\":\"传感器故障\"}"
+    },
+    {
+      "propertyId": 12,
+      "identifier": "water_flow",
+      "propertyName": "水流量",
+      "description": null,
+      "dataType": "float",
+      "dataSchema": "\"unit\":\"m³/h\",\"min\":\"0\",\"len\":4,\"unitName\":\"立方米每小时\",\"max\":\"9999999\""
+    },
+    {
+      "propertyId": 13,
+      "identifier": "module_type",
+      "propertyName": "模组型号",
+      "description": null,
+      "dataType": "vary-string",
+      "dataSchema": "\"len\":0,\"unit\":\"null\",\"unitName\":\"\""
+    },
+    {
+      "propertyId": 14,
+      "identifier": "temperature",
+      "propertyName": "水温",
+      "description": null,
+      "dataType": "float",
+      "dataSchema": "\"unit\":\"°C\",\"min\":\"0\",\"len\":4,\"unitName\":\"摄氏度\",\"max\":\"100\""
+    },
+    {
+      "propertyId": 15,
+      "identifier": "valve_onoff",
+      "propertyName": "阀门开关",
+      "description": null,
+      "dataType": "enum",
+      "dataSchema": "\"len\":1,\"enumDetail\":{\"0\":\"关闭\",\"1\":\"开启\"}"
+    },
+    {
+      "propertyId": 16,
+      "identifier": "battery_state",
+      "propertyName": "电池状态",
+      "description": null,
+      "dataType": "enum",
+      "dataSchema": "\"len\":1,\"enumDetail\":{\"0\":\"正常\",\"1\":\"低电量\"}"
+    },
+    {
+      "propertyId": 17,
+      "identifier": "battery_value",
+      "propertyName": "电池电量",
+      "description": null,
+      "dataType": "integer",
+      "dataSchema": "\"unit\":\"%\",\"min\":\"0\",\"len\":4,\"unitName\":\"百分比\",\"max\":\"100\""
+    },
+    {
+      "propertyId": 18,
+      "identifier": "terminal_type",
+      "propertyName": "终端型号",
+      "description": null,
+      "dataType": "vary-string",
+      "dataSchema": "\"len\":0,\"unit\":\"null\",\"unitName\":\"\""
+    },
+    {
+      "propertyId": 19,
+      "identifier": "back_total_flow",
+      "propertyName": "反向累计流量",
+      "description": null,
+      "dataType": "float",
+      "dataSchema": "\"unit\":\"m³\",\"min\":\"0\",\"len\":4,\"unitName\":\"立方米\",\"max\":\"99999999\""
+    },
+    {
+      "propertyId": 20,
+      "identifier": "battery_voltage",
+      "propertyName": "电池电压",
+      "description": null,
+      "dataType": "float",
+      "dataSchema": "\"unit\":\"V\",\"min\":\"0\",\"len\":4,\"unitName\":\"伏特\",\"max\":\"24\""
+    },
+    {
+      "propertyId": 21,
+      "identifier": "hydraulic_value",
+      "propertyName": "水压值",
+      "description": null,
+      "dataType": "float",
+      "dataSchema": "\"unit\":\"MPa\",\"min\":\"0\",\"len\":4,\"unitName\":\"兆帕\",\"max\":\"10\""
+    },
+    {
+      "propertyId": 22,
+      "identifier": "hardware_version",
+      "propertyName": "硬件版本",
+      "description": null,
+      "dataType": "vary-string",
+      "dataSchema": "\"len\":0,\"unit\":\"null\",\"unitName\":\"\""
+    },
+    {
+      "propertyId": 23,
+      "identifier": "software_version",
+      "propertyName": "软件版本",
+      "description": null,
+      "dataType": "vary-string",
+      "dataSchema": "\"len\":0,\"unit\":\"null\",\"unitName\":\"\""
+    },
+    {
+      "propertyId": 24,
+      "identifier": "manufacturer_name",
+      "propertyName": "厂家名称",
+      "description": null,
+      "dataType": "vary-string",
+      "dataSchema": "\"len\":0,\"unit\":\"null\",\"unitName\":\"\""
+    },
+    {
+      "propertyId": 25,
+      "identifier": "water_consumption",
+      "propertyName": "用水量",
+      "description": null,
+      "dataType": "float",
+      "dataSchema": "\"unit\":\"m³\",\"min\":\"0\",\"len\":4,\"unitName\":\"立方米\",\"max\":\"99999999\""
+    },
+    {
+      "propertyId": 26,
+      "identifier": "forward_total_flow",
+      "propertyName": "正向累计流量",
+      "description": null,
+      "dataType": "float",
+      "dataSchema": "\"unit\":\"m³\",\"min\":\"0\",\"len\":4,\"unitName\":\"立方米\",\"max\":\"99999999\""
+    }
+  ],
+  "services": [
+    {
+      "serviceId": 1,
+      "identifier": "data_report",
+      "serviceName": "业务数据上报",
+      "serviceType": "DataReport",
+      "description": null,
+      "properties": [
+        {
+          "propertyId": 12,
+          "serial": 1
+        }
+      ],
+      "parameters": []
+    },
+    {
+      "serviceId": 1002,
+      "identifier": "battery_voltage_low_alarm",
+      "serviceName": "电池低电压告警",
+      "serviceType": "EventReport",
+      "description": null,
+      "properties": [
+        {
+          "propertyId": 16,
+          "serial": 1
+        },
+        {
+          "propertyId": 20,
+          "serial": 2
+        }
+      ],
+      "parameters": []
+    },
+    {
+      "serviceId": 2,
+      "identifier": "signal_report",
+      "serviceName": "信号数据上报",
+      "serviceType": "DataReport",
+      "description": null,
+      "properties": [
+        {
+          "propertyId": 4,
+          "serial": 1
+        },
+        {
+          "propertyId": 5,
+          "serial": 2
+        },
+        {
+          "propertyId": 2,
+          "serial": 3
+        },
+        {
+          "propertyId": 1,
+          "serial": 4
+        },
+        {
+          "propertyId": 8,
+          "serial": 5
+        }
+      ],
+      "parameters": []
+    },
+    {
+      "serviceId": 9001,
+      "identifier": "valve_onoff_resp",
+      "serviceName": "阀门开关控制响应",
+      "serviceType": "CommandResponse",
+      "description": null,
+      "properties": [
+        {
+          "propertyId": 15,
+          "serial": 1
+        },
+        {
+          "propertyId": 10,
+          "serial": 2
+        }
+      ],
+      "parameters": []
+    },
+    {
+      "serviceId": 8001,
+      "identifier": "valve_onoff_cmd",
+      "serviceName": "阀门开关控制",
+      "serviceType": "Command",
+      "description": null,
+      "properties": [
+        {
+          "propertyId": 15,
+          "serial": 1
+        }
+      ],
+      "parameters": []
+    },
+    {
+      "serviceId": 1001,
+      "identifier": "error_code_report",
+      "serviceName": "故障上报",
+      "serviceType": "EventReport",
+      "description": null,
+      "properties": [
+        {
+          "propertyId": 11,
+          "serial": 1
+        },
+        {
+          "propertyId": 6,
+          "serial": 2
+        }
+      ],
+      "parameters": []
+    },
+    {
+      "serviceId": 3,
+      "identifier": "info_report",
+      "serviceName": "设备信息上报",
+      "serviceType": "DataReport",
+      "description": null,
+      "properties": [
+        {
+          "propertyId": 24,
+          "serial": 1
+        },
+        {
+          "propertyId": 18,
+          "serial": 2
+        },
+        {
+          "propertyId": 13,
+          "serial": 3
+        },
+        {
+          "propertyId": 22,
+          "serial": 4
+        },
+        {
+          "propertyId": 23,
+          "serial": 5
+        },
+        {
+          "propertyId": 3,
+          "serial": 6
+        },
+        {
+          "propertyId": 7,
+          "serial": 7
+        }
+      ],
+      "parameters": []
+    }
+  ]
+}
+```
+
+示例代码
 
 ```python
 from nb import AEP
