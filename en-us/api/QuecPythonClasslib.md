@@ -2199,6 +2199,31 @@ If the execution is failed, -1 is returned. If the execution is successful, an a
 
 
 
+##### Obtain the ID of the Serving Cell
+
+> **net.getServingCi()**
+
+Obtain the ID of the Serving Cell.
+
+* Parameter
+
+NA
+
+* Return Value
+
+Serving cell ID : Successful execution.
+
+-1: Failed execution.
+
+* Example
+
+```python
+>>> net.getServingCi()
+94938399
+```
+
+
+
 ##### Obtain the MNC of the Neighbor Cell
 
 > **net.getMnc()**
@@ -2218,6 +2243,31 @@ If the execution is failed, -1 is returned. If the execution is successful, an a
 ```python
 >>> net.getMnc()
 [0, 0]
+```
+
+
+
+##### Obtain the MNC of the Serving Cell
+
+> **net.getServingMnc()**
+
+Obtain the MNC of the Serving Cell.
+
+* Parameter
+
+NA
+
+* Return Value
+
+Serving cell MNC : Successful execution.
+
+-1: Failed execution.
+
+* Example
+
+```python
+>>> net.getServingMnc()
+1
 ```
 
 
@@ -2247,6 +2297,33 @@ Note : For modules of the EC100Y/EC600S/EC600N series, the value is expressed in
 
 
 
+##### Obtain the MCC of the Serving Cell
+
+> **net.getServingMcc()**
+
+Obtain the MCC of the Serving Cell.
+
+* Parameter
+
+NA
+
+* Return Value
+
+Serving cell MCC : Successful execution.
+
+-1: Failed execution.
+
+Note : For modules of the EC100Y/EC600S/EC600N series, the value is expressed in hexadecimal. For example, the decimal number 1120 in the following example is 0x460, indicating the mobile device country code 460. For modules of other models, the value is directly expressed in decimal, such as the mobile device country code 460.That's 460 in decimal notation.
+
+* Example
+
+```python
+>>> net.getServingMcc()
+1120
+```
+
+
+
 ##### Obtain the LAC of the Neighbor Cell
 
 > **net.getLac()**
@@ -2266,6 +2343,31 @@ If the execution is failed, -1 is returned. If the execution is successful, an a
 ```python
 >>> net.getLac()
 [21771, 0]
+```
+
+
+
+##### Obtain the LAC of the Serving Cell
+
+> **net.getServingLac()**
+
+Obtain the LAC of the Serving Cell.
+
+* Parameter
+
+NA
+
+* Return Value
+
+Serving cell LAC : Successful execution.
+
+-1: Failed execution.
+
+* Example
+
+```python
+>>> net.getServingLac()
+56848
 ```
 
 
