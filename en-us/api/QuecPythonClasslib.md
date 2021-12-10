@@ -4425,7 +4425,7 @@ It reads the voltage value of the specified channel. Unit: mV.
 
 | Parameter | Type | Description                                                  |
 | --------- | ---- | ------------------------------------------------------------ |
-| ADCn      | int  | ADC Channel<br/>The corresponding pins for EC100Y-CN module are as follows:<br/>ADC0 – Pin No. 39<br/>ADC1 – Pin No. 81<br/>The corresponding pins for EC600S-CN/EC600N_CN modules are as follows<br/>ADC0 – Pin No. 19<br/>The corresponding pins for EC600U series module are as follows<br />ADC0 – Pin No. 19<br/>ADC1 – Pin No. 20<br />ADC2 – Pin No. 113<br />ADC3 – Pin No. 114<br />The corresponding pins for EC200U series module are as follows<br />ADC0 – Pin No. 45<br/>ADC1 – Pin No. 44<br />ADC2 – Pin No.43<br /> |
+| ADCn      | int  | ADC Channel<br/>The corresponding pins for EC100Y-CN module are as follows:<br/>ADC0 – Pin No. 39<br/>ADC1 – Pin No. 81<br/>The corresponding pins for EC600S-CN/EC600N_CN modules are as follows<br/>ADC0 – Pin No. 19<br/>The corresponding pins for EC800N/BC25PA series module are as follows<br />ADC0 – Pin No. 9<br/>The corresponding pins for EC600U series module are as follows<br />ADC0 – Pin No. 19<br/>ADC1 – Pin No. 20<br />ADC2 – Pin No. 113<br />ADC3 – Pin No. 114<br />The corresponding pins for EC200U series module are as follows<br />ADC0 – Pin No. 45<br/>ADC1 – Pin No. 44<br />ADC2 – Pin No.43<br /> |
 
 * Return Value
 
@@ -6227,6 +6227,8 @@ List [4] - the bottom layer outputs the key value, which is generally not used.
 | Parameter   | parameter type | parameter description                            |
 | ------ | -------- | ----------------------------------- |
 | Enbale | int      | 1-enable multi-function keys, 0-ignore multi-function keys |
+
+Note: only ec600ncnlc platform needs to call this function.
 
 * Return value
 
