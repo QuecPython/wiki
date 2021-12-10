@@ -356,7 +356,7 @@ if __name__ == '__main__':
 
 * 返回值
 
-功返回度格式经纬度坐标信息，返回格式：`(longtitude, latitude, accuracy)`，`(0.0, 0.0, 0)`表示未获取到有效坐标信息；
+成功返回经纬度坐标信息，单位度，返回格式：`(longtitude, latitude, accuracy)`，`(0.0, 0.0, 0)`表示未获取到有效坐标信息；
 
 `longtitude` ： 经度
 
@@ -1051,7 +1051,7 @@ sim.setCallback(cb)
 
 
 
-##### 设置FWmode
+##### 设置控制呼叫转移
 
 > **voiceCall.setFw(reason, fwmode, phonenum)**
 
@@ -1059,11 +1059,11 @@ sim.setCallback(cb)
 
 * 参数
 
-| 参数      | 参数类型 | 参数说明                                              |
-| --------  | -------- | ----------------------------------------------------- |
-| reason    | int      | 呼叫转移的条件/原因:<br/>0 : unconditional<br/>1 : mobile busy<br/>2 : no reply<br/>3 : not reachable<br/>4 : all call forwarding (refer 3GPP TS 22.030)<br/>5 : all conditional call forwarding (refer 3GPP TS 22.030 ) |
-| fwmode    | int      | 对呼叫转移的控制:<br/>0 : 禁用<br/>1 : 启用<br/>2 : 查询状态<br/>3 : 注册<br/>4 : 擦除 |
-| phonenum  | string   | 呼叫转移的目标电话                                    |
+| 参数     | 参数类型 | 参数说明                                                     |
+| -------- | -------- | ------------------------------------------------------------ |
+| reason   | int      | 呼叫转移的条件/原因:<br/>0 : unconditional<br/>1 : mobile busy<br/>2 : no reply<br/>3 : not reachable |
+| fwmode   | int      | 对呼叫转移的控制:<br/>0 : 禁用<br/>1 : 启用<br/>2 : 查询状态<br/>3 : 注册<br/>4 : 擦除 |
+| phonenum | string   | 呼叫转移的目标电话                                           |
 
 * 返回值
 
@@ -1139,7 +1139,7 @@ sim.setCallback(cb)
 
 > **voiceCall.setAutoRecord(enable, record_type, record_mode, filename)**
 
-自动录音使能接口。(默认关闭自动录音)
+自动录音使能接口。(默认关闭自动录音)，自动录音使能需要在通话前设置完毕
 
 注：非volte版本无该接口
 
@@ -3072,7 +3072,7 @@ download_list = [{'url': 'http://www.example.com/app.py', 'file_name': '/usr/app
 
 模块功能：音频播放，支持TTS、mp3以及AMR文件播放。
 
-注意：BC25PA平台不支持此模块。
+注意：展锐平台、BC25PA平台不支持此模块。
 
 ##### TTS 
 
@@ -3778,8 +3778,6 @@ aud.play(1, 0, 'U:/test.mp3')
 
 ##### Record
 
-适配版本：EC100Y(V0009)及以上；EC600S(V0003)及以上。
-
 注意：BC25PA平台不支持此模块。
 
 ###### 创建一个对象
@@ -3946,7 +3944,7 @@ record_test.getData(“test.amr”,0, 44)
 
 * 返回值
 
-  若获取成功,返回文件大小 ，单位字节：
+  若获取成功,返回文件大小 （asr平台不返回文件头），单位字节：
 
   wav格式时，此值会比返回callback返回值大44 bytes（44 bytes为文件头）；
 
@@ -10117,8 +10115,7 @@ camCaputre.callback(callback)
 模块功能：对L76K GPS型号进行数据获取，可以得到模块定位是否成功，定位的经纬度数据，UTC授时时间，获取GPS模块的定位模式，获取GPS模块定位使用卫星数量，获取GPS模块定位可见卫星数量，获取定位方位角，GPS模块对地速度，模块定位大地高等数据信息。
 
 * 注意
-  BC25PA平台不支持模块功能。
-> 暂时只支持EC600U CNLB
+  当前仅展锐平台支持
 
 ##### 打开GNSS串口，读取并解析GNSS数据
 
@@ -10132,9 +10129,9 @@ camCaputre.callback(callback)
 | :------- | :--- | ------------------------------------------------------------ |
 | uartn    | int  | UARTn范围为0-3：<br />0-UART0 - DEBUG PORT<br />1-UART1 – BT PORT<br />2-UART2 – MAIN PORT<br />3-UART3 – USB CDC PORT |
 | baudrate | int  | 波特率，常用波特率都支持，如4800、9600、19200、38400、57600、115200、230400等 |
-| databits | int  | 数据位（5 ~ 8）                                                |
+| databits | int  | 数据位（5 ~ 8），展锐平台当前仅支持8位                       |
 | parity   | int  | 奇偶校验（0 – NONE，1 – EVEN，2 - ODD）                      |
-| stopbits | int  | 停止位（1 ~ 2）                                                |
+| stopbits | int  | 停止位（1 ~ 2）                                              |
 | flowctl  | int  | 硬件控制流（0 – FC_NONE， 1 – FC_HW）                        |
 
 
@@ -10238,7 +10235,7 @@ GPS模块定位可见卫星数量
 
 - **返回值**
 
-定位方位角，范围：0 ~ 359，以真北为参考平面。
+定位方位角，范围：0 ~ 359，以正北为参考平面。
 
 
 
