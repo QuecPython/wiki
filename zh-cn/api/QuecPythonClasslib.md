@@ -126,6 +126,41 @@ myprint()
 
 
 
+##### 配置用户DNS
+
+> **dataCall.setDnsserver(profileIdx, sim_id, priDns, secDns)**
+
+用户自定义DNS服务器信息配置接口，用户调用该接口后，可以将默认基站分配的DNS服务器改为自定义设置的服务器，可通过获取拨号信息查询当前使用的DNS服务器。
+
+* 参数
+
+| 参数       | 参数类型 | 参数说明                                                     |
+| ---------- | -------- | ------------------------------------------------------------ |
+| profileIdx | int      | PDP索引，ASR平台范围1-8，展锐平台范围1-7，一般设置为1，设置其他值可能需要专用apn与密码才能设置成功 |
+| sim_id     | int      | simid, 范围：0 or 1 （默认为0）                              |
+| priDns     | string   | 需要设置的自定义DNS服务器                                    |
+| secDns     | string   | 需要设置的自定义DNS服务器                                    |
+
+* 返回值
+
+成功返回整型值0，失败返回整型值-1。
+
+* 注意
+
+  当前仅EC600S/EC600N/EC800N/EC200U/EC600U平台支持该功能。
+
+  更改DNS服务器后，域名解析时，将同步使用设置的DNS服务器。
+
+* 示例
+
+```python
+>>> import dataCall
+>>> dataCall.setDnsserver(1, 0, "8.8.8.8", "114.114.114.114")
+0
+```
+
+
+
 ##### 获取用户apn
 
 > **dataCall.getApn(simid, profileIdx)**
