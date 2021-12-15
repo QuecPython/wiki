@@ -10,7 +10,7 @@
 
 Python是解释性语言。Python解释器同一时间只能运行一个程序的一条语句。标准的交互Python解释器可以在命令行中通过键入`python`命令打开：
 
-```text
+```python
 $ python
 Python 3.6.0 | packaged by conda-forge | (default, Jan 13 2017, 23:17:12)
 [GCC 4.8.2 20140120 (Red Hat 4.8.2-15)] on linux
@@ -37,7 +37,7 @@ Hello world
 
 一些Python程序员总是这样执行Python代码的，从事数据分析和科学计算的人却会使用IPython，一个强化的Python解释器，或Jupyter notebooks，一个网页代码笔记本，它原先是IPython的一个子项目。当你使用`%run`命令，IPython会同样执行指定文件中的代码，结束之后，还可以与结果交互：
 
-```text
+```python
 $ ipython
 Python 3.6.0 | packaged by conda-forge | (default, Jan 13 2017, 23:17:12)
 Type "copyright", "credits" or "license" for more information.
@@ -199,7 +199,7 @@ Out[15]: str
 
 变量是在特殊命名空间中的对象的名字，类型信息保存在对象自身中。一些人可能会说Python不是“类型化语言”。这是不正确的，看下面的例子：
 
-```text
+```python
 In [16]: '5' + 5
 ---------------------------------------------------------------------------
 TypeError                                 Traceback (most recent call last)
@@ -210,7 +210,7 @@ TypeError: must be str, not int
 
 在某些语言中，例如Visual Basic，字符串‘5’可能被默许转换（或投射）为整数，因此会产生10。但在其它语言中，例如JavaScript，整数5会被投射成字符串，结果是联结字符串‘55’。在这个方面，Python被认为是强类型化语言，意味着每个对象都有明确的类型（或类），默许转换只会发生在特定的情况下，例如：
 
-```text
+```python
 In [17]: a = 4.5
 
 In [18]: b = 2
@@ -225,7 +225,7 @@ Out[20]: 2.25
 
 知道对象的类型很重要，最好能让函数可以处理多种类型的输入。你可以用`isinstance`函数检查对象是某个类型的实例：
 
-```text
+```python
 In [21]: a = 5
 
 In [22]: isinstance(a, int)
@@ -234,7 +234,7 @@ Out[22]: True
 
 `isinstance`可以用类型元组，检查对象的类型是否在元组中：
 
-```text
+```python
 In [23]: a = 5; b = 4.5
 
 In [24]: isinstance(a, (int, float))
@@ -248,7 +248,7 @@ Out[25]: True
 
 Python的对象通常都有属性（其它存储在对象内部的Python对象）和方法（对象的附属函数可以访问对象的内部数据）。可以用`obj.attribute_name`访问属性和方法：
 
-```text
+```python
 In [1]: a = 'foo'
 
 In [2]: a.<Press Tab>
@@ -264,7 +264,7 @@ a.find        a.istitle     a.rfind       a.startswith
 
 也可以用`getattr`函数，通过名字访问属性和方法：
 
-```text
+```python
 In [27]: getattr(a, 'split')
 Out[27]: <function str.split>
 ```
@@ -286,7 +286,7 @@ def isiterable(obj):
 
 这个函数会返回字符串以及大多数Python集合类型为`True`：
 
-```text
+```python
 In [29]: isiterable('a string')
 Out[29]: True
 

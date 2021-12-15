@@ -10,7 +10,7 @@ Python Fundamentals
 
 Python is an interpretive language. The Python interpreter can only run one statement of a program at a time. A standard interactive Python interpreter can be opened on the command line by typing the ` python ` command:
 
-```text
+```python
 $ python
 Python 3.6.0 | packaged by conda-forge | (default, Jan 13 2017, 23:17:12)
 [GCC 4.8.2 20140120 (Red Hat 4.8.2-15)] on linux
@@ -37,7 +37,7 @@ Hello world
 
 While some Python programmers always execute Python code this way, data analysts and scientific testers use IPython, an enhanced Python interpreter, or Jupyter Notebooks, a web code notebooks originally a subproject of IPython. When you execute the `%run` command, IPython will also execute the code in the specified file, and then interact with the results:
 
-```text
+```python
 $ ipython
 Python 3.6.0 | packaged by conda-forge | (default, Jan 13 2017, 23:17:12)
 Type "copyright", "credits" or "license" for more information.
@@ -199,7 +199,7 @@ Out[15]: str
 
 A variable is the name of an object in a special namespace, and the type information is stored in the object itself. Some people may say that Python is not a "typed language". This is incorrect. Look at the following example:
 
-```text
+```python
 In [16]: '5' + 5
 ---------------------------------------------------------------------------
 TypeError                                 Traceback (most recent call last)
@@ -210,7 +210,7 @@ TypeError: must be str, not int
 
 In some languages, such as Visual Basic, the string '5' may be implicitly converted (or projected) to an integer, resulting in a 10. But in other languages, such as JavaScript, the integer 5 is projected as a string, resulting in the join string '55'. In this respect, Python is considered a strongly typed language, meaning that every object has an explicit type (or class), and tacit conversion only occurs in certain situations, such as:
 
-```text
+```python
 In [17]: a = 4.5
 
 In [18]: b = 2
@@ -225,7 +225,7 @@ Out[20]: 2.25
 
 It is important to know the type of object, and it is best to make the function handle multiple types of input. You can use the ` isinstance ` function to check that an object is an instance of a certain type:
 
-```text
+```python
 In [21]: a = 5
 
 In [22]: isinstance(a, int)
@@ -234,7 +234,7 @@ Out[22]: True
 
 ` isinstance ` can use a type tuple to check that the type of an object is in the tuple:
 
-```text
+```python
 In [23]: a = 5; b = 4.5
 
 In [24]: isinstance(a, (int, float))
@@ -248,7 +248,7 @@ Out[25]: True
 
 Python objects usually have attributes (other Python objects stored inside the object) and methods (the object's accessory functions can access the object's internal data). You can access attributes and methods with ` obj.attribute_name `:
 
-```text
+```python
 In [1]: a = 'foo'
 
 In [2]: a.<Press Tab>
@@ -264,7 +264,7 @@ a.find        a.istitle     a.rfind       a.startswith
 
 You can also use `getattr` function to access attributes and methods by names.
 
-```text
+```python
 In [27]: getattr(a, 'split')
 Out[27]: <function str.split>
 ```
@@ -286,7 +286,7 @@ def isiterable(obj):
 
 This function returns a string and most Python collections are of type ` True `:
 
-```text
+```python
 In [29]: isiterable('a string')
 Out[29]: True
 
