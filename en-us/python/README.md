@@ -2332,7 +2332,7 @@ S ['Steven']
 
 Table 3-2 lists some itertools functions that I often use. It is recommended to refer to Python official documents for further study.
 
-![Table 3-2 Some Useful Itertools Function](E:\QuecPython\demo_qpy\docs\python\images\1246.jpg)
+![Table 3-2 Some Useful Itertools Function](images\1246.jpg)
 
 ### Error and Exception Handling
 Handling Python errors and exceptions gracefully is an important part of building robust programs. In data analysis, many functions are only used for partial input. For example, Python's float function converts a string to a floating-point number, but there is a ` ValueError ` error when the input is incorrect:
@@ -2531,7 +2531,7 @@ This can automatically close the file when exiting the code block.
 
 If you type **F = open (path, 'W')**, a new file will be created in *examples/segismundo.txt*, overwriting any original data at that location. There is also an x file schema that can create writable files, but cannot if the file path exists. Table 3-3 lists all the read/write modes.
 
-![Table 3-3 File Modes of Python](E:\QuecPython\demo_qpy\docs\python\images\1247.jpg)
+![Table 3-3 File Modes of Python](images\1247.jpg)
 
 For readable files, some common methods are **read**, **seek** and **tell**. **Read** returns characters from the file. The content of the character is determined by the encoding of the file (such as UTF-8). If it is opened in binary mode, it is the original byte:
 
@@ -2609,7 +2609,7 @@ Out[227]:
 
 Table 3-4 lists some of the most commonly used file methods.
 
-![Table 3-4 Important File Methods or Attributes of Python](E:\QuecPython\demo_qpy\docs\python\images\1248.jpg)
+![Table 3-4 Important File Methods or Attributes of Python](images\1248.jpg)
 
 ### Bytes and Unicode of the file
 The default operation for Python files is "text mode," which means you need to process Python strings (i.e. Unicode). It is opposite to "binary mode", and file mode is added with a b. Let's look at the file in the previous section (UTF-8 encoded with non-ASCII characters):
