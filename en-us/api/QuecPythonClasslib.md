@@ -127,6 +127,44 @@ After calling this interface, the user_apn.json will be created in the user part
 
 
 
+##### get APN Information
+
+> **dataCall.getApn(simid, profileIdx)**
+
+get APN Information(Variable parameter function)
+By default, there is at least one parameter(simid) and a maximum of two parameters(simid,pid);
+When there is only one parameter simID, the APN loaded by default is obtained; when there are two parameters, the APN of the corresponding PID is obtained  
+
+* Parameter
+
+| Parameter  | Type | Description                                                     |
+| ---------- | -------- | ------------------------------------------------------------ |
+| simid      | int      | simid,range：0/1|
+| profileIdx | int      | PDP context index. Range for ASR: 1-8,range for 8910:1-7|
+
+* Return Value
+
+APN  Successful execution.
+
+-1  Failed execution.
+
+* NOTE
+
+The 8910 and ASR platform support this method.
+
+* Example
+
+```python
+>>> import dataCall
+>>> dataCall.getApn(0)
+'cmnet'
+
+>>> dataCall.getApn(0,2)
+'hhhnet'
+```
+
+
+
 ##### Register Callback Function
 
 > **dataCall.setCallback(usrFun)**
@@ -989,6 +1027,61 @@ NA
 
 
 
+
+##### enable automatic recording api
+
+> **voiceCall.setAutoRecord(enable, record_type, record_mode, filename)**
+
+enable automatic recording api.(The automatic recording function is disabled by default)
+
+note：The non-Volte version does not have this interface
+
+* Parameter
+
+| Parameter    | Type     | Description                                              |
+| --------     | -------- | -------------------------------------------------------- |
+| enable       | int      | enable switch.        range:【0/1】:  0：Disable the automatic recording function 1：enable the automatic recording function     |
+| record_type  | int      | Recording File Type.  range:【0/1】:  0：AMR  1:WAV                |
+| record_mode  | int      | mode.                 range:【0/1/2】:0：RX   1:TX    2:MIX                |
+| filename     | string   | file name.                |
+
+* Return Value
+
+0 : Successful execution.
+-1: Failed execution.
+"NOT SUPPORT": The interface is not supported.
+
+* Example
+
+```python
+>>> voiceCall.setAutoRecord(1,0,2,'U:/test.amr')
+0
+```
+
+
+
+##### Start the recording
+
+> **voiceCall.startRecord(record_type, record_mode, filename)**
+
+Start the recording api.
+
+note：The non-Volte version does not have this interface
+
+* Parameter
+
+| Parameter    | Type     | Description                                           |
+| --------     | -------- | ----------------------------------------------------- |
+| record_type  | int      | Recording File Type.  range:【0/1】;   0:AMR  1:WAV                |
+| record_mode  | int      | mode                  range:【0/1/2】; 0:RX   1:TX    2:MIX                |
+| filename     | string   | file name                |
+
+* Return Value
+
+0 : Successful execution.
+-1: Failed execution.
+"NOT SUPPORT": The interface is not supported.
+
 ##### switch voice channel
 
 > **voiceCall.setChannel(device)**
@@ -1007,14 +1100,116 @@ Set the voice output channel during a call. The default channel is channel 0.
 
 -1  Failed execution.
 
+
 * Example
 
 ```python
->>> voiceCall.setChannel(2) # Switch to the speaker channel
+>>> voiceCall.startRecord(0,2,'U:/test.amr')
 0
 ```
 
 
+
+
+##### End Current Recording
+
+> **voiceCall.stopRecord()**
+
+End Current Recording
+
+note：The non-Volte version does not have this interface
+
+* Parameter
+
+NA
+
+* Return Value
+
+0 : Successful execution.
+-1: Failed execution.
+"NOT SUPPORT": The interface is not supported.
+
+* Example
+
+```python
+>>> voiceCall.stopRecord()
+0
+```
+
+
+
+##### Start the recording(stream)
+
+> **voiceCall.startRecordStream(record_type, record_mode, record_cb)**
+
+Start the recording(stream)
+
+note：The non-Volte version does not have this interface
+
+* Parameter
+
+| Parameter    | Type     | Description                                              |
+| --------     | -------- | ----------------------------------------------------- |
+| record_type  | int      | Recording File Type.  range:【0/1】;   0:AMR  1:WAV                |
+| record_mode  | int      | mode                  range:【0/1/2】; 0:RX   1:TX    2:MIX               |
+| record_cb    | function | callback function                |
+
+* Return Value
+
+0 : Successful execution.
+-1: Failed execution.
+"NOT SUPPORT": The interface is not supported.
+
+* Example
+
+*The return value of the callback function is defined as follows
+```
+args[0]:stream data
+args[1]:stream data len
+args[2]:states
+
+states values：
+typedef enum
+{
+	HELIOS_VC_AUD_REC_ERROR = -1,
+	HELIOS_VC_AUD_REC_START = 0,
+	HELIOS_VC_AUD_REC_DATA,
+	HELIOS_VC_AUD_REC_PAUSE,
+	HELIOS_VC_AUD_REC_FINISHED,
+	HELIOS_VC_AUD_REC_DISK_FULL,
+}HELIOS_VC_AUD_REC_STATE;
+```
+
+```python
+>>> import voiceCall
+>>> import audio
+
+>>> f=open('usr/mia.amr','w')
+
+>>> def cb(para):
+...     if(para[2] == 1):
+...         read_buf = bytearray(para[1])
+...         voiceCall.readRecordStream(read_buf,para[1])
+...         f.write(read_buf,para[1])
+...         del read_buf
+...     elif(para[2] == 3):
+...         f.close()
+...         
+...         
+... 
+>>> voiceCall.callStart('13855169092')
+0
+>>> voiceCall.startRecordStream(0,2,cb)
+0
+// Hang up the phone here (MO/MT hanging up can be done)
+>>> uos.listdir('usr')
+['system_config.json', 'mia.amr']
+>>> aud=audio.Audio(0)
+>>> aud.setVolume(11)
+0
+>>> aud.play(2,1,'U:/mia.amr')
+0
+```
 
 ##### Get Volume
 
@@ -1049,6 +1244,7 @@ Set the volume of the voice.
   0  Successful execution.
 
   -1  Failed execution.
+
 
 
 
@@ -2003,6 +2199,31 @@ If the execution is failed, -1 is returned. If the execution is successful, an a
 
 
 
+##### Obtain the ID of the Serving Cell
+
+> **net.getServingCi()**
+
+Obtain the ID of the Serving Cell.
+
+* Parameter
+
+NA
+
+* Return Value
+
+Serving cell ID : Successful execution.
+
+-1: Failed execution.
+
+* Example
+
+```python
+>>> net.getServingCi()
+94938399
+```
+
+
+
 ##### Obtain the MNC of the Neighbor Cell
 
 > **net.getMnc()**
@@ -2022,6 +2243,31 @@ If the execution is failed, -1 is returned. If the execution is successful, an a
 ```python
 >>> net.getMnc()
 [0, 0]
+```
+
+
+
+##### Obtain the MNC of the Serving Cell
+
+> **net.getServingMnc()**
+
+Obtain the MNC of the Serving Cell.
+
+* Parameter
+
+NA
+
+* Return Value
+
+Serving cell MNC : Successful execution.
+
+-1: Failed execution.
+
+* Example
+
+```python
+>>> net.getServingMnc()
+1
 ```
 
 
@@ -2051,6 +2297,33 @@ Note : For modules of the EC100Y/EC600S/EC600N series, the value is expressed in
 
 
 
+##### Obtain the MCC of the Serving Cell
+
+> **net.getServingMcc()**
+
+Obtain the MCC of the Serving Cell.
+
+* Parameter
+
+NA
+
+* Return Value
+
+Serving cell MCC : Successful execution.
+
+-1: Failed execution.
+
+Note : For modules of the EC100Y/EC600S/EC600N series, the value is expressed in hexadecimal. For example, the decimal number 1120 in the following example is 0x460, indicating the mobile device country code 460. For modules of other models, the value is directly expressed in decimal, such as the mobile device country code 460.That's 460 in decimal notation.
+
+* Example
+
+```python
+>>> net.getServingMcc()
+1120
+```
+
+
+
 ##### Obtain the LAC of the Neighbor Cell
 
 > **net.getLac()**
@@ -2070,6 +2343,31 @@ If the execution is failed, -1 is returned. If the execution is successful, an a
 ```python
 >>> net.getLac()
 [21771, 0]
+```
+
+
+
+##### Obtain the LAC of the Serving Cell
+
+> **net.getServingLac()**
+
+Obtain the LAC of the Serving Cell.
+
+* Parameter
+
+NA
+
+* Return Value
+
+Serving cell LAC : Successful execution.
+
+-1: Failed execution.
+
+* Example
+
+```python
+>>> net.getServingLac()
+56848
 ```
 
 
@@ -3654,6 +3952,34 @@ record_test.gain(4,12)
 
 
 
+###### Switch amr recording DTX function
+
+Currently only 600N/800N platforms support this function.
+
+> **record.amrEncDtx_enable(on_off)**
+
+Switch amr recording DTX function
+
+- Parameter
+
+| Parameter | Parameter Type | Description                                                  |
+| --------- | -------------- | ------------------------------------------------------------ |
+| on_off    | int            | 1: open DTX <br>0: close DTX   <br>No parameters：Get current configuration |
+
+- Return Value
+
+  No parameters：Get current configuration
+
+  with parameters：If the parameter is correct, there is no return, if the parameter is wrong, an exception will be thrown.
+
+- Example
+
+```python
+record_test.amrEncDtx_enable(1)
+```
+
+
+
 ###### Read the List of Recording Files
 
 > **record.list_file()**
@@ -4099,7 +4425,7 @@ It reads the voltage value of the specified channel. Unit: mV.
 
 | Parameter | Type | Description                                                  |
 | --------- | ---- | ------------------------------------------------------------ |
-| ADCn      | int  | ADC Channel<br/>The corresponding pins for EC100Y-CN module are as follows:<br/>ADC0 – Pin No. 39<br/>ADC1 – Pin No. 81<br/>The corresponding pins for EC600S-CN/EC600N_CN modules are as follows<br/>ADC0 – Pin No. 19<br/>The corresponding pins for EC600U series module are as follows<br />ADC0 – Pin No. 19<br/>ADC1 – Pin No. 20<br />ADC2 – Pin No. 113<br />ADC3 – Pin No. 114<br />The corresponding pins for EC200U series module are as follows<br />ADC0 – Pin No. 45<br/>ADC1 – Pin No. 44<br />ADC2 – Pin No.43<br /> |
+| ADCn      | int  | ADC Channel<br/>The corresponding pins for EC100Y-CN module are as follows:<br/>ADC0 – Pin No. 39<br/>ADC1 – Pin No. 81<br/>The corresponding pins for EC600S-CN/EC600N_CN modules are as follows<br/>ADC0 – Pin No. 19<br/>The corresponding pins for EC800N/BC25PA series module are as follows<br />ADC0 – Pin No. 9<br/>The corresponding pins for EC600U series module are as follows<br />ADC0 – Pin No. 19<br/>ADC1 – Pin No. 20<br />ADC2 – Pin No. 113<br />ADC3 – Pin No. 114<br />The corresponding pins for EC200U series module are as follows<br />ADC0 – Pin No. 45<br/>ADC1 – Pin No. 44<br />ADC2 – Pin No.43<br /> |
 
 * Return Value
 
@@ -5832,8 +6158,123 @@ if __name__ == '__main__':
     # wdt.stop()
 
 ```
+##### KeyPad
+
+Module function: provide matrix keyboard interface and support platform ec600scn_ LB/EC800N_ CN_ LA/EC600NCNLC
+
+###### Create keypad object
+
+> **keypad=machine.KeyPad()**
+>
+> ```python
+> >>>import machine
+> >>>keypad=machine.KeyPad()
+> ```
+>
+> 
+
+###### Initialize keypad
+
+> **keypad.init()**
+
+Initialize keypad settings.
+
+* Parameters
+
+nothing
+
+Return value
+
+0 is returned for success and - 1 is returned for failure.
+
+###### Set callback function
+
+> **keypad.set_ callback(usrFun)**
+
+After the key is connected to the module, press and release the key to trigger the callback function setting.
+
+* Parameters
+
+| Parameter   | parameter type | parameter description                                   |
+| ------ | -------- | ------------------------------------------ |
+| usrFun | function | callback function. This function will be triggered when the external keyboard key is pressed and placed |
 
 
+Note: the usrfun parameter is list.
+
+List contains five parameters. It has the following meanings:
+
+list[0] - 90 means press and non-90 means lift
+
+list[1] - row
+
+list[2] - col
+
+List [3] - reserved, 0 by default, not used for the time being
+
+List [4] - the bottom layer outputs the key value, which is generally not used.
+
+* Return value
+
+0
+
+###### Set pin reuse
+
+> **keypad.setMuliKeyen(enbale)**
+
+* Parameters
+
+| Parameter   | parameter type | parameter description                            |
+| ------ | -------- | ----------------------------------- |
+| Enbale | int      | 1-enable multi-function keys, 0-ignore multi-function keys |
+
+Note: only ec600ncnlc platform needs to call this function.
+
+* Return value
+
+0
+
+###### Uninitialization
+
+> **keypad.deinit()**
+
+Release the initialized resource and callback function settings.
+
+* Parameters
+
+nothing
+
+* Return value
+
+0 is returned for success and - 1 is returned for failure.
+
+###### Use example
+```python
+import machine
+import utime
+is_loop = 1
+keypad=machine.KeyPad()  
+keypad.init()
+def userfun(l_list):
+    global is_loop 
+    if  l_list[0] != 90 and l_list[1] == 4 and l_list[2] == 4 :
+        is_loop = 0
+        print('will exit')
+    print(l_list)
+    
+keypad.setMuliKeyen(1)
+keypad.set_callback(userfun)
+loop_num = 0
+
+while is_loop == 1 and loop_num < 10:
+    utime.sleep(5)
+    loop_num = loop_num +1
+    print(" running..... ",is_loop,loop_num)
+
+keypad.setMuliKeyen(0)
+keypad.deinit()
+print('exit!')
+```
 
 #### qrcode- QR Code Display 
 
@@ -9667,9 +10108,9 @@ Failed - not 0
 
 | Parameter | Type   | Description                                                  |
 | --------- | ------ | ------------------------------------------------------------ |
-| data_len  | int    | Expected Send data length (note that this parameter is adjusted according to the actual length of data, and the minimum value is taken according to the comparison between the capacity of data variable and data_len) |
+| data_len  | int    | Expected Send data length (note that this parameter is adjusted according to the actual length of data, and the minimum value is taken according to the comparison between the capacity of data variable and data_len),Non blocking|
 | data      | string | Data to be sent,The maximum supported data length is 1024 bytes                                   |
-| type      | int    | Sending method: 0, 1 and 2 do not need response confirmation, and 100, 101 and 102 need response confirmation. Only 0, 1 and 2 sending methods are supported temporarily. |
+| type      | int    | Indicates that the core network releases the RRC connection with the module: 0 - no indication. 1 - indicates that no further uplink or downlink data is expected after the packet uplink data, and the core network can release it immediately. 2 - indicates that a single downlink packet with a corresponding reply is expected in the uplink data of the packet, and the core network will release it immediately after distribution. |
 
 - Note
 
@@ -9786,9 +10227,9 @@ Failed - not 0
 
 | Parameter | Type   | Description                                                  |
 | --------- | ------ | ------------------------------------------------------------ |
-| data_len  | int    | Expected Send data length (note that this parameter is adjusted according to the actual length of data, and the minimum value is taken according to the comparison between the capacity of data variable and data_len) |
+| data_len  | int    | Expected Send data length (note that this parameter is adjusted according to the actual length of data, and the minimum value is taken according to the comparison between the capacity of data variable and data_len),Non blocking|
 | data      | string | Data to be sent,The maximum supported data length is 1024 bytes                                            |
-| type      | int    | Sending method: 0, 1 and 2 do not need response confirmation, and 100, 101 and 102 need response confirmation. Only 0, 1 and 2 sending methods are supported temporarily. |
+| type      | int    | Indicates that the core network releases the RRC connection with the module: 0 - no indication. 1 - indicates that no further uplink or downlink data is expected after the packet uplink data, and the core network can release it immediately. 2 - indicates that a single downlink packet with a corresponding reply is expected in the uplink data of the packet, and the core network will release it immediately after distribution. |
 
 - Note
 
@@ -9822,15 +10263,174 @@ Success -True
 Failed -False
 
 - Example
-
+Sample model[Download address](https://python.quectel.com/wiki/#/static-file/Ctwing_Object_model/aep_example.json)
 ```python
->>> aep.close()
-True
+from nb import AEP
+import utime
+import ustruct
+
+#以下5个函数需要判断如果机器是大端格式数据就不转
+def aep_htons(source):
+    return source & 0xffff
+def aep_htoni(source):
+    return source & 0xffffffff
+
+
+def aep_htonl(source):
+    return source & 0xffffffffffffffff
+
+def aep_htonf(source):
+    return ustruct.unpack('<I', ustruct.pack('<f', source))[0]
+
+def aep_htond(source):
+    return ustruct.unpack('Q', ustruct.pack('d', source))[0]
+
+def HexToStr(source, t=None):
+    if t:
+        if not isinstance(t, int):
+            raise Exception("{} is not int type".format(t))
+        fmt = "%0" + str(t*2)+"x"
+        return fmt%source
+    else:
+        if not source >> 8:
+            return "%02x" % source
+        elif not source >> 16:
+            return "%04x" % source
+        elif not source >> 32:
+            return "%08x" % source
+        else:
+            return "%016x" % source
+
+
+def StrToHex(source):
+    return int(source)
+
+#对照物模型定义，打包解包根据相应的服务id中的属性进行解析
+serid_dict={'阀门开关控制':8001,
+            '故障上报':1001,
+            '设备信息上报':3,
+            '阀门开关控制响应':9001,
+            '信号数据上报':2,
+            '电池低电压告警':1002,
+            '业务数据上报':1
+           }
+dict_cmd={'数据上报':0x02,
+          '事件上报':0x07,
+          '无线参数上报':0x03,
+          '下行指令固定':0x06,
+          '指令响应':0x86
+         }
+send_type={
+	'RAI_NONE':0,
+	'RAI_1':1,
+	'RAI_2':1
+}
+servcei_info={
+    'ip':"221.229.214.202",
+    'port':"5683"
+}
+
+def aep_pack_cmdtype02(service_id,data_in):
+    data=HexToStr(dict_cmd['数据上报'],1)
+    data+=HexToStr(service_id,2)    			#serviceid转成字符串
+    if service_id == 1:
+        data+=HexToStr(4,2)	                    #发送数据8.14，float类型四个字节长度,此处只举例一个情况
+        data+=HexToStr(aep_htonf(data_in),4)    #float数据转成字符串
+    else:
+        print('not support')                    #
+    return data
+ 
+def aep_pack(cmdtype,service_id,data):
+    if cmdtype == dict_cmd['数据上报']:                            #数据上报-0x02，此处只举例一个情况
+        return aep_pack_cmdtype02(service_id,data)
+    else:
+        print('not support')
+
+def aep_unpack_cmdtype06(data_in):
+    print('-------------------unpack recv data before  ------------------')
+    print(data_in)
+    print(data_in[0:4])
+    print(data_in[4:8])
+    print(data_in[8:12])
+    print(data_in[12:])
+    print('-------------------unpack recv data before------------------')
+    service_id  = int(str(data_in.decode()[0:4]),16)
+    service_id  = aep_htons(service_id)
+    task_id     = data_in[4:8]
+    payload_len = int(str(data_in.decode()[8:12]),16)
+    payload_len = aep_htons(payload_len)
+    value = 0
+    if service_id == serid_dict['阀门开关控制']:                 #物模型下发属性id=15,两个16进制字节,枚举型,0或者1
+       value = int(str(data_in.decode()[12:14]),16)
+       value = aep_htons(value)
+    if service_id == serid_dict['故障上报']:
+        pass
+    if service_id == serid_dict['设备信息上报']:
+        pass
+    if service_id == serid_dict['阀门开关控制响应']:
+        pass
+    if service_id == serid_dict['信号数据上报']:
+        pass
+    print('-------------------unpack recv data after------------------')
+    print("service_id ",service_id)
+    print("task_id ",task_id)
+    print("payload_len ",payload_len)
+    print("payload ",value)
+    print('-------------------unpack recv data after------------------')
+    
+def aep_unpack(data_in):
+    cmdtype=StrToHex(str(data_in.decode()[:2]))
+    data=data_in[2:]
+    if cmdtype == dict_cmd['下行指令固定']:
+        aep_unpack_cmdtype06(data)
+    else:
+        print('not support')
+
+aep=AEP(servcei_info['ip'],servcei_info['port'])
+
+def recv():
+    data=bytearray(20)	
+    ret=aep.recv(18,data)
+    if ret == -1:
+        return
+    aep_unpack(data)    
+    return ret
+
+def connect():
+    ret = aep.connect()
+    print('connect ',ret)
+
+def send():
+    water_flow_value=8.14
+    data=aep_pack(dict_cmd['数据上报'],serid_dict['业务数据上报'],water_flow_value)
+    print('send: ',data)
+    print('len: ',len(data))
+    data_len=len(data)
+    ret = aep.send(data_len,data,send_type['RAI_NONE'])
+    print('send ',ret)
+
+def close():
+    ret = aep.close()
+    print('close ',ret)
+    
+loop_num = 0
+
+def do_task():
+    connect()
+    send()
+    global loop_num
+    while loop_num < 10:
+        loop_num=loop_num+1
+        utime.sleep(3)
+        ret = recv()
+        if ret == 0:
+            break
+    close()
+
+if __name__ == '__main__':
+    do_task()
+
 ```
-
-##### 
-
-###### 
 
 
 

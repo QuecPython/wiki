@@ -9,10 +9,15 @@
 	<meta name="keywords" content="doc,docs,documentation,gitbook,creator,generator,github,jekyll,github-pages">
 	<meta name="description" content="A magical documentation generator.">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
-	<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify/lib/themes/vue.css" title="vue">
-	<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify/lib/themes/dark.css" title="dark" disabled>
-	<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify/lib/themes/buble.css" title="buble" disabled>
-	<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify/lib/themes/pure.css" title="pure" disabled>
+	<!-- <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/docsify/4.12.1/themes/vue.css" title="vue"> -->
+	<!-- <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/docsify/4.12.1/themes/dark.css" title="dark" disabled> -->
+	<!-- <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/docsify/4.12.1/themes/buble.css" title="buble" disabled> -->
+	<!-- <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/docsify/4.12.1/themes/pure.css" title="pure" disabled> -->
+	
+	<link rel="stylesheet" href="static/css/vue.css" title="vue">
+	<!-- <link rel="stylesheet" href="static/css/dark.css" title="vue"> -->
+	<!-- <link rel="stylesheet" href="static/css/buble.css" title="vue"> -->
+	<!-- <link rel="stylesheet" href="static/css/pure.css" title="vue"> -->
 	<link rel="stylesheet" href="static/css/sidebar.min.css" />
 	<link rel="stylesheet" href="static/css/main.css" />
 	<style>
@@ -70,15 +75,35 @@
       }
     }
   </script>
-  <script src="//cdn.jsdelivr.net/npm/docsify/lib/docsify.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/search.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/prismjs/components/prism-bash.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/prismjs/components/prism-markdown.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/prismjs/components/prism-nginx.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/zoom-image.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/docsify-copy-code"></script>
-  <script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-python.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/docsify-sidebar-collapse/dist/docsify-sidebar-collapse.min.js"></script>
+  <!-- <script src="//cdnjs.cloudflare.com/ajax/libs/docsify/4.12.1/docsify.min.js"></script> -->
+  <!-- <script src="//cdnjs.cloudflare.com/ajax/libs/docsify/4.12.1/plugins/search.min.js"></script> -->
+  <!-- <script src="//cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/prism.min.js"></script> -->
+  <!-- <script src="//cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/components/prism-markdown.min.js"></script> -->
+  <!-- <script src="//cdnjs.cloudflare.com/ajax/libs/docsify/4.12.1/plugins/zoom-image.min.js"></script> -->
+  <!-- <script src="//cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/components/prism-nginx.min.js"></script> -->
+  <!-- <script src="//cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/components/prism-python.min.js"></script> -->
+  
+  <script src="static/js/docsify.min.js"></script>
+  <script src="static/js/search.min.js"></script>
+  <!-- <script src="static/js/prism.js"></script> -->
+  <script src="static/js/prism-markdown.min.js"></script>
+  <script src="static/js/zoom-image.min.js"></script>
+  <!-- <script src="static/js/prism-nginx.min.js"></script> -->
+  <script src="static/js/prism-python.min.js"></script>
+  <!-- https://unpkg.com/docsify-copy-code@2.1.1/dist/docsify-copy-code.min.js -->
+  <!-- unpkg.com/prismjs/components/prism-bash.js -->
+  <script src="static/js/docsify-copy-code.min.js"></script>
+  
+  <!-- <script src="//unpkg.com/docsify-scroll-to-top/dist/docsify-scroll-to-top.min.js"></script> -->
+  <script src="static/js/docsify-scroll-to-top.min.js"></script>
+
+	<script src="static/js/countable.min.js"></script>
+	<!-- <script src="//unpkg.com/docsify-count/dist/countable.min.js"></script> -->
+  
+  <!-- <script src="//unpkg.com/docsify-pagination/dist/docsify-pagination.min.js"></script> -->
+  <script src="static/js/docsify-pagination.min.js"></script>
+  <script src="static/js/docsify-sidebar-collapse.min.js"></script>
+  
   <script>
   var _hmt = _hmt || [];
 (function() {
