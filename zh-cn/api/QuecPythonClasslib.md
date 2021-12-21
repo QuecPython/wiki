@@ -3811,6 +3811,144 @@ aud.play(1, 0, 'U:/test.mp3')
 
 
 
+###### 音频流播放
+
+> aud.playStream(format, buf)
+
+音频流播放，支持mp3、amr和wav格式的音频流播放。
+
+* 参数
+
+| 参数   | 参数类型 | 参数说明                                                     |
+| ------ | -------- | ------------------------------------------------------------ |
+| format | int      | 音频流格式<br/>1- PCM（暂不支持）<br/>2 - WAVPCM<br/>3 - MP3<br/>4 - AMRNB |
+| buf    | buf      | 音频流内容                                                   |
+
+* 返回值
+
+  播放成功返回整型0；
+
+  播放失败返回整型-1；
+
+  
+
+###### 停止音频流播放
+
+> audio_test.stopPlayStream()
+
+停止音频流播放
+
+* 参数
+
+  无
+
+* 返回值
+
+  停止成功返回整型0；
+
+  停止失败返回整型-1；
+
+
+- 示例
+
+  ```python
+  import audio
+  import utime
+  
+  audio_test = audio.Audio(0)
+  
+  size = 10*1024 # 保证一次填充的音频数据足够大以便底层连续播放
+  format = 4
+  
+  def play_from_fs():
+      file_size = uos.stat("/usr/test.amr")[6]  # 获取文件总字节数
+      print(file_size)
+      with open("/usr/test.amr", "rb")as f:   
+          while 1:
+              b = f.read(size)   # read
+              if not b:
+                  break
+              audio_test.playStream(format, b)
+              utime.sleep_ms(20)
+          f.close()
+  
+  
+  play_from_fs()
+  utime.sleep_ms(5000) # 等待播放完成
+  audio_test.stopPlayStream() # 停止本次播放以便不影响下次播放
+  ```
+
+
+
+###### Tone音播放
+
+支持平台EC600U/EC200U/EC600N/EC800N
+
+> aud.aud_tone_play(tone, time)
+
+播放tone音，播放一段时间(time)后自动停止播放
+
+* 参数
+
+| 参数 | 参数类型 | 参数说明                                                     |
+| ---- | -------- | ------------------------------------------------------------ |
+| tone | int      | tone类型<br/>0~15- 按键音(0~9、A、B、C、D、#、*)（仅EC600U/EC200U平台支持）<br/>16 - 拨号音，（注：EC600N/EC800N平台为连续的tone音，而EC600U/EC200U平台是播放、停顿交替的tone音）<br/>17 - busy（仅EC600U/EC200U平台支持）<br/>18- radio ack（仅EC600U/EC200U平台支持）<br/>19- call drop（仅EC600U/EC200U平台支持）<br/>20- special information（仅EC600U/EC200U平台支持）<br/>21- call waiting（仅EC600U/EC200U平台支持）<br/>22- ringing（仅EC600U/EC200U平台支持） |
+| time | int      | 播放时长，单位ms<br/>0 - 不停止一直播放，只能调用aud.aud_tone_play_stop()接口才能停止（仅EC600N/EC800N平台支持，EC600U/EC200U平台填0则无动作）<br/>大于0 - 播放时长time ms |
+
+* 返回值
+
+  播放成功返回整型0；
+
+  播放失败返回整型-1；
+
+  
+
+###### 停止Tone音播放
+
+仅EC600N/EC800N平台支持
+
+> aud.aud_tone_play_stop()
+
+主动停止播放tone音
+
+* 参数
+
+  无
+
+* 返回值
+
+  停止成功返回整型0；
+
+  停止失败返回整型-1；
+
+
+
+
+- 示例
+
+```python
+import audio
+import utime
+
+aud = audio.Audio(0)
+
+# EC600U/EC200U平台
+def dial_play_ec600u():
+    aud.aud_tone_play(16, 5000)
+
+# EC600N/EC800N平台
+def dial_play_ec600n():
+    for i in range(0,20):
+        aud.aud_tone_play(16, 1000)
+        utime.sleep(2)
+        aud.aud_tone_play_stop()
+        
+# dial_play_ec600n()
+dial_play_ec600u()
+```
+
+
+
 ##### Record
 
 注意：BC25PA平台不支持此模块。
