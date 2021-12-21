@@ -73,6 +73,12 @@ input{
 	
 }
 
+.markdown-section code.lang-json, .markdown-section pre{
+	background-color: #333 !important;
+	border-radius: 9px;
+	
+}
+
 .markdown-section code.lang-, .markdown-section pre{
 	background-color: #333 !important;
 	border-radius: 9px;
@@ -86,11 +92,16 @@ input{
 	margin-right: 0.2rem;
 }
 
-
+.token.punctuation{
+	color:#B0E0E6;
+}
 .lang-python{
 	color:white	 !important;
 }
 .lang-c{
+	color:white	 !important;
+}
+.lang-json{
 	color:white	 !important;
 }
 .lang-{
