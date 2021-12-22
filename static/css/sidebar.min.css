@@ -1,4 +1,4 @@
-@import"//cdn.jsdelivr.net/npm/docsify-sidebar-collapse/dist/sidebar.min.css";
+@import"../js/jquery.sidebar.min.js";
 /*或者@importurl(style2.css);*/
 .app-sub-sidebar li:before {
     content: "";

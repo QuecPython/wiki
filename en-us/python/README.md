@@ -10,7 +10,7 @@ Python Fundamentals
 
 Python is an interpretive language. The Python interpreter can only run one statement of a program at a time. A standard interactive Python interpreter can be opened on the command line by typing the ` python ` command:
 
-```text
+```python
 $ python
 Python 3.6.0 | packaged by conda-forge | (default, Jan 13 2017, 23:17:12)
 [GCC 4.8.2 20140120 (Red Hat 4.8.2-15)] on linux
@@ -37,7 +37,7 @@ Hello world
 
 While some Python programmers always execute Python code this way, data analysts and scientific testers use IPython, an enhanced Python interpreter, or Jupyter Notebooks, a web code notebooks originally a subproject of IPython. When you execute the `%run` command, IPython will also execute the code in the specified file, and then interact with the results:
 
-```text
+```python
 $ ipython
 Python 3.6.0 | packaged by conda-forge | (default, Jan 13 2017, 23:17:12)
 Type "copyright", "credits" or "license" for more information.
@@ -199,7 +199,7 @@ Out[15]: str
 
 A variable is the name of an object in a special namespace, and the type information is stored in the object itself. Some people may say that Python is not a "typed language". This is incorrect. Look at the following example:
 
-```text
+```python
 In [16]: '5' + 5
 ---------------------------------------------------------------------------
 TypeError                                 Traceback (most recent call last)
@@ -210,7 +210,7 @@ TypeError: must be str, not int
 
 In some languages, such as Visual Basic, the string '5' may be implicitly converted (or projected) to an integer, resulting in a 10. But in other languages, such as JavaScript, the integer 5 is projected as a string, resulting in the join string '55'. In this respect, Python is considered a strongly typed language, meaning that every object has an explicit type (or class), and tacit conversion only occurs in certain situations, such as:
 
-```text
+```python
 In [17]: a = 4.5
 
 In [18]: b = 2
@@ -225,7 +225,7 @@ Out[20]: 2.25
 
 It is important to know the type of object, and it is best to make the function handle multiple types of input. You can use the ` isinstance ` function to check that an object is an instance of a certain type:
 
-```text
+```python
 In [21]: a = 5
 
 In [22]: isinstance(a, int)
@@ -234,7 +234,7 @@ Out[22]: True
 
 ` isinstance ` can use a type tuple to check that the type of an object is in the tuple:
 
-```text
+```python
 In [23]: a = 5; b = 4.5
 
 In [24]: isinstance(a, (int, float))
@@ -248,7 +248,7 @@ Out[25]: True
 
 Python objects usually have attributes (other Python objects stored inside the object) and methods (the object's accessory functions can access the object's internal data). You can access attributes and methods with ` obj.attribute_name `:
 
-```text
+```python
 In [1]: a = 'foo'
 
 In [2]: a.<Press Tab>
@@ -264,7 +264,7 @@ a.find        a.istitle     a.rfind       a.startswith
 
 You can also use `getattr` function to access attributes and methods by names.
 
-```text
+```python
 In [27]: getattr(a, 'split')
 Out[27]: <function str.split>
 ```
@@ -286,7 +286,7 @@ def isiterable(obj):
 
 This function returns a string and most Python collections are of type ` True `:
 
-```text
+```python
 In [29]: isiterable('a string')
 Out[29]: True
 
@@ -2332,7 +2332,7 @@ S ['Steven']
 
 Table 3-2 lists some itertools functions that I often use. It is recommended to refer to Python official documents for further study.
 
-![Table 3-2 Some Useful Itertools Function](E:\QuecPython\demo_qpy\docs\python\images\1246.jpg)
+![Table 3-2 Some Useful Itertools Function](images\1246.jpg)
 
 ### Error and Exception Handling
 Handling Python errors and exceptions gracefully is an important part of building robust programs. In data analysis, many functions are only used for partial input. For example, Python's float function converts a string to a floating-point number, but there is a ` ValueError ` error when the input is incorrect:
@@ -2531,7 +2531,7 @@ This can automatically close the file when exiting the code block.
 
 If you type **F = open (path, 'W')**, a new file will be created in *examples/segismundo.txt*, overwriting any original data at that location. There is also an x file schema that can create writable files, but cannot if the file path exists. Table 3-3 lists all the read/write modes.
 
-![Table 3-3 File Modes of Python](E:\QuecPython\demo_qpy\docs\python\images\1247.jpg)
+![Table 3-3 File Modes of Python](images\1247.jpg)
 
 For readable files, some common methods are **read**, **seek** and **tell**. **Read** returns characters from the file. The content of the character is determined by the encoding of the file (such as UTF-8). If it is opened in binary mode, it is the original byte:
 
@@ -2609,7 +2609,7 @@ Out[227]:
 
 Table 3-4 lists some of the most commonly used file methods.
 
-![Table 3-4 Important File Methods or Attributes of Python](E:\QuecPython\demo_qpy\docs\python\images\1248.jpg)
+![Table 3-4 Important File Methods or Attributes of Python](images\1248.jpg)
 
 ### Bytes and Unicode of the file
 The default operation for Python files is "text mode," which means you need to process Python strings (i.e. Unicode). It is opposite to "binary mode", and file mode is added with a b. Let's look at the file in the previous section (UTF-8 encoded with non-ASCII characters):

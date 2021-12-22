@@ -73,6 +73,12 @@ input{
 	
 }
 
+.markdown-section code.lang-json, .markdown-section pre{
+	background-color: #333 !important;
+	border-radius: 9px;
+	
+}
+
 .markdown-section code.lang-, .markdown-section pre{
 	background-color: #333 !important;
 	border-radius: 9px;
@@ -93,6 +99,9 @@ input{
 	color:white	 !important;
 }
 .lang-c{
+	color:white	 !important;
+}
+.lang-json{
 	color:white	 !important;
 }
 .lang-{

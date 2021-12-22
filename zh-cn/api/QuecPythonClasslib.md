@@ -126,6 +126,41 @@ myprint()
 
 
 
+##### 配置用户DNS
+
+> **dataCall.setDnsserver(profileIdx, sim_id, priDns, secDns)**
+
+用户自定义DNS服务器信息配置接口，用户调用该接口后，可以将默认基站分配的DNS服务器改为自定义设置的服务器，可通过获取拨号信息查询当前使用的DNS服务器。
+
+* 参数
+
+| 参数       | 参数类型 | 参数说明                                                     |
+| ---------- | -------- | ------------------------------------------------------------ |
+| profileIdx | int      | PDP索引，ASR平台范围1-8，展锐平台范围1-7，一般设置为1，设置其他值可能需要专用apn与密码才能设置成功 |
+| sim_id     | int      | simid, 范围：0 or 1 （默认为0）                              |
+| priDns     | string   | 需要设置的自定义DNS服务器                                    |
+| secDns     | string   | 需要设置的自定义DNS服务器                                    |
+
+* 返回值
+
+成功返回整型值0，失败返回整型值-1。
+
+* 注意
+
+  当前仅EC600S/EC600N/EC800N/EC200U/EC600U平台支持该功能。
+
+  更改DNS服务器后，域名解析时，将同步使用设置的DNS服务器。
+
+* 示例
+
+```python
+>>> import dataCall
+>>> dataCall.setDnsserver(1, 0, "8.8.8.8", "114.114.114.114")
+0
+```
+
+
+
 ##### 获取用户apn
 
 > **dataCall.getApn(simid, profileIdx)**
@@ -356,7 +391,7 @@ if __name__ == '__main__':
 
 * 返回值
 
-功返回度格式经纬度坐标信息，返回格式：`(longtitude, latitude, accuracy)`，`(0.0, 0.0, 0)`表示未获取到有效坐标信息；
+成功返回经纬度坐标信息，单位度，返回格式：`(longtitude, latitude, accuracy)`，`(0.0, 0.0, 0)`表示未获取到有效坐标信息；
 
 `longtitude` ： 经度
 
@@ -386,6 +421,60 @@ if __name__ == '__main__':
 (117.1138, 31.82279, 550)
 # 上面使用的密钥"xxxxxxxxxxxxxxxx"指代token，具体需要向移远申请
 ```
+
+
+
+#### wifilocator - wifi定位
+
+模块功能：提供WIFI定位接口，获取坐标信息。
+
+注意：当前仅EC600S/EC600N/EC800N/EC200U/EC600U平台支持该功能。
+
+> **wifilocator(token)**
+
+配置wifi定位套件token信息
+
+* 参数
+
+| 参数  | 参数类型 | 参数说明                     |
+| ----- | -------- | ---------------------------- |
+| token | string   | 密钥，16位字符组成，需要申请 |
+
+* 返回值
+
+成功返回WIFI定位对象。
+
+
+
+> **wifilocator.getwifilocator()**
+
+获取坐标信息。
+
+成功返回度格式经纬度坐标信息，返回格式：`(longtitude, latitude, accuracy)`；
+
+`longtitude` ： 经度
+
+`latitude` ：纬度
+
+`accuracy` ：精确度，单位米
+
+失败返回错误码说明如下：
+
+-1 – 当前网络异常，请确认拨号是否正常
+
+-2 – 密钥长度错误，必须为16字节
+
+-3 – 获取坐标出错
+
+* 示例
+
+  ```python
+  >>> from wifilocator import wifilocator
+  >>> wifilocator = wifilocator("xxxxxxxxxxxxxxxx")
+  >>> wifilocator.getwifilocator()
+  (117.1152877807617, 31.82142066955567, 100)
+  # 上面使用的密钥"xxxxxxxxxxxxxxxx"指代token，具体需要向移远申请
+  ```
 
 
 
@@ -997,7 +1086,7 @@ sim.setCallback(cb)
 
 
 
-##### 设置FWmode
+##### 设置控制呼叫转移
 
 > **voiceCall.setFw(reason, fwmode, phonenum)**
 
@@ -1005,11 +1094,11 @@ sim.setCallback(cb)
 
 * 参数
 
-| 参数      | 参数类型 | 参数说明                                              |
-| --------  | -------- | ----------------------------------------------------- |
-| reason    | int      | 呼叫转移的条件/原因:<br/>0 : unconditional<br/>1 : mobile busy<br/>2 : no reply<br/>3 : not reachable<br/>4 : all call forwarding (refer 3GPP TS 22.030)<br/>5 : all conditional call forwarding (refer 3GPP TS 22.030 ) |
-| fwmode    | int      | 对呼叫转移的控制:<br/>0 : 禁用<br/>1 : 启用<br/>2 : 查询状态<br/>3 : 注册<br/>4 : 擦除 |
-| phonenum  | string   | 呼叫转移的目标电话                                    |
+| 参数     | 参数类型 | 参数说明                                                     |
+| -------- | -------- | ------------------------------------------------------------ |
+| reason   | int      | 呼叫转移的条件/原因:<br/>0 : unconditional<br/>1 : mobile busy<br/>2 : no reply<br/>3 : not reachable |
+| fwmode   | int      | 对呼叫转移的控制:<br/>0 : 禁用<br/>1 : 启用<br/>2 : 查询状态<br/>3 : 注册<br/>4 : 擦除 |
+| phonenum | string   | 呼叫转移的目标电话                                           |
 
 * 返回值
 
@@ -1085,7 +1174,7 @@ sim.setCallback(cb)
 
 > **voiceCall.setAutoRecord(enable, record_type, record_mode, filename)**
 
-自动录音使能接口。(默认关闭自动录音)
+自动录音使能接口。(默认关闭自动录音)，自动录音使能需要在通话前设置完毕
 
 注：非volte版本无该接口
 
@@ -1916,13 +2005,13 @@ net模块的设置APN主要使用场景是专网卡设定特定APN才能注网�
 
 失败返回整型值-1，成功返回包含三种网络系统（GSM、UMTS、LTE）的信息的list，如果对应网络系统信息为空，则返回空的List。返回值格式如下：
 
-`([(flag, cid, mcc, mnc, lac, arfcn, bsic, rssi)], [(flag, cid, licd, mcc, mnc, lac, arfcn, bsic, rssi)], [(flag, cid, mcc, mnc, pci, tac, earfcn, rssi),...])`
+`([(flag, cid, mcc, mnc, lac, arfcn, bsic, rssi)], [(flag, cid, licd, mcc, mnc, lac, arfcn, bsic, rssi)], [(flag, cid, mcc, mnc, pci, tac, earfcn, rssi, rsrq),...])`
 
 GSM网络系统返回值说明
 
 | 参数  | 参数意义                                                     |
 | ----- | ------------------------------------------------------------ |
-| flag  | 返回 0 - 2， 0：present，1：inter，2：intra                  |
+| flag  | 返回 0 - 3， 0：present，1：neighbor，2：neighbor_intra 3：neighbor_inter                 |
 | cid   | 返回GSM网络下的cell id信息，0则为空，范围0 ~ 65535           |
 | mcc   | 移动设备国家代码，范围 0 ~ 999<br>注意：EC100Y/EC600S/EC600N系列的模组，该值是用十六进制来表示，比如下面示例中的十进制数1120，用十六进制表示为0x460，表示移动设备国家代码460，其他型号模组，该值直接用十进制表示，比如移动设备国家代码460，就是用十进制的460来表示。 |
 | mnc   | 移动设备网络代码，范围 0 ~ 99                                |
@@ -1935,7 +2024,7 @@ UMTS网络系统返回值说明
 
 | 参数   | 参数意义                                                     |
 | ------ | ------------------------------------------------------------ |
-| flag   | 返回 0 - 2， 0：present，1：inter，2：intra                  |
+| flag   | 返回 0 - 3， 0：present，1：neighbor，2：neighbor_intra 3：neighbor_inter                   |
 | cid    | 返回UMTS网络下的 Cell identity 信息，Cell identity = RNC_ID * 65536 + Cell_ID，Cell identity范围 0x0000000 ~ 0xFFFFFFF（注意这里是28bits）；其中RNC_ID的范围是0 ~ 4095，Cell_ID的范围是0 ~ 65535 |
 | lcid   | URA ID，范围 0 ~ 65535，0表示该信息不存在                    |
 | mcc    | 移动设备国家代码，范围 0 ~ 999                               |
@@ -1949,7 +2038,7 @@ LTE网络系统返回值说明
 
 | 参数   | 参数意义                                                     |
 | ------ | ------------------------------------------------------------ |
-| flag   | 返回 0 - 2， 0：present，1：inter，2：intra                  |
+| flag   | 返回 0 - 3， 0：present，1：neighbor，2：neighbor_intra 3：neighbor_inter                   |
 | cid    | 返回LTE网络下的 Cell identity 信息，Cell identity = RNC_ID * 65536 + Cell_ID，Cell identity范围 0x0000000 ~ 0xFFFFFFF（注意这里是28bits）；其中RNC_ID的范围是0 ~ 4095，Cell_ID的范围是0 ~ 65535 |
 | mcc    | 移动设备国家代码，范围 0 ~ 999                               |
 | mnc    | 移动设备网络代码，范围 0 ~ 99                                |
@@ -1957,12 +2046,14 @@ LTE网络系统返回值说明
 | tac    | 跟踪区域码，0 ~ 65535                                        |
 | earfcn | 无线频道编号，范围 0 ~ 65535                                 |
 | rssi   | 接收的信号强度，在LTE网络下，表示RSRP质量（负值），是根据RSRP测量报告值换算而来，换算关系如下：<br>RSRP质量（负数）= RSRP测量报告值 - 140，单位dBm，范围 -140 ~ -44 dBm |
+| rsrq  |(Reference Signal Receiving Quality):LTE参考信号接收质量(仅ASR平台数据有意义，其余平台默认0)，范围 -20 ~ -3  注：理论上rsrq的范围应该是-19.5 ~ -3，但由于计算方法问题，目前能给出的是-20 ~ -3|
 
 * 示例
 
 ```python
 >>> net.getCellInfo()
-([], [], [(0, 14071232, 1120, 0, 123, 21771, 1300, -69), (3, 0, 0, 0, 65535, 0, 40936, -140), (3, 0, 0, 0, 65535, 0, 3590, -140), (3, 0, 0, 0, 63, 0, 40936, -112)])
+([], [], [(0, 232301375, 1120, 17, 378, 26909, 1850, -66, -8), (3, 110110494, 1120, 17, 10, 26909, 2452, -87, -17), (3, 94542859, 1120, 1, 465, 56848, 1650, -75, -10), 
+(3, 94472037, 1120, 1, 369, 56848, 3745, -84, -20)])
 ```
 
 
@@ -2292,6 +2383,31 @@ LTE list：
 
 
 
+##### 获取服务小区ID
+
+> **net.getServingCi()**
+
+获取服务小区ID。（实时获取）
+
+* 参数
+
+无
+
+* 返回值
+
+成功返回服务小区ID。
+
+失败返回整型值-1。
+
+* 示例
+
+```python
+>>> net.getServingCi()
+94938399
+```
+
+
+
 ##### 获取附近小区的mnc
 
 > **net.getMnc()**
@@ -2313,6 +2429,31 @@ LTE list：
 ```python
 >>> net.getMnc()
 [0, 0]
+```
+
+
+
+##### 获取服务小区的mnc
+
+> **net.getServingMnc()**
+
+获取服务小区的mnc。（实时获取）
+
+* 参数
+
+无
+
+* 返回值
+
+成功返回服务小区mnc。
+
+失败返回整型值-1。
+
+* 示例
+
+```python
+>>> net.getServingMnc()
+1
 ```
 
 
@@ -2344,6 +2485,33 @@ LTE list：
 
 
 
+##### 获取服务小区的mcc
+
+> **net.getServingMcc()**
+
+获取服务小区的mcc。（实时获取）
+
+* 参数
+
+无
+
+* 返回值
+
+成功返回服务小区的mcc。
+
+失败返回整型值-1。
+
+注意：EC100Y/EC600S/EC600N系列的模组，该值是用十六进制来表示，比如下面示例中的十进制数1120，十六进制即0x460，表示移动设备国家代码460，其他型号模组，该值直接用十进制表示，比如移动设备国家代码460，就是用十进制的460来表示。
+
+* 示例
+
+```python
+>>> net.getServingMcc()
+1120
+```
+
+
+
 ##### 获取附近小区的lac
 
 > **net.getLac()**
@@ -2365,6 +2533,31 @@ LTE list：
 ```python
 >>> net.getLac()
 [21771, 0]
+```
+
+
+
+##### 获取服务小区的lac
+
+> **net.getServingLac()**
+
+获取服务小区的Lac。（实时获取）
+
+* 参数
+
+无
+
+* 返回值
+
+成功返回服务小区lac
+
+失败返回整型值-1。
+
+* 示例
+
+```python
+>>> net.getServingLac()
+56848
 ```
 
 
@@ -2914,7 +3107,7 @@ download_list = [{'url': 'http://www.example.com/app.py', 'file_name': '/usr/app
 
 模块功能：音频播放，支持TTS、mp3以及AMR文件播放。
 
-注意：BC25PA平台不支持此模块。
+注意：展锐平台、BC25PA平台不支持此模块。
 
 ##### TTS 
 
@@ -3618,9 +3811,145 @@ aud.play(1, 0, 'U:/test.mp3')
 
 
 
-##### Record
+###### 音频流播放
 
-适配版本：EC100Y(V0009)及以上；EC600S(V0003)及以上。
+> aud.playStream(format, buf)
+
+音频流播放，支持mp3、amr和wav格式的音频流播放。
+
+* 参数
+
+| 参数   | 参数类型 | 参数说明                                                     |
+| ------ | -------- | ------------------------------------------------------------ |
+| format | int      | 音频流格式<br/>1- PCM（暂不支持）<br/>2 - WAVPCM<br/>3 - MP3<br/>4 - AMRNB |
+| buf    | buf      | 音频流内容                                                   |
+
+* 返回值
+
+  播放成功返回整型0；
+
+  播放失败返回整型-1；
+
+  
+
+###### 停止音频流播放
+
+> audio_test.stopPlayStream()
+
+停止音频流播放
+
+* 参数
+
+  无
+
+* 返回值
+
+  停止成功返回整型0；
+
+  停止失败返回整型-1；
+
+
+- 示例
+
+  ```python
+  import audio
+  import utime
+  
+  audio_test = audio.Audio(0)
+  
+  size = 10*1024 # 保证一次填充的音频数据足够大以便底层连续播放
+  format = 4
+  
+  def play_from_fs():
+      file_size = uos.stat("/usr/test.amr")[6]  # 获取文件总字节数
+      print(file_size)
+      with open("/usr/test.amr", "rb")as f:   
+          while 1:
+              b = f.read(size)   # read
+              if not b:
+                  break
+              audio_test.playStream(format, b)
+              utime.sleep_ms(20)
+          f.close()
+  
+  
+  play_from_fs()
+  utime.sleep_ms(5000) # 等待播放完成
+  audio_test.stopPlayStream() # 停止本次播放以便不影响下次播放
+  ```
+
+
+
+###### Tone音播放
+
+支持平台EC600U/EC200U/EC600N/EC800N
+
+> aud.aud_tone_play(tone, time)
+
+播放tone音，播放一段时间(time)后自动停止播放
+
+* 参数
+
+| 参数 | 参数类型 | 参数说明                                                     |
+| ---- | -------- | ------------------------------------------------------------ |
+| tone | int      | tone类型<br/>0~15- 按键音(0~9、A、B、C、D、#、*)（仅EC600U/EC200U平台支持）<br/>16 - 拨号音，（注：EC600N/EC800N平台为连续的tone音，而EC600U/EC200U平台是播放、停顿交替的tone音）<br/>17 - busy（仅EC600U/EC200U平台支持）<br/>18- radio ack（仅EC600U/EC200U平台支持）<br/>19- call drop（仅EC600U/EC200U平台支持）<br/>20- special information（仅EC600U/EC200U平台支持）<br/>21- call waiting（仅EC600U/EC200U平台支持）<br/>22- ringing（仅EC600U/EC200U平台支持） |
+| time | int      | 播放时长，单位ms<br/>0 - 不停止一直播放，只能调用aud.aud_tone_play_stop()接口才能停止（仅EC600N/EC800N平台支持，EC600U/EC200U平台填0则无动作）<br/>大于0 - 播放时长time ms |
+
+* 返回值
+
+  播放成功返回整型0；
+
+  播放失败返回整型-1；
+
+  
+
+###### 停止Tone音播放
+
+仅EC600N/EC800N平台支持
+
+> aud.aud_tone_play_stop()
+
+主动停止播放tone音
+
+* 参数
+
+  无
+
+* 返回值
+
+  停止成功返回整型0；
+
+  停止失败返回整型-1；
+
+
+
+
+- 示例
+
+```python
+import audio
+import utime
+
+aud = audio.Audio(0)
+
+# EC600U/EC200U平台
+def dial_play_ec600u():
+    aud.aud_tone_play(16, 5000)
+
+# EC600N/EC800N平台
+def dial_play_ec600n():
+    for i in range(0,20):
+        aud.aud_tone_play(16, 1000)
+        utime.sleep(2)
+        aud.aud_tone_play_stop()
+        
+# dial_play_ec600n()
+dial_play_ec600u()
+```
+
+
+
+##### Record
 
 注意：BC25PA平台不支持此模块。
 
@@ -3788,7 +4117,7 @@ record_test.getData(“test.amr”,0, 44)
 
 * 返回值
 
-  若获取成功,返回文件大小 ，单位字节：
+  若获取成功,返回文件大小 （asr平台不返回文件头），单位字节：
 
   wav格式时，此值会比返回callback返回值大44 bytes（44 bytes为文件头）；
 
@@ -3953,6 +4282,34 @@ record_test.end_callback(record_callback)
 
 ```python
 record_test.gain(4,12)
+```
+
+
+
+###### 配置amr录音DTX功能开关
+
+目前仅600N/800N平台支持该功能。
+
+> **record.amrEncDtx_enable(on_off)**
+
+配置amr录音DTX功能开关
+
+- 参数
+
+| 参数   | 参数类型 | 参数说明                                           |
+| ------ | -------- | -------------------------------------------------- |
+| on_off | int      | 1: 开启DTX <br>0: 关闭DTX   <br>不传：获取当前配置 |
+
+- 返回值
+
+  不传参：返回当前配置
+
+  传参：参数正确无返回，参数错误抛异常
+
+- 示例
+
+```python
+record_test.amrEncDtx_enable(1)
 ```
 
 
@@ -4472,7 +4829,7 @@ ADC功能初始化。
 
 | 参数 | 参数类型 | 参数说明                                                     |
 | ---- | -------- | ------------------------------------------------------------ |
-| ADCn | int      | ADC通道<br/>EC100Y平台对应引脚如下<br/>ADC0 – 引脚号39<br/>ADC1 – 引脚号81<br/>EC600S/EC600N平台对应引脚如下<br/>ADC0 – 引脚号19<br/>EC800N平台对应引脚如下<br/>ADC0 – 引脚号9<br/>EC600U平台对应引脚如下<br />ADC0 – 引脚号19<br/>ADC1 – 引脚号20<br />ADC2 – 引脚号113<br />ADC3 – 引脚号114<br />EC200U平台对应引脚如下<br />ADC0 – 引脚号45<br/>ADC1 – 引脚号44<br />ADC2 – 引脚号43<br /> |
+| ADCn | int      | ADC通道<br/>EC100Y平台对应引脚如下<br/>ADC0 – 引脚号39<br/>ADC1 – 引脚号81<br/>EC600S/EC600N平台对应引脚如下<br/>ADC0 – 引脚号19<br/>EC800N/BC25PA平台对应引脚如下<br/>ADC0 – 引脚号9<br/>EC600U平台对应引脚如下<br />ADC0 – 引脚号19<br/>ADC1 – 引脚号20<br />ADC2 – 引脚号113<br />ADC3 – 引脚号114<br />EC200U平台对应引脚如下<br />ADC0 – 引脚号45<br/>ADC1 – 引脚号44<br />ADC2 – 引脚号43<br /> |
 
 * 返回值
 
@@ -4678,6 +5035,8 @@ from misc import USBNET
 #work on RNDIS mode
 USBNET.open()
 ```
+
+
 
 #### modem - 设备相关
 
@@ -5774,7 +6133,8 @@ if __name__ == '__main__':
 | EC100Y        | port0:<br />CS:引脚号25<br />CLK:引脚号26<br />MOSI:引脚号27<br />MISO:引脚号28<br />port1:<br />CS:引脚号105<br />CLK:引脚号104<br />MOSI:引脚号107<br />MISO:引脚号106 |
 | EC800N        | port0:<br />CS:引脚号31<br />CLK:引脚号30<br />MOSI:引脚号32<br />MISO:引脚号33<br />port1:<br />CS:引脚号52<br />CLK:引脚号53<br />MOSI:引脚号50<br />MISO:引脚号51 |
 | BC25PA        | port0:<br />CS:引脚号6<br />CLK:引脚号5<br />MOSI:引脚号4<br />MISO:引脚号3|
-
+* 注意
+  BC25PA平台仅不支持1、2模式。
 - 示例
 
 ```python
@@ -6288,6 +6648,124 @@ if __name__ == '__main__':
 
     # wdt.stop()
 
+```
+
+##### KeyPad
+
+模块功能:提供矩阵键盘接口，支持平台EC600SCN_LB/EC800N_CN_LA/EC600NCNLC
+
+###### 创建keypad对象
+
+> **keypad=machine.KeyPad()**
+>
+> ```python
+> >>>import machine
+> >>>keypad=machine.KeyPad()
+> ```
+>
+> 
+
+###### 初始化keypad
+
+> **keypad.init()**
+
+初始化keypad设置。
+
+* 参数
+
+无
+
+* 返回值
+
+成功返回0，失败返回-1。
+
+###### 设置回调函数
+
+> **keypad.set_callback(usrFun)**
+
+按键接入模组后，按放按键后触发回调函数设置。
+
+* 参数
+
+| 参数   | 参数类型 | 参数说明                                   |
+| ------ | -------- | ------------------------------------------ |
+| usrFun | function | 回调函数，当外接键盘按键按放会触发此函数。 |
+
+注意:usrFun参数为list。
+
+list包含五个参数。其含义如下：
+
+list[0]	- 90表示按下，非90表示抬起
+
+list[1]    - row
+
+list[2]    - col
+
+list[3]    - 预留，默认0，暂时不用
+
+list[4]    - 底层输出按键值，一般不用。
+
+* 返回值
+
+0
+
+###### 设置引脚复用
+
+> **keypad.setMuliKeyen(enbale)**
+
+* 参数
+
+| 参数   | 参数类型 | 参数说明                            |
+| ------ | -------- | ----------------------------------- |
+| enbale | int      | 1-使能多功能按键,0-忽略多功能按键。 |
+
+注意:只有EC600NCNLC平台需要调用此函数。
+
+* 返回值
+
+0
+
+###### 解除初始化
+
+> **keypad.deinit()**
+
+释放初始化的资源和回调函数设置。
+
+* 参数
+
+无
+
+* 返回值
+
+成功返回0，失败返回-1。
+
+###### 使用示例
+
+```python
+import machine
+import utime
+is_loop = 1
+keypad=machine.KeyPad()  
+keypad.init()
+def userfun(l_list):
+    global is_loop 
+    if  l_list[0] != 90 and l_list[1] == 4 and l_list[2] == 4 :
+        is_loop = 0
+        print('will exit')
+    print(l_list)
+    
+keypad.setMuliKeyen(1)
+keypad.set_callback(userfun)
+loop_num = 0
+
+while is_loop == 1 and loop_num < 10:
+    utime.sleep(5)
+    loop_num = loop_num +1
+    print(" running..... ",is_loop,loop_num)
+
+keypad.setMuliKeyen(0)
+keypad.deinit()
+print('exit!')
 ```
 
 
@@ -9865,6 +10343,7 @@ camCaputre.callback(callback)
 
 * 注意
   当前仅ASR和展锐的EC200U/EC600U系列支持该功能。
+
 ##### 打开GNSS串口，读取并解析GNSS数据
 
 > **gnss = GnssGetData(uartn,baudrate,databits,parity,stopbits,flowctl)**
@@ -9877,9 +10356,9 @@ camCaputre.callback(callback)
 | :------- | :--- | ------------------------------------------------------------ |
 | uartn    | int  | UARTn范围为0-3：<br />0-UART0 - DEBUG PORT<br />1-UART1 – BT PORT<br />2-UART2 – MAIN PORT<br />3-UART3 – USB CDC PORT |
 | baudrate | int  | 波特率，常用波特率都支持，如4800、9600、19200、38400、57600、115200、230400等 |
-| databits | int  | 数据位（5 ~ 8）                                                |
+| databits | int  | 数据位（5 ~ 8），展锐平台当前仅支持8位                       |
 | parity   | int  | 奇偶校验（0 – NONE，1 – EVEN，2 - ODD）                      |
-| stopbits | int  | 停止位（1 ~ 2）                                                |
+| stopbits | int  | 停止位（1 ~ 2）                                              |
 | flowctl  | int  | 硬件控制流（0 – FC_NONE， 1 – FC_HW）                        |
 
 * 返回值
@@ -9988,8 +10467,8 @@ camCaputre.callback(callback)
   无
 
 - **返回值**
+定位方位角，范围：0 ~ 359，以正北为参考平面。
 
-  成功返回定位方位角，范围：0 ~ 359，以真北为参考平面；失败返回整型-1
 
 
 
@@ -10071,11 +10550,18 @@ SecureData.Store(index,databuf,len)
 | index   | int       | index范围为1-16：<br />1 - 8 最大存储52字节数据<br />9 - 12 最大存储100字节数据<br />13 - 14 最大存储500字节数据<br />15 - 16 最大存储1000字节数据 |
 | databuf | bytearray | 待存储的数据数组                                             |
 | len     | int       | 要写入数据的长度                                             |
-|存储时按照databuf和len两者中长度较小的进行存储|||
-|**返回值**|||
-|-1: 参数有误 |||
-|0: 执行正常|||
+
+
+存储时按照databuf和len两者中长度较小的进行存储
+
+**返回值**
+
+-1: 参数有误
+
+0: 执行正常
+
 ##### 数据读取
+
 SecureData.Read(index,databuf,len)
 - **参数**
 | 参数    | 类型      | 说明                                            |
@@ -10204,8 +10690,8 @@ bytearray(b'12345678')
 | 参数     | 类型   | 说明                                                         |
 | -------- | ------ | ------------------------------------------------------------ |
 | data_len | int    | 期望接受的数据长度(注意此参数根据data的实际长度进行调整，按照data变量的容量和data_len的比较取最小值) |
-| data     | string | 存储接收到的数据,最大支持1024字节数据。                                             |
-| type     | int    | 发送方式:0、1、2为无需响应确认，100、101、102需要响应确认。暂时仅支持0、1、2发送方式。 |
+| data     | string | 存储接收到的数据,最大支持1024字节数据。                      |
+| type     | int    | 表示核心网释放与模块的RRC连接：0-无指示。1-指示该包上行数据后不期望有进一步的上行或者下行数据，核心网可立即释放  。2-指示该包上行数据后期望有对应回复的单个下行数据包，核心网在下发后立即释放  。 |
 
 - 说明
 
@@ -10253,10 +10739,10 @@ True
 
 - 参数
 
-| 参数 | 类型   | 说明                                 |
-| ---- | ------ | ------------------------------------ |
-| ip   | string | 物联网平台的服务器ip地址,最大长度16. |
-| port | string | 物联网平台的服务器端口,最大长度5.    |
+| 参数 | 类型   | 说明                                          |
+| ---- | ------ | --------------------------------------------- |
+| ip   | string | 物联网平台的服务器ip地址,最大长度16,合法ipv4. |
+| port | string | 物联网平台的服务器端口,最大长度5,范围0~65536. |
 
 - 示例
 
@@ -10294,12 +10780,12 @@ True
 
 | 参数     | 类型   | 说明                                                         |
 | -------- | ------ | ------------------------------------------------------------ |
-| data_len | int    | 期望接受的数据长度(注意此参数根据data的实际长度进行调整，按照data变量的容量和data_len的比较取最小值) |
+| data_len | int    | 期望接受的数据长度(注意此参数根据data的实际长度进行调整，按照data变量的容量和data_len的比较取最小值),非阻塞。 |
 | data     | string | 存储接收到的数据。                                           |
 
 - 说明
 
-接收数据为16进制字符串，故数据长度必定是偶数。
+接收数据为16进制字符串，故数据长度必定是偶数,非阻塞，如果无数据读取返回失败。
 
 - 返回值
 
@@ -10322,13 +10808,15 @@ True
 
 | 参数     | 类型   | 说明                                                         |
 | -------- | ------ | ------------------------------------------------------------ |
-| data_len | int    | 期望发送的数据长度(注意此参数根据data的实际长度进行调整，按照data变量的容量和data_len的比较取最小值) |
-| data     | string | 待发送数据，最大支持1024字节数据。                                               |
-| type     | int    | 发送方式:0、1、2为无需响应确认，100、101、102需要响应确认。暂时仅支持0、1、2发送方式。 |
+| data_len | int    | 期望发送的数据长度(注意此参数根据data的实际长度进行调整，按照data变量的容量和data_len的比较取最小值)，非阻塞 |
+| data     | string | 待发送数据，最大支持1024字节数据。                           |
+| type     | int    | 表示核心网释放与模块的RRC连接：0-无指示。1-指示该包上行数据后不期望有进一步的上行或者下行数据，核心网可立即释放  。2-指示该包上行数据后期望有对应回复的单个下行数据包，核心网在下发后立即释放  。 |
+
+
 
 - 说明
 
-发送数据为16进制字符串，数据长度为偶数。
+发送数据为16进制字符串，数据长度为偶数，非阻塞,返回成功表示发送指令执行成功,不表示数据已经发送到云平台。
 
 - 返回值
 
@@ -10364,4 +10852,549 @@ bytearray(b'313233')
 True
 ```
 
-##### 
+
+
+###### 使用示例
+
+示例物模型
+
+```json
+{
+  "productInfo": {
+    "productId": 15082482
+  },
+  "properties": [
+    {
+      "propertyId": 1,
+      "identifier": "ecl",
+      "propertyName": "无线信号覆盖等级",
+      "description": null,
+      "dataType": "integer",
+      "dataSchema": "\"unit\":\"null\",\"min\":\"-32768\",\"len\":4,\"unitName\":\"\",\"max\":\"32767\""
+    },
+    {
+      "propertyId": 2,
+      "identifier": "pci",
+      "propertyName": "物理小区标识",
+      "description": null,
+      "dataType": "integer",
+      "dataSchema": "\"unit\":\"null\",\"min\":\"-32768\",\"len\":4,\"unitName\":\"\",\"max\":\"32767\""
+    },
+    {
+      "propertyId": 3,
+      "identifier": "IMEI",
+      "propertyName": "IMEI",
+      "description": null,
+      "dataType": "vary-string",
+      "dataSchema": "\"len\":0,\"unit\":\"null\",\"unitName\":\"\""
+    },
+    {
+      "propertyId": 4,
+      "identifier": "rsrp",
+      "propertyName": "参考信号接收功率",
+      "description": null,
+      "dataType": "integer",
+      "dataSchema": "\"unit\":\"null\",\"min\":\"-32768\",\"len\":4,\"unitName\":\"\",\"max\":\"32767\""
+    },
+    {
+      "propertyId": 5,
+      "identifier": "sinr",
+      "propertyName": "信号与干扰加噪声比",
+      "description": null,
+      "dataType": "integer",
+      "dataSchema": "\"unit\":\"null\",\"min\":\"-32768\",\"len\":4,\"unitName\":\"\",\"max\":\"32767\""
+    },
+    {
+      "propertyId": 6,
+      "identifier": "time",
+      "propertyName": "当前时间",
+      "description": null,
+      "dataType": "timestamp",
+      "dataSchema": "\"len\":8"
+    },
+    {
+      "propertyId": 7,
+      "identifier": "ICCID",
+      "propertyName": "ICCID",
+      "description": null,
+      "dataType": "vary-string",
+      "dataSchema": "\"len\":0,\"unit\":\"null\",\"unitName\":\"\""
+    },
+    {
+      "propertyId": 8,
+      "identifier": "cell_id",
+      "propertyName": "小区位置信息",
+      "description": null,
+      "dataType": "integer",
+      "dataSchema": "\"unit\":\"null\",\"min\":\"-2147483648\",\"len\":4,\"unitName\":\"\",\"max\":\"2147483647\""
+    },
+    {
+      "propertyId": 9,
+      "identifier": "velocity",
+      "propertyName": "水流速",
+      "description": null,
+      "dataType": "float",
+      "dataSchema": "\"unit\":\"m/s\",\"min\":\"0\",\"len\":4,\"unitName\":\"米每秒\",\"max\":\"100\""
+    },
+    {
+      "propertyId": 10,
+      "identifier": "act_result",
+      "propertyName": "指令执行结果",
+      "description": null,
+      "dataType": "enum",
+      "dataSchema": "\"len\":1,\"enumDetail\":{\"0\":\"执行成功\",\"1\":\"执行失败\"}"
+    },
+    {
+      "propertyId": 11,
+      "identifier": "error_code",
+      "propertyName": "故障",
+      "description": null,
+      "dataType": "enum",
+      "dataSchema": "\"len\":1,\"enumDetail\":{\"0\":\"正常\",\"1\":\"传感器故障\"}"
+    },
+    {
+      "propertyId": 12,
+      "identifier": "water_flow",
+      "propertyName": "水流量",
+      "description": null,
+      "dataType": "float",
+      "dataSchema": "\"unit\":\"m³/h\",\"min\":\"0\",\"len\":4,\"unitName\":\"立方米每小时\",\"max\":\"9999999\""
+    },
+    {
+      "propertyId": 13,
+      "identifier": "module_type",
+      "propertyName": "模组型号",
+      "description": null,
+      "dataType": "vary-string",
+      "dataSchema": "\"len\":0,\"unit\":\"null\",\"unitName\":\"\""
+    },
+    {
+      "propertyId": 14,
+      "identifier": "temperature",
+      "propertyName": "水温",
+      "description": null,
+      "dataType": "float",
+      "dataSchema": "\"unit\":\"°C\",\"min\":\"0\",\"len\":4,\"unitName\":\"摄氏度\",\"max\":\"100\""
+    },
+    {
+      "propertyId": 15,
+      "identifier": "valve_onoff",
+      "propertyName": "阀门开关",
+      "description": null,
+      "dataType": "enum",
+      "dataSchema": "\"len\":1,\"enumDetail\":{\"0\":\"关闭\",\"1\":\"开启\"}"
+    },
+    {
+      "propertyId": 16,
+      "identifier": "battery_state",
+      "propertyName": "电池状态",
+      "description": null,
+      "dataType": "enum",
+      "dataSchema": "\"len\":1,\"enumDetail\":{\"0\":\"正常\",\"1\":\"低电量\"}"
+    },
+    {
+      "propertyId": 17,
+      "identifier": "battery_value",
+      "propertyName": "电池电量",
+      "description": null,
+      "dataType": "integer",
+      "dataSchema": "\"unit\":\"%\",\"min\":\"0\",\"len\":4,\"unitName\":\"百分比\",\"max\":\"100\""
+    },
+    {
+      "propertyId": 18,
+      "identifier": "terminal_type",
+      "propertyName": "终端型号",
+      "description": null,
+      "dataType": "vary-string",
+      "dataSchema": "\"len\":0,\"unit\":\"null\",\"unitName\":\"\""
+    },
+    {
+      "propertyId": 19,
+      "identifier": "back_total_flow",
+      "propertyName": "反向累计流量",
+      "description": null,
+      "dataType": "float",
+      "dataSchema": "\"unit\":\"m³\",\"min\":\"0\",\"len\":4,\"unitName\":\"立方米\",\"max\":\"99999999\""
+    },
+    {
+      "propertyId": 20,
+      "identifier": "battery_voltage",
+      "propertyName": "电池电压",
+      "description": null,
+      "dataType": "float",
+      "dataSchema": "\"unit\":\"V\",\"min\":\"0\",\"len\":4,\"unitName\":\"伏特\",\"max\":\"24\""
+    },
+    {
+      "propertyId": 21,
+      "identifier": "hydraulic_value",
+      "propertyName": "水压值",
+      "description": null,
+      "dataType": "float",
+      "dataSchema": "\"unit\":\"MPa\",\"min\":\"0\",\"len\":4,\"unitName\":\"兆帕\",\"max\":\"10\""
+    },
+    {
+      "propertyId": 22,
+      "identifier": "hardware_version",
+      "propertyName": "硬件版本",
+      "description": null,
+      "dataType": "vary-string",
+      "dataSchema": "\"len\":0,\"unit\":\"null\",\"unitName\":\"\""
+    },
+    {
+      "propertyId": 23,
+      "identifier": "software_version",
+      "propertyName": "软件版本",
+      "description": null,
+      "dataType": "vary-string",
+      "dataSchema": "\"len\":0,\"unit\":\"null\",\"unitName\":\"\""
+    },
+    {
+      "propertyId": 24,
+      "identifier": "manufacturer_name",
+      "propertyName": "厂家名称",
+      "description": null,
+      "dataType": "vary-string",
+      "dataSchema": "\"len\":0,\"unit\":\"null\",\"unitName\":\"\""
+    },
+    {
+      "propertyId": 25,
+      "identifier": "water_consumption",
+      "propertyName": "用水量",
+      "description": null,
+      "dataType": "float",
+      "dataSchema": "\"unit\":\"m³\",\"min\":\"0\",\"len\":4,\"unitName\":\"立方米\",\"max\":\"99999999\""
+    },
+    {
+      "propertyId": 26,
+      "identifier": "forward_total_flow",
+      "propertyName": "正向累计流量",
+      "description": null,
+      "dataType": "float",
+      "dataSchema": "\"unit\":\"m³\",\"min\":\"0\",\"len\":4,\"unitName\":\"立方米\",\"max\":\"99999999\""
+    }
+  ],
+  "services": [
+    {
+      "serviceId": 1,
+      "identifier": "data_report",
+      "serviceName": "业务数据上报",
+      "serviceType": "DataReport",
+      "description": null,
+      "properties": [
+        {
+          "propertyId": 12,
+          "serial": 1
+        }
+      ],
+      "parameters": []
+    },
+    {
+      "serviceId": 1002,
+      "identifier": "battery_voltage_low_alarm",
+      "serviceName": "电池低电压告警",
+      "serviceType": "EventReport",
+      "description": null,
+      "properties": [
+        {
+          "propertyId": 16,
+          "serial": 1
+        },
+        {
+          "propertyId": 20,
+          "serial": 2
+        }
+      ],
+      "parameters": []
+    },
+    {
+      "serviceId": 2,
+      "identifier": "signal_report",
+      "serviceName": "信号数据上报",
+      "serviceType": "DataReport",
+      "description": null,
+      "properties": [
+        {
+          "propertyId": 4,
+          "serial": 1
+        },
+        {
+          "propertyId": 5,
+          "serial": 2
+        },
+        {
+          "propertyId": 2,
+          "serial": 3
+        },
+        {
+          "propertyId": 1,
+          "serial": 4
+        },
+        {
+          "propertyId": 8,
+          "serial": 5
+        }
+      ],
+      "parameters": []
+    },
+    {
+      "serviceId": 9001,
+      "identifier": "valve_onoff_resp",
+      "serviceName": "阀门开关控制响应",
+      "serviceType": "CommandResponse",
+      "description": null,
+      "properties": [
+        {
+          "propertyId": 15,
+          "serial": 1
+        },
+        {
+          "propertyId": 10,
+          "serial": 2
+        }
+      ],
+      "parameters": []
+    },
+    {
+      "serviceId": 8001,
+      "identifier": "valve_onoff_cmd",
+      "serviceName": "阀门开关控制",
+      "serviceType": "Command",
+      "description": null,
+      "properties": [
+        {
+          "propertyId": 15,
+          "serial": 1
+        }
+      ],
+      "parameters": []
+    },
+    {
+      "serviceId": 1001,
+      "identifier": "error_code_report",
+      "serviceName": "故障上报",
+      "serviceType": "EventReport",
+      "description": null,
+      "properties": [
+        {
+          "propertyId": 11,
+          "serial": 1
+        },
+        {
+          "propertyId": 6,
+          "serial": 2
+        }
+      ],
+      "parameters": []
+    },
+    {
+      "serviceId": 3,
+      "identifier": "info_report",
+      "serviceName": "设备信息上报",
+      "serviceType": "DataReport",
+      "description": null,
+      "properties": [
+        {
+          "propertyId": 24,
+          "serial": 1
+        },
+        {
+          "propertyId": 18,
+          "serial": 2
+        },
+        {
+          "propertyId": 13,
+          "serial": 3
+        },
+        {
+          "propertyId": 22,
+          "serial": 4
+        },
+        {
+          "propertyId": 23,
+          "serial": 5
+        },
+        {
+          "propertyId": 3,
+          "serial": 6
+        },
+        {
+          "propertyId": 7,
+          "serial": 7
+        }
+      ],
+      "parameters": []
+    }
+  ]
+}
+```
+
+示例代码
+
+```python
+from nb import AEP
+import utime
+import ustruct
+
+#以下5个函数需要判断如果机器是大端格式数据就不转
+def aep_htons(source):
+    return source & 0xffff
+def aep_htoni(source):
+    return source & 0xffffffff
+
+
+def aep_htonl(source):
+    return source & 0xffffffffffffffff
+
+def aep_htonf(source):
+    return ustruct.unpack('<I', ustruct.pack('<f', source))[0]
+
+def aep_htond(source):
+    return ustruct.unpack('Q', ustruct.pack('d', source))[0]
+
+def HexToStr(source, t=None):
+    if t:
+        if not isinstance(t, int):
+            raise Exception("{} is not int type".format(t))
+        fmt = "%0" + str(t*2)+"x"
+        return fmt%source
+    else:
+        if not source >> 8:
+            return "%02x" % source
+        elif not source >> 16:
+            return "%04x" % source
+        elif not source >> 32:
+            return "%08x" % source
+        else:
+            return "%016x" % source
+
+
+def StrToHex(source):
+    return int(source)
+
+#对照物模型定义，打包解包根据相应的服务id中的属性进行解析
+serid_dict={'阀门开关控制':8001,
+            '故障上报':1001,
+            '设备信息上报':3,
+            '阀门开关控制响应':9001,
+            '信号数据上报':2,
+            '电池低电压告警':1002,
+            '业务数据上报':1
+           }
+dict_cmd={'数据上报':0x02,
+          '事件上报':0x07,
+          '无线参数上报':0x03,
+          '下行指令固定':0x06,
+          '指令响应':0x86
+         }
+send_type={
+	'RAI_NONE':0,
+	'RAI_1':1,
+	'RAI_2':1
+}
+servcei_info={
+    'ip':"221.229.214.202",
+    'port':"5683"
+}
+
+def aep_pack_cmdtype02(service_id,data_in):
+    data=HexToStr(dict_cmd['数据上报'],1)
+    data+=HexToStr(service_id,2)    			#serviceid转成字符串
+    if service_id == 1:
+        data+=HexToStr(4,2)	                    #发送数据8.14，float类型四个字节长度,此处只举例一个情况
+        data+=HexToStr(aep_htonf(data_in),4)    #float数据转成字符串
+    else:
+        print('not support')                    #
+    return data
+ 
+def aep_pack(cmdtype,service_id,data):
+    if cmdtype == dict_cmd['数据上报']:                            #数据上报-0x02，此处只举例一个情况
+        return aep_pack_cmdtype02(service_id,data)
+    else:
+        print('not support')
+
+def aep_unpack_cmdtype06(data_in):
+    print('-------------------unpack recv data before  ------------------')
+    print(data_in)
+    print(data_in[0:4])
+    print(data_in[4:8])
+    print(data_in[8:12])
+    print(data_in[12:])
+    print('-------------------unpack recv data before------------------')
+    service_id  = int(str(data_in.decode()[0:4]),16)
+    service_id  = aep_htons(service_id)
+    task_id     = data_in[4:8]
+    payload_len = int(str(data_in.decode()[8:12]),16)
+    payload_len = aep_htons(payload_len)
+    value = 0
+    if service_id == serid_dict['阀门开关控制']:                 #物模型下发属性id=15,两个16进制字节,枚举型,0或者1
+       value = int(str(data_in.decode()[12:14]),16)
+       value = aep_htons(value)
+    if service_id == serid_dict['故障上报']:
+        pass
+    if service_id == serid_dict['设备信息上报']:
+        pass
+    if service_id == serid_dict['阀门开关控制响应']:
+        pass
+    if service_id == serid_dict['信号数据上报']:
+        pass
+    print('-------------------unpack recv data after------------------')
+    print("service_id ",service_id)
+    print("task_id ",task_id)
+    print("payload_len ",payload_len)
+    print("payload ",value)
+    print('-------------------unpack recv data after------------------')
+    
+def aep_unpack(data_in):
+    cmdtype=StrToHex(str(data_in.decode()[:2]))
+    data=data_in[2:]
+    if cmdtype == dict_cmd['下行指令固定']:
+        aep_unpack_cmdtype06(data)
+    else:
+        print('not support')
+
+aep=AEP(servcei_info['ip'],servcei_info['port'])
+
+def recv():
+    data=bytearray(20)	
+    ret=aep.recv(18,data)
+    if ret == -1:
+        return
+    aep_unpack(data)    
+    return ret
+
+def connect():
+    ret = aep.connect()
+    print('connect ',ret)
+
+def send():
+    water_flow_value=8.14
+    data=aep_pack(dict_cmd['数据上报'],serid_dict['业务数据上报'],water_flow_value)
+    print('send: ',data)
+    print('len: ',len(data))
+    data_len=len(data)
+    ret = aep.send(data_len,data,send_type['RAI_NONE'])
+    print('send ',ret)
+
+def close():
+    ret = aep.close()
+    print('close ',ret)
+    
+loop_num = 0
+
+def do_task():
+    connect()
+    send()
+    global loop_num
+    while loop_num < 10:
+        loop_num=loop_num+1
+        utime.sleep(3)
+        ret = recv()
+        if ret == 0:
+            break
+    close()
+
+if __name__ == '__main__':
+    do_task()
+
+```
+
