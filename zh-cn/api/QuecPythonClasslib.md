@@ -4324,11 +4324,11 @@ record_test.amrEncDtx_enable(1)
 
 * 参数
 
-| 参数       | 参数类型 | 参数说明                      |
-| ---------- | -------- | ----------------------------- |
-| format     | int      | 音频格式，目前支持pcm wav amr |
-| samplerate | int      | 采样率，目前支持8K 和 16K     |
-| time       | int      | 录音时长，单位 S (秒)         |
+| 参数       | 参数类型 | 参数说明                    |
+| ---------- | -------- | --------------------------- |
+| format     | int      | 音频格式，目前支持 amr 格式 |
+| samplerate | int      | 采样率，目前支持8K 和 16K   |
+| time       | int      | 录音时长，单位 S (秒)       |
 
 * 返回值
 
@@ -4934,25 +4934,61 @@ usb.setCallback(usb_callback)
 
 提供USB网卡功能
 
-注意：目前仅ASR平台支持
+注意：目前仅ASR和展锐平台支持
 
 ###### 设置USB网卡工作类型（重启生效）
 
-USBNET.set_worktype(type)
+> **USBNET.set_worktype(type)**
 
 - 参数
 
-  | 参数 | 参数类型 | 参数说明                                                   |
-  | ---- | -------- | ---------------------------------------------------------- |
-  | type | int      | USBNET 工作类型 Type_ECM – ECM 模式 Type_RNDIS – RNDIS模式 |
+  | 参数 | 参数类型 | 参数说明                                                     |
+  | ---- | -------- | ------------------------------------------------------------ |
+  | type | int      | USBNET 工作类型<br>Type_ECM – ECM 模式<br>Type_RNDIS – RNDIS模式 |
 
 - 返回值
 
   设置成功返回整型0，失败返回整型-1。
+  
+  
+
+###### 获取USB网卡工作类型（重启生效）
+
+> **USBNET.get_worktype()**
+
+* 参数
+
+  无
+
+* 返回值
+
+  成功返回当前网卡模式，失败返回整型-1。
+
+
+
+###### 获取USBNET当前状态
+
+> **USBNET.get_status()**
+
+* 参数
+
+  无
+
+* 返回值
+
+  成功返回USBNET当前状态，失败返回整型-1。
+
+  状态说明：
+
+  0 - 未连接
+
+  1 - 连接成功
+
+
 
 ###### 打开USB网卡
 
-USBNET.open()
+> **USBNET.open()**
 
 - 参数
 
@@ -4962,9 +4998,25 @@ USBNET.open()
 
   打开成功返回整型0，失败返回整型-1。
 
+
+
+###### 关闭USB网卡
+
+> **USBNET.close()**
+
+- 参数
+
+  无
+
+- 返回值
+
+  成功返回整型0，失败返回整型-1。
+
+
+
 示例
 
-```
+```python
 from misc import USBNET
 from misc import Power
 
@@ -10289,13 +10341,13 @@ camCaputre.callback(callback)
 模块功能：对L76K GPS型号进行数据获取，可以得到模块定位是否成功，定位的经纬度数据，UTC授时时间，获取GPS模块的定位模式，获取GPS模块定位使用卫星数量，获取GPS模块定位可见卫星数量，获取定位方位角，GPS模块对地速度，模块定位大地高等数据信息。
 
 * 注意
-  当前仅展锐平台支持
+  当前仅ASR和展锐的EC200U/EC600U系列支持该功能。
 
 ##### 打开GNSS串口，读取并解析GNSS数据
 
-**gnss = GnssGetData(uartn,baudrate,databits,parity,stopbits,flowctl)**
+> **gnss = GnssGetData(uartn,baudrate,databits,parity,stopbits,flowctl)**
 
-**gnss.read_gnss_data()**
+> **gnss.read_gnss_data()**
 
 - **参数**
 
@@ -10308,136 +10360,142 @@ camCaputre.callback(callback)
 | stopbits | int  | 停止位（1 ~ 2）                                              |
 | flowctl  | int  | 硬件控制流（0 – FC_NONE， 1 – FC_HW）                        |
 
+* 返回值
+
+  无
+
 
 
 ##### 获取是否定位成功
 
-**gnss.isFix()**
+> **gnss.isFix()**
 
 - **参数**
 
-无
+  无
 
 - **返回值**
 
-1：定位成功
+  1：定位成功
 
-0：定位失败
+  0：定位失败
 
 
 
 ##### 获取UTC时间
 
-**gnss.getUtcTime()**
+> **gnss.getUtcTime()**
 
 - **参数**
 
-无
+  无
 
 - **返回值**
 
-UTC时间
+  成功返回UTC时间，失败返回整型-1
 
 
 
 ##### 获取GPS模块定位模式
 
-**gnss.getLocationMode()**
+> **gnss.getLocationMode()**
 
 - **参数**
 
-无
+  无
 
 - **返回值**
 
-| 0    | 定位不可用或者无效                  |
-| ---- | ----------------------------------- |
-| 1    | 定位有效,定位模式：GPS、SPS 模式    |
-| 2    | 定位有效,定位模式： DGPS、DSPS 模式 |
+| 返回值 | 描述                                |
+| ------ | ----------------------------------- |
+| -1     | 获取失败（串口未读到数据）          |
+| 0      | 定位不可用或者无效                  |
+| 1      | 定位有效,定位模式：GPS、SPS 模式    |
+| 2      | 定位有效,定位模式： DGPS、DSPS 模式 |
 
 
 
 ##### 获取GPS模块定位使用卫星数量
 
-**gnss.getUsedSateCnt()**
+> **gnss.getUsedSateCnt()**
 
 - **参数**
 
-无
+  无
 
 - **返回值**
 
-GPS模块定位使用卫星数量
+  成功返回GPS模块定位使用卫星数量，失败返回整型-1
 
 
 
 ##### 获取GPS模块定位的经纬度信息
 
-**gnss.getLocation()**
+> **gnss.getLocation()**
 
 - **参数**
 
-无
+  无
 
 - **返回值**
 
-GPS模块定位的经纬度信息
+  成功返回GPS模块定位的经纬度信息，失败返回整型-1
 
 
 
 ##### 获取GPS模块定位可见卫星数量
 
-**gnss.getViewedSateCnt()**
+> **gnss.getViewedSateCnt()**
 
 - **参数**
 
-无
+  无
 
 - **返回值**
 
-GPS模块定位可见卫星数量
+  成功返回GPS模块定位可见卫星数量，失败返回整型-1
 
 
 
 ##### 获取GPS模块定位方位角 
 
-**gnss.getCourse()**
+> **gnss.getCourse()**
 
 - **参数**
 
-无
+  无
 
 - **返回值**
-
 定位方位角，范围：0 ~ 359，以正北为参考平面。
+
 
 
 
 ##### 获取GPS模块定位大地高
 
-**gnss.getGeodeticHeight()**
+> **gnss.getGeodeticHeight()**
 
 - **参数**
 
-无
+  无
 
 - **返回值**
 
-定位大地高(单位:米)
+  成功返回定位大地高(单位:米)，失败返回整型-1
 
 
 
 ##### 获取GPS模块对地速度
 
-**gnss.getSpeed()**
+> **gnss.getSpeed()**
 
 - **参数**
 
-无
+  无
 
 - **返回值**
 
-GPS模块对地速度(单位:KM/h)
+  成功返回GPS模块对地速度(单位:KM/h)，失败返回整型-1
 
 
 
@@ -10477,7 +10535,10 @@ if __name__ == '__main__':
 0.0
 ```
 
+
+
 #### SecureData - 安全数据区
+
 模块功能：模组提供一块裸flash区域及专门的读写接口供客户存贮重要信息，且信息在烧录固件后不丢失(烧录不包含此功能的固件无法保证不丢失)。提供一个存储和读取接口，不提供删除接口。
 > 目前只支持EC600N、EC600S系列项目
 ##### 数据存储
