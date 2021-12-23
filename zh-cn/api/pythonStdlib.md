@@ -201,6 +201,77 @@ b'\xb3\xc9Y\x1b\xe9'
 
 
 
+##### 初始化SD卡驱动
+
+目前仅EC600N/EC800N平台支持。
+
+> **uos.VfsFat(spi_port, spimode, spiclk, spics)**
+
+初始化SD卡，和SD卡通信。使用SPI通信方式。
+
+* 参数
+
+| 参数     | 参数类型 | 参数说明                                                     |
+| -------- | -------- | ------------------------------------------------------------ |
+| spi_port | int      | 通道选择[0,1]                                                |
+| spimode  | int      | SPI 的工作模式(模式0最常用):<br/>时钟极性CPOL: 即SPI空闲时，时钟信号SCLK的电平（0:空闲时低电平; 1:空闲时高电平）<br/>0 : CPOL=0, CPHA=0<br/>1 : CPOL=0, CPHA=1<br/>2: CPOL=1, CPHA=0<br/>3: CPOL=1, CPHA=1 |
+| spiclk   | int      | 时钟频率 0 : 812.5kHz 1 : 1.625MHz 2 : 3.25MHz 3 : 6.5MHz 4 : 13MHz |
+| spics    | int      | 指定CS片选引脚为任意GPIO，硬件CS可以接这里指定的脚，也可以接默认的SPI CS脚<br/>1~n:指定Pin.GPIO1~Pin.GPIOn为CS脚 |
+
+* 返回值
+
+成功则返回VfsFat object，失败则会卡住。
+
+* 示例 
+
+```python
+>>> cdev = uos.VfsFat(1, 0, 4, 1)
+```
+
+
+
+##### 挂载文件系统
+
+> **uos.mount(vfs_obj, path)**
+
+挂载底层文件系统到VFS。
+
+* 参数
+
+| 参数    | 参数类型   | 参数说明         |
+| ------- | ---------- | ---------------- |
+| vfs_obj | vfs object | 文件系统对象     |
+| path    | str        | 文件系统的根目录 |
+
+* 返回值
+
+无。
+
+* 示例
+
+```python
+>>> cdev = uos.VfsFat(1, 0, 4, 1)
+>>> uos.mount(cdev, '/sd')
+```
+
+- SD卡使用示例
+
+  目前仅EC600N/EC800N平台支持。
+
+```python
+>>> cdev = uos.VfsFat(1, 0, 4, 1)
+>>> uos.mount(cdev, '/sd')
+>>> f = open('/sd/test.txt','w+')
+>>> f.write('0123456')
+>>> f.close()
+>>> uos.listdir('/sd')
+>>> f = open('/sd/test.txt','r')
+>>> f.read()
+>>> f.close()
+```
+
+
+
 #### gc - 内存碎片回收
 
 gc 模块实现内存垃圾回收机制，该模块实现了CPython模块相应模块的子集。更多信息请参阅阅CPython文档：[gc](https://docs.python.org/3.5/library/gc.html#module-gc)
