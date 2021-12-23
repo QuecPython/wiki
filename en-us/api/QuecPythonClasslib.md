@@ -1927,10 +1927,10 @@ The function sets the current RAT and the roaming configuration.
 
 * Parameter
 
-| Parameter | Type | Description                                              |
-| --------- | ---- | -------------------------------------------------------- |
-| mode      | int  | RAT. Range: 0-18. For more details, see the table above. |
-| roaming   | int  | Turn on/off the roaming. (0: Turn off. 1: Turn on)       |
+| Parameter | Type | Description                                                  |
+| --------- | ---- | ------------------------------------------------------------ |
+| mode      | int  | RAT. Range: 0-18. For more details, see the table above.     |
+| roaming   | int  | Turn on/off the roaming. (0: Turn off. 1: Turn on). This parameter is optional, do not set this parameter for unsupported platforms. |
 
 * Return Value
 
@@ -1940,7 +1940,7 @@ The function sets the current RAT and the roaming configuration.
 
 * note
 
-  The BC25PA platform does not support this module function.
+  The BC25PA platform does not support this module function. The EC200U/EC600U does not support roaming parameters.
 
 
 ##### Obtain the Network Mode
@@ -4557,6 +4557,10 @@ NOTE：Currently, only the ASR platform and Unisoc supports it.
 * Return Value
 
   Return the USBNET working type if successful, otherwise return -1.
+  
+  1 - ECM type
+  
+  3 - RNDIS type
 
 
 
@@ -7020,6 +7024,8 @@ See comprehensive example
 
 ##### Get BLE Status
 
+> **ble.getStatus()**
+
 * Function:
 
   Get  the status of BLE.
@@ -7044,9 +7050,15 @@ See comprehensive example
 
 ##### Get BLE Public Address
 
+> **ble.getPublicAddr()**
+
 * Function:
 
   Gets the BLE public address.This interface can be called only after BLE has been initialized and started successfully, for example, after receiving an event with event_id 0 in the callback.
+
+* note:
+
+  If there is a default Bluetooth MAC address, the MAC address obtained by the interface is the same as the default Bluetooth MAC address. If it is not set, the address obtained by the interface will be a static address generated randomly after Bluetooth is started, so it will be different each time Bluetooth is powered on again.
 
 * Parameter:
 
@@ -7254,6 +7266,10 @@ See comprehensive example
 
   Set BLE local name.
 
+* note:
+
+  For BLE, if you want  to see the name of the broadcast device when scanning, you need to include the Bluetooth name in the broadcast data, or include the device name in the scan reply data.
+
 * Parameter:
 
   | Parameter | Type         | Description                           |
@@ -7293,7 +7309,7 @@ See comprehensive example
   | adv_type      | Unsigned integer type | Advertising type. <br>0 - CONNECTABLE UNDIRECTED, default <br>1 - CONNECTABLE HIGH DUTY CYCLE DIRECTED<br>2 - SCANNABLE UNDIRECTED<br>3 - NON CONNECTABLE UNDIRECTED<br>4 - CONNECTABLE LOW DUTY CYCLE DIRECTED |
   | addr_type     | Unsigned integer type | Local address type.  <br>0 - Public address<br>1 - Random address |
   | channel       | Unsigned integer type | Advertising channel. <br>1 - Advertising channel 37<br>2 - Advertising channel 38<br>4 - Advertising channel 39<br>7 - Advertising channel 37 and 38 and 39, default |
-  | filter_policy | Unsigned integer type | Advertising filter policy.<br>0 - Process scan and connection requests from all devices<br/>1 - Process connection requests from all devices and scan requests from only white list devices<br/>2 - Process scan requests from all devices and connection requests from only white list devices<br/>3 - Process connection and scan requests from only white list devices |
+  | filter_policy | Unsigned integer type | Advertising filter policy.<br>0 - Process scan and connection requests from all devices<br/>1 - Process connection requests from all devices and scan requests from only white list devices(Not currently supported)<br/>2 - Process scan requests from all devices and connection requests from only white list devices(Not currently supported)<br/>3 - Process connection and scan requests from only white list devices(Not currently supported) |
   | discov_mode   | Unsigned integer type | Discovery mode. Used by GAP protocol and the default is 2 .<br/>1 - Limited Discoverable Mode<br/>2 - General Discoverable Mode |
   | no_br_edr     | Unsigned integer type | No use of BR/EDR. The default is 1. The value is 0 if BR/EDR is used. |
   | enable_adv    | Unsigned integer type | Enable advertising. The default is 1. The value is 0 if advertising is disabled. |
@@ -7842,6 +7858,9 @@ def ble_callback(args):
     elif event_id == event.BLE_STOP_STATUS_IND:  # ble stop
         if status == 0:
             print('[callback] ble stop successful.')
+            ble_status = ble.getStatus()
+            print('ble status is {}'.format(ble_status))
+            ble_gatt_server_release()
         else:
             print('[callback] ble stop failed.')
     elif event_id == event.BLE_CONNECT_IND:  # ble connect
@@ -8175,7 +8194,6 @@ def main():
             count = 0
             print('!!!!! stop BLE now !!!!!')
             ble_gatt_close()
-            ble_gatt_server_release()
             return 0
 
 
