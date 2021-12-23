@@ -4528,11 +4528,11 @@ usb.setCallback(usb_callback)
 
 It provides the USB network adapter function.
 
-NOTE：Currently, only the ASR platform supports it.
+NOTE：Currently, only the ASR platform and Unisoc supports it.
 
 ###### Setting the USBNET working type (Take effect after restart)
 
-USBNET.set_worktype(type)
+> **USBNET.set_worktype(type)**
 
 - Parameter
 
@@ -4544,9 +4544,45 @@ USBNET.set_worktype(type)
 
   Return 0 if the setting is successful, otherwise return -1.
 
+
+
+###### Getting the USBNET working type (Take effect after restart)
+
+> **USBNET.get_worktype()**
+
+* Parameter
+
+  None
+
+* Return Value
+
+  Return the USBNET working type if successful, otherwise return -1.
+
+
+
+###### Getting the USBNET status
+
+> **USBNET.get_status()**
+
+* Parameter
+
+  None
+
+* Return Value
+
+  Return the USBNET status if successful, otherwise return -1.
+
+  status：
+
+  0 - Not connected
+
+  1 - connected
+
+
+
 ###### Open USBNET
 
-USBNET.open()
+> **USBNET.open()**
 
 - Parameter
 
@@ -4555,6 +4591,22 @@ USBNET.open()
 - Return Value
 
   Return 0 if the opening is successful, otherwise return -1.
+  
+  
+
+###### Close USBNET
+
+> **USBNET.close()**
+
+- Parameter
+
+  None
+
+- Return Value
+
+  Return 0 if successful, otherwise return -1.
+
+
 
 Example
 
@@ -9830,13 +9882,13 @@ Scandecode.callback(callback)
 
 Module function: Get positioning data from GPS model of L76 module, including whether the module locates successfully, latitude, longitude, UTC time, positioning mode,  number of satellites, number of visible satellites, azimuth angle, speed over the ground, geodetic height and so on. 
 
-Note: The BC25PA platform does not support this module function.
+Note: Currently, only the ASR and Unisoc EC200U/EC600U series support this function.
 
 ###### Turn on GNSS Port to Read and Parse GNSS Data
 
-**gnss = GnssGetData(uartn,baudrate,databits,parity,stopbits,flowctl)**
+> **gnss = GnssGetData(uartn,baudrate,databits,parity,stopbits,flowctl)**
 
-**gnss.read_gnss_data()**
+> **gnss.read_gnss_data()**
 
 - Parameter
 
@@ -9853,132 +9905,134 @@ Note: The BC25PA platform does not support this module function.
 
 ###### Get Whether the Positioning is Successful
 
-**gnss.isFix()**
+> **gnss.isFix()**
 
 - Parameter
 
-None.
+  None.
 
 - Return Value
 
-1: Successful positioning 
+  1: Successful positioning 
 
-0:  Positioning failure
+  0:  Positioning failure
 
 
 
 ###### Get UTC Time
 
-**gnss.getUtcTime()**
+> **gnss.getUtcTime()**
 
 - **Parameter**
 
-None.
+  None.
 
 - **Return Value**
 
-UTC Time
+  Return UTC Time on success, otherwise return -1.
 
 
 
 ###### Get Positioning Mode
 
-**gnss.getLocationMode()**
+> **gnss.getLocationMode()**
 
 - **Parameter**
 
-None.
+  None.
 
 - **Return Value**
 
-| 0    | Unavailable or invalid positioning                  |
-| ---- | --------------------------------------------------- |
-| 1    | A valid positioning, positioning mode: GPS or SPS   |
-| 2    | A valid positioning, positioning mode: DGPS or DSPS |
+| value | description                                         |
+| ----- | --------------------------------------------------- |
+| -1    | get data failed                                     |
+| 0     | Unavailable or invalid positioning                  |
+| 1     | A valid positioning, positioning mode: GPS or SPS   |
+| 2     | A valid positioning, positioning mode: DGPS or DSPS |
 
 
 
 ###### Get Number of Satellites
 
-**gnss.getUsedSateCnt()**
+> **gnss.getUsedSateCnt()**
 
 - **Parameter**
 
-None.
+  None.
 
 - **Return Value**
 
-The number of satellites of GPS module.
+  Return the number of satellites of GPS module on success,  otherwise return -1.
 
 
 
 ###### Get Latitude and Longitude Information
 
-**gnss.getLocation()**
+> **gnss.getLocation()**
 
 - **Parameter**
 
-None.
+  None.
 
 - **Return Value**
 
-The latitude and longitude information of GPS module.
+  Return the latitude and longitude information of GPS module on success, otherwise return -1.
 
 
 
 ###### Get Number of Visible Satellites
 
-**gnss.getViewedSateCnt()**
+> **gnss.getViewedSateCnt()**
 
 - **Parameter**
 
-None.
+  None.
 
 - **Return Value**
 
-The number of visible satellites of GPS module.
+  Return the number of visible satellites of GPS module on success, otherwise return -1.
 
 
 
 ###### Get Azimuth Angle 
 
-**gnss.getCourse()**
+> **gnss.getCourse()**
 
 - **Parameter**
 
-None.
+  None.
 
 - **Return Value**
 
-Azimuth angle. Range: 0–359, based on true north.
+  Return azimuth angle on success, Range: 0–359, based on true north, otherwise return -1.
 
 
 
 ###### Get Geodetic Height
 
-**gnss.getGeodeticHeight()**
+> **gnss.getGeodeticHeight()**
 
 - **Parameter**
 
-None.
+  None.
 
 - **Return Value**
 
-Geodetic height. Unit: m.
+  Return geodetic height(Unit: m) , otherwise return -1.
 
 
 
 ###### Get  Speed Over the Ground
 
-**gnss.getSpeed()**
+> **gnss.getSpeed()**
 
 - **Parameter**
 
-None.
+  None.
 
 - **Return Value**
 
-The speed over the ground of GPS module. Unit: KM/h.
+  Return the speed over the ground of GPS module(Unit: KM/h), otherwise return -1 .
 
 
 
