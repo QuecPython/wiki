@@ -6177,7 +6177,7 @@ NA
 
 ###### Example
 
-```PYTHON
+```python
 '''
 @Author: Pawn
 @Date: 2020-08-12

@@ -6615,7 +6615,7 @@ lcd.lcd_show("lcd_test1.bin",0,0,126,220) #该lcd_test1.bin 中没有包含图�
 
 ###### 使用示例
 
-```PYTHON
+```python
 '''
 @Author: Pawn
 @Date: 2020-08-12
