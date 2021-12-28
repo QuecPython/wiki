@@ -1519,28 +1519,21 @@ uio 模块包含其他类型的stream（类文件）对象和辅助函数。该�
 
 **格式化字符表**
 
-| Format | C Type               | Python type       | Standard size |
-| ------ | -------------------- | ----------------- | ------------- |
-| `x`    | pad byte             | no value          |               |
-| `c`    | `char`               | bytes of length 1 | 1             |
-| `b`    | `signed char`        | integer           | 1             |
-| `B`    | `unsigned char`      | integer           | 1             |
-| `?`    | `_Bool`              | bool              | 1             |
-| `h`    | `short`              | integer           | 2             |
-| `H`    | `unsigned short`     | integer           | 2             |
-| `i`    | `int`                | integer           | 4             |
-| `I`    | `unsigned int`       | integer           | 4             |
-| `l`    | `long`               | integer           | 4             |
-| `L`    | `unsigned long`      | integer           | 4             |
-| `q`    | `long long`          | integer           | 8             |
-| `Q`    | `unsigned long long` | integer           | 8             |
-| `n`    | `ssize_t`            | integer           |               |
-| `N`    | `size_t`             | integer           |               |
-| `f`    | `float`              | float             | 4             |
-| `d`    | `double`             | float             | 8             |
-| `s`    | `char[]`             | bytes             |               |
-| `p`    | `char[]`             | bytes             |               |
-| `P`    | `void *`             | integer           |               |
+| Format | C Type               | Python type | Standard size |
+| ------ | -------------------- | ----------- | ------------- |
+| `b`    | `signed char`        | integer     | 1             |
+| `B`    | `unsigned char`      | integer     | 1             |
+| `h`    | `short`              | integer     | 2             |
+| `H`    | `unsigned short`     | integer     | 2             |
+| `i`    | `int`                | integer     | 4             |
+| `I`    | `unsigned int`       | integer     | 4             |
+| `l`    | `long`               | integer     | 4             |
+| `L`    | `unsigned long`      | integer     | 4             |
+| `q`    | `long long`          | integer     | 8             |
+| `Q`    | `unsigned long long` | integer     | 8             |
+| `f`    | `float`              | float       | 4             |
+| `d`    | `double`             | float       | 8             |
+| `P`    | `void *`             | integer     | 4             |
 
 默认情况下，C类型以机器的本机格式和字节顺序表示，并在必要时通过跳过填充字节来正确对齐（根据C编译器使用的规则）
 
