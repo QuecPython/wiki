@@ -91,11 +91,255 @@ myprint()
 
 
 
+##### 用户apn拨号（支持设置多路用户apn）
+
+> **dataCall.startByUserApns(apn_dict=None, filename=None)**
+
+当用户不希望使用默认的开机拨号功能（需要关闭默认的开机自动拨号功能），需要使用自己配置的 apn 信息来拨号上网，又担心只设置一条 apn 万一写错了可能导致拨号失败上不了网，希望能设置多条 apn 信息，这样即使前面一条或几条写错了导致拨号失败，也能自动使用后面的其他 apn 来继续尝试拨号。这种情况下，就可以使用该接口来满足需求；该接口不仅支持设置多路用户 apn 信息，还支持两种方式来存放用户的 apn 信息，第一种是用户直接将自己的 apn 信息保存在字典中直接内置在代码里面；第二种是用户将自己的 apn 信息保存在 json 文件中，文件存放于usr目录或者usr的子目录。
+
+* 参数 
+
+| 参数     | 参数类型 | 参数说明                                                     |
+| -------- | -------- | ------------------------------------------------------------ |
+| apn_dict | 字典     | 存放用户apn信息的字典，注意格式要求，具体见示例              |
+| filename | string   | 带文件路径的 json 文件名，该文件用于存放用户apn信息，注意格式要求，具体见示例；关于路径，一定是 "/usr/"开头，比如存放在usr目录下，那就是 “/usr/xxx.json” |
+
+* 返回值
+
+  返回一个元组，包含两个元素，形式如下：
+
+  `(stagecode, subcode)`
+
+  正常返回 (3,1)，其他异常返回说明见下面的返回值说明。
+
+  返回值说明：
+
+| 返回值    | 类型 | 说明                                                         |
+| --------- | ---- | ------------------------------------------------------------ |
+| stagecode | 整型 | 阶段码，表示该接口进行到哪个阶段。<br>1 - 程序在获取SIM卡状态阶段，因为SIM卡状态异常，返回时的值；<br>2 - 程序在获取注网状态阶段，因为获取注网状态失败或者注网没成功时返回的值；<br>3 - 程序在拨号阶段，返回时的值；<br>用户使用时，stagecode 正常返回值应该是3，如果是前两个值，说明是不正常的。 |
+| subcode   | 整型 | 子码，结合 stagecode 的值，来表示该拨号接口在不同阶段的具体状态。<br/>当 stagecode = 1 时：<br/>subcode 表示 SIM卡的状态，范围[0, 21]，每个值的详细说明，请参考：[https://python.quectel.com/wiki/#/zh-cn/api/QuecPythonClasslib?id=sim-sim%e5%8d%a1](https://python.quectel.com/wiki/#/zh-cn/api/QuecPythonClasslib?id=sim-sim卡) <br/>中 sim.getStatus() 接口的返回值说明。<br/><br/>当 stagecode = 2 时：<br/>subcode 表示注网状态，范围[0, 11]，每个值的详细说明，请参考：[https://python.quectel.com/wiki/#/zh-cn/api/QuecPythonClasslib?id=net-%e7%bd%91%e7%bb%9c%e7%9b%b8%e5%85%b3%e5%8a%9f%e8%83%bd](https://python.quectel.com/wiki/#/zh-cn/api/QuecPythonClasslib?id=net-网络相关功能)    中的 net.getState() 接口的返回值说明。<br/>subcode = -1，表示获取注网状态失败；<br/>其他值参考上面链接中对应接口说明。<br/>如果模块注网成功，就会进入 stagecode = 3 的阶段，不会在stagecode = 2 的阶段返回。<br/><br>当 stagecode = 3 时：<br/>subcode = -1，表示尝试了所有的用户apn进行拨号，都拨号失败；<br>subcode = 0，表示模块在使用用户apn拨号之前，就已经拨号成功，此时可能有如下3种情况：<br>（1）用户没有关闭默认的开机自动拨号功能；<br>（2）用户在开机后自己调用相关接口拨号成功了；<br/>（3）开机后，用户已经执行过 startByUserApns() 接口拨号成功，然后再次执行该接口；<br>subcode = 1，表示使用用户的apn拨号成功。 |
+
+* 注意
+
+  用户apn即可以保存在字典中内置到代码里面，也可以保存到 json文件中，下面说明apn信息的保存格式：
+
+  1、字典中apn信息保存格式说明
+
+  （1）必须是字典的格式，即使只有一路apn相关信息，也要写成 
+
+  {"key":  {"profileIdx": x, "ipType": x, "apn": "xxx", "username": "xxx", "password": "xxx", "authType": x}}
+
+  （2）每一条apn信息中profileIdx、ipType、apn、username、password以及authType这几个成员都必不可少，这些参数参考dataCall.start()接口的参数说明；
+
+  （3）由于字典是无序的结构，所以取apn信息时并不是哪条apn写在前就先取出哪个，这个是随机的；
+
+  示例：
+
+  ```python
+  apn_infos = {
+      "1": {
+          "profileIdx": 1, 
+          "ipType": 0, 
+          "apn": "111111-apn", 
+          "username": "111111-user", 
+          "password": "111111-pwd", 
+          "authType": 0
+      },
+      "2": {
+          "profileIdx": 1, 
+          "ipType": 0, 
+          "apn": "222222-apn", 
+          "username": "222222-user", 
+          "password": "222222-pwd", 
+          "authType": 0
+      },
+      "3": {
+          "profileIdx": 1, 
+          "ipType": 0, 
+          "apn": "333333-apn", 
+          "username": "333333-user", 
+          "password": "333333-pwd", 
+          "authType": 0
+      }
+  }
+  
+  ```
+
+  2、json文件中apn信息的保存格式说明
+
+  （1）必须是字典的格式，即使只有一路apn相关信息，也要写成 
+
+  {"key":  {"profileIdx": x, "ipType": x, "apn": "xxx", "username": "xxx", "password": "xxx", "authType": x}}
+
+  （2）每一条apn信息中profileIdx、ipType、apn、username、password以及authType这几个成员都必不可少，这些参数参考dataCall.start()接口的参数说明；
+
+  ```json
+  {
+      "1": {
+          "profileIdx": 1, 
+          "ipType": 0, 
+          "apn": "111111-apn", 
+          "username": "111111-user", 
+          "password": "111111-pwd", 
+          "authType": 0
+      },
+      "2": {
+          "profileIdx": 1, 
+          "ipType": 0, 
+          "apn": "222222-apn", 
+          "username": "222222-user", 
+          "password": "222222-pwd", 
+          "authType": 0
+      },
+      "3": {
+          "profileIdx": 1, 
+          "ipType": 0, 
+          "apn": "333333-apn", 
+          "username": "333333-user", 
+          "password": "333333-pwd", 
+          "authType": 0
+      }
+  }
+  ```
+
+  3、apn信息这两种保存方式，根据用户需要，只能同时选择其中一种，并且也必须选择其中一种；
+
+  4、由于该接口主要用于替代默认的开机拨号功能，如果用户选择使用该接口功能，那么就需要在用户脚本中首先执行该接口，等该接口返回成功后，说明拨号联网已经成功，然后再去进行其他网络业务的操作。
+
+示例
+
+```python
+import dataCall
+
+
+PROJECT_NAME = "QuecPython_DataCall_example"
+PROJECT_VERSION = "1.0.0"
+
+
+"""
+方式一：将apn信息保存在代码中
+"""
+apn_infos = {
+    "1": {
+        "profileIdx": 1,
+        "ipType": 0,
+        "apn": "111111",
+        "username": "111111",
+        "password": "111111",
+        "authType": 0
+    },
+    "2": {
+        "profileIdx": 1,
+        "ipType": 0,
+        "apn": "222222",
+        "username": "222222",
+        "password": "222222",
+        "authType": 0
+    },
+    "3": {
+        "profileIdx": 1,
+        "ipType": 0,
+        "apn": "333333",
+        "username": "333333",
+        "password": "333333",
+        "authType": 0
+    }
+}
+
+if __name__ == '__main__':
+    stagecode, subcode = dataCall.startByUserApns(apn_dict=apn_infos)
+    if stagecode == 3:
+        if subcode == 1:
+            print('拨号已经成功')
+        elif subcode == 0:
+            print('当前已经拨号过了，请确认是否关闭了开机自动拨号或者是首次调用该接口等')
+        else:
+            print('已经尝试了所有的apn，都拨号失败')
+    elif stagecode == 1:
+        if subcode == 0:
+            print('请确认是否插入SIM卡,或者卡槽是否松动')
+        else:
+            print('SIM 卡状态异常(状态值：{})，请确认是否欠费等'.format(subcode))
+    else:
+        if subcode == -1:
+            print('获取注网状态失败了')
+        else:
+            print('设备注网异常，注网状态值：{}'.format(subcode))
+
+# =======================================================================================
+"""
+方式二：将apn信息保存在json文件中
+"""
+apn_file_path = '/usr/apns.json'
+
+if __name__ == '__main__':
+    stagecode, subcode = dataCall.startByUserApns(filename=apn_file_path)
+    if stagecode == 3:
+        if subcode == 1:
+            print('拨号已经成功')
+        elif subcode == 0:
+            print('当前已经拨号过了，请确认是否关闭了开机自动拨号或者是首次调用该接口等')
+        else:
+            print('已经尝试了所有的apn，都拨号失败')
+    elif stagecode == 1:
+        if subcode == 0:
+            print('请确认是否插入SIM卡,或者卡槽是否松动')
+        else:
+            print('SIM 卡状态异常(状态值：{})，请确认是否欠费等'.format(subcode))
+    else:
+        if subcode == -1:
+            print('获取注网状态失败了')
+        else:
+            print('设备注网异常，注网状态值：{}'.format(subcode))
+```
+
+
+
+##### 开启或关闭开机自动拨号（重启生效）
+
+> **dataCall.poweronAutoDatacall(enable)**
+
+用于关闭或者开启开机自动拨号功能，重启后生效。开机自动拨号默认就是开启的。
+
+* 参数 
+
+| 参数   | 参数类型 | 参数说明                                             |
+| ------ | -------- | ---------------------------------------------------- |
+| enable | int      | 0 - 关闭开机自动拨号功能<br>1 - 开启开机自动拨号功能 |
+
+* 返回值
+
+  无
+
+* 注意
+
+  该接口仅适用于平时的开发调试，因为该接口设置后需要重启才能生效；如果用户在量产中，希望关闭模组自带的开机自动拨号功能，可采取如下方案：
+
+  步骤1：在自己的电脑上创建一个名为 system_config.json 的文件；
+
+  步骤2：将如下内容复制到创建的 system_config.json 文件中保存；
+
+  ```json
+  {"replFlag": 0, "datacallFlag": 0}
+  ```
+
+  参数说明：
+
+  ​	replFlag - 开启还是关闭交互功能；详情请参考官方Wiki文档——QuecPython 第三方库——system 环境配置 部分的说明；
+
+  ​	datacallFlag - 开启还是关闭开机自动拨号功能，0表示关闭，1表示开启；
+
+  步骤3：利用官方开发调试工具QPYCom，将 system_config.json 文件合并到固件中，必须是在模块的usr目录，就像合并main.py一样操作即可；
+
+  步骤4：将上一步中合并成功的固件下载到模组中即可，模组开机时会自动检测 system_config.json 文件的配置。
+
+
+
 ##### 配置用户apn
 
-> **dataCall.setApn(profileIdx, ipType, apn, username, password, authType)**
+> **dataCall.setApn(profileIdx, ipType, apn, username, password, authType，flag=0)**
 
-用户apn信息配置接口，用户调用该接口后，会在用户分区目录下创建user_apn.json文件，用于保存用户apn信息，并使用该apn信息启动拨号，进行数据链路激活。
+用户apn信息配置接口，用户调用该接口后，会在用户分区目录下创建user_apn.json文件，用于保存用户apn信息，重启后则使用用户配置的apn来拨号。
 
 * 参数
 
@@ -107,6 +351,7 @@ myprint()
 | username   | string   | apn用户名，可为空，最大长度不超过15字节                      |
 | password   | string   | apn密码，可为空，最大长度不超过15字节                        |
 | authType   | int      | 加密方式，0-不加密，1-PAP，2-CHAP                            |
+| flag       | int      | 可选参数，默认为0，表示仅创建user_apn.json文件，用于保存用户apn信息；为1时，表示创建user_apn.json文件保存用户apn信息之后，还会使用该apn信息立即进行一次拨号；不管该参数是0还是1，都不会影响重启时使用用户设置的apn进行开机拨号。 |
 
 * 返回值
 
@@ -7350,7 +7595,7 @@ True
 
   | 参数          | 类型 | 说明                                                         |
   | ------------- | ---- | ------------------------------------------------------------ |
-  | timeout       | 整型 | 该超时时间参数是上层应用的超时，当触发超时会主动上报已扫描到的热点信息，若在超时前扫描到设置的热点个数或达到底层扫频超时时间会自动上报热点信息。<br>参数范围：<br/>600S ：4-255秒<br/>200U/600U ：120-5000秒 |
+  | timeout       | 整型 | 该超时时间参数是上层应用的超时，当触发超时会主动上报已扫描到的热点信息，若在超时前扫描到设置的热点个数或达到底层扫频超时时间会自动上报热点信息。<br>参数范围：<br/>600S ：4-255秒<br/>200U/600U ：120-5000毫秒 |
   | round         | 整型 | 该参数是wifi扫描轮，达到扫描轮数后，会结束扫描并获取扫描结果。<br/>参数范围：<br/>600S ：1-3轮次<br/>200U/600U ：1-10轮次 |
   | max_bssid_num | 整型 | 该参数是wifi扫描热点最大个，若底层扫描热点个数达到设置的最大个数，会结束扫描并获取扫描结果。<br/>参数范围：<br/>600S ：4-30个<br/>200U/600U ：1-300个 |
   | scan_timeout  | 整型 | 该参数是底层wifi扫描热点超时时间，若底层扫描热点时间达到设置的超时时间，会结束扫描并获取扫描结果。该参数设置范围为1-255秒。 |
