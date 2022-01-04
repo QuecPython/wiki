@@ -5972,6 +5972,90 @@ if __name__ == '__main__':
 
 
 
+###### 设置RTC alarm时间
+
+支持平台EC600U/EC200U/EC600N/EC800N/BC25
+
+> rtc.set_alarm([year, month, day, week, hour, minute, second, microsecond])
+
+设置RTC alarm时间，参数week不参于设置，microsecond参数保留，暂未使用，默认是0。
+
+* 参数
+
+| 参数        | 类型 | 说明                                  |
+| ----------- | ---- | ------------------------------------- |
+| year        | int  | 年                                    |
+| month       | int  | 月，范围1 ~ 12                        |
+| day         | int  | 日，范围1 ~ 31                        |
+| week        | int  | 星期，范围0 ~ 6，该参数不起作用，保留 |
+| hour        | int  | 时，范围0 ~ 23                        |
+| minute      | int  | 分，范围0 ~ 59                        |
+| second      | int  | 秒，范围0 ~ 59                        |
+| microsecond | int  | 微秒，保留参数，暂未使用，写0即可     |
+
+* 返回值
+
+设置成功返回整型值0，设置失败返回整型值-1 。
+
+
+
+###### 注册RTC alarm回调
+
+支持平台EC600U/EC200U/EC600N/EC800N/BC25
+
+> rtc.register_callback(fun)
+
+注册RTC alarm回调处理函数
+
+* 参数
+
+| 参数 | 类型     | 说明                  |
+| ---- | -------- | --------------------- |
+| fun  | function | RTC alarm回调处理函数 |
+
+* 返回值
+
+注册成功返回整型值0，注册失败返回整型值-1 。
+
+
+
+###### 开关RTC alarm功能
+
+支持平台EC600U/EC200U/EC600N/EC800N/BC25
+
+> rtc.enable_alarm(on_off)
+
+打开/关闭RTC alarm功能
+
+* 参数
+
+| 参数   | 类型 | 说明                                     |
+| ------ | ---- | ---------------------------------------- |
+| on_off | int  | 1-打开RTC alarm功能；0-关闭RTC alarm功能 |
+
+* 返回值
+
+打开/关闭成功返回整型值0，打开/关闭失败返回整型值-1 。
+
+
+
+- 示例
+
+```python
+from machine import RTC
+rtc = RTC()
+def callback(args):
+   print('RTC alarm')
+
+rtc.register_callback(callback)
+rtc.set_alarm([2021, 7, 9, 5, 12, 30, 0, 0])
+rtc.enable_alarm(1)
+```
+
+注：EC600U/EC200U平台支持自动开机，即设置alarm功能之后将模块关机，alarm时间到了之后可以自动开机。其他平台不支持该特性。
+
+
+
 ##### I2C
 
 类功能：用于设备之间通信的双线协议。
