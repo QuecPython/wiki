@@ -18,6 +18,7 @@
 | productSecret | string | 可选参数，默认为None，productSecret，产品密钥<br />一机一密认证方案时，此参数传入None<br/>一型一密认证方案时，此参数传入真实的产品密钥 |
 | DeviceName    | string | 设备名称                                                     |
 | DeviceSecret  | string | 可选参数,默认为Non，设备密钥（一型一密认证方案时此参数传入None） |
+| MqttServer    | string | 可选参数,需要连接的服务器名称,默认为"{productKey}.iot-as-mqtt.cn-shanghai.aliyuncs.com" |
 
 * 返回值
 
