@@ -1857,6 +1857,15 @@ if __name__ == '__main__':
 
 sys 模块中提供了与QuecPython运行环境有关的函数和变量。该模块实现相应CPython模块的子集。更多信息请参阅阅CPython文档：[sys](https://docs.python.org/3.5/library/sys.html#module-sys)
 
+说明：新架构代码升级了MPY的版本，sys变更为usys。导入模块时建议使用以下方式进行导入 
+
+```python
+try:
+    import usys as sys
+except ImportError:
+    import sys
+```
+
 **常数说明**
 
 > **sys.argv**

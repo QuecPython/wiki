@@ -1756,6 +1756,15 @@ if __name__ == '__main__':
 
 This module provide functions and variables related to the QuecPython runtime environment. This module implements a subset of the corresponding [CPython](https://docs.micropython.org/en/latest/reference/glossary.html#term-CPython) module, as described below. For more information, refer to the original CPython documentation: [sys](https://docs.python.org/3.5/library/sys.html#module-sys)
 
+Note: The new architecture code upgrades the version of MPY from sys to usys. You are advised to use the following methods to import modules
+
+```python
+try:
+    import usys as sys
+except ImportError:
+    import sys
+```
+
 **Constants**
 
 > **sys.argv**
