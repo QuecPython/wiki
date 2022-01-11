@@ -3828,7 +3828,7 @@ Set audio volume.
 
 | Parameter | Parameter Type | Description                                                  |
 | --------- | -------------- | ------------------------------------------------------------ |
-| vol       | int            | Volume. Range: 1–11. The higher the number, the higher the volume. |
+| vol       | int            | Volume. Range: 0 –11. The higher the number, the higher the volume. |
 
 * Return Value
 
