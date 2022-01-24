@@ -4770,11 +4770,11 @@ usb.setCallback(usb_callback)
 
 It provides the USB network adapter function.
 
-NOTE：Currently, only the ASR platform and Unisoc supports it.
+NOTE：Currently, only the ASR platform supports it.
 
 ###### Setting the USBNET working type (Take effect after restart)
 
-> **USBNET.set_worktype(type)**
+USBNET.set_worktype(type)
 
 - Parameter
 
@@ -4785,46 +4785,6 @@ NOTE：Currently, only the ASR platform and Unisoc supports it.
 - Return Value
 
   Return 0 if the setting is successful, otherwise return -1.
-
-
-
-###### Getting the USBNET working type (Take effect after restart)
-
-> **USBNET.get_worktype()**
-
-* Parameter
-
-  None
-
-* Return Value
-
-  Return the USBNET working type if successful, otherwise return -1.
-  
-  1 - ECM type
-  
-  3 - RNDIS type
-
-
-
-###### Getting the USBNET status
-
-> **USBNET.get_status()**
-
-* Parameter
-
-  None
-
-* Return Value
-
-  Return the USBNET status if successful, otherwise return -1.
-
-  status：
-
-  0 - Not connected
-
-  1 - connected
-
-
 
 ###### Open USBNET
 

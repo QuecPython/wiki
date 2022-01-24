@@ -7063,7 +7063,7 @@ if __name__ == '__main__':
 
 ###### 创建keypad对象
 
-> **keypad=machine.KeyPad()**
+> **keypad=machine.KeyPad(row,col)**
 >
 * 参数
 | 参数   | 参数类型 | 参数说明                            |
@@ -7075,20 +7075,19 @@ if __name__ == '__main__':
 * 示例：
 > ```python
 > >>>import machine
-> >>>keypad=machine.KeyPad()
+> >>>keypad=machine.KeyPad(2,3)		# 矩阵键盘设置为2行3列矩阵键盘
+> >>>keypad=machine.KeyPad()  	 	# 不设置,默认设置为4行4列矩阵键盘
+> >>>keypad=machine.KeyPad(2)  	 	# 行值设置为2,不设置列值,列值默认为4,2行4列矩阵键盘
 > ```
 >
-> 
 
 ###### 初始化keypad
 
 > **keypad.init()**
 
 初始化keypad设置。
-
 * 参数
-
-无
+> 无
 
 * 返回值
 
@@ -10742,7 +10741,8 @@ camCaputre.callback(callback)
 模块功能：对L76K GPS型号进行数据获取，可以得到模块定位是否成功，定位的经纬度数据，UTC授时时间，获取GPS模块的定位模式，获取GPS模块定位使用卫星数量，获取GPS模块定位可见卫星数量，获取定位方位角，GPS模块对地速度，模块定位大地高等数据信息。
 
 * 注意
-  当前仅ASR和展锐的EC200U/EC600U系列支持该功能。
+  BC25PA平台不支持模块功能。
+> 暂时只支持EC600U CNLB
 
 ##### 打开GNSS串口，读取并解析GNSS数据
 
