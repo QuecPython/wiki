@@ -2432,7 +2432,6 @@ This function sets the current modem functionality.
 #### checkNet - Wait for Network to be Ready
 
 Function: The checkNet module is mainly used for the script programs [auto-startup], and provides APIs to wait for the network to be ready. If it times out or exits abnormally, the program returns an error code. Therefore, if there are network-related operations in the your program, the method in the checkNet module should be called at the beginning of the user program to wait for the network to be ready. Of course, you can also implement the functions of this module by yourselves. 
-Note: The BC25PA platform does not support this module function.
 ##### Create checkNet Object
 
 > **import checkNet**
@@ -2832,7 +2831,6 @@ if __name__ == '__main__':
 #### app_fota - Upgrade User File 
 
 Module function: Upgrade user file 
-Note: The BC25PA platform does not support this module function.
 ##### Create an app_fota Object
 
 1. Import app_fota module
@@ -5434,7 +5432,7 @@ Row number of the pin map.
 
 ##### RTC
 
-Class function: It provides methods to get and set RTC time. 
+Class function: It provides methods to get and set RTC time. For bc25pa platform, it can wake up the module from deep sleep or software shutdown.
 
 ###### Create RTC Object
 
@@ -5486,7 +5484,79 @@ When getting the time, return a tuple containing the date and time in the follow
 (2020, 3, 12, 4, 12, 12, 14, 0)
 ```
 
+###### Set callback function
 
+> **rtc.register_callback(usrFun)**
+
+When RTC expiration time callback function is set (for BC25PA platform, if it is recovered from deep sleep or software shutdown, calling this function will immediately call usrfun once)
+* Parameter
+
+| Parameter   | Type | Description                                   |
+| ------ | -------- | ------------------------------------------ |
+| usrFun | function | Callback function, which is called when the set RTC time arrives. |
+
+Note: usrFun requires parameters
+
+* Return Value
+0	Successful execution.
+
+-1	Failed execution.
+* Example
+
+```python
+>>> def test(df):
+...     print('rtc test...',df)
+...     
+...     
+... 
+>>> 
+>>> rtc.register_callback(test)
+0
+```
+###### Set RTC expiration time
+rtc.set_alarm(data_e)
+Set the RTC expiration time. When the expiration time is reached, the registered callback function will be called
+* Parameter
+| Parameter   | Type | Description                                   |
+| ----------- | ---- | ------------------------------------------------------------ |
+| year        | int  | year                                                           |
+| month       | int  | month,Range1 ~ 12                                                 |
+| day         | int  | day,Range1 ~ 31                                                 |
+| week        | int  | week,Range0 ~ 6,Where 0 means Sunday and 1 ~ 6 means Monday to Saturday respectively. When setting time,this parameter does not work and is reserved. This parameter is valid when getting time |
+| hour        | int  | hour,Range0 ~ 23                                                 |
+| minute      | int  | minute,Range0 ~ 59                                                 |
+| second      | int  | second,Range0 ~ 59                                                 |
+| microsecond | int  | microsecond,The parameter is reserved and not used yet. When setting the time, the parameter can be written as 0            |
+
+* Return Value
+0	Successful execution.
+-1	Failed execution.
+* Example
+```python
+>>> data_e=rtc.datetime()
+>>> data_l=list(data_e)
+>>> data_l[6] +=30				
+>>> data_e=tuple(data_l)
+>>> rtc.set_alarm(data_e)
+0
+```
+###### Start / stop RTC timer
+rtc.enable_alarm(on_off)
+The timer can be started only when the callback function is set (bc25pa platform)
+* Parameter
+
+| Parameter | Type | Description                                                  |
+| ----------- | ---- | ------------------------------------------------------------ |
+| on_off        | int  | 0 - Turn off RTC timer. 1 - Start RTC timer.                     |
+
+* Return Value
+0	Successful execution.
+-1	Failed execution.
+* Example
+```python
+>>> rtc.enable_alarm(1)
+0
+```
 
 ##### I2C
 
@@ -5655,7 +5725,7 @@ Adaptation version: EC100Y (V0009) and above; EC600S (V0002) and above.
 | EC600S/EC600N | port0:<br />CS:Pin number 58<br />CLK:Pin number 61<br />MOSI:Pin number 60<br />MISO:Pin number 59<br />port1:<br />CS:Pin number 4<br />CLK:Pin number 1<br />MOSI:Pin number 3<br />MISO:Pin number 2 |
 | EC100Y        | port0:<br />CS:Pin number 25<br />CLK:Pin number 26<br />MOSI:Pin number 27<br />MISO:Pin number 28<br />port1:<br />CS:Pin number 105<br />CLK:Pin number 104<br />MOSI:Pin number 107<br />MISO:Pin number 106 |
 | BC25PA        | port0:<br />CS:Pin number 6<br />CLK:Pin number 5<br />MOSI:Pin number 4<br />MISO:Pin number 3|
-
+* Note:Bc25pa platform does not support 1 and 2 modes.
 - Example
 
 ```python
@@ -6165,6 +6235,14 @@ Module function: provide matrix keyboard interface and support platform ec600scn
 ###### Create keypad object
 
 > **keypad=machine.KeyPad()**
+*Parameter
+| Parameter | Type | Description                                      |
+| ------ | -------- | ----------------------------------- |
+|Row | int | row (if it is greater than 0 and less than 8, and neither row nor column is set, the default is 4)|
+|Col | int | column (greater than 0 and less than 8. If the column is not set, the default is 4)|
+Note: if row and col are not set, the default is 4X4..
+
+*Example:
 >
 > ```python
 > >>>import machine
@@ -6195,7 +6273,9 @@ After the key is connected to the module, press and release the key to trigger t
 
 * Parameters
 
-| Parameter   | parameter type | parameter description                                   |
+- Parameter
+
+| Parameter | Type | Description                                      |
 | ------ | -------- | ------------------------------------------ |
 | usrFun | function | callback function. This function will be triggered when the external keyboard key is pressed and placed |
 
@@ -6204,35 +6284,17 @@ Note: the usrfun parameter is list.
 
 List contains five parameters. It has the following meanings:
 
-list[0] - 90 means press and non-90 means lift
+list[0] - 1 means press and 0 means lift
 
 list[1] - row
 
 list[2] - col
 
-List [3] - reserved, 0 by default, not used for the time being
-
-List [4] - the bottom layer outputs the key value, which is generally not used.
 
 * Return value
 
 0
 
-###### Set pin reuse
-
-> **keypad.setMuliKeyen(enbale)**
-
-* Parameters
-
-| Parameter   | parameter type | parameter description                            |
-| ------ | -------- | ----------------------------------- |
-| Enbale | int      | 1-enable multi-function keys, 0-ignore multi-function keys |
-
-Note: only ec600ncnlc platform needs to call this function.
-
-* Return value
-
-0
 
 ###### Uninitialization
 
@@ -6257,12 +6319,11 @@ keypad=machine.KeyPad()
 keypad.init()
 def userfun(l_list):
     global is_loop 
-    if  l_list[0] != 90 and l_list[1] == 4 and l_list[2] == 4 :
+    if  l_list[0] != 1 :
         is_loop = 0
         print('will exit')
     print(l_list)
     
-keypad.setMuliKeyen(1)
 keypad.set_callback(userfun)
 loop_num = 0
 
@@ -6271,7 +6332,6 @@ while is_loop == 1 and loop_num < 10:
     loop_num = loop_num +1
     print(" running..... ",is_loop,loop_num)
 
-keypad.setMuliKeyen(0)
 keypad.deinit()
 print('exit!')
 ```
@@ -10190,7 +10250,23 @@ None.
 >>> aep.connect()
 0
 ```
+###### Query data to be read
 
+> **aep.check()**
+
+- **Parameter**
+None
+- **Return Value**
+Returns the number of pieces of data to be read distributed by the cloud platform
+
+- Example
+
+```python
+>>> from nb import AEP
+>>> aep=AEP("221.229.214.202","5683")
+>>> aep.check()
+0
+```
 ###### Receive data
 
 > **aep.recv(data_len,data)**
@@ -10233,8 +10309,7 @@ Failed - not 0
 
 - Note
 
-The sent data is a hexadecimal string, and the data length is even.
-
+The sending data is a hexadecimal string, the data length is an even number, blocking (timeout 3 minutes), and returning success indicates that the sending instruction is executed successfully.
 - **Return Value**
 
 Success - 0
@@ -10305,7 +10380,7 @@ def HexToStr(source, t=None):
 def StrToHex(source):
     return int(source)
 
-#对照物模型定义，打包解包根据相应的服务id中的属性进行解析
+#对照物模型定义,打包解包根据相应的服务id中的属性进行解析
 serid_dict={'阀门开关控制':8001,
             '故障上报':1001,
             '设备信息上报':3,
@@ -10323,7 +10398,7 @@ dict_cmd={'数据上报':0x02,
 send_type={
 	'RAI_NONE':0,
 	'RAI_1':1,
-	'RAI_2':1
+	'RAI_2':2
 }
 servcei_info={
     'ip':"221.229.214.202",
@@ -10334,14 +10409,14 @@ def aep_pack_cmdtype02(service_id,data_in):
     data=HexToStr(dict_cmd['数据上报'],1)
     data+=HexToStr(service_id,2)    			#serviceid转成字符串
     if service_id == 1:
-        data+=HexToStr(4,2)	                    #发送数据8.14，float类型四个字节长度,此处只举例一个情况
+        data+=HexToStr(4,2)	                    #发送数据8.14,float类型四个字节长度,此处只举例一个情况
         data+=HexToStr(aep_htonf(data_in),4)    #float数据转成字符串
     else:
         print('not support')                    #
     return data
  
 def aep_pack(cmdtype,service_id,data):
-    if cmdtype == dict_cmd['数据上报']:                            #数据上报-0x02，此处只举例一个情况
+    if cmdtype == dict_cmd['数据上报']:                            #数据上报-0x02,此处只举例一个情况
         return aep_pack_cmdtype02(service_id,data)
     else:
         print('not support')

@@ -2623,7 +2623,7 @@ LTE list：
 
 模块功能：checkNet模块主要用于【开机自动运行】的用户脚本程序，该模块提供API用来阻塞等待网络就绪，如果超时或者其他异常退出会返回错误码，所以如果用户的程序中有涉及网络相关的操作，那么在用户程序的开始应该调用 checkNet 模块中的方法以等待网络就绪。当然，用户也可以自己实现这个模块的功能。
 
-注意：当前仅EC600S/EC600N/EC800N/EC200U/EC600U平台支持该功能。
+注意：当前仅EC600S/EC600N/EC800N/EC200U/EC600U/BC25PA平台支持该功能。
 
 ##### 创建checkNet对象
 
@@ -3030,7 +3030,6 @@ if __name__ == '__main__':
 
 模块功能：用户文件升级
 
-注意：BC25PA平台不支持此模块。
 
 ##### 创建app_fota对象
 
@@ -5208,6 +5207,7 @@ if __name__ == '__main__':
 | EC600S/EC600N | uart0:<br />TX: 引脚号71<br />RX: 引脚号72<br />uart1:<br />TX: 引脚号3<br />RX: 引脚号2<br />uart2:<br />TX:引脚号32<br />RX:引脚号31 |
 | EC100Y        | uart0:<br />TX: 引脚号21<br />RX: 引脚号20<br />uart1:<br />TX: 引脚号27<br />RX: 引脚号28<br />uart2:<br />TX:引脚号50<br />RX:引脚号49 |
 | EC800N        | uart0:<br />TX: 引脚号39<br />RX: 引脚号38<br />uart1:<br />TX: 引脚号50<br />RX: 引脚号51<br />uart2:<br />TX:引脚号18<br />RX:引脚号17 |
+| BC25PA        | uart1:<br />TX: 引脚号29<br />RX: 引脚号28<br />             |
 
 * 示例
 
@@ -5726,7 +5726,7 @@ if __name__ == '__main__':
 
 ##### RTC
 
-类功能：提供获取设置rtc时间方法。
+类功能：提供获取设置rtc时间方法，对于BC25PA平台起到从深休眠或者软件关机状态唤醒模组的功能。
 
 ###### 创建RTC对象
 
@@ -5774,6 +5774,81 @@ if __name__ == '__main__':
 0
 >>> rtc.datetime()
 (2020, 3, 12, 4, 12, 12, 14, 0)
+
+```
+
+###### 设置回调函数
+
+> **rtc.register_callback(usrFun)**
+
+当设置rtc到期时间回调函数(对于BC25PA平台,如果是从深休眠或者软件关机状态中恢复,调用此函数会立刻调用一次usrFun)。
+
+* 参数
+
+| 参数   | 参数类型 | 参数说明                                   |
+| ------ | -------- | ------------------------------------------ |
+| usrFun | function | 回调函数，当设置的RTC时间到达则调用此函数。 |
+
+注意:usrFun需要参数
+
+* 返回值
+	成功: 0
+	失败: -1
+* 示例
+
+```python
+>>> def test(df):
+...     print('rtc test...',df)
+...     
+...     
+... 
+>>> 
+>>> rtc.register_callback(test)
+0
+```
+###### 设置RTC到期时间
+rtc.set_alarm(data_e)
+设置RTC到期时间,当到了到期时间就会调用注册的回调函数。
+* 参数
+| 参数        | 类型 | 说明                                                         |
+| ----------- | ---- | ------------------------------------------------------------ |
+| year        | int  | 年                                                           |
+| month       | int  | 月，范围1 ~ 12                                                 |
+| day         | int  | 日，范围1 ~ 31                                                 |
+| week        | int  | 星期，范围0 ~ 6，其中0表示周日，1 ~ 6分别表示周一到周六；设置时间时，该参数不起作用，保留；获取时间时该参数有效 |
+| hour        | int  | 时，范围0 ~ 23                                                 |
+| minute      | int  | 分，范围0 ~ 59                                                 |
+| second      | int  | 秒，范围0 ~ 59                                                 |
+| microsecond | int  | 微秒，保留参数，暂未使用，设置时间时该参数写0即可            |
+
+* 返回值
+	成功: 0
+	失败: -1
+* 示例
+
+```python
+>>> data_e=rtc.datetime()
+>>> data_l=list(data_e)
+>>> data_l[6] +=30				
+>>> data_e=tuple(data_l)
+>>> rtc.set_alarm(data_e)
+0
+```
+###### 启动/停止RTC定时器
+rtc.enable_alarm(on_off)
+只有在设置回调函数时才能启动定时器(BC25PA平台)
+* 参数
+| 参数        | 类型 | 说明                                                         |
+| ----------- | ---- | ------------------------------------------------------------ |
+| on_off        | int  | 0 - 关闭RTC定时器. 1 - 启动RTC定时器.                     |
+
+* 返回值
+	成功: 0
+	失败: -1
+* 示例
+```python
+>>> rtc.enable_alarm(1)
+0
 ```
 
 
@@ -5944,7 +6019,7 @@ if __name__ == '__main__':
 | EC800N        | port0:<br />CS:引脚号31<br />CLK:引脚号30<br />MOSI:引脚号32<br />MISO:引脚号33<br />port1:<br />CS:引脚号52<br />CLK:引脚号53<br />MOSI:引脚号50<br />MISO:引脚号51 |
 | BC25PA        | port0:<br />CS:引脚号6<br />CLK:引脚号5<br />MOSI:引脚号4<br />MISO:引脚号3|
 * 注意
-  BC25PA平台仅不支持1、2模式。
+  BC25PA平台不支持1、2模式。
 - 示例
 
 ```python
@@ -6468,6 +6543,14 @@ if __name__ == '__main__':
 
 > **keypad=machine.KeyPad()**
 >
+* 参数
+| 参数   | 参数类型 | 参数说明                            |
+| ------ | -------- | ----------------------------------- |
+| row | int      | 行(大于0,小于8,行和列均不设置的情况下,默认为4) |
+| col | int      | 列(大于0,小于8,列不设置的情况下,默认4) |
+
+注意:如果row和col均不设置,默认为4X4.
+* 示例：
 > ```python
 > >>>import machine
 > >>>keypad=machine.KeyPad()
@@ -6503,33 +6586,13 @@ if __name__ == '__main__':
 
 注意:usrFun参数为list。
 
-list包含五个参数。其含义如下：
+list包含三个参数。其含义如下：
 
-list[0]	- 90表示按下，非90表示抬起
+list[0]: 1表示按下，0表示抬起
 
-list[1]    - row
+list[1] : row
 
-list[2]    - col
-
-list[3]    - 预留，默认0，暂时不用
-
-list[4]    - 底层输出按键值，一般不用。
-
-* 返回值
-
-0
-
-###### 设置引脚复用
-
-> **keypad.setMuliKeyen(enbale)**
-
-* 参数
-
-| 参数   | 参数类型 | 参数说明                            |
-| ------ | -------- | ----------------------------------- |
-| enbale | int      | 1-使能多功能按键,0-忽略多功能按键。 |
-
-注意:只有EC600NCNLC平台需要调用此函数。
+list[2] : col
 
 * 返回值
 
@@ -6559,21 +6622,16 @@ keypad=machine.KeyPad()
 keypad.init()
 def userfun(l_list):
     global is_loop 
-    if  l_list[0] != 90 and l_list[1] == 4 and l_list[2] == 4 :
+    if  l_list[0] != 1 :
         is_loop = 0
         print('will exit')
     print(l_list)
-    
-keypad.setMuliKeyen(1)
 keypad.set_callback(userfun)
 loop_num = 0
-
 while is_loop == 1 and loop_num < 10:
     utime.sleep(5)
     loop_num = loop_num +1
     print(" running..... ",is_loop,loop_num)
-
-keypad.setMuliKeyen(0)
 keypad.deinit()
 print('exit!')
 ```
@@ -10572,6 +10630,24 @@ True
 >>> aep.connect()
 0
 ```
+###### 查询待读取数据
+> **aep.check()**
+
+- 参数
+
+无
+
+- 返回值
+返回云平台下发的待读取数据条数
+
+- 示例
+
+```python
+>>> from nb import AEP
+>>> aep=AEP("221.229.214.202","5683")
+>>> aep.check()
+0
+```
 
 ###### 接收数据
 
@@ -10617,7 +10693,7 @@ True
 
 - 说明
 
-发送数据为16进制字符串，数据长度为偶数，非阻塞,返回成功表示发送指令执行成功,不表示数据已经发送到云平台。
+发送数据为16进制字符串，数据长度为偶数，阻塞(超时时间3分钟),返回成功表示发送指令执行成功。
 
 - 返回值
 
@@ -11090,7 +11166,7 @@ dict_cmd={'数据上报':0x02,
 send_type={
 	'RAI_NONE':0,
 	'RAI_1':1,
-	'RAI_2':1
+	'RAI_2':2
 }
 servcei_info={
     'ip':"221.229.214.202",
