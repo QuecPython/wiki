@@ -66,7 +66,7 @@ myprint()
 
 | 参数       | 参数类型 | 参数说明                                                     |
 | ---------- | -------- | ------------------------------------------------------------ |
-| profileIdx | int      | PDP索引，ASR平台范围1-8，展锐平台范围1-7，一般设置为1，设置其他值可能需要专用apn与密码才能设置成功 |
+| profileIdx | int      | PDP索引，ASR平台范围1-8[volte版本默认PID最大的一路用来注册IMS，请勿重复操作]，展锐平台范围1-7，一般设置为1，设置其他值可能需要专用apn与密码才能设置成功 |
 | ipType     | int      | IP类型，0-IPV4，1-IPV6，2-IPV4和IPV6                         |
 | apn        | string   | apn名称，可为空，最大长度不超过63字节                        |
 | username   | string   | apn用户名，可为空，最大长度不超过15字节                      |
@@ -91,11 +91,255 @@ myprint()
 
 
 
+##### 用户apn拨号（支持设置多路用户apn）
+
+> **dataCall.startByUserApns(apn_dict=None, filename=None)**
+
+当用户不希望使用默认的开机拨号功能（需要关闭默认的开机自动拨号功能），需要使用自己配置的 apn 信息来拨号上网，又担心只设置一条 apn 万一写错了可能导致拨号失败上不了网，希望能设置多条 apn 信息，这样即使前面一条或几条写错了导致拨号失败，也能自动使用后面的其他 apn 来继续尝试拨号。这种情况下，就可以使用该接口来满足需求；该接口不仅支持设置多路用户 apn 信息，还支持两种方式来存放用户的 apn 信息，第一种是用户直接将自己的 apn 信息保存在字典中直接内置在代码里面；第二种是用户将自己的 apn 信息保存在 json 文件中，文件存放于usr目录或者usr的子目录。
+
+* 参数 
+
+| 参数     | 参数类型 | 参数说明                                                     |
+| -------- | -------- | ------------------------------------------------------------ |
+| apn_dict | 字典     | 存放用户apn信息的字典，注意格式要求，具体见示例              |
+| filename | string   | 带文件路径的 json 文件名，该文件用于存放用户apn信息，注意格式要求，具体见示例；关于路径，一定是 "/usr/"开头，比如存放在usr目录下，那就是 “/usr/xxx.json” |
+
+* 返回值
+
+  返回一个元组，包含两个元素，形式如下：
+
+  `(stagecode, subcode)`
+
+  正常返回 (3,1)，其他异常返回说明见下面的返回值说明。
+
+  返回值说明：
+
+| 返回值    | 类型 | 说明                                                         |
+| --------- | ---- | ------------------------------------------------------------ |
+| stagecode | 整型 | 阶段码，表示该接口进行到哪个阶段。<br>1 - 程序在获取SIM卡状态阶段，因为SIM卡状态异常，返回时的值；<br>2 - 程序在获取注网状态阶段，因为获取注网状态失败或者注网没成功时返回的值；<br>3 - 程序在拨号阶段，返回时的值；<br>用户使用时，stagecode 正常返回值应该是3，如果是前两个值，说明是不正常的。 |
+| subcode   | 整型 | 子码，结合 stagecode 的值，来表示该拨号接口在不同阶段的具体状态。<br/>当 stagecode = 1 时：<br/>subcode 表示 SIM卡的状态，范围[0, 21]，每个值的详细说明，请参考：[https://python.quectel.com/wiki/#/zh-cn/api/QuecPythonClasslib?id=sim-sim%e5%8d%a1](https://python.quectel.com/wiki/#/zh-cn/api/QuecPythonClasslib?id=sim-sim卡) <br/>中 sim.getStatus() 接口的返回值说明。<br/><br/>当 stagecode = 2 时：<br/>subcode 表示注网状态，范围[0, 11]，每个值的详细说明，请参考：[https://python.quectel.com/wiki/#/zh-cn/api/QuecPythonClasslib?id=net-%e7%bd%91%e7%bb%9c%e7%9b%b8%e5%85%b3%e5%8a%9f%e8%83%bd](https://python.quectel.com/wiki/#/zh-cn/api/QuecPythonClasslib?id=net-网络相关功能)    中的 net.getState() 接口的返回值说明。<br/>subcode = -1，表示获取注网状态失败；<br/>其他值参考上面链接中对应接口说明。<br/>如果模块注网成功，就会进入 stagecode = 3 的阶段，不会在stagecode = 2 的阶段返回。<br/><br>当 stagecode = 3 时：<br/>subcode = -1，表示尝试了所有的用户apn进行拨号，都拨号失败；<br>subcode = 0，表示模块在使用用户apn拨号之前，就已经拨号成功，此时可能有如下3种情况：<br>（1）用户没有关闭默认的开机自动拨号功能；<br>（2）用户在开机后自己调用相关接口拨号成功了；<br/>（3）开机后，用户已经执行过 startByUserApns() 接口拨号成功，然后再次执行该接口；<br>subcode = 1，表示使用用户的apn拨号成功。 |
+
+* 注意
+
+  用户apn即可以保存在字典中内置到代码里面，也可以保存到 json文件中，下面说明apn信息的保存格式：
+
+  1、字典中apn信息保存格式说明
+
+  （1）必须是字典的格式，即使只有一路apn相关信息，也要写成 
+
+  {"key":  {"profileIdx": x, "ipType": x, "apn": "xxx", "username": "xxx", "password": "xxx", "authType": x}}
+
+  （2）每一条apn信息中profileIdx、ipType、apn、username、password以及authType这几个成员都必不可少，这些参数参考dataCall.start()接口的参数说明；
+
+  （3）由于字典是无序的结构，所以取apn信息时并不是哪条apn写在前就先取出哪个，这个是随机的；
+
+  示例：
+
+  ```python
+  apn_infos = {
+      "1": {
+          "profileIdx": 1, 
+          "ipType": 0, 
+          "apn": "111111-apn", 
+          "username": "111111-user", 
+          "password": "111111-pwd", 
+          "authType": 0
+      },
+      "2": {
+          "profileIdx": 1, 
+          "ipType": 0, 
+          "apn": "222222-apn", 
+          "username": "222222-user", 
+          "password": "222222-pwd", 
+          "authType": 0
+      },
+      "3": {
+          "profileIdx": 1, 
+          "ipType": 0, 
+          "apn": "333333-apn", 
+          "username": "333333-user", 
+          "password": "333333-pwd", 
+          "authType": 0
+      }
+  }
+  
+  ```
+
+  2、json文件中apn信息的保存格式说明
+
+  （1）必须是字典的格式，即使只有一路apn相关信息，也要写成 
+
+  {"key":  {"profileIdx": x, "ipType": x, "apn": "xxx", "username": "xxx", "password": "xxx", "authType": x}}
+
+  （2）每一条apn信息中profileIdx、ipType、apn、username、password以及authType这几个成员都必不可少，这些参数参考dataCall.start()接口的参数说明；
+
+  ```json
+  {
+      "1": {
+          "profileIdx": 1, 
+          "ipType": 0, 
+          "apn": "111111-apn", 
+          "username": "111111-user", 
+          "password": "111111-pwd", 
+          "authType": 0
+      },
+      "2": {
+          "profileIdx": 1, 
+          "ipType": 0, 
+          "apn": "222222-apn", 
+          "username": "222222-user", 
+          "password": "222222-pwd", 
+          "authType": 0
+      },
+      "3": {
+          "profileIdx": 1, 
+          "ipType": 0, 
+          "apn": "333333-apn", 
+          "username": "333333-user", 
+          "password": "333333-pwd", 
+          "authType": 0
+      }
+  }
+  ```
+
+  3、apn信息这两种保存方式，根据用户需要，只能同时选择其中一种，并且也必须选择其中一种；
+
+  4、由于该接口主要用于替代默认的开机拨号功能，如果用户选择使用该接口功能，那么就需要在用户脚本中首先执行该接口，等该接口返回成功后，说明拨号联网已经成功，然后再去进行其他网络业务的操作。
+
+示例
+
+```python
+import dataCall
+
+
+PROJECT_NAME = "QuecPython_DataCall_example"
+PROJECT_VERSION = "1.0.0"
+
+
+"""
+方式一：将apn信息保存在代码中
+"""
+apn_infos = {
+    "1": {
+        "profileIdx": 1,
+        "ipType": 0,
+        "apn": "111111",
+        "username": "111111",
+        "password": "111111",
+        "authType": 0
+    },
+    "2": {
+        "profileIdx": 1,
+        "ipType": 0,
+        "apn": "222222",
+        "username": "222222",
+        "password": "222222",
+        "authType": 0
+    },
+    "3": {
+        "profileIdx": 1,
+        "ipType": 0,
+        "apn": "333333",
+        "username": "333333",
+        "password": "333333",
+        "authType": 0
+    }
+}
+
+if __name__ == '__main__':
+    stagecode, subcode = dataCall.startByUserApns(apn_dict=apn_infos)
+    if stagecode == 3:
+        if subcode == 1:
+            print('拨号已经成功')
+        elif subcode == 0:
+            print('当前已经拨号过了，请确认是否关闭了开机自动拨号或者是首次调用该接口等')
+        else:
+            print('已经尝试了所有的apn，都拨号失败')
+    elif stagecode == 1:
+        if subcode == 0:
+            print('请确认是否插入SIM卡,或者卡槽是否松动')
+        else:
+            print('SIM 卡状态异常(状态值：{})，请确认是否欠费等'.format(subcode))
+    else:
+        if subcode == -1:
+            print('获取注网状态失败了')
+        else:
+            print('设备注网异常，注网状态值：{}'.format(subcode))
+
+# =======================================================================================
+"""
+方式二：将apn信息保存在json文件中
+"""
+apn_file_path = '/usr/apns.json'
+
+if __name__ == '__main__':
+    stagecode, subcode = dataCall.startByUserApns(filename=apn_file_path)
+    if stagecode == 3:
+        if subcode == 1:
+            print('拨号已经成功')
+        elif subcode == 0:
+            print('当前已经拨号过了，请确认是否关闭了开机自动拨号或者是首次调用该接口等')
+        else:
+            print('已经尝试了所有的apn，都拨号失败')
+    elif stagecode == 1:
+        if subcode == 0:
+            print('请确认是否插入SIM卡,或者卡槽是否松动')
+        else:
+            print('SIM 卡状态异常(状态值：{})，请确认是否欠费等'.format(subcode))
+    else:
+        if subcode == -1:
+            print('获取注网状态失败了')
+        else:
+            print('设备注网异常，注网状态值：{}'.format(subcode))
+```
+
+
+
+##### 开启或关闭开机自动拨号（重启生效）
+
+> **dataCall.poweronAutoDatacall(enable)**
+
+用于关闭或者开启开机自动拨号功能，重启后生效。开机自动拨号默认就是开启的。
+
+* 参数 
+
+| 参数   | 参数类型 | 参数说明                                             |
+| ------ | -------- | ---------------------------------------------------- |
+| enable | int      | 0 - 关闭开机自动拨号功能<br>1 - 开启开机自动拨号功能 |
+
+* 返回值
+
+  无
+
+* 注意
+
+  该接口仅适用于平时的开发调试，因为该接口设置后需要重启才能生效；如果用户在量产中，希望关闭模组自带的开机自动拨号功能，可采取如下方案：
+
+  步骤1：在自己的电脑上创建一个名为 system_config.json 的文件；
+
+  步骤2：将如下内容复制到创建的 system_config.json 文件中保存；
+
+  ```json
+  {"replFlag": 0, "datacallFlag": 0}
+  ```
+
+  参数说明：
+
+  ​	replFlag - 开启还是关闭交互功能；详情请参考官方Wiki文档——QuecPython 第三方库——system 环境配置 部分的说明；
+
+  ​	datacallFlag - 开启还是关闭开机自动拨号功能，0表示关闭，1表示开启；
+
+  步骤3：利用官方开发调试工具QPYCom，将 system_config.json 文件合并到固件中，必须是在模块的usr目录，就像合并main.py一样操作即可；
+
+  步骤4：将上一步中合并成功的固件下载到模组中即可，模组开机时会自动检测 system_config.json 文件的配置。
+
+
+
 ##### 配置用户apn
 
-> **dataCall.setApn(profileIdx, ipType, apn, username, password, authType)**
+> **dataCall.setApn(profileIdx, ipType, apn, username, password, authType，flag=0)**
 
-用户apn信息配置接口，用户调用该接口后，会在用户分区目录下创建user_apn.json文件，用于保存用户apn信息，并使用该apn信息启动拨号，进行数据链路激活。
+用户apn信息配置接口，用户调用该接口后，会在用户分区目录下创建user_apn.json文件，用于保存用户apn信息，重启后则使用用户配置的apn来拨号。
 
 * 参数
 
@@ -107,6 +351,7 @@ myprint()
 | username   | string   | apn用户名，可为空，最大长度不超过15字节                      |
 | password   | string   | apn密码，可为空，最大长度不超过15字节                        |
 | authType   | int      | 加密方式，0-不加密，1-PAP，2-CHAP                            |
+| flag       | int      | 可选参数，默认为0，表示仅创建user_apn.json文件，用于保存用户apn信息；为1时，表示创建user_apn.json文件保存用户apn信息之后，还会使用该apn信息立即进行一次拨号；不管该参数是0还是1，都不会影响重启时使用用户设置的apn进行开机拨号。 |
 
 * 返回值
 
@@ -2060,7 +2305,7 @@ LTE网络系统返回值说明
 
 ##### 获取网络制式及漫游配置
 
-注意：BC25PA平台不支持此方法。
+注意：BC25PA平台不支持此方法。EC200U/EC600U平台不支持漫游参数配置。
 
 > **net.getConfig()**
 
@@ -2109,7 +2354,7 @@ LTE网络系统返回值说明
 
 ##### 设置网络制式及漫游配置
 
-注意：BC25PA平台不支持此方法。
+注意：BC25PA平台不支持此方法。EC200U/EC600U平台不支持漫游参数配置。
 
 > **net.setConfig(mode, roaming)**
 
@@ -2120,7 +2365,7 @@ LTE网络系统返回值说明
 | 参数    | 参数类型 | 参数说明                             |
 | ------- | -------- | ------------------------------------ |
 | mode    | int      | 网络制式，0 ~ 18，详见上述网络制式表格 |
-| roaming | int      | 漫游开关(0：关闭， 1：开启)          |
+| roaming | int      | 漫游开关(0：关闭， 1：开启)，可选参数，不支持的平台不填写该参数即可。 |
 
 * 返回值
 
@@ -3810,6 +4055,144 @@ aud.play(1, 0, 'U:/test.mp3')
 
 
 
+###### 音频流播放
+
+> aud.playStream(format, buf)
+
+音频流播放，支持mp3、amr和wav格式的音频流播放。
+
+* 参数
+
+| 参数   | 参数类型 | 参数说明                                                     |
+| ------ | -------- | ------------------------------------------------------------ |
+| format | int      | 音频流格式<br/>1- PCM（暂不支持）<br/>2 - WAVPCM<br/>3 - MP3<br/>4 - AMRNB |
+| buf    | buf      | 音频流内容                                                   |
+
+* 返回值
+
+  播放成功返回整型0；
+
+  播放失败返回整型-1；
+
+  
+
+###### 停止音频流播放
+
+> audio_test.stopPlayStream()
+
+停止音频流播放
+
+* 参数
+
+  无
+
+* 返回值
+
+  停止成功返回整型0；
+
+  停止失败返回整型-1；
+
+
+- 示例
+
+  ```python
+  import audio
+  import utime
+  
+  audio_test = audio.Audio(0)
+  
+  size = 10*1024 # 保证一次填充的音频数据足够大以便底层连续播放
+  format = 4
+  
+  def play_from_fs():
+      file_size = uos.stat("/usr/test.amr")[6]  # 获取文件总字节数
+      print(file_size)
+      with open("/usr/test.amr", "rb")as f:   
+          while 1:
+              b = f.read(size)   # read
+              if not b:
+                  break
+              audio_test.playStream(format, b)
+              utime.sleep_ms(20)
+          f.close()
+  
+  
+  play_from_fs()
+  utime.sleep_ms(5000) # 等待播放完成
+  audio_test.stopPlayStream() # 停止本次播放以便不影响下次播放
+  ```
+
+
+
+###### Tone音播放
+
+支持平台EC600U/EC200U/EC600N/EC800N
+
+> aud.aud_tone_play(tone, time)
+
+播放tone音，播放一段时间(time)后自动停止播放
+
+* 参数
+
+| 参数 | 参数类型 | 参数说明                                                     |
+| ---- | -------- | ------------------------------------------------------------ |
+| tone | int      | tone类型<br/>0~15- 按键音(0~9、A、B、C、D、#、*)（仅EC600U/EC200U平台支持）<br/>16 - 拨号音，（注：EC600N/EC800N平台为连续的tone音，而EC600U/EC200U平台是播放、停顿交替的tone音）<br/>17 - busy（仅EC600U/EC200U平台支持）<br/>18- radio ack（仅EC600U/EC200U平台支持）<br/>19- call drop（仅EC600U/EC200U平台支持）<br/>20- special information（仅EC600U/EC200U平台支持）<br/>21- call waiting（仅EC600U/EC200U平台支持）<br/>22- ringing（仅EC600U/EC200U平台支持） |
+| time | int      | 播放时长，单位ms<br/>0 - 不停止一直播放，只能调用aud.aud_tone_play_stop()接口才能停止（仅EC600N/EC800N平台支持，EC600U/EC200U平台填0则无动作）<br/>大于0 - 播放时长time ms |
+
+* 返回值
+
+  播放成功返回整型0；
+
+  播放失败返回整型-1；
+
+  
+
+###### 停止Tone音播放
+
+仅EC600N/EC800N平台支持
+
+> aud.aud_tone_play_stop()
+
+主动停止播放tone音
+
+* 参数
+
+  无
+
+* 返回值
+
+  停止成功返回整型0；
+
+  停止失败返回整型-1；
+
+
+
+
+- 示例
+
+```python
+import audio
+import utime
+
+aud = audio.Audio(0)
+
+# EC600U/EC200U平台
+def dial_play_ec600u():
+    aud.aud_tone_play(16, 5000)
+
+# EC600N/EC800N平台
+def dial_play_ec600n():
+    for i in range(0,20):
+        aud.aud_tone_play(16, 1000)
+        utime.sleep(2)
+        aud.aud_tone_play_stop()
+        
+# dial_play_ec600n()
+dial_play_ec600u()
+```
+
+
+
 ##### Record
 
 注意：BC25PA平台不支持此模块。
@@ -4185,11 +4568,11 @@ record_test.amrEncDtx_enable(1)
 
 * 参数
 
-| 参数       | 参数类型 | 参数说明                      |
-| ---------- | -------- | ----------------------------- |
-| format     | int      | 音频格式，目前支持pcm wav amr |
-| samplerate | int      | 采样率，目前支持8K 和 16K     |
-| time       | int      | 录音时长，单位 S (秒)         |
+| 参数       | 参数类型 | 参数说明                    |
+| ---------- | -------- | --------------------------- |
+| format     | int      | 音频格式，目前支持 amr 格式 |
+| samplerate | int      | 采样率，目前支持8K 和 16K   |
+| time       | int      | 录音时长，单位 S (秒)       |
 
 * 返回值
 
@@ -4795,25 +5178,65 @@ usb.setCallback(usb_callback)
 
 提供USB网卡功能
 
-注意：目前仅ASR平台支持
+注意：目前仅ASR和展锐平台支持
 
 ###### 设置USB网卡工作类型（重启生效）
 
-USBNET.set_worktype(type)
+> **USBNET.set_worktype(type)**
 
 - 参数
 
-  | 参数 | 参数类型 | 参数说明                                                   |
-  | ---- | -------- | ---------------------------------------------------------- |
-  | type | int      | USBNET 工作类型 Type_ECM – ECM 模式 Type_RNDIS – RNDIS模式 |
+  | 参数 | 参数类型 | 参数说明                                                     |
+  | ---- | -------- | ------------------------------------------------------------ |
+  | type | int      | USBNET 工作类型<br>Type_ECM – ECM 模式<br>Type_RNDIS – RNDIS模式 |
 
 - 返回值
 
   设置成功返回整型0，失败返回整型-1。
+  
+  
+
+###### 获取USB网卡工作类型（重启生效）
+
+> **USBNET.get_worktype()**
+
+* 参数
+
+  无
+
+* 返回值
+
+  成功返回当前网卡模式，失败返回整型-1。返回值说明：
+  
+  1 - ECM模式
+  
+  3 - RNDIS模式
+
+
+
+###### 获取USBNET当前状态
+
+> **USBNET.get_status()**
+
+* 参数
+
+  无
+
+* 返回值
+
+  成功返回USBNET当前状态，失败返回整型-1。
+
+  状态说明：
+
+  0 - 未连接
+
+  1 - 连接成功
+
+
 
 ###### 打开USB网卡
 
-USBNET.open()
+> **USBNET.open()**
 
 - 参数
 
@@ -4823,9 +5246,25 @@ USBNET.open()
 
   打开成功返回整型0，失败返回整型-1。
 
+
+
+###### 关闭USB网卡
+
+> **USBNET.close()**
+
+- 参数
+
+  无
+
+- 返回值
+
+  成功返回整型0，失败返回整型-1。
+
+
+
 示例
 
-```
+```python
 from misc import USBNET
 from misc import Power
 
@@ -5853,6 +6292,90 @@ rtc.enable_alarm(on_off)
 
 
 
+###### 设置RTC alarm时间
+
+支持平台EC600U/EC200U/EC600N/EC800N/BC25
+
+> rtc.set_alarm([year, month, day, week, hour, minute, second, microsecond])
+
+设置RTC alarm时间，参数week不参于设置，microsecond参数保留，暂未使用，默认是0。
+
+* 参数
+
+| 参数        | 类型 | 说明                                  |
+| ----------- | ---- | ------------------------------------- |
+| year        | int  | 年                                    |
+| month       | int  | 月，范围1 ~ 12                        |
+| day         | int  | 日，范围1 ~ 31                        |
+| week        | int  | 星期，范围0 ~ 6，该参数不起作用，保留 |
+| hour        | int  | 时，范围0 ~ 23                        |
+| minute      | int  | 分，范围0 ~ 59                        |
+| second      | int  | 秒，范围0 ~ 59                        |
+| microsecond | int  | 微秒，保留参数，暂未使用，写0即可     |
+
+* 返回值
+
+设置成功返回整型值0，设置失败返回整型值-1 。
+
+
+
+###### 注册RTC alarm回调
+
+支持平台EC600U/EC200U/EC600N/EC800N/BC25
+
+> rtc.register_callback(fun)
+
+注册RTC alarm回调处理函数
+
+* 参数
+
+| 参数 | 类型     | 说明                  |
+| ---- | -------- | --------------------- |
+| fun  | function | RTC alarm回调处理函数 |
+
+* 返回值
+
+注册成功返回整型值0，注册失败返回整型值-1 。
+
+
+
+###### 开关RTC alarm功能
+
+支持平台EC600U/EC200U/EC600N/EC800N/BC25
+
+> rtc.enable_alarm(on_off)
+
+打开/关闭RTC alarm功能
+
+* 参数
+
+| 参数   | 类型 | 说明                                     |
+| ------ | ---- | ---------------------------------------- |
+| on_off | int  | 1-打开RTC alarm功能；0-关闭RTC alarm功能 |
+
+* 返回值
+
+打开/关闭成功返回整型值0，打开/关闭失败返回整型值-1 。
+
+
+
+- 示例
+
+```python
+from machine import RTC
+rtc = RTC()
+def callback(args):
+   print('RTC alarm')
+
+rtc.register_callback(callback)
+rtc.set_alarm([2021, 7, 9, 5, 12, 30, 0, 0])
+rtc.enable_alarm(1)
+```
+
+注：EC600U/EC200U平台支持自动开机，即设置alarm功能之后将模块关机，alarm时间到了之后可以自动开机。其他平台不支持该特性。
+
+
+
 ##### I2C
 
 类功能：用于设备之间通信的双线协议。
@@ -5994,7 +6517,6 @@ if __name__ == '__main__':
 
 类功能：串行外设接口总线协议。
 
-适配版本：EC100Y(V0009)及以上；EC600S(V0002)及以上。
 
 ###### 创建SPI对象
 
@@ -6014,7 +6536,7 @@ if __name__ == '__main__':
 | ------------- | ------------------------------------------------------------ |
 | EC600U        | port0:<br />CS:引脚号4<br />CLK:引脚号1<br />MOSI:引脚号3<br />MISO:引脚号2<br />port1:<br />CS:引脚号58<br />CLK:引脚号61<br />MOSI:引脚号59<br />MISO:引脚号60 |
 | EC200U        | port0:<br />CS:引脚号134<br />CLK:引脚号133<br />MOSI:引脚号132<br />MISO:引脚号131<br />port1:<br />CS:引脚号26<br />CLK:引脚号27<br />MOSI:引脚号24<br />MISO:引脚号25 |
-| EC600S/EC600N | port0:<br />CS:引脚号58<br />CLK:引脚号61<br />MOSI:引脚号60<br />MISO:引脚号59<br />port1:<br />CS:引脚号4<br />CLK:引脚号1<br />MOSI:引脚号3<br />MISO:引脚号2 |
+| EC600S/EC600N | port0:<br />CS:引脚号58<br />CLK:引脚号61<br />MOSI:引脚号59<br />MISO:引脚号60<br />port1:<br />CS:引脚号4<br />CLK:引脚号1<br />MOSI:引脚号3<br />MISO:引脚号2 |
 | EC100Y        | port0:<br />CS:引脚号25<br />CLK:引脚号26<br />MOSI:引脚号27<br />MISO:引脚号28<br />port1:<br />CS:引脚号105<br />CLK:引脚号104<br />MOSI:引脚号107<br />MISO:引脚号106 |
 | EC800N        | port0:<br />CS:引脚号31<br />CLK:引脚号30<br />MOSI:引脚号32<br />MISO:引脚号33<br />port1:<br />CS:引脚号52<br />CLK:引脚号53<br />MOSI:引脚号50<br />MISO:引脚号51 |
 | BC25PA        | port0:<br />CS:引脚号6<br />CLK:引脚号5<br />MOSI:引脚号4<br />MISO:引脚号3|
@@ -6501,7 +7023,7 @@ lcd.lcd_show("lcd_test1.bin",0,0,126,220) #该lcd_test1.bin 中没有包含图�
 
 ###### 使用示例
 
-```PYTHON
+```python
 '''
 @Author: Pawn
 @Date: 2020-08-12
@@ -7131,7 +7653,7 @@ True
 
   | 参数          | 类型 | 说明                                                         |
   | ------------- | ---- | ------------------------------------------------------------ |
-  | timeout       | 整型 | 该超时时间参数是上层应用的超时，当触发超时会主动上报已扫描到的热点信息，若在超时前扫描到设置的热点个数或达到底层扫频超时时间会自动上报热点信息。<br>参数范围：<br/>600S ：4-255秒<br/>200U/600U ：120-5000秒 |
+  | timeout       | 整型 | 该超时时间参数是上层应用的超时，当触发超时会主动上报已扫描到的热点信息，若在超时前扫描到设置的热点个数或达到底层扫频超时时间会自动上报热点信息。<br>参数范围：<br/>600S ：4-255秒<br/>200U/600U ：120-5000毫秒 |
   | round         | 整型 | 该参数是wifi扫描轮，达到扫描轮数后，会结束扫描并获取扫描结果。<br/>参数范围：<br/>600S ：1-3轮次<br/>200U/600U ：1-10轮次 |
   | max_bssid_num | 整型 | 该参数是wifi扫描热点最大个，若底层扫描热点个数达到设置的最大个数，会结束扫描并获取扫描结果。<br/>参数范围：<br/>600S ：4-30个<br/>200U/600U ：1-300个 |
   | scan_timeout  | 整型 | 该参数是底层wifi扫描热点超时时间，若底层扫描热点时间达到设置的超时时间，会结束扫描并获取扫描结果。该参数设置范围为1-255秒。 |
@@ -7330,7 +7852,11 @@ wifi list:(2, [('F0:B4:29:86:95:C7': -79),('44:00:4D:D5:26:E0', -92)])
 
 * 功能：
 
-  获取 BLE 公共地址。该接口需要在BLE已经初始化完成并启动成功后才能调用，比如在回调中收到 event_id 为0的事件之后，即 start 成功后，去调用。
+  获取 BLE 协议栈正在使用的公共地址。该接口需要在BLE已经初始化完成并启动成功后才能调用，比如在回调中收到 event_id 为0的事件之后，即 start 成功后，去调用。
+
+* 注意：
+
+  如果有出厂设置默认蓝牙MAC地址，那么该接口获取的MAC地址和默认的蓝牙MAC地址是一致的；如果没有设置，那么该接口获取的地址，将是蓝牙启动后随机生成的静态地址，因此在每次重新上电运行蓝牙时都不相同。
 
 * 参数：
 
@@ -7536,6 +8062,10 @@ ble.serverInit(ble_callback)
 
   设置 BLE 名称。
 
+* 注意：
+
+  对于BLE，设备在广播时，如果希望扫描软件扫描时，能看到广播设备的名称，是需要在广播数据中包含蓝牙名称的，或者在扫描回复数据中包含设备名称。
+
 * 参数：
 
   | 参数 | 类型   | 说明                               |
@@ -7573,7 +8103,7 @@ ble.serverInit(ble_callback)
   | adv_type      | 无符号整型 | 广播类型，取值范围如下：<br>0 - 可连接的非定向广播，默认选择<br>1 - 可连接高占空比的定向广播<br>2 - 可扫描的非定向广播<br>3 - 不可连接的非定向广播<br>4 - 可连接低占空比的定向广播 |
   | addr_type     | 无符号整型 | 本地地址类型，取值范围如下：<br>0 - 公共地址<br>1 - 随机地址 |
   | channel       | 无符号整型 | 广播通道，取值范围如下：<br>1 - 37信道<br>2 - 38信道<br>4 - 39信道<br>7 - 上述3个通道都选择，默认该选项 |
-  | filter_policy | 无符号整型 | 广播过滤策略，取值范围如下：<br>0 - 处理所有设备的扫描和连接请求<br/>1 - 处理所有设备的连接请求和只处理白名单设备的扫描请求<br/>2 - 处理所有设备的扫描请求和只处理白名单设备的连接请求<br/>3 - 只处理白名单设备的连接和扫描请求 |
+  | filter_policy | 无符号整型 | 广播过滤策略，取值范围如下：<br>0 - 处理所有设备的扫描和连接请求<br/>1 - 处理所有设备的连接请求和只处理白名单设备的扫描请求（暂不支持）<br/>2 - 处理所有设备的扫描请求和只处理白名单设备的连接请求（暂不支持）<br/>3 - 只处理白名单设备的连接和扫描请求（暂不支持） |
   | discov_mode   | 无符号整型 | 发现模式，GAP协议使用，默认为2<br/>1 - 有限可发现模式<br/>2 - 一般可发现模式 |
   | no_br_edr     | 无符号整型 | 不用BR/EDR，默认为1，如果用则为0                             |
   | enable_adv    | 无符号整型 | 使能广播，默认为1，不使能则为0                               |
@@ -8094,6 +8624,9 @@ def ble_callback(args):
     elif event_id == event.BLE_STOP_STATUS_IND:  # ble stop
         if status == 0:
             print('[callback] ble stop successful.')
+            ble_status = ble.getStatus()
+            print('ble status is {}'.format(ble_status))
+            ble_gatt_server_release()
         else:
             print('[callback] ble stop failed.')
     elif event_id == event.BLE_CONNECT_IND:  # ble connect
@@ -8427,7 +8960,6 @@ def main():
             count = 0
             print('!!!!! stop BLE now !!!!!')
             ble_gatt_close()
-            ble_gatt_server_release()
             return 0
 
 
@@ -10210,13 +10742,13 @@ camCaputre.callback(callback)
 模块功能：对L76K GPS型号进行数据获取，可以得到模块定位是否成功，定位的经纬度数据，UTC授时时间，获取GPS模块的定位模式，获取GPS模块定位使用卫星数量，获取GPS模块定位可见卫星数量，获取定位方位角，GPS模块对地速度，模块定位大地高等数据信息。
 
 * 注意
-  当前仅展锐平台支持
+  当前仅ASR和展锐的EC200U/EC600U系列支持该功能。
 
 ##### 打开GNSS串口，读取并解析GNSS数据
 
-**gnss = GnssGetData(uartn,baudrate,databits,parity,stopbits,flowctl)**
+> **gnss = GnssGetData(uartn,baudrate,databits,parity,stopbits,flowctl)**
 
-**gnss.read_gnss_data()**
+> **gnss.read_gnss_data()**
 
 - **参数**
 
@@ -10229,136 +10761,142 @@ camCaputre.callback(callback)
 | stopbits | int  | 停止位（1 ~ 2）                                              |
 | flowctl  | int  | 硬件控制流（0 – FC_NONE， 1 – FC_HW）                        |
 
+* 返回值
+
+  无
+
 
 
 ##### 获取是否定位成功
 
-**gnss.isFix()**
+> **gnss.isFix()**
 
 - **参数**
 
-无
+  无
 
 - **返回值**
 
-1：定位成功
+  1：定位成功
 
-0：定位失败
+  0：定位失败
 
 
 
 ##### 获取UTC时间
 
-**gnss.getUtcTime()**
+> **gnss.getUtcTime()**
 
 - **参数**
 
-无
+  无
 
 - **返回值**
 
-UTC时间
+  成功返回UTC时间，失败返回整型-1
 
 
 
 ##### 获取GPS模块定位模式
 
-**gnss.getLocationMode()**
+> **gnss.getLocationMode()**
 
 - **参数**
 
-无
+  无
 
 - **返回值**
 
-| 0    | 定位不可用或者无效                  |
-| ---- | ----------------------------------- |
-| 1    | 定位有效,定位模式：GPS、SPS 模式    |
-| 2    | 定位有效,定位模式： DGPS、DSPS 模式 |
+| 返回值 | 描述                                |
+| ------ | ----------------------------------- |
+| -1     | 获取失败（串口未读到数据）          |
+| 0      | 定位不可用或者无效                  |
+| 1      | 定位有效,定位模式：GPS、SPS 模式    |
+| 2      | 定位有效,定位模式： DGPS、DSPS 模式 |
 
 
 
 ##### 获取GPS模块定位使用卫星数量
 
-**gnss.getUsedSateCnt()**
+> **gnss.getUsedSateCnt()**
 
 - **参数**
 
-无
+  无
 
 - **返回值**
 
-GPS模块定位使用卫星数量
+  成功返回GPS模块定位使用卫星数量，失败返回整型-1
 
 
 
 ##### 获取GPS模块定位的经纬度信息
 
-**gnss.getLocation()**
+> **gnss.getLocation()**
 
 - **参数**
 
-无
+  无
 
 - **返回值**
 
-GPS模块定位的经纬度信息
+  成功返回GPS模块定位的经纬度信息，失败返回整型-1
 
 
 
 ##### 获取GPS模块定位可见卫星数量
 
-**gnss.getViewedSateCnt()**
+> **gnss.getViewedSateCnt()**
 
 - **参数**
 
-无
+  无
 
 - **返回值**
 
-GPS模块定位可见卫星数量
+  成功返回GPS模块定位可见卫星数量，失败返回整型-1
 
 
 
 ##### 获取GPS模块定位方位角 
 
-**gnss.getCourse()**
+> **gnss.getCourse()**
 
 - **参数**
 
-无
+  无
 
 - **返回值**
-
 定位方位角，范围：0 ~ 359，以正北为参考平面。
+
 
 
 
 ##### 获取GPS模块定位大地高
 
-**gnss.getGeodeticHeight()**
+> **gnss.getGeodeticHeight()**
 
 - **参数**
 
-无
+  无
 
 - **返回值**
 
-定位大地高(单位:米)
+  成功返回定位大地高(单位:米)，失败返回整型-1
 
 
 
 ##### 获取GPS模块对地速度
 
-**gnss.getSpeed()**
+> **gnss.getSpeed()**
 
 - **参数**
 
-无
+  无
 
 - **返回值**
 
-GPS模块对地速度(单位:KM/h)
+  成功返回GPS模块对地速度(单位:KM/h)，失败返回整型-1
 
 
 
@@ -10398,7 +10936,10 @@ if __name__ == '__main__':
 0.0
 ```
 
+
+
 #### SecureData - 安全数据区
+
 模块功能：模组提供一块裸flash区域及专门的读写接口供客户存贮重要信息，且信息在烧录固件后不丢失(烧录不包含此功能的固件无法保证不丢失)。提供一个存储和读取接口，不提供删除接口。
 > 目前只支持EC600N、EC600S系列项目
 ##### 数据存储

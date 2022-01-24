@@ -91,9 +91,252 @@ This function starts the dial-up and activates the data link.
 
 
 
+##### User APN dialing (multiple user APN Settings are supported)
+
+> **dataCall.startByUserApns(apn_dict=None, filename=None)**
+
+If a user does not want to use the default dial-up function (you need to disable the default automatic dial-up function when the user starts up) and needs to use user APN to dial up to the Internet, but worries that setting only one APN may lead to dial-up failure in case of incorrect APN writing, you need to set multiple APN information. In this way, even if one or more of the preceding APN is incorrectly written and the dialing fails, the subsequent APNs are automatically used to continue the dialing attempt. In this case, the interface can be used to meet the requirements; This interface not only supports setting the multiple APN, but also supports two ways to store the APN information of users. The first way is that users directly save their APN information in the dictionary and directly built-in in the code. The second option is for users to store their APN information in json files in a usr directory or a subdirectory of usr.
+
+* Parameter
+
+| Parameter | Type   | Description                                                  |
+| --------- | ------ | ------------------------------------------------------------ |
+| apn_dict  | dict   | A dict that stores user APN information. Note the format requirements. For details, see an example. |
+| filename  | string | Json file name with file path. The file is used to store user APN information. For details, see the example. The path must start with "/usr/", such as "/usr/xxx.json" in the usr directory. |
+
+* Return Value
+
+  Returns a tuple containing two elements of the form:
+
+  `(stagecode, subcode)`
+
+  Returns (3,1) on success and 0 on failure, Other returned values are described as follows:
+
+
+| Return Value | type | Description                                                  |
+| ------------ | ---- | ------------------------------------------------------------ |
+| stagecode    | int  | Stage code, indicates the stage of the dialing.<br>1 - In the stage of obtaining SIM card status, the program returns the value when SIM card status is abnormal;<br>2 - The value returned when the program failed to obtain the network state or failed to obtain the network state in the stage of obtaining network state;<br>3 - The value returned by the program during the dialing;<br>Stagecode should normally return 3 when used by the user. The first two values are abnormal. |
+| subcode      | int  | Subcode，it is combined with the value of stagecode  to represent the specific state of dialing in different stages.<br/>When stagecode = 1:<br/>subcode indicates the state of the SIM card, range: [0, 21], for the description of each value, refer to the return value in sim.getStatus():[https://python.quectel.com/wiki/#/zh-cn/api/QuecPythonClasslib?id=sim-sim%e5%8d%a1](https://python.quectel.com/wiki/#/zh-cn/api/QuecPythonClasslib?id=sim-sim卡) <br/><br/>Subcode，it is combined with the value of stagecode  to represent the specific state of dialing in different stages.<br/>When stagecode = 1:<br/>subcode indicates the state of the SIM card, range: [0, 21], for the description of each value, refer to the return value in sim.getStatus():[https://python.quectel.com/wiki/#/zh-cn/api/QuecPythonClasslib?id=sim-sim%e5%8d%a1](https://python.quectel.com/wiki/#/zh-cn/api/QuecPythonClasslib?id=sim-sim卡) <br/><br/>When stagecode = 2:<br/>subcode indicates the state of the network registration, range: [0, 11], for the description of each values, refer to the return value in net.getState():[https://python.quectel.com/wiki/#/zh-cn/api/QuecPythonClasslib?id=net-%e7%bd%91%e7%bb%9c%e7%9b%b8%e5%85%b3%e5%8a%9f%e8%83%bd](https://python.quectel.com/wiki/#/zh-cn/api/QuecPythonClasslib?id=net-网络相关功能) <br/>Subcode = -1: indicates that the network status fails to be obtained.<br/>For other value, see the above link.<br/><br>When stagecode = 3 :<br/>subcode = -1: Indicates that all user APN attempts are made to dial up, but all attempts fail.<br>subcode = 0: Indicates that the module successfully dials before using the user APN. In this case, the following three situations may occur:<br>（1）The user does not disable the default automatic dialing function upon startup.<br>（2）The user successfully calls the dialing interface after starting the machine.<br/>（3）After startup, the user has executed the startByUserApns() interface and dialed successfully, and then executed the interface again.<br>subcode = 1: Dialing succeeded. |
+
+* note
+
+  The user APN can be saved in the dictionary built-in code, or can be saved in json file, the following describes the format of APN information:
+
+  1. A description of the format for saving APN information in the dict
+
+  （1）It must be in dictionary format, even if there is only APN information, it must be in the following format:
+
+  {"key":  {"profileIdx": x, "ipType": x, "apn": "xxx", "username": "xxx", "password": "xxx", "authType": x}}
+
+  （2）profileIdx, ipType, apn, username, password, and authType are required for each APN message, refer to the parameter description of the datacall.start () interface;
+
+  （3）Since the dictionary is an unordered structure, the APN information is not taken out first which APN is written before, which is random.
+
+  Example：
+
+  ```python
+  apn_infos = {
+      "1": {
+          "profileIdx": 1, 
+          "ipType": 0, 
+          "apn": "111111-apn", 
+          "username": "111111-user", 
+          "password": "111111-pwd", 
+          "authType": 0
+      },
+      "2": {
+          "profileIdx": 1, 
+          "ipType": 0, 
+          "apn": "222222-apn", 
+          "username": "222222-user", 
+          "password": "222222-pwd", 
+          "authType": 0
+      },
+      "3": {
+          "profileIdx": 1, 
+          "ipType": 0, 
+          "apn": "333333-apn", 
+          "username": "333333-user", 
+          "password": "333333-pwd", 
+          "authType": 0
+      }
+  }
+  
+  ```
+
+  2. A description of the format for saving APN information in a json file 
+
+  （1）It must be in dictionary format, even if there is only APN information, it must be in the following format:
+
+  {"key":  {"profileIdx": x, "ipType": x, "apn": "xxx", "username": "xxx", "password": "xxx", "authType": x}}
+
+  （2）profileIdx, ipType, apn, username, password, and authType are required for each APN message, refer to the parameter description of the datacall.start () interface;
+
+  ```json
+  {
+      "1": {
+          "profileIdx": 1, 
+          "ipType": 0, 
+          "apn": "111111-apn", 
+          "username": "111111-user", 
+          "password": "111111-pwd", 
+          "authType": 0
+      },
+      "2": {
+          "profileIdx": 1, 
+          "ipType": 0, 
+          "apn": "222222-apn", 
+          "username": "222222-user", 
+          "password": "222222-pwd", 
+          "authType": 0
+      },
+      "3": {
+          "profileIdx": 1, 
+          "ipType": 0, 
+          "apn": "333333-apn", 
+          "username": "333333-user", 
+          "password": "333333-pwd", 
+          "authType": 0
+      }
+  }
+  ```
+
+  3. You can select only one of the two saving modes for APN information based on user requirements;
+
+  4. This interface is used to replace the default dial-up function upon startup. If you choose to use this interface, you need to run this interface in the user script first. After this interface returns a success message, the dial-up networking is successful, and then perform other network services.
+
+Example
+
+```python
+import dataCall
+
+
+PROJECT_NAME = "QuecPython_DataCall_example"
+PROJECT_VERSION = "1.0.0"
+
+
+"""
+Method 1: Save APN information in code
+"""
+apn_infos = {
+    "1": {
+        "profileIdx": 1,
+        "ipType": 0,
+        "apn": "111111",
+        "username": "111111",
+        "password": "111111",
+        "authType": 0
+    },
+    "2": {
+        "profileIdx": 1,
+        "ipType": 0,
+        "apn": "222222",
+        "username": "222222",
+        "password": "222222",
+        "authType": 0
+    },
+    "3": {
+        "profileIdx": 1,
+        "ipType": 0,
+        "apn": "333333",
+        "username": "333333",
+        "password": "333333",
+        "authType": 0
+    }
+}
+
+if __name__ == '__main__':
+    stagecode, subcode = dataCall.startByUserApns(apn_dict=apn_infos)
+    if stagecode == 3:
+        if subcode == 1:
+            print('Dialing has been successful')
+        elif subcode == 0:
+            print('Check whether automatic dialing on startup is disabled or the interface is invoked for the first time  ')
+        else:
+            print('All APNs have been tried and dial-up failed')
+    elif stagecode == 1:
+        if subcode == 0:
+            print('Check whether a SIM card is inserted or whether the card slot is loose')
+        else:
+            print('The SIM card status is abnormal (status value: {}). Check whether the SIM card is in arrears'.format(subcode))
+    else:
+        if subcode == -1:
+            print('Failed to get the network status')
+        else:
+            print('The status of network register is abnormal, status :{}'.format(subcode))
+
+# =======================================================================================
+"""
+Method 2: Save APN information in a JSON file
+"""
+apn_file_path = '/usr/apns.json'
+
+if __name__ == '__main__':
+    stagecode, subcode = dataCall.startByUserApns(filename=apn_file_path)
+    if stagecode == 3:
+        if subcode == 1:
+            print('Dialing has been successful')
+        elif subcode == 0:
+            print('Check whether automatic dialing on startup is disabled or the interface is invoked for the first time  ')
+        else:
+            print('All APNs have been tried and dial-up failed')
+    elif stagecode == 1:
+        if subcode == 0:
+            print('Check whether a SIM card is inserted or whether the card slot is loose')
+        else:
+            print('The SIM card status is abnormal (status value: {}). Check whether the SIM card is in arrears'.format(subcode))
+    else:
+        if subcode == -1:
+            print('Failed to get the network status')
+        else:
+            print('The status of network register is abnormal, status :{}'.format(subcode))
+```
+
+
+
+- Enable or disable automatic dialing (take effect after restart)
+
+> **dataCall.poweronAutoDatacall(enable)**
+
+Enable or disable automatic dialing, take effect after restart. It is enabled by default.
+
+* Parameter
+
+| Parameter | Type | Description                                                  |
+| --------- | ---- | ------------------------------------------------------------ |
+| enable    | int  | 0 - disable automatic dialing<br>1 - enable automatic dialing |
+
+* Return Value
+
+  None
+
+* note
+
+  This interface is only applicable to development and debugging, because it takes effect only after being reset. If the user wants to turn off the automatic dialing function when the module is in mass production, he/she can take the following steps:
+
+  step 1: Create a file called system_config.json on your computer.
+
+  step 2: Copy the following content to the  system_config.json file and save it.  
+
+  ```json
+  {"replFlag": 0, "datacallFlag": 0}
+  ```
+
+  Parameter:
+
+  ​	replFlag - Enable or disable REPL, Please refer to the official Wiki documentation for details——QuecPythonThirdlib.md——system - Set system;
+
+  ​	datacallFlag - Enable or disable automatic dialing, 0-disable, 1-enable;
+
+  step 3: Use QPYCom to merge the system_config.json file into the firmware, which must be in the module's usr directory, just like merging main.py;
+
+  step 4: Download the firmware successfully merged in the previous step into the module. The module will automatically detect the configuration of the system_config.json file upon startup.
+
+
+
 ##### Configure APN Information
 
-> **dataCall.setApn(profileIdx, ipType, apn, username, password, authType)**
+> **dataCall.setApn(profileIdx, ipType, apn, username, password, authType, flag=0)**
 
 After calling this interface, the user_apn.json will be created in the user partition to save the APN configurations.
 
@@ -107,6 +350,7 @@ After calling this interface, the user_apn.json will be created in the user part
 | username   | string | Optional. APN user name.  The maximum length is 15 bytes.    |
 | password   | string | Optional. APN password. The maximum length is 15 bytes.      |
 | authType   | int    | Authentication type. 0-No authentication, 1-PAP, 2-CHAP.     |
+| flag       | int    | This parameter is optional. The default value is 0, indicating that only a user_apn.json file is created to save user APN information. If the value is 1, the user_apn.json file is created to save user APN information, and the APN information is used for dial-up immediately. No matter the value is 0 or 1, the APN configured by the user is used for startup dialing during the restart. |
 
 * Return Value
 
@@ -1927,10 +2171,10 @@ The function sets the current RAT and the roaming configuration.
 
 * Parameter
 
-| Parameter | Type | Description                                              |
-| --------- | ---- | -------------------------------------------------------- |
-| mode      | int  | RAT. Range: 0-18. For more details, see the table above. |
-| roaming   | int  | Turn on/off the roaming. (0: Turn off. 1: Turn on)       |
+| Parameter | Type | Description                                                  |
+| --------- | ---- | ------------------------------------------------------------ |
+| mode      | int  | RAT. Range: 0-18. For more details, see the table above.     |
+| roaming   | int  | Turn on/off the roaming. (0: Turn off. 1: Turn on). This parameter is optional, do not set this parameter for unsupported platforms. |
 
 * Return Value
 
@@ -1940,7 +2184,7 @@ The function sets the current RAT and the roaming configuration.
 
 * note
 
-  The BC25PA platform does not support this module function.
+  The BC25PA platform does not support this module function. The EC200U/EC600U does not support roaming parameters.
 
 
 ##### Obtain the Network Mode
@@ -4526,11 +4770,11 @@ usb.setCallback(usb_callback)
 
 It provides the USB network adapter function.
 
-NOTE：Currently, only the ASR platform supports it.
+NOTE：Currently, only the ASR platform and Unisoc supports it.
 
 ###### Setting the USBNET working type (Take effect after restart)
 
-USBNET.set_worktype(type)
+> **USBNET.set_worktype(type)**
 
 - Parameter
 
@@ -4542,9 +4786,49 @@ USBNET.set_worktype(type)
 
   Return 0 if the setting is successful, otherwise return -1.
 
+
+
+###### Getting the USBNET working type (Take effect after restart)
+
+> **USBNET.get_worktype()**
+
+* Parameter
+
+  None
+
+* Return Value
+
+  Return the USBNET working type if successful, otherwise return -1.
+  
+  1 - ECM type
+  
+  3 - RNDIS type
+
+
+
+###### Getting the USBNET status
+
+> **USBNET.get_status()**
+
+* Parameter
+
+  None
+
+* Return Value
+
+  Return the USBNET status if successful, otherwise return -1.
+
+  status：
+
+  0 - Not connected
+
+  1 - connected
+
+
+
 ###### Open USBNET
 
-USBNET.open()
+> **USBNET.open()**
 
 - Parameter
 
@@ -4553,6 +4837,22 @@ USBNET.open()
 - Return Value
 
   Return 0 if the opening is successful, otherwise return -1.
+  
+  
+
+###### Close USBNET
+
+> **USBNET.close()**
+
+- Parameter
+
+  None
+
+- Return Value
+
+  Return 0 if successful, otherwise return -1.
+
+
 
 Example
 
@@ -6195,7 +6495,7 @@ NA
 
 ###### Example
 
-```PYTHON
+```python
 '''
 @Author: Pawn
 @Date: 2020-08-12
@@ -6847,7 +7147,7 @@ True
 
   | Parameter     | Type         | Description                                                  |
   | ------------- | ------------ | ------------------------------------------------------------ |
-  | timeout       | Integer type | This parameter is the timeout of upper layer application. When the application triggers timeout, it actively reports the scanned hot spot information. The application automatically reports the hot spot information if it scans all the hop spots which have been set previously or the underlying layer scan reaches the frequency sweeping timeout before the timeout of the application. <br>Range:<br/>600S: 4–255; unit: second.<br/>200U/600U: 120–5000; unit: second. |
+  | timeout       | Integer type | This parameter is the timeout of upper layer application. When the application triggers timeout, it actively reports the scanned hot spot information. The application automatically reports the hot spot information if it scans all the hop spots which have been set previously or the underlying layer scan reaches the frequency sweeping timeout before the timeout of the application. <br>Range:<br/>600S: 4–255; unit: s.<br/>200U/600U: 120–5000; unit: ms. |
   | round         | Integer type | This parameter is the scanning rounds of wifi. When reaching the scanning rounds, the scan stops and the scanning results are obtained. <br/>Range:<br/>600S: 1–3; unit: round<br/>200U/600U: 1–10; unit: round |
   | max_bssid_num | Integer type | This parameter determines the maximum number of hot spots to be scanned. If the number of hot spots scanned by the underlying layer reaches the maximum, the scan stops and the scanning results are obtained. <br/>Range:<br/>600S: 4–30<br/>200U/600U: 1–300 |
   | scan_timeout  | Integer type | This parameter is the wifi hot spot scanning timeout of underlying layer. If the underlying layer scan reaches the hot spot scanning timeout set previously,  the scan stops and the scanning results are obtained. Range: 1–255. Unit: second. |
@@ -7028,6 +7328,8 @@ See comprehensive example
 
 ##### Get BLE Status
 
+> **ble.getStatus()**
+
 * Function:
 
   Get  the status of BLE.
@@ -7052,9 +7354,15 @@ See comprehensive example
 
 ##### Get BLE Public Address
 
+> **ble.getPublicAddr()**
+
 * Function:
 
   Gets the BLE public address.This interface can be called only after BLE has been initialized and started successfully, for example, after receiving an event with event_id 0 in the callback.
+
+* note:
+
+  If there is a default Bluetooth MAC address, the MAC address obtained by the interface is the same as the default Bluetooth MAC address. If it is not set, the address obtained by the interface will be a static address generated randomly after Bluetooth is started, so it will be different each time Bluetooth is powered on again.
 
 * Parameter:
 
@@ -7262,6 +7570,10 @@ See comprehensive example
 
   Set BLE local name.
 
+* note:
+
+  For BLE, if you want  to see the name of the broadcast device when scanning, you need to include the Bluetooth name in the broadcast data, or include the device name in the scan reply data.
+
 * Parameter:
 
   | Parameter | Type         | Description                           |
@@ -7301,7 +7613,7 @@ See comprehensive example
   | adv_type      | Unsigned integer type | Advertising type. <br>0 - CONNECTABLE UNDIRECTED, default <br>1 - CONNECTABLE HIGH DUTY CYCLE DIRECTED<br>2 - SCANNABLE UNDIRECTED<br>3 - NON CONNECTABLE UNDIRECTED<br>4 - CONNECTABLE LOW DUTY CYCLE DIRECTED |
   | addr_type     | Unsigned integer type | Local address type.  <br>0 - Public address<br>1 - Random address |
   | channel       | Unsigned integer type | Advertising channel. <br>1 - Advertising channel 37<br>2 - Advertising channel 38<br>4 - Advertising channel 39<br>7 - Advertising channel 37 and 38 and 39, default |
-  | filter_policy | Unsigned integer type | Advertising filter policy.<br>0 - Process scan and connection requests from all devices<br/>1 - Process connection requests from all devices and scan requests from only white list devices<br/>2 - Process scan requests from all devices and connection requests from only white list devices<br/>3 - Process connection and scan requests from only white list devices |
+  | filter_policy | Unsigned integer type | Advertising filter policy.<br>0 - Process scan and connection requests from all devices<br/>1 - Process connection requests from all devices and scan requests from only white list devices(Not currently supported)<br/>2 - Process scan requests from all devices and connection requests from only white list devices(Not currently supported)<br/>3 - Process connection and scan requests from only white list devices(Not currently supported) |
   | discov_mode   | Unsigned integer type | Discovery mode. Used by GAP protocol and the default is 2 .<br/>1 - Limited Discoverable Mode<br/>2 - General Discoverable Mode |
   | no_br_edr     | Unsigned integer type | No use of BR/EDR. The default is 1. The value is 0 if BR/EDR is used. |
   | enable_adv    | Unsigned integer type | Enable advertising. The default is 1. The value is 0 if advertising is disabled. |
@@ -7850,6 +8162,9 @@ def ble_callback(args):
     elif event_id == event.BLE_STOP_STATUS_IND:  # ble stop
         if status == 0:
             print('[callback] ble stop successful.')
+            ble_status = ble.getStatus()
+            print('ble status is {}'.format(ble_status))
+            ble_gatt_server_release()
         else:
             print('[callback] ble stop failed.')
     elif event_id == event.BLE_CONNECT_IND:  # ble connect
@@ -8183,7 +8498,6 @@ def main():
             count = 0
             print('!!!!! stop BLE now !!!!!')
             ble_gatt_close()
-            ble_gatt_server_release()
             return 0
 
 
@@ -9890,13 +10204,13 @@ Scandecode.callback(callback)
 
 Module function: Get positioning data from GPS model of L76 module, including whether the module locates successfully, latitude, longitude, UTC time, positioning mode,  number of satellites, number of visible satellites, azimuth angle, speed over the ground, geodetic height and so on. 
 
-Note: The BC25PA platform does not support this module function.
+Note: Currently, only the ASR and Unisoc EC200U/EC600U series support this function.
 
 ###### Turn on GNSS Port to Read and Parse GNSS Data
 
-**gnss = GnssGetData(uartn,baudrate,databits,parity,stopbits,flowctl)**
+> **gnss = GnssGetData(uartn,baudrate,databits,parity,stopbits,flowctl)**
 
-**gnss.read_gnss_data()**
+> **gnss.read_gnss_data()**
 
 - Parameter
 
@@ -9913,132 +10227,134 @@ Note: The BC25PA platform does not support this module function.
 
 ###### Get Whether the Positioning is Successful
 
-**gnss.isFix()**
+> **gnss.isFix()**
 
 - Parameter
 
-None.
+  None.
 
 - Return Value
 
-1: Successful positioning 
+  1: Successful positioning 
 
-0:  Positioning failure
+  0:  Positioning failure
 
 
 
 ###### Get UTC Time
 
-**gnss.getUtcTime()**
+> **gnss.getUtcTime()**
 
 - **Parameter**
 
-None.
+  None.
 
 - **Return Value**
 
-UTC Time
+  Return UTC Time on success, otherwise return -1.
 
 
 
 ###### Get Positioning Mode
 
-**gnss.getLocationMode()**
+> **gnss.getLocationMode()**
 
 - **Parameter**
 
-None.
+  None.
 
 - **Return Value**
 
-| 0    | Unavailable or invalid positioning                  |
-| ---- | --------------------------------------------------- |
-| 1    | A valid positioning, positioning mode: GPS or SPS   |
-| 2    | A valid positioning, positioning mode: DGPS or DSPS |
+| value | description                                         |
+| ----- | --------------------------------------------------- |
+| -1    | get data failed                                     |
+| 0     | Unavailable or invalid positioning                  |
+| 1     | A valid positioning, positioning mode: GPS or SPS   |
+| 2     | A valid positioning, positioning mode: DGPS or DSPS |
 
 
 
 ###### Get Number of Satellites
 
-**gnss.getUsedSateCnt()**
+> **gnss.getUsedSateCnt()**
 
 - **Parameter**
 
-None.
+  None.
 
 - **Return Value**
 
-The number of satellites of GPS module.
+  Return the number of satellites of GPS module on success,  otherwise return -1.
 
 
 
 ###### Get Latitude and Longitude Information
 
-**gnss.getLocation()**
+> **gnss.getLocation()**
 
 - **Parameter**
 
-None.
+  None.
 
 - **Return Value**
 
-The latitude and longitude information of GPS module.
+  Return the latitude and longitude information of GPS module on success, otherwise return -1.
 
 
 
 ###### Get Number of Visible Satellites
 
-**gnss.getViewedSateCnt()**
+> **gnss.getViewedSateCnt()**
 
 - **Parameter**
 
-None.
+  None.
 
 - **Return Value**
 
-The number of visible satellites of GPS module.
+  Return the number of visible satellites of GPS module on success, otherwise return -1.
 
 
 
 ###### Get Azimuth Angle 
 
-**gnss.getCourse()**
+> **gnss.getCourse()**
 
 - **Parameter**
 
-None.
+  None.
 
 - **Return Value**
 
-Azimuth angle. Range: 0–359, based on true north.
+  Return azimuth angle on success, Range: 0–359, based on true north, otherwise return -1.
 
 
 
 ###### Get Geodetic Height
 
-**gnss.getGeodeticHeight()**
+> **gnss.getGeodeticHeight()**
 
 - **Parameter**
 
-None.
+  None.
 
 - **Return Value**
 
-Geodetic height. Unit: m.
+  Return geodetic height(Unit: m) , otherwise return -1.
 
 
 
 ###### Get  Speed Over the Ground
 
-**gnss.getSpeed()**
+> **gnss.getSpeed()**
 
 - **Parameter**
 
-None.
+  None.
 
 - **Return Value**
 
-The speed over the ground of GPS module. Unit: KM/h.
+  Return the speed over the ground of GPS module(Unit: KM/h), otherwise return -1 .
 
 
 
