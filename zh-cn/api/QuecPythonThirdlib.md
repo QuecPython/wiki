@@ -2054,7 +2054,7 @@ q.put("this is a test msg")
 
 发布消息, 对应订阅的topic将收到并多线程对此消息处理, 
 
-> **sys_bus.pulish(topic , msg)**
+> **sys_bus.publish(topic , msg)**
 
 - 参数
 
