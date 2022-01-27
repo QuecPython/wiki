@@ -157,7 +157,7 @@ In [11]: b
 Out[11]: [1, 2, 3, 4]
 ```
 
-![](C:\Users\sonia.liu\AppData\Roaming\Typora\typora-user-images\image-20210728153707264.png)
+![](images\image-20210728153707264.png)
 
 It is important to understand what Python references mean, when, how, and why data is replicated. Especially when you use Python to deal with large data sets.
 
@@ -1452,7 +1452,7 @@ It takes a while to get familiar with using slices, especially if you've learned
 
 ![](images\1244.jpg)
 
-![image-20210728171647093](C:\Users\sonia.liu\AppData\Roaming\Typora\typora-user-images\image-20210728171647093.png)
+![image-20210728171647093](images\image-20210728171647093.png)
 
 You can take one element at a time by using ` step ` after the second colon:
 
