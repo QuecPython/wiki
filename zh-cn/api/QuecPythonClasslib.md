@@ -4252,9 +4252,9 @@ record_test = audio.Record()
 * 示例
 
 ```python
-record_test.start(“test.wav”,40)	#录制wav格式
-record_test.start(“test.amr”,40)	#录制amr格式
-record_test.start(“test”,40)	#录制amr格式
+record_test.start("test.wav",40)	#录制wav格式
+record_test.start("test.amr",40)	#录制amr格式
+record_test.start("test",40)	#录制amr格式
 ```
 
 
