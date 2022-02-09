@@ -64,7 +64,7 @@ This function starts the dial-up and activates the data link.
 
 | Parameter  | Type   | Description                                                  |
 | ---------- | ------ | ------------------------------------------------------------ |
-| profileIdx | int    | PDP context index. Range: 1-8. It is generally set to 1, if set as 2-8, the private APN and password may be required. |
+| profileIdx | int    | PDP context index. Range: 1-8 [volte version with the largest default PID is used to register IMS, please do not repeat the operation]. It is generally set to 1, if set as 2-8, the private APN and password may be required. |
 | ipType     | int    | IP type. 0-IPV4, 1-IPV6, 2-IPV4 and IPV6.                    |
 | apn        | string | Optional. APN name. The maximum length is 63 bytes.          |
 | username   | string | Optional. APN user name.  The maximum length is 15 bytes.    |
