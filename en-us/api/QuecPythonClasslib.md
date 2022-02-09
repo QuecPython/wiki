@@ -3826,7 +3826,7 @@ Set audio volume.
 
 | Parameter | Parameter Type | Description                                                  |
 | --------- | -------------- | ------------------------------------------------------------ |
-| vol       | int            | Volume. Range: 1–11. The higher the number, the higher the volume. |
+| vol       | int            | Volume. Range: 0 –11. The higher the number, the higher the volume. |
 
 * Return Value
 
@@ -10166,11 +10166,13 @@ Module function: Get positioning data from GPS model of L76 module, including wh
 
 Note: Currently, only the ASR and Unisoc EC200U/EC600U series support this function.
 
-###### Turn on GNSS Port to Read and Parse GNSS Data
 
+
+##### Create gnss object
+
+> **from gnss import GnssGetData**
+>
 > **gnss = GnssGetData(uartn,baudrate,databits,parity,stopbits,flowctl)**
-
-> **gnss.read_gnss_data()**
 
 - Parameter
 
@@ -10183,9 +10185,140 @@ Note: Currently, only the ASR and Unisoc EC200U/EC600U series support this funct
 | stopbits  | int  | Stop bit (1 ~ 2)                                               |
 | flowctl   | int  | Hardware flow control (0 – FC_NONE， 1 – FC_HW)              |
 
+* Return Value
+
+  None
+
+* Example
+
+```python
+from gnss import GnssGetData
+gnss = GnssGetData(1, 9600, 8, 0, 1, 0)
+```
 
 
-###### Get Whether the Positioning is Successful
+
+##### Read and Parse GNSS Data
+
+> **gnss.read_gnss_data(max_retry=1, debug=0)**
+
+* Parameter
+
+| Parameter | Type | Description                                                  |
+| --------- | ---- | ------------------------------------------------------------ |
+| max_retry | int  | This parameter is optional. Indicates the maximum number of automatic re-reading attempts when the read GNSS is invalid. If the length of read data is 0 (that is, no data is read), exit directly. If any GNGGA, GNRMC, or GPGSV statement is not found or found but the data is invalid, then the next packet of data will be read again. Exit until the GNGGA, GNRMC, and GPGSV statements are found and the data is valid or the maximum number of attempts is reached. The default value is 1, indicating that data is read only once. |
+| debug     | int  | This parameter is optional. The default value is 0. Indicates whether debugging information is output in the process of reading and parsing GNSS data. 0 indicates that no detailed information is output, and 1 indicates that detailed information is output, so that users can intuitively see the analysis results and compare them. Note that if the debug value is 0, it does not output all debugging information, but only some simple and basic information. For example, if the corresponding data is not found in the original GNSS data or the data is invalid, the message is displayed indicating that the data is invalid or the relevant data is not found. For details, see the example. |
+
+* Return Value
+
+  Returns the length of GNSS data read from the serial port, in bytes.
+
+* Example
+
+```python
+#=========================================================================
+gnss.read_gnss_data()	# read only once and no detailed debugging information is displayed
+4224	# Read data successfully, and parse GNGGA, GNRMC, and GPGSV statements successfully, return the original length of the read data directly
+#=========================================================================
+gnss.read_gnss_data()  # read only once and no detailed debugging information is displayed
+GNGGA data is invalid. # Data reading succeeds, but the GNGGA location data is invalid
+GNRMC data is invalid. # Data reading succeeds, but the GNRMC location data is invalid
+648		# Returns the length of the original data read
+#=========================================================================
+gnss.read_gnss_data(max_retry=3)  # Set the maximum number of automatic reads to 3
+Not find GPGSV data or GPGSV data is invalid.  # GPGSV data not found or invalid for the first read
+continue read.        # Continue reading the next packet of data
+Not find GNGGA data.  # The second read failed to find GNGGA data
+Not find GNRMC data.  # The second read failed to find GNRMC data
+continue read.        # Continue reading the next packet of data
+Not find GNGGA data.  # The third read failed to find GNGGA data
+Not find GNRMC data.  # The third read failed to find GNRMC data
+continue read.        # If the third attempt fails again, the system determines that the maximum number of attempts has reached and exits
+128
+#=========================================================================
+gnss.read_gnss_data(debug=1)  # Set to read parsing process output details
+GGA data : ['GNGGA', '021224.000', '3149.27680', 'N', '11706.93369', 'E', '1', '19', '0.9', '168.2', 'M', '-5.0', 'M', '', '*52']  # Output GNGGA data matched from the original GNSS data and simply processed
+RMC data : ['GNRMC', '021224.000', 'A', '3149.27680', 'N', '11706.93369', 'E', '0.00', '153.28', '110122', '', '', 'A', 'V*02']  # Output GNRMC data matched from the original GNSS data and simply processed
+total_sen_num = 3, total_sat_num = 12  # Output the total number of complete GPGSV statements and the number of visible satellites
+# The following is the specific GPGSV statement information
+[0] : ['$GPGSV', '3', '1', '12', '10', '79', '210', '35', '12', '40', '070', '43', '21', '08', '305', '31', '23', '46', '158', '43', '0*6E']
+[1] : ['$GPGSV', '3', '2', '12', '24', '', '', '26', '25', '54', '125', '42', '31', '', '', '21', '32', '50', '324', '34', '0*64']
+[2] : ['$GPGSV', '3', '3', '12', '193', '61', '104', '44', '194', '58', '117', '42', '195', '05', '162', '35', '199', '', '', '32', '0*54']
+4224
+```
+
+
+
+##### Get the original GNSS data read
+
+> **gnss.getOriginalData()**
+
+This interface is used to return the original GNSS data read from the serial port. If users want to get the original GNSS data for their own processing or some data confirmation, they can get it through this interface. 
+
+* Parameter
+
+  None
+
+* Return Value
+
+  Returns original GNSS data read from the serial port as a string.
+
+* Example
+
+```python
+data = gnss.getOriginalData()
+print(data)
+# Due to the large amount of data, only partial results are listed
+00,A,3149.28094,N,11706.93869,E,0.00,153.28,110122,,,A,V*04
+$GNVTG,153.28,T,,M,0.00,N,0.00,K,A*2E
+$GNZDA,021555.000,11,01,2022,00,00*4D
+$GPTXT,01,01,01,ANTENNA OK*35
+$GNGGA,021556.000,3149.28095,N,11706.93869,E,1,24,0.6,166.5,M,-5.0,M,,*5E
+$GNGLL,3149.28095,N,11706.93869,E,021556.000,A,A*47
+$GNGSA,A,3,10,12,21,23,24,25,32,193,194,195,199,,1.0,0.6,0.8,1*35
+$GNGSA,A,3,01,04,07,09,14,21,22,24,38,39,42,45,1.0,0.6,0.8,4*36
+... 
+$GNGGA,021600.000,3149.28096,N,11706.93877,E,1,25,0.6,166.4,M,-5.0,M,,*52
+$GNGLL,3149.28096,N,11706.93877,E,021600.000,A,A*4B
+$GNGSA,A,3,10,12,21,23,24,25,31,32,193,194,195,199,1.0,0.6,0.8,1*37
+$GNGSA,A,3,01,04,07,09,$GNGGA,021601.000,3149.28096,N,11706.93878,E,1,25,0.6,166.4,M,-5.0,M,,*5C
+$GNGLL,3149.2809
+```
+
+
+
+##### Check the validity of the parsing result
+
+> **gnss.checkDataValidity()**
+
+The functional interface provided by the GNSS module obtains data from GNGGA, GNRMC and GPGSV statements in the original GNSS packets read from the serial port. This interface is used to check the validity of GNGGA, GNRMC and GPGSV statements in a packet of GNSS data read from the serial port.
+
+* Parameter
+
+  None
+
+* Return Value
+
+  Returns a tuple of the form` (gga_valid, rmc_valid, gsv_valid)`
+
+  `gga_valid` - Indicates whether GNGGA data is matched and parsed successfully. 0 indicates that GNGGA data is not matched or invalid. 1 indicates that GNGGA data is valid;
+
+  `rmc_valid` - Indicates whether GNRMC data is matched and parsed successfully. 0 indicates that GNRMC data is not matched or invalid. 1 indicates that GNRMC data is valid;
+
+  `gsv_valid` - Indicates whether GPGSV data is matched and parsed successfully. 0 indicates that GPGSV data is not matched or invalid. 1 indicates that GPGSV data is valid.
+
+  If the user only cares about the location result, that is, whether the GNGGA data is valid, the `gga_valid` parameter is 1 (or whether the location is successful through the gnss.isFix () interface), and all three parameters are not required to be 1. GNRMC data is parsed to obtain the earth speed, and GPGSV data is parsed to obtain the number of visible satellites and their corresponding azimuth angles. Therefore, if you do not care about these parameters, you can ignore `rmc_valid` and `gsv_valid`.
+
+* Example
+
+```python
+gnss.checkDataValidity()
+(1, 1, 1)  #  GNGGA, GNRMC, and GPGSV data are matched and parsed successfully
+```
+
+
+
+##### Get Whether the Positioning is Successful
 
 > **gnss.isFix()**
 
@@ -10199,31 +10332,45 @@ Note: Currently, only the ASR and Unisoc EC200U/EC600U series support this funct
 
   0:  Positioning failure
 
+* Example
+
+```python
+gnss.isFix()
+1
+```
 
 
-###### Get UTC Time
+
+##### Get UTC Time
 
 > **gnss.getUtcTime()**
 
-- **Parameter**
+- Parameter
 
   None.
 
-- **Return Value**
+- Return Value
 
-  Return UTC Time on success, otherwise return -1.
+  Return UTC Time as a string on success, otherwise return -1.
+
+* Example
+
+```python
+gnss.getUtcTime()
+'06:22:05.000'  # hh:mm:ss.sss
+```
 
 
 
-###### Get Positioning Mode
+##### Get Positioning Mode
 
 > **gnss.getLocationMode()**
 
-- **Parameter**
+- Parameter
 
   None.
 
-- **Return Value**
+- Return Value
 
 | value | description                                         |
 | ----- | --------------------------------------------------- |
@@ -10231,126 +10378,150 @@ Note: Currently, only the ASR and Unisoc EC200U/EC600U series support this funct
 | 0     | Unavailable or invalid positioning                  |
 | 1     | A valid positioning, positioning mode: GPS or SPS   |
 | 2     | A valid positioning, positioning mode: DGPS or DSPS |
+| 6     | Estimation (dead reckoning) model                   |
+
+* Example
+
+```python
+gnss.getLocationMode()
+1
+```
 
 
 
-###### Get Number of Satellites
+##### Get number of satellites used for positioning
 
 > **gnss.getUsedSateCnt()**
 
-- **Parameter**
+- Parameter
 
   None.
 
-- **Return Value**
+- Return Value
 
-  Return the number of satellites of GPS module on success,  otherwise return -1.
+  The number of satellites used for GPS module positioning is returned as an integer on success, and integer -1 is returned on failure.
+
+* Example
+
+```python
+gnss.getUsedSateCnt()
+24
+```
 
 
 
-###### Get Latitude and Longitude Information
+##### Get Latitude and Longitude Information
 
 > **gnss.getLocation()**
 
-- **Parameter**
+* Parameter
 
   None.
 
-- **Return Value**
+* Return Value
 
-  Return the latitude and longitude information of GPS module on success, otherwise return -1.
+  The latitude and longitude information of the GPS module is returned on success, and integer -1 is returned on failure. The return value is in the following format on success:
+
+  `(longitude, lon_direction, latitude, lat_direction)`
+
+  `longitude` - float type
+
+  `lon_direction` - Longitude direction. The value is a string of characters. E indicates east longitude and W indicates west longitude
+
+  `latitude` - float type
+
+  `lat_direction` -  Latitude direction. The value is a string of characters. N indicates north latitude and S indicates south latitude
+
+* Example
+
+```python
+gnss.getLocation()
+(117.1156448333333, 'E', 31.82134916666667, 'N')
+```
 
 
 
-###### Get Number of Visible Satellites
+##### Get Number of Visible Satellites
 
 > **gnss.getViewedSateCnt()**
 
-- **Parameter**
+- Parameter
 
   None.
 
-- **Return Value**
+- Return Value
 
   Return the number of visible satellites of GPS module on success, otherwise return -1.
 
+* Example
+
+```python
+gnss.getViewedSateCnt()
+12
+```
 
 
-###### Get Azimuth Angle 
+
+##### Get the azimuth of the visible GNSS satellite
 
 > **gnss.getCourse()**
 
-- **Parameter**
+- Parameter
 
   None.
 
-- **Return Value**
+- Return Value
 
-  Return azimuth angle on success, Range: 0–359, based on true north, otherwise return -1.
+  Returns all visible GNSS satellite azimuth angles on success, Range: 0–359, based on true north, otherwise return -1.The return format is dictionary, where key indicates the satellite number and value indicates the azimuth. Note that the value of value can be either an integer value or ", depending on whether the azimuth in the GPGSV statement in the original GNSS data has a value. The return value is of the following form:
+  
+  `{key:value, ...,  key:value}`
+
+* Example
+
+```python
+gnss.getCourse()
+{'10': 204, '195': 162, '12': 68, '193': 105, '32': 326, '199': 162, '25': 122, '31': 247, '24': 52, '194': 116, '21': 304, '23': 159}
+```
 
 
 
-###### Get Geodetic Height
+##### Get the altitude of the GPS module
 
 > **gnss.getGeodeticHeight()**
 
-- **Parameter**
+- Parameter
 
   None.
 
-- **Return Value**
+- Return Value
 
-  Return geodetic height(Unit: m) , otherwise return -1.
+  The float altitude is returned in meters on success, and integer -1 on failure.
+
+* Example
+
+```python
+gnss.getGeodeticHeight()
+166.5
+```
 
 
 
-###### Get  Speed Over the Ground
+##### Get  Speed Over the Ground
 
 > **gnss.getSpeed()**
 
-- **Parameter**
+- Parameter
 
   None.
 
-- **Return Value**
+- Return Value
 
-  Return the speed over the ground of GPS module(Unit: KM/h), otherwise return -1 .
-
-
+  Return the speed over the ground of GPS module(Unit: KM/h), float type, otherwise return -1 .
 
 - Example
 
 ```python
-from machine import UART
-from gnss import GnssGetData
-import utime
-
-if __name__ == '__main__':
-    print("#### enter system main####")
-    gnss=GnssGetData(1, 9600, 8, 0, 1, 0)
-    while True:
-        gnss.read_gnss_data()
-        print(gnss.isFix())
-        print(gnss.getUtcTime())
-        print(gnss.getLocationMode())
-        print(gnss.getUsedSateCnt())
-        print(gnss.getLocation())
-        print(gnss.getViewedSateCnt())
-        print(gnss.getCourse())
-        print(gnss.getGeodeticHeight())
-        print(gnss.getSpeed())
-        utime.sleep(3)
-    
-    
-Results:
-1
-020031.000
-1
-16
-(22.32905, 'N', 113.5597, 'E')
-13
-034
-67.5
+gnss.getSpeed()
 0.0
 ```
 
