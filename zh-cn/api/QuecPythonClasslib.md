@@ -121,7 +121,7 @@ myprint()
 
 * 注意
 
-  用户apn即可以保存在字典中内置到代码里面，也可以保存到 json文件中，下面说明apn信息的保存格式：
+  用户apn既可以保存在字典中内置到代码里面，也可以保存到 json文件中，下面说明apn信息的保存格式：
 
   1、字典中apn信息保存格式说明
 
@@ -4252,9 +4252,9 @@ record_test = audio.Record()
 * 示例
 
 ```python
-record_test.start(“test.wav”,40)	#录制wav格式
-record_test.start(“test.amr”,40)	#录制amr格式
-record_test.start(“test”,40)	#录制amr格式
+record_test.start("test.wav",40)	#录制wav格式
+record_test.start("test.amr",40)	#录制amr格式
+record_test.start("test",40)	#录制amr格式
 ```
 
 
@@ -4930,7 +4930,7 @@ pk.powerKeyEventRegister(pwk_callback)
 | 参数      | 参数类型 | 参数说明                                                     |
 | --------- | -------- | ------------------------------------------------------------ |
 | PWMn      | int      | PWM号<br/>注：EC100YCN平台，支持PWM0-PWM3，对应引脚如下：<br/>PWM0 – 引脚号19<br/>PWM1 – 引脚号18<br/>PWM2 – 引脚号23<br/>PWM3 – 引脚号22<br/>注：EC600SCN/EC600N平台，支持PWM0-PWM3，对应引脚如下：<br/>PWM0 – 引脚号52<br/>PWM1 – 引脚号53<br/>PWM2 – 引脚号70<br/>PWM3 – 引脚号69<br />注：EC800N平台，支持PWM0-PWM3，对应引脚如下：<br/>PWM0 – 引脚号79<br/>PWM1 – 引脚号78<br/>PWM2 – 引脚号16<br/>PWM3 – 引脚号49<br />注：EC200UCN平台，支持PWM0，对应引脚如下：<br />PWM0 – 引脚号135<br />注：EC600UCN平台，支持PWM0，对应引脚如下：<br />PWM0 – 引脚号70<br /> |
-| ABOVE_xx  | int      | EC600SCN/EC600N/EC800N平台:<br />PWM.ABOVE_MS				ms级取值范围：(0,1023]<br/>PWM.ABOVE_1US				us级取值范围：(0,157]<br/>PWM.ABOVE_10US				us级取值范围：(1,1575]<br/>PWM.ABOVE_BELOW_US			ns级 取值(0,1024]<br />EC200U/EC600U平台:<br />PWM.ABOVE_MS				ms级取值范围：(0,10]<br/>PWM.ABOVE_1US				us级取值范围：(0,10000]<br/>PWM.ABOVE_10US				us级取值范围：(0,10000]<br/>PWM.ABOVE_BELOW_US			ns级 取值[100,65535] |
+| ABOVE_xx  | int      | EC600SCN/EC600N/EC800N平台:<br />PWM.ABOVE_MS				ms级取值范围：(0,1023]<br/>PWM.ABOVE_1US				us级取值范围：(0,157]<br/>PWM.ABOVE_10US				us级取值范围：(1,1575]<br/>PWM.ABOVE_BELOW_US			ns级 取值(0,1024]<br />EC200U/EC600U平台:<br />PWM.ABOVE_MS				ms级取值范围：(0,10]<br/>PWM.ABOVE_1US				us级取值范围：(0,10000]<br/>PWM.ABOVE_10US				us级取值范围：(1,10000]<br/>PWM.ABOVE_BELOW_US			ns级 取值[100,65535] |
 | highTime  | int      | ms级时，单位为ms<br/>us级时，单位为us<br/>ns级别：需要使用者计算<br/>               频率 = 13Mhz / cycleTime<br/>               占空比 = highTime/ cycleTime |
 | cycleTime | int      | ms级时，单位为ms<br/>us级时，单位为us<br/>ns级别：需要使用者计算<br/>             频率 = 13Mhz / cycleTime<br/>             占空比 = highTime/ cycleTime |
 
@@ -5708,7 +5708,7 @@ if __name__ == '__main__':
 
 | 参数 | 类型   | 说明       |
 | ---- | ------ | ---------- |
-| data | string | 发送的数据 |
+| data | buf/string  | 发送的数据 |
 
 * 返回值
 
@@ -6511,6 +6511,198 @@ if __name__ == '__main__':
 
 ```
 
+##### I2C_simulation
+
+类功能：用于gpio模拟标准i2c协议。
+
+除了创建对象外，其它的操作（读写）均与I2C一致
+
+###### 
+
+###### 创建I2C_simulation对象
+
+> **from machine import I2C_simulation**
+>
+> **i2c_obj = I2C_simulation(GPIO_clk,  GPIO_sda, CLK)**
+
+* 参数说明
+
+| 参数     | 类型 | 说明                                                  |
+| -------- | ---- | ----------------------------------------------------- |
+| GPIO_clk | int  | i2c的CLK引脚(需要控制的GPIO引脚号，参照Pin模块的定义) |
+| GPIO_sda | int  | i2c的SDA引脚(需要控制的GPIO引脚号，参照Pin模块的定义) |
+| CLK      | int  | i2c的频率 （0,1000000Hz]                              |
+
+- 示例
+
+```python
+from machine import I2C_simulation
+
+i2c_obj = I2C_simulation(I2C_simulation.GPIO10, I2C_simulation.GPIO11, 300)  # 返回i2c对象
+```
+
+
+
+###### 读取数据
+
+> **I2C_simulation.read(slaveaddress, addr,addr_len, r_data, datalen, delay)**
+
+从 I2C 总线中读取数据。
+
+**参数说明**
+
+| 参数         | 类型      | 说明                             |
+| ------------ | --------- | -------------------------------- |
+| slaveaddress | int       | i2c 设备地址                     |
+| addr         | bytearray | i2c 寄存器地址                   |
+| addr_len     | int       | 寄存器地址长度                   |
+| r_data       | bytearray | 接收数据的字节数组               |
+| datalen      | int       | 字节数组的长度                   |
+| delay        | int       | 延时，数据转换缓冲时间（单位ms） |
+
+* 返回值
+
+成功返回整型值0，失败返回整型值-1。
+
+
+
+###### 写入数据
+
+> **I2C_simulation.write(slaveaddress, addr, addr_len, data, datalen)**
+
+从 I2C 总线中写入数据。
+
+* 参数说明
+
+| 参数         | 类型      | 说明           |
+| ------------ | --------- | -------------- |
+| slaveaddress | int       | i2c 设备地址   |
+| addr         | bytearray | i2c 寄存器地址 |
+| addr_len     | int       | 寄存器地址长度 |
+| data         | bytearray | 写入的数据     |
+| datalen      | int       | 写入数据的长度 |
+
+* 返回值
+
+成功返回整型值0，失败返回整型值-1。
+
+
+
+###### 使用示例
+
+该示例是驱动AHT10获取温湿度。
+
+```python
+import log
+#from machine import I2C
+from machine import I2C_simulation
+import utime as time
+"""
+1. calibration
+2. Trigger measurement
+3. read data
+"""
+
+# API  手册 http://qpy.quectel.com/wiki/#/zh-cn/api/?id=i2c
+# AHT10 说明书
+#  https://server4.eca.ir/eshop/AHT10/Aosong_AHT10_en_draft_0c.pdf
+
+
+class aht10class():
+    i2c_log = None
+    i2c_dev = None
+    i2c_addre = None
+
+    # Initialization command
+    AHT10_CALIBRATION_CMD = 0xE1
+    # Trigger measurement
+    AHT10_START_MEASURMENT_CMD = 0xAC
+    # reset
+    AHT10_RESET_CMD = 0xBA
+
+    def write_data(self, data):
+        self.i2c_dev.write(self.i2c_addre,
+                           bytearray(0x00), 0,
+                           bytearray(data), len(data))
+        pass
+
+    def read_data(self, length):
+        print("read_data start")
+        r_data = [0x00 for i in range(length)]
+        r_data = bytearray(r_data)
+        print("read_data start1")
+        ret = self.i2c_dev.read(self.i2c_addre,
+                          bytearray(0x00), 0,
+                          r_data, length,
+                          0)
+        print("read_data start2")
+        print('ret',ret)
+        print('r_data:',r_data)
+        return list(r_data)
+
+    def aht10_init(self, addre=0x38, Alise="Ath10"):
+        self.i2c_log = log.getLogger(Alise)
+        self.i2c_dev = I2C_simulation(I2C_simulation.GPIO10, I2C_simulation.GPIO11, 300)
+        self.i2c_addre = addre
+        self.sensor_init()
+        pass
+
+    def aht10_transformation_temperature(self, data):
+        r_data = data
+        #　根据数据手册的描述来转化温度
+        humidity = (r_data[0] << 12) | (
+            r_data[1] << 4) | ((r_data[2] & 0xF0) >> 4)
+        humidity = (humidity/(1 << 20)) * 100.0
+        print("current humidity is {0}%".format(humidity))
+        temperature = ((r_data[2] & 0xf) << 16) | (
+            r_data[3] << 8) | r_data[4]
+        temperature = (temperature * 200.0 / (1 << 20)) - 50
+        print("current temperature is {0}°C".format(temperature))
+        
+
+    def sensor_init(self):
+        # calibration
+        self.write_data([self.AHT10_CALIBRATION_CMD, 0x08, 0x00])
+        time.sleep_ms(300)  # at last 300ms
+        pass
+
+
+    def ath10_reset(self):
+        self.write_data([self.AHT10_RESET_CMD])
+        time.sleep_ms(20)  # at last 20ms
+
+    def Trigger_measurement(self):
+        # Trigger data conversion
+        self.write_data([self.AHT10_START_MEASURMENT_CMD, 0x33, 0x00])
+        time.sleep_ms(200)  # at last delay 75ms
+        # check has success
+        r_data = self.read_data(6)
+        # check bit7
+        if (r_data[0] >> 7) != 0x0:
+            print("Conversion has error")
+        else:
+            self.aht10_transformation_temperature(r_data[1:6])
+
+ath_dev = None
+
+def i2c_aht10_test():
+    global ath_dev
+    ath_dev = aht10class()
+    ath_dev.aht10_init()
+
+    # 测试十次
+    for i in range(5):
+        ath_dev.Trigger_measurement()
+        time.sleep(1)
+
+
+if __name__ == "__main__":
+    print('start')
+    i2c_aht10_test()
+
+
+```
+
 
 
 ##### SPI
@@ -6528,7 +6720,7 @@ if __name__ == '__main__':
 | ---- | ---- | ------------------------------------------------------------ |
 | port | int  | 通道选择[0,1]                                                |
 | mode | int  | SPI 的工作模式(模式0最常用):<br />时钟极性CPOL: 即SPI空闲时，时钟信号SCLK的电平（0:空闲时低电平; 1:空闲时高电平）<br /> 0 : CPOL=0, CPHA=0<br /> 1 : CPOL=0, CPHA=1<br /> 2:  CPOL=1, CPHA=0<br /> 3:  CPOL=1, CPHA=1 |
-| clk  | int  | 时钟频率<br /> 0 : 812.5kHz<br /> 1 : 1.625MHz<br /> 2 : 3.25MHz<br /> 3 : 6.5MHz<br /> 4 : 13MHz<br /> 5 :  26MH |
+| clk  | int  | 时钟频率<br />EC600NCN/EC600SCN/EC800NCN:<br /> 0 : 812.5kHz<br /> 1 : 1.625MHz<br /> 2 : 3.25MHz<br /> 3 : 6.5MHz<br /> 4 : 13MHz<br /> 5 :  26MHz<br /> 6：52MHz<br />EC600UCN/EC200UCN:<br />0 : 781.25KHz<br />1 : 1.5625MHz<br />2 : 3.125MHz<br />3 : 5MHz<br />4 : 6.25MHz<br />5 : 10MHz<br />6 : 12.5MHz<br />7 : 20MHz<br />8 : 25MHz<br />9 : 33.33MHz<br />BC25PA：<br />0 ： 5MHz<br />X : XMHz  (X in [1,39]) |
 
 - 引脚说明
 
@@ -10749,19 +10941,19 @@ camCaputre.callback(callback)
 
 #### GNSS - 定位授时
 
-模块功能：对L76K GPS型号进行数据获取，可以得到模块定位是否成功，定位的经纬度数据，UTC授时时间，获取GPS模块的定位模式，获取GPS模块定位使用卫星数量，获取GPS模块定位可见卫星数量，获取定位方位角，GPS模块对地速度，模块定位大地高等数据信息。
+模块功能：对L76K GPS型号进行数据获取，可以得到模块定位是否成功，定位的经纬度数据，UTC授时时间，获取GPS模块的定位模式，获取GPS模块定位使用卫星数量，获取GPS模块定位可见卫星数量，获取定位方位角，GPS模块对地速度，模块定位大地高等数据信息。目前，该模块提供的功能接口，所获取的数据都来源于从串口读出的原始GNSS数据包中的GNGGA、GNRMC和GPGSV语句。
 
 * 注意
   BC25PA平台不支持模块功能。
 > 暂时只支持EC600U CNLB
 
-##### 打开GNSS串口，读取并解析GNSS数据
+##### 创建gnss对象
 
+> **from gnss import GnssGetData**
+>
 > **gnss = GnssGetData(uartn,baudrate,databits,parity,stopbits,flowctl)**
 
-> **gnss.read_gnss_data()**
-
-- **参数**
+* 参数
 
 | 参数     | 类型 | 说明                                                         |
 | :------- | :--- | ------------------------------------------------------------ |
@@ -10776,35 +10968,176 @@ camCaputre.callback(callback)
 
   无
 
+* 示例
+
+```python
+from gnss import GnssGetData
+gnss = GnssGetData(1, 9600, 8, 0, 1, 0)
+```
 
 
-##### 获取是否定位成功
 
-> **gnss.isFix()**
+##### 读取GNSS数据并解析
 
-- **参数**
+> **gnss.read_gnss_data(max_retry=1, debug=0)**
+
+* 参数
+
+| 参数      | 类型 | 说明                                                         |
+| --------- | ---- | ------------------------------------------------------------ |
+| max_retry | int  | 可选参数，可不填该参数；表示当读取的GNSS无效时，自动重新读取的最大尝试次数，如果读取数据长度为0（即没有读取到数据）则直接退出；这里会进行自动重新读取的前提是，当前读取的这一包原始GNSS数据中，如果GNGGA、GNRMC和GPGSV语句有任何一种没有找到或者是找到但是数据是无效的，那么就会重新去读取下一包数据，直到GNGGA、GNRMC和GPGSV语句都找到并且数据有效或者达到最大尝试次数退出。默认为1，表示只读取一次数据。 |
+| debug     | int  | 可选参数，可不填该参数，默认为0；表示在读取解析GNSS数据过程中，是否输出一些调试信息，为0表示不输出详细信息，为1表示输出详细信息，方便用户直观的看到解析结果以及进行比对；这里要注意的是，debug为0，并不是一点调试信息都不输出，而是仅仅输出一些简单的基本的信息，比如没有从原始的GNSS数据中找到对应数据或数据无效，则提示数据无效或者没有找到相关数据之类的基本信息，具体可参考示例。 |
+
+* 返回值
+
+  返回从串口读取的GNSS数据长度，单位字节。
+
+* 示例
+
+```python
+#=========================================================================
+gnss.read_gnss_data()	# 使用默认设置，仅读取一次，不输出详细调试信息
+4224	# 读取数据成功，并解析GNGGA、GNRMC和GPGSV语句都成功，直接返回读取的原始数据长度
+#=========================================================================
+gnss.read_gnss_data()  # 使用默认设置，仅读取一次，不输出详细调试信息
+GNGGA data is invalid. # 读取数据成功，获取的GNGGA定位数据无效
+GNRMC data is invalid. # 读取数据成功，获取的GNRMC定位数据无效
+648		# 返回读取的原始数据长度
+#=========================================================================
+gnss.read_gnss_data(max_retry=3)  # 设置最大自动读取次数为3次
+Not find GPGSV data or GPGSV data is invalid.  # 第1次读取，GPGSV数据未找到或无效
+continue read.        # 继续读取下一包数据
+Not find GNGGA data.  # 第2次读取，没有找到GNGGA数据
+Not find GNRMC data.  # 第2次读取，没有找到GNRMC数据
+continue read.        # 继续尝试读取下一包
+Not find GNGGA data.  # 第3次读取，没有找到GNGGA数据
+Not find GNRMC data.  # 第3次读取，没有找到GNRMC数据
+continue read.        # 第3次依然失败，准备继续读取，判断出已经达到最大尝试次数，退出
+128
+#=========================================================================
+gnss.read_gnss_data(debug=1)  # 设置读取解析过程输出详细信息
+GGA data : ['GNGGA', '021224.000', '3149.27680', 'N', '11706.93369', 'E', '1', '19', '0.9', '168.2', 'M', '-5.0', 'M', '', '*52']  # 输出从原始GNSS数据中匹配到并简单处理后的GNGGA数据
+RMC data : ['GNRMC', '021224.000', 'A', '3149.27680', 'N', '11706.93369', 'E', '0.00', '153.28', '110122', '', '', 'A', 'V*02']  # 输出从原始GNSS数据中匹配到并简单处理后的GNRMC数据
+total_sen_num = 3, total_sat_num = 12  # 输出一组完整GPGSV语句总条数和可视卫星数量
+# 下面是具体的匹配到的GPGSV语句信息
+[0] : ['$GPGSV', '3', '1', '12', '10', '79', '210', '35', '12', '40', '070', '43', '21', '08', '305', '31', '23', '46', '158', '43', '0*6E']
+[1] : ['$GPGSV', '3', '2', '12', '24', '', '', '26', '25', '54', '125', '42', '31', '', '', '21', '32', '50', '324', '34', '0*64']
+[2] : ['$GPGSV', '3', '3', '12', '193', '61', '104', '44', '194', '58', '117', '42', '195', '05', '162', '35', '199', '', '', '32', '0*54']
+4224
+```
+
+
+
+##### 获取读取的原始GNSS数据
+
+> **gnss.getOriginalData()**
+
+该接口用于返回从串口读取的原始GNSS数据，如果用户希望拿到原始GNSS数据，自己进行处理或者进行一些数据确认，可以通过该接口来获取。该接口在每次调用`gnss.read_gnss_data(max_retry=1, debug=0)`接口后，返回的即本次读取的原始数据。
+
+* 参数
 
   无
 
-- **返回值**
+* 返回值
+
+  返回从串口读取的原始GNSS数据，字符串类型。
+
+* 示例
+
+```python
+data = gnss.getOriginalData()
+print(data)
+# 数据量较大，仅列出部分结果
+00,A,3149.28094,N,11706.93869,E,0.00,153.28,110122,,,A,V*04
+$GNVTG,153.28,T,,M,0.00,N,0.00,K,A*2E
+$GNZDA,021555.000,11,01,2022,00,00*4D
+$GPTXT,01,01,01,ANTENNA OK*35
+$GNGGA,021556.000,3149.28095,N,11706.93869,E,1,24,0.6,166.5,M,-5.0,M,,*5E
+$GNGLL,3149.28095,N,11706.93869,E,021556.000,A,A*47
+$GNGSA,A,3,10,12,21,23,24,25,32,193,194,195,199,,1.0,0.6,0.8,1*35
+$GNGSA,A,3,01,04,07,09,14,21,22,24,38,39,42,45,1.0,0.6,0.8,4*36
+... 
+$GNGGA,021600.000,3149.28096,N,11706.93877,E,1,25,0.6,166.4,M,-5.0,M,,*52
+$GNGLL,3149.28096,N,11706.93877,E,021600.000,A,A*4B
+$GNGSA,A,3,10,12,21,23,24,25,31,32,193,194,195,199,1.0,0.6,0.8,1*37
+$GNGSA,A,3,01,04,07,09,$GNGGA,021601.000,3149.28096,N,11706.93878,E,1,25,0.6,166.4,M,-5.0,M,,*5C
+$GNGLL,3149.2809
+```
+
+
+
+##### 检查本次读取解析结果有效性
+
+> **gnss.checkDataValidity()**
+
+GNSS模块提供的功能接口，所获取的数据都来源于从串口读出的原始GNSS数据包中的GNGGA、GNRMC和GPGSV语句，该接口用于检查读取的一包GNSS数据中，GNGGA、GNRMC和GPGSV语句的有效性。
+
+* 参数
+
+  无
+
+* 返回值
+
+  返回一个元组，形式为` (gga_valid, rmc_valid, gsv_valid)`
+
+  `gga_valid` - 表示本次读取解析，是否匹配到GNGGA数据并解析成功，0表示没有匹配到GNGGA数据或数据无效，1表示有效；
+
+  `rmc_valid` - 表示本次读取解析，是否匹配到GNRMC数据并解析成功，0表述没有匹配到GNRMC数据或数据无效，1表示有效；
+
+  `gsv_valid` - 表示本地读取解析，是否匹配到GPGSV数据并解析成功，0表示没有匹配到GPGSV数据或数据无效，1表示有效。
+
+  如果用户只关心定位结果，即GNGGA数据是否有效，只要gga_valid参数为1即可（或者通过gnss.isFix()接口来判断定位是否成功），不一定要三个参数都为1；解析GNRMC数据是为了获取对地速度，解析GPGSV数据是为了获取可视卫星数量以及这些卫星对应的方位角，所以用户如果不关心这些参数，可忽略rmc_valid和gsv_valid。
+
+* 示例
+
+```python
+gnss.checkDataValidity()
+(1, 1, 1)  # 说明本次读取解析，GNGGA、GNRMC和GPGSV这三种数据都匹配成功并解析成功
+```
+
+
+
+##### 检查是否定位成功
+
+> **gnss.isFix()**
+
+- 参数
+
+  无
+
+- 返回值
 
   1：定位成功
 
   0：定位失败
 
+示例
+
+```
+gnss.isFix()
+1
+```
 
 
-##### 获取UTC时间
+
+##### 获取定位的UTC时间
 
 > **gnss.getUtcTime()**
 
-- **参数**
+- 参数
 
   无
 
-- **返回值**
+- 返回值
 
-  成功返回UTC时间，失败返回整型-1
+  成功返回UTC时间，字符串类型，失败返回整型-1。
+
+* 示例
+
+```python
+gnss.getUtcTime()
+'06:22:05.000'  # hh:mm:ss.sss
+```
 
 
 
@@ -10812,18 +11145,26 @@ camCaputre.callback(callback)
 
 > **gnss.getLocationMode()**
 
-- **参数**
+- 参数
 
   无
 
-- **返回值**
+- 返回值
 
-| 返回值 | 描述                                |
-| ------ | ----------------------------------- |
-| -1     | 获取失败（串口未读到数据）          |
-| 0      | 定位不可用或者无效                  |
-| 1      | 定位有效,定位模式：GPS、SPS 模式    |
-| 2      | 定位有效,定位模式： DGPS、DSPS 模式 |
+| 返回值 | 描述                                     |
+| ------ | ---------------------------------------- |
+| -1     | 获取失败，串口未读到数据或未读到有效数据 |
+| 0      | 定位不可用或者无效                       |
+| 1      | 定位有效,定位模式：GPS、SPS 模式         |
+| 2      | 定位有效,定位模式： DGPS、DSPS 模式      |
+| 6      | 估算（航位推算）模式                     |
+
+* 示例
+
+```python
+gnss.getLocationMode()
+1
+```
 
 
 
@@ -10831,13 +11172,20 @@ camCaputre.callback(callback)
 
 > **gnss.getUsedSateCnt()**
 
-- **参数**
+- 参数
 
   无
 
-- **返回值**
+- 返回值
 
-  成功返回GPS模块定位使用卫星数量，失败返回整型-1
+  成功返回GPS模块定位使用卫星数量，返回值类型为整型，失败返回整型-1。
+
+* 示例
+
+```
+gnss.getUsedSateCnt()
+24
+```
 
 
 
@@ -10845,13 +11193,30 @@ camCaputre.callback(callback)
 
 > **gnss.getLocation()**
 
-- **参数**
+- 参数
 
   无
 
-- **返回值**
+- 返回值
 
-  成功返回GPS模块定位的经纬度信息，失败返回整型-1
+  成功返回GPS模块定位的经纬度信息，失败返回整型-1；成功时返回值格式如下：
+  
+  `(longitude, lon_direction, latitude, lat_direction)`
+  
+  `longitude` - 经度，float型
+  
+  `lon_direction` - 经度方向，字符串类型，E表示东经，W表示西经
+  
+  `latitude` - 纬度，float型
+  
+  `lat_direction` - 纬度方向，字符串类型，N表示北纬，S表示南纬
+
+* 示例
+
+```python
+gnss.getLocation()
+(117.1156448333333, 'E', 31.82134916666667, 'N')
+```
 
 
 
@@ -10859,41 +11224,64 @@ camCaputre.callback(callback)
 
 > **gnss.getViewedSateCnt()**
 
-- **参数**
+- 参数
 
   无
 
-- **返回值**
+- 返回值
 
-  成功返回GPS模块定位可见卫星数量，失败返回整型-1
+  成功返回GPS模块定位可见卫星数量，整型值，失败返回整型-1。
+
+* 示例
+
+```python
+gnss.getViewedSateCnt()
+12
+```
 
 
 
-##### 获取GPS模块定位方位角 
+##### 获取可视的GNSS卫星方位角 
 
 > **gnss.getCourse()**
 
-- **参数**
+- 参数
 
   无
 
-- **返回值**
-定位方位角，范围：0 ~ 359，以正北为参考平面。
+- 返回值
+  返回所有可视的GNSS卫星方位角，范围：0 ~ 359，以正北为参考平面。返回形式为字典，其中key表示卫星编号，value表示方位角。要注意，value的值可能是一个整型值，也可能是''，这取决于原始的GNSS数据中GPGSV语句中方位角是否有值。返回值形式如下：
+
+  `{key:value, ...,  key:value}`
+
+- 示例
+
+```python
+ gnss.getCourse()
+{'10': 204, '195': 162, '12': 68, '193': 105, '32': 326, '199': 162, '25': 122, '31': 247, '24': 52, '194': 116, '21': 304, '23': 159}
+```
 
 
 
 
-##### 获取GPS模块定位大地高
+##### 获取GPS模块定位海拔高度
 
 > **gnss.getGeodeticHeight()**
 
-- **参数**
+- 参数
 
   无
 
-- **返回值**
+- 返回值
 
-  成功返回定位大地高(单位:米)，失败返回整型-1
+  成功返回浮点类型海拔高度(单位:米)，失败返回整型-1。
+
+* 示例
+
+```python
+gnss.getGeodeticHeight()
+166.5
+```
 
 
 
@@ -10901,49 +11289,18 @@ camCaputre.callback(callback)
 
 > **gnss.getSpeed()**
 
-- **参数**
+- 参数
 
   无
 
-- **返回值**
+- 返回值
 
-  成功返回GPS模块对地速度(单位:KM/h)，失败返回整型-1
+  成功返回GPS模块对地速度(单位:KM/h)，浮点类型，失败返回整型-1
 
-
-
-- **示例**
+示例
 
 ```python
-from machine import UART
-from gnss import GnssGetData
-import utime
-
-if __name__ == '__main__':
-    print("#### enter system main####")
-    gnss=GnssGetData(1, 9600, 8, 0, 1, 0)
-    while True:
-        gnss.read_gnss_data()
-        print(gnss.isFix())
-        print(gnss.getUtcTime())
-        print(gnss.getLocationMode())
-        print(gnss.getUsedSateCnt())
-        print(gnss.getLocation())
-        print(gnss.getViewedSateCnt())
-        print(gnss.getCourse())
-        print(gnss.getGeodeticHeight())
-        print(gnss.getSpeed())
-        utime.sleep(3)
-    
-    
-运行结果示例：
-1
-020031.000
-1
-16
-(22.32905, 'N', 113.5597, 'E')
-13
-034
-67.5
+gnss.getSpeed()
 0.0
 ```
 
