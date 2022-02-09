@@ -18,6 +18,7 @@ Configure the product and device information of Alibaba Cloud loT suite.
 | productSecret | string | The product secret which is optional. Default: None.<br />In unique-certificate-per-device authentication, input None (Cannot be an empty string).<br/>In unique-certificate-per-product authentication, input the real product key. |
 | DeviceName    | string | Device name                                                  |
 | DeviceSecret  | string | Device key which is optional. Default: None.（In unique-certificate-per-product authentication, input None） |
+| MqttServer    | string | Optional parameter, the name of the server to be connected to, the default is "{productKey}.iot-as-mqtt.cn-shanghai.aliyuncs.com" |
 
 * Return Value
 
