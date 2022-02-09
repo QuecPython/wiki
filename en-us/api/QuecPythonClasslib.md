@@ -5818,6 +5818,92 @@ The timer can be started only when the callback function is set (bc25pa platform
 0
 ```
 
+
+
+###### Set RTC alarm time
+
+Support platform ec600u / ec200u / ec600n / ec800n / bc25
+
+> rtc.set_alarm([year, month, day, week, hour, minute, second, microsecond])
+
+Set the RTC alarm time. The parameter week is not involved in the setting. The microsecond parameter is reserved and not used yet. The default is 0.
+
+* Parameters
+
+|Parameter | type | description|
+| ----------- | ---- | ------------------------------------- |
+|Year | int ||
+|Month | int | month, range 1 ~ 12|
+|Day | int | day, range 1 ~ 31|
+|Week | int | week, range 0 ~ 6, this parameter does not work, reserved|
+|When hour | int | the range is 0 ~ 23|
+|Minute | int | min, range 0 ~ 59|
+|Second | int | second, range 0 ~ 59|
+|Microsecond | int | microseconds, reserved parameters, unused temporarily, write 0|
+
+* Return value
+
+The integer value 0 is returned after setting successfully, and the integer value - 1 is returned after setting fails.
+
+
+
+###### Register RTC alarm callback
+
+Support platform ec600u / ec200u / ec600n / ec800n / bc25
+
+> rtc.register_callback(fun)
+
+Register RTC alarm callback handler
+
+* Parameters
+
+|Parameter | type | description|
+| ---- | -------- | --------------------- |
+|Fun | function | RTC alarm callback processing function|
+
+* Return value
+
+The integer value 0 is returned after successful registration, and the integer value - 1 is returned after failed registration.
+
+
+
+###### Switch RTC alarm function
+
+Support platform ec600u / ec200u / ec600n / ec800n / bc25
+
+> rtc.enable_alarm(on_off)
+
+Turn on / off RTC alarm function
+
+* Parameters
+
+|Parameter | type | description|
+| ------ | ---- | ---------------------------------------- |
+| on_ Off | int | 1 - turn on RTC alarm function; 0 - turn off RTC alarm function|
+
+* Return value
+
+An integer value of 0 is returned when opening / closing is successful, and an integer value of - 1 is returned when opening / closing is failed.
+
+
+
+-Examples
+
+```python
+from machine import RTC
+rtc = RTC()
+def callback(args):
+   print('RTC alarm')
+
+rtc.register_callback(callback)
+rtc.set_alarm([2021, 7, 9, 5, 12, 30, 0, 0])
+rtc.enable_alarm(1)
+```
+
+Note: ec600u / ec200u platform supports automatic startup, that is, after setting the alarm function, the module will be shut down. After the alarm time is up, it can be started automatically. This feature is not supported on other platforms.
+
+
+
 ##### I2C
 
 Class function: A two-wire protocol used for communication between devices. 
