@@ -201,6 +201,77 @@ b'\xb3\xc9Y\x1b\xe9'
 
 
 
+##### Initialize SD card driver
+
+At present, it is only supported by ec600n / ec800n platforms.
+
+> **uos.VfsFat(spi_port, spimode, spiclk, spics)**
+
+Initialize SD card and communicate with SD card. Use SPI communication mode.
+
+* Parameters
+
+|Parameter | parameter type | parameter description|
+| -------- | -------- | ------------------------------------------------------------ |
+| spi_ Port | int | channel selection [0,1]|
+|Spimode | int | SPI working mode (mode 0 is the most commonly used): < br / > clock polarity cpol: that is, when SPI is idle, the level of clock signal SCLK (0: idle low level; 1: idle high level) < br / > 0: cpol = 0, CPHA = 0 < br / > 1: cpol = 0, CPHA = 1 < br / > 2: cpol = 1, CPHA = 0 < br / > 3: cpol = 1, CPHA = 1|
+|Spiclk | int | clock frequency 0: 812.5khz 1: 1.625mhz 2: 3.25mhz 3: 6.5mhz 4: 13mhz|
+|SPICs | int | specifies that the CS chip selection pin is any GPIO. The hardware CS can be connected to the pin specified here or the default SPI CS pin < br / > 1 ~ n: specify pin GPIO1~Pin. Gpion is CS pin|
+
+* Return value
+
+Vfsfat object will be returned if successful, and will be stuck if failed.
+
+* Examples
+
+```python
+>>> cdev = uos.VfsFat(1, 0, 4, 1)
+```
+
+
+
+##### Mount file system
+
+> **uos.mount(vfs_obj, path)**
+
+Mount the underlying file system to VFS.
+
+* Parameters
+
+|Parameter | parameter type | parameter description|
+| ------- | ---------- | ---------------- |
+| vfs_ Obj | VFS object | file system object|
+|Path | str | root directory of file system|
+
+* Return value
+
+None.
+
+* Examples
+
+```python
+>>> cdev = uos.VfsFat(1, 0, 4, 1)
+>>> uos.mount(cdev, '/sd')
+```
+
+-SD card usage example
+
+  At present, it is only supported by ec600n / ec800n platforms.
+
+```python
+>>> cdev = uos.VfsFat(1, 0, 4, 1)
+>>> uos.mount(cdev, '/sd')
+>>> f = open('/sd/test.txt','w+')
+>>> f.write('0123456')
+>>> f.close()
+>>> uos.listdir('/sd')
+>>> f = open('/sd/test.txt','r')
+>>> f.read()
+>>> f.close()
+```
+
+
+
 #### gc - Control the Garbage Collector
 
 This module provides an interface to the optional garbage collector. This module implements a subset of the corresponding [CPython](https://docs.micropython.org/en/latest/reference/glossary.html#term-CPython) module, as described below. For more information, refer to the original CPython documentation: [gc](https://docs.python.org/3.5/library/gc.html#module-gc)
