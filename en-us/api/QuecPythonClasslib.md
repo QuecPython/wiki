@@ -5962,7 +5962,6 @@ if __name__ == '__main__':
 
 Class function: Serial peripheral interface bus protocol. 
 
-Adaptation version: EC100Y (V0009) and above; EC600S (V0002) and above. 
 
 ###### Create SPI Object
 
@@ -5982,7 +5981,7 @@ Adaptation version: EC100Y (V0009) and above; EC600S (V0002) and above.
 | ------------- | ------------------------------------------------------------ |
 | EC600U        | port0:<br />CS:Pin number 4<br />CLK:Pin number 1<br />MOSI:Pin number 3<br />MISO:Pin number 2<br />port1:<br />CS:Pin number <br />CLK:Pin number <br />MOSI:Pin number <br />MISO:Pin number 60 |
 | EC200U        | port0:<br />CS:Pin number 134<br />CLK:Pin number 133<br />MOSI:Pin number 132<br />MISO:Pin number 131<br />port1:<br />CS:Pin number 26<br />CLK:Pin number 27<br />MOSI:Pin number 24<br />MISO:Pin number 25 |
-| EC600S/EC600N | port0:<br />CS:Pin number 58<br />CLK:Pin number 61<br />MOSI:Pin number 60<br />MISO:Pin number 59<br />port1:<br />CS:Pin number 4<br />CLK:Pin number 1<br />MOSI:Pin number 3<br />MISO:Pin number 2 |
+| EC600S/EC600N | port0:<br />CS:Pin number 58<br />CLK:Pin number 61<br />MOSI:Pin number 59<br />MISO:Pin number 60<br />port1:<br />CS:Pin number 4<br />CLK:Pin number 1<br />MOSI:Pin number 3<br />MISO:Pin number 2 |
 | EC100Y        | port0:<br />CS:Pin number 25<br />CLK:Pin number 26<br />MOSI:Pin number 27<br />MISO:Pin number 28<br />port1:<br />CS:Pin number 105<br />CLK:Pin number 104<br />MOSI:Pin number 107<br />MISO:Pin number 106 |
 | BC25PA        | port0:<br />CS:Pin number 6<br />CLK:Pin number 5<br />MOSI:Pin number 4<br />MISO:Pin number 3|
 * Note:Bc25pa platform does not support 1 and 2 modes.
