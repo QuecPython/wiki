@@ -6767,26 +6767,37 @@ if __name__ == '__main__':
 ```
 ##### KeyPad
 
-Module function: provide matrix keyboard interface and support platform ec600scn_ LB/EC800N_ CN_ LA/EC600NCNLC
+Module function: provide matrix keyboard interface and support platform EC600SCN_LB/EC800N_CN_LA/EC600NCN_LC
+EC200U supports 4x3 at most and EC600U supports 6x6 at most.
 
 ###### Create keypad object
 
 > **keypad=machine.KeyPad()**
-*Parameter
+
+- Parameter
 | Parameter | Type | Description                                      |
 | ------ | -------- | ----------------------------------- |
-|Row | int | row (if it is greater than 0 and less than 8, and neither row nor column is set, the default is 4)|
-|Col | int | column (greater than 0 and less than 8. If the column is not set, the default is 4)|
-Note: if row and col are not set, the default is 4X4..
+|Row | int | Greater than 0, not exceeding the maximum supported by the platform|
+|Col | int | Greater than 0, not exceeding the maximum supported by the platform|
+Note: if row and col are not set, the default is 4X4.
 
-*Example:
+|Platform | maximum row | maximum column|
+| ------------- | ------ | ------ |
+| EC800N/EC600N | 4 | 4 |
+| EC600S | 5 | 5 |
+| EC200U | 4 | 3 |
+| EC600U | 6 | 6 |
+
+* Example:
 >
-> ```python
-> >>>import machine
-> >>>keypad=machine.KeyPad()
-> ```
+>```python
+>>>>import machine
+>>>>keypad=machine.KeyPad(2,3)		# The matrix keyboard is set as a matrix keyboard with 2 rows and 3 columns
+>>>>keypad=machine.KeyPad()  	 	# Not set. The default setting is 4 rows and 4 columns matrix keyboard
+>>>>keypad=machine.KeyPad(2)  	 	# The row value is set to 2, and the column value defaults to 4
+>```
 >
-> 
+>
 
 ###### Initialize keypad
 
@@ -6798,7 +6809,7 @@ Initialize keypad settings.
 
 nothing
 
-Return value
+- Return value
 
 0 is returned for success and - 1 is returned for failure.
 
@@ -6808,18 +6819,15 @@ Return value
 
 After the key is connected to the module, press and release the key to trigger the callback function setting.
 
-* Parameters
-
 - Parameter
-
 | Parameter | Type | Description                                      |
 | ------ | -------- | ------------------------------------------ |
 | usrFun | function | callback function. This function will be triggered when the external keyboard key is pressed and placed |
 
 
-Note: the usrfun parameter is list.
+Note: The argument to the usrfun function is the list data type.
 
-List contains five parameters. It has the following meanings:
+List contains three parameters. It has the following meanings:
 
 list[0] - 1 means press and 0 means lift
 
@@ -6847,7 +6855,7 @@ nothing
 
 0 is returned for success and - 1 is returned for failure.
 
-###### Use example
+###### example
 ```python
 import machine
 import utime
@@ -10812,7 +10820,7 @@ Module name: nb(lowercase)
 
 Support platform: BC25PA
 
-Introduction: it includes three sub modules OC, AEP. The two sub modules all use lwm2m for data interaction.
+Introduction: it includes two sub modules OC, AEP. The two sub modules all use lwm2m for data interaction.
 
 ##### OC
 
