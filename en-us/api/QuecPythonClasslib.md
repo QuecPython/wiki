@@ -6048,7 +6048,6 @@ Class function: used for GPIO simulation standard I2C protocol.
 
 Except for creating objects, other operations (reading and writing) are consistent with I2C
 
-###### 
 
 ###### Create I2C_ Simulation object
 

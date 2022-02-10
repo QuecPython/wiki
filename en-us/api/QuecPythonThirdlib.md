@@ -1682,7 +1682,7 @@ system.replSetEnable(1)  # Enable interactive protection.
 
 
 
-####  ql_ FS - advanced file operations
+####  ql_fs - advanced file operations
 
 Module function: used for advanced operation of files
 
@@ -1690,13 +1690,13 @@ Adaptation version: not supported by bc25
 
 
 
-##### ** import QL_ fs**
+##### **import QL_ fs**
 
 > **import ql_fs**
 
 
 
-##### ** check whether the file or folder exists**
+##### **check whether the file or folder exists**
 
 > **ql_fs.path_exists(file_path)**
 
@@ -2032,7 +2032,7 @@ q.put("this is a test msg")
 
 
 
-####  sys_ Bus session bus
+####  sys_bus session bus
 
 It is used for message subscription, publishing, broadcasting, multithreading, etc., similar to the internal mqtt
 
