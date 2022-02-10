@@ -6251,7 +6251,7 @@ Class function: Serial peripheral interface bus protocol.
 | --------- | ---- | ------------------------------------------------------------ |
 | port      | int  | Channel selection[0,1]                                       |
 | mode      | int  | SPI working mode (ususally mode 0): <br />Clock polarity CPOL: When SPI is idle, the level of the clock signal SCLK (0: Low level when idle; 1: High level when idle)<br /> 0 : CPOL=0, CPHA=0<br /> 1 : CPOL=0, CPHA=1<br /> 2:  CPOL=1, CPHA=0<br /> 3:  CPOL=1, CPHA=1 |
-| clk       | int  | volume_up clock frequency<br /> 0 : 812.5kHz<br /> 1 : 1.625MHz<br /> 2 : 3.25MHz<br /> 3 : 6.5MHz<br /> 4 : 13MHz<br /> 5 :  26MH |
+| clk       | int  | volume_up clock frequency<br />EC600NCN/EC600SCN/EC800NCN:<br /> 0 : 812.5kHz<br /> 1 : 1.625MHz<br /> 2 : 3.25MHz<br /> 3 : 6.5MHz<br /> 4 : 13MHz<br /> 5 :  26MHz<br /> 6：52MHz<br />EC600UCN/EC200UCN:<br />0 : 781.25KHz<br />1 : 1.5625MHz<br />2 : 3.125MHz<br />3 : 5MHz<br />4 : 6.25MHz<br />5 : 10MHz<br />6 : 12.5MHz<br />7 : 20MHz<br />8 : 25MHz<br />9 : 33.33MHz<br />BC25PA：<br />0 ： 5MHz<br />X : XMHz  (X in [1,39]) |
 
 - Pin Description
 
