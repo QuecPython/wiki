@@ -5257,7 +5257,7 @@ It sends data to UART.
 
 | Parameter | Type   | Description        |
 | --------- | ------ | ------------------ |
-| data      | string | Data has been sent |
+| data      | buf/string | Data has been sent |
 
 * Return Value
 
