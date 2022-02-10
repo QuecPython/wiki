@@ -6042,6 +6042,198 @@ if __name__ == '__main__':
 
 ```
 
+##### I2C_simulation
+
+Class function: used for GPIO simulation standard I2C protocol.
+
+Except for creating objects, other operations (reading and writing) are consistent with I2C
+
+###### 
+
+###### Create I2C_ Simulation object
+
+> **from machine import I2C_simulation**
+>
+> **i2c_obj = I2C_simulation(GPIO_clk,  GPIO_sda, CLK)**
+
+* Parameter description
+
+|Parameter | type | description|
+| -------- | ---- | ----------------------------------------------------- |
+| GPIO_ CLK pin of CLK | int | I2C (GPIO pin number to be controlled, refer to the definition of pin module)|
+| GPIO_ SDA pin of SDA | int | I2C (GPIO pin number to be controlled, refer to the definition of pin module)|
+|Frequency of CLK | int | I2C (01000000hz]|
+
+-Examples
+
+```python
+from machine import I2C_simulation
+
+i2c_obj = I2C_simulation(I2C_simulation.GPIO10, I2C_simulation.GPIO11, 300)  #Return I2C object
+```
+
+
+
+###### Read data
+
+> **I2C_simulation.read(slaveaddress, addr,addr_len, r_data, datalen, delay)**
+
+Read data from I2C bus.
+
+**Parameter description**
+
+|Parameter | type | description|
+| ------------ | --------- | -------------------------------- |
+|Slaveaddress | int | I2C device address|
+|Addr | bytearray | I2C register address|
+| addr_ Len | int | register address length|
+| r_ Data | bytearray | byte array of received data|
+|Datalen | int | length of byte array|
+|Delay | int | delay, data conversion buffer time (unit: ms)|
+
+* Return value
+
+The integer value 0 is returned successfully, and the integer value - 1 is returned in failure.
+
+
+
+###### Write data
+
+> **I2C_simulation.write(slaveaddress, addr, addr_len, data, datalen)**
+
+Write data from the I2C bus.
+
+* Parameter description
+
+|Parameter | type | description|
+| ------------ | --------- | -------------- |
+|Slaveaddress | int | I2C device address|
+|Addr | bytearray | I2C register address|
+| addr_ Len | int | register address length|
+|Data | bytearray | written data|
+|Datalen | int | length of data written|
+
+* Return value
+
+The integer value 0 is returned successfully, and the integer value - 1 is returned in failure.
+
+
+
+###### Use example
+
+This example is to drive aht10 to obtain temperature and humidity.
+
+```python
+import log
+#from machine import I2C
+from machine import I2C_simulation
+import utime as time
+"""
+1. calibration
+2. Trigger measurement
+3. read data
+"""
+
+#API manual http://qpy.quectel.com/wiki/#/zh -cn/api/? id=i2c
+#Aht10 instructions
+#  https://server4.eca.ir/eshop/AHT10/Aosong_AHT10_en_draft_0c.pdf
+
+
+class aht10class():
+    i2c_log = None
+    i2c_dev = None
+    i2c_addre = None
+
+    # Initialization command
+    AHT10_CALIBRATION_CMD = 0xE1
+    # Trigger measurement
+    AHT10_START_MEASURMENT_CMD = 0xAC
+    # reset
+    AHT10_RESET_CMD = 0xBA
+
+    def write_data(self, data):
+        self.i2c_dev.write(self.i2c_addre,
+                           bytearray(0x00), 0,
+                           bytearray(data), len(data))
+        pass
+
+    def read_data(self, length):
+        print("read_data start")
+        r_data = [0x00 for i in range(length)]
+        r_data = bytearray(r_data)
+        print("read_data start1")
+        ret = self.i2c_dev.read(self.i2c_addre,
+                          bytearray(0x00), 0,
+                          r_data, length,
+                          0)
+        print("read_data start2")
+        print('ret',ret)
+        print('r_data:',r_data)
+        return list(r_data)
+
+    def aht10_init(self, addre=0x38, Alise="Ath10"):
+        self.i2c_log = log.getLogger(Alise)
+        self.i2c_dev = I2C_simulation(I2C_simulation.GPIO10, I2C_simulation.GPIO11, 300)
+        self.i2c_addre = addre
+        self.sensor_init()
+        pass
+
+    def aht10_transformation_temperature(self, data):
+        r_data = data
+        #Convert the temperature according to the description in the data book
+        humidity = (r_data[0] << 12) | (
+            r_data[1] << 4) | ((r_data[2] & 0xF0) >> 4)
+        humidity = (humidity/(1 << 20)) * 100.0
+        print("current humidity is {0}%".format(humidity))
+        temperature = ((r_data[2] & 0xf) << 16) | (
+            r_data[3] << 8) | r_data[4]
+        temperature = (temperature * 200.0 / (1 << 20)) - 50
+        print("current temperature is {0}°C".format(temperature))
+        
+
+    def sensor_init(self):
+        # calibration
+        self.write_data([self.AHT10_CALIBRATION_CMD, 0x08, 0x00])
+        time.sleep_ms(300)  # at last 300ms
+        pass
+
+
+    def ath10_reset(self):
+        self.write_data([self.AHT10_RESET_CMD])
+        time.sleep_ms(20)  # at last 20ms
+
+    def Trigger_measurement(self):
+        # Trigger data conversion
+        self.write_data([self.AHT10_START_MEASURMENT_CMD, 0x33, 0x00])
+        time.sleep_ms(200)  # at last delay 75ms
+        # check has success
+        r_data = self.read_data(6)
+        # check bit7
+        if (r_data[0] >> 7) != 0x0:
+            print("Conversion has error")
+        else:
+            self.aht10_transformation_temperature(r_data[1:6])
+
+ath_dev = None
+
+def i2c_aht10_test():
+    global ath_dev
+    ath_dev = aht10class()
+    ath_dev.aht10_init()
+
+    #Test ten times
+    for i in range(5):
+        ath_dev.Trigger_measurement()
+        time.sleep(1)
+
+
+if __name__ == "__main__":
+    print('start')
+    i2c_aht10_test()
+
+
+```
+
 
 
 ##### SPI
