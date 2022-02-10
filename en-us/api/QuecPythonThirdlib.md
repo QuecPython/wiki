@@ -1682,6 +1682,465 @@ system.replSetEnable(1)  # Enable interactive protection.
 
 
 
+####  ql_ FS - advanced file operations
+
+Module function: used for advanced operation of files
+
+Adaptation version: not supported by bc25
+
+
+
+##### ** import QL_ fs**
+
+> **import ql_fs**
+
+
+
+##### ** check whether the file or folder exists**
+
+> **ql_fs.path_exists(file_path)**
+
+Check whether the file or folder exists
+
+-Parameters
+
+|Parameter | type | description|
+| --------- | ------ | ---------------------- |
+| file_ Path | string | absolute path of file or folder|
+
+-Return value
+
+Returns true if it exists and false if it does not exist
+
+
+
+**Use example**
+
+```python
+import ql_fs
+ret = ql_fs.ql_fs.path_dirname("/usr/xxx.py")
+print(ret)
+
+#Print true does not exist false
+```
+
+
+
+##### Get the path of the folder where the file is located
+
+> **ql_fs.path_dirname(file_path)**
+
+Returns the folder path where files and folders are located
+
+-Parameters
+
+|Parameter | type | description|
+| --------- | ------ | ---------------------- |
+| file_ Path | string | absolute path of file or folder|
+
+-Return value
+  -Path address of type string
+
+
+
+**Use example**
+
+```python
+import ql_fs
+ret = ql_fs.path_dirname("/usr/bin")
+print("ret")
+
+#The printing results are as follows
+# /usr
+```
+
+
+
+##### Create folder
+
+> **ql_fs.mkdirs(dir_path)**
+
+Create a folder recursively and pass in the folder path
+
+-Parameters
+
+|Parameter | type | description|
+| -------- | ------ | ------------------------ |
+| dir_ Path | string | absolute path of the folder to be created|
+
+-Return value
+  - None
+
+
+
+**Use example**
+
+```python
+import ql_fs
+
+ql_fs.mkdirs("usr/a/b")
+```
+
+
+
+##### Delete folder
+
+
+
+> **ql_fs.rmdirs(dir_path)**
+
+Output folder, incoming folder path
+
+-Parameters
+
+|Parameter | type | description|
+| -------- | ------ | ------------------------ |
+| dir_ Path | string | absolute path of the folder to be deleted|
+
+-Return value
+  - None
+
+
+
+**Use example**
+
+```python
+import ql_fs
+
+ql_fs.rmdirs("usr/a/b")
+```
+
+
+
+##### Get file size
+
+> **ql_fs.path_getsize(file_path)**
+
+Pass in the file path and return the number of bytes occupied by the file
+
+-Parameters
+
+|Parameter | type | description|
+| --------- | ------ | -------- |
+| file_ Path | string | file path|
+
+-Return value
+  -A number of type int in bytes
+
+
+
+**Use example**
+
+```python
+import ql_fs
+
+ql_fs.path_getsize('usr/system_config.json')
+```
+
+
+
+##### Create file
+
+> **ql_fs.touch(file, data)**
+
+Create files or update file data. The default is JSON files. Text files can also be imported for updating. Folders will be created automatically, and then the contents of files will be created or updated
+
+-Parameters
+
+|Parameter | type | description|
+| :--- | ------ | ---------------------- |
+|File | string | absolute path of file|
+|Data | Dict | currently only supports the creation of JSON files|
+
+-Return value
+  -Int type
+  -0 is successful
+  -- 1 failed
+
+
+
+**Use example**
+
+```python
+import ql_fs
+data = {
+    "test":1
+}
+#Create or update JSON files
+ql_fs.touch("/usr/bin/config.json", data)
+
+```
+
+
+
+##### Read JSON file
+
+> **ql_fs.read_json(file)**
+
+Read the JSON file and return
+
+-Parameters
+
+|Parameter | type | description|
+| ---- | ------ | ---------------------- |
+|File | string | JSON file path to be read|
+
+-Return value
+  -Read successful
+    -Return dict type
+  -Fail
+    -Return to none
+
+
+
+**Use example**
+
+```python
+import ql_fs
+
+data = ql_fs.read_json("/usr/system_config.json")
+```
+
+
+
+##### File copy
+
+> **ql_fs.file_copy(dst, src)**
+
+Copy the file from the original path to the destination path
+
+-Parameters
+
+|Parameter | type | description|
+| ---- | ------ | -------- |
+|DST | string | target path|
+|SRC | string | original path|
+
+-Return value
+  -True means the copy was successful
+
+
+
+**Use example**
+
+```python
+import ql_fs
+
+ql_fs.file_copy("usr/a.json", "usr/system_config.json")
+```
+
+
+
+
+
+#### Queue - normal queue
+
+Module function: used for inter thread communication
+
+##### Initialize queue
+
+> **from queue import Queue**
+>
+> **q = Queue(maxsize=100)**
+
+-Parameters
+
+|Parameter | type | description|
+| ------- | ---- | ------------------------------- |
+|Maxsize | int | the default length is 100. Set the maximum queue length|
+
+-Return value
+  -Queue object
+
+
+
+##### Put data into the queue
+
+Stuff data into the queue
+
+> **q.put(data)**
+
+-Parameters
+
+|Parameter | type | description|
+| ---- | ---- | -------------------------------------------------------- |
+|Data | void | the inserted data can be empty. If it is not transmitted, it can be recognized that it is relaxing an empty signal|
+
+-Return value
+  -True is success
+  -False is failure
+
+
+
+##### Get data
+
+Get data from the queue. Here, you need to pay attention to the block acquisition in getting data
+
+> **q.get()**
+
+-Parameters
+  -None
+-Return value
+  -It is the data in the queue. If it is an empty signal, it will be obtained as none
+
+
+
+##### Check whether the queue is empty
+
+> **q.empty()**
+
+-Parameters
+  -None
+-Return value
+  -True is null
+  -False is not empty
+
+
+
+##### View the number of data in the queue
+
+> **q.size()**
+
+-Parameters
+  -None
+-Return value
+  -Current data length of type int
+
+
+
+##### Use example
+
+```python
+import _thread
+from queue import Queue
+
+#Default length of initialization queue: 100
+q = Queue()
+
+
+def get():
+    while True:
+        #Blocking acquisition
+        data = q.get()
+        print("data = {}".format(data))
+
+#Thread deblocking
+_thread.start_new_thread(get, ())
+q.put("this is a test msg")
+
+```
+
+
+
+####  sys_ Bus session bus
+
+It is used for message subscription, publishing, broadcasting, multithreading, etc., similar to the internal mqtt
+
+##### Subscribe to topic
+
+> **import sys_bus**
+>
+> **sys_bus.subscibe(topic, handler)**
+
+-Parameters
+
+|Parameter | type | description|
+| ------- | ---------- | ------------------------------------------------------------ |
+|Topic | string / int | topic to subscribe to|
+|Handler | func | processing function. When there is a corresponding topic, it will call the processing function to process it accordingly. < br > handler needs two parameters (topic, MSG)|
+
+-Return value
+  - None
+
+
+
+##### Publish topic message
+
+Publish a message, and the topic corresponding to the subscription will receive and process the message through multiple threads,
+
+> **sys_bus.publish(topic , msg)**
+
+-Parameters
+
+|Parameter | type | description|
+| ----- | ---------- | -------------- |
+| topic | string/int | topic          |
+|MSG | void | any type of data|
+
+-Return value
+  - None
+
+
+
+##### View session bus registry
+
+Check the subscription registry, which contains all topics and subscription functions
+
+> **sys_bus.sub_table(topic=None)**
+
+-Parameters
+
+|Parameter | type | description|
+| ----- | ---------- | ------------------------------------------------------------ |
+|Topic | string / int | can be omitted. < br > passing means viewing the registry of this topic. < br > not passing means viewing the registry of all topics|
+
+-Return value
+  -Subscription function list or registry of type dict / list
+
+
+
+##### Unsubscribe
+
+Unsubscribe from the topic, or a function under the corresponding topic
+
+> **sys_bus.unsubscribe(topic , cb=None)**
+
+|Parameter | type | description|
+| ----- | ---------- | --------------------------------- |
+|Topic | string / int | corresponding topic|
+|CB | function | the subscription function to be deleted. If it is not transmitted, delete topic|
+
+When CB is not transmitted, only topic is passed in, and all subscription functions under topic and from topic are deleted. If CB is transmitted, the corresponding CB function in the subscription list under topic is deleted
+
+-Return value
+
+True deletion succeeded, false deletion failed
+
+
+
+##### Use example
+
+```python
+import sys_bus
+
+
+def test(topic, msg):
+    print("test ... topic = {} msg = {}".format(topic, msg))
+
+#subscribe
+sys_bus.subscribe("test", test)
+#release
+sys_bus.publish("test", "this is a test msg")
+
+#  test ... topic = test msg = this is a test msg
+
+#Unbind the test function corresponding to the subscription under test topic
+sys_bus.unsubscribe("test", test)
+
+#Unbind all subscription functions under the corresponding test topic
+sys_bus.unsubscribe("test")
+```
+
+
+
+
+
+#### Uasyncio collaboration
+
+[uasyncio document center](https://python.quectel.com/doc/doc/Advanced_development/zh/QuecPythonThird/asyncio.html)
+
+
+
 #### ussl-SSL Algorithm
 Note: The BC25PA platform does not support this module function.
 
