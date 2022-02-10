@@ -3908,9 +3908,9 @@ Start recording.
 * Example
 
 ```python
-record_test.start(“test.wav”,40)	#Record the file in wav format
-record_test.start(“test.amr”,40)	#Record the file in amr format
-record_test.start(“test”,40)	#Record the file in amr format
+record_test.start("test.wav",40)	#Record the file in wav format
+record_test.start("test.amr",40)	#Record the file in amr format
+record_test.start("test",40)	#Record the file in amr format
 ```
 
 
