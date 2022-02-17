@@ -3895,6 +3895,24 @@ None
 
 
 
+###### stop queue playback
+
+> **aud.stop()**
+
+Stop the playback of the entire queue, that is, if TTS or audio is currently being played, and there are other content to be played in the queue, after calling this interface, it will not only stop the currently playing content, but also clear the content of the queue, and no longer play any more. content. If it is currently playing and the playback queue is empty, calling this interface has the same effect as the stop() interface.
+
+* Parameter
+
+None
+
+* Return Value
+
+  0     Successful execution
+
+  -1    Failed execution
+
+
+
 ###### Register the Callback Function
 
 > **aud.setCallback(usrFun)**
@@ -3997,6 +4015,144 @@ Set audio volume.
 0
 >>> aud.getVolume()
 6
+```
+
+
+
+###### Audio streaming
+
+> aud.playStream(format, buf)
+
+Audio stream playback, supporting MP3, AMR and wav format audio stream playback.
+
+* Parameters
+
+|Parameter | parameter type | parameter description|
+| ------ | -------- | ------------------------------------------------------------ |
+|Format | int | audio stream format < br / > 1 - PCM (not supported temporarily) < br / > 2 - wavpcm < br / > 3 - MP3 < br / > 4 - amrnb|
+|Buf | buf | audio stream content|
+
+* Return value
+
+  If the playback is successful, the integer 0 will be returned;
+
+  If playback fails, integer - 1 will be returned;
+
+  
+
+###### Stop audio streaming
+
+> audio_test.stopPlayStream()
+
+Stop audio streaming
+
+* Parameters
+
+  nothing
+
+* Return value
+
+  Stop successfully, return integer 0;
+
+  Stop failure returns integer - 1;
+
+
+-Examples
+
+  ```python
+  import audio
+  import utime
+  
+  audio_test = audio.Audio(0)
+  
+  Size = 10 * 1024 # ensure that the audio data filled at one time is large enough for continuous playback at the bottom layer
+  format = 4
+  
+  def play_from_fs():
+      file_ size = uos. Stat ("/ usr / test. AMR") [6] # get the total bytes of the file
+      print(file_size)
+      with open("/usr/test.amr", "rb")as f:   
+          while 1:
+              b = f.read(size)   # read
+              if not b:
+                  break
+              audio_test.playStream(format, b)
+              utime.sleep_ms(20)
+          f.close()
+  
+  
+  play_from_fs()
+  utime. sleep_ MS (5000) # wait for playback to complete
+  audio_ test. Stopplaystream() # stops this playback so as not to affect the next playback
+  ```
+
+
+
+###### Tone playback
+
+Support platform ec600u / ec200u / ec600n / ec800n
+
+> aud.aud_tone_play(tone, time)
+
+Play tone tone and stop playing automatically after playing for a period of time
+
+* Parameters
+
+|Parameter | parameter type | parameter description|
+| ---- | -------- | ------------------------------------------------------------ |
+|Tone | int | tone type < br / > 0 ~ 15 - key tone (0 ~ 9, a, B, C, D, #, *) (only supported by ec600u / ec200u platform) < br / > 16 - dial tone, (Note: the ec600n / ec800n platform is a continuous tone tone, while the ec600u / ec200u platform is a tone with alternating play and pause) < br / > 17 - busy < br / > 18 - Radio ack < br / > 19 - call drop < br / > 20 - special information < br / > 21 - call waiting (only supported on ec600u / ec200u platforms) < br / > 22 - ringing (only supported on ec600u / ec200u platforms)|
+|Time | int | playback duration, unit MS < br / > 0 - you can only call aud without stopping playback aud_ tone_ play_ Stop() interface can be stopped (only ec600n / ec800n platform supports, ec600u / ec200u platform fills 0, then there is no action) < br / > greater than 0 - playback duration time MS|
+
+* Return value
+
+  If the playback is successful, the integer 0 will be returned;
+
+  If playback fails, integer - 1 will be returned;
+
+  
+
+###### Stop tone playback
+
+Only ec600n / ec800n platform supports
+
+> aud.aud_tone_play_stop()
+
+Actively stop playing tone
+
+* Parameters
+
+  nothing
+
+* Return value
+
+  Stop successfully, return integer 0;
+
+  Stop failure returns integer - 1;
+
+
+
+
+-Examples
+
+```python
+import audio
+import utime
+
+aud = audio.Audio(0)
+
+#200ecu / 600ecu platform
+def dial_play_ec600u():
+    aud.aud_tone_play(16, 5000)
+
+#Ec600n / ec800n platform
+def dial_play_ec600n():
+    for i in range(0,20):
+        aud.aud_tone_play(16, 1000)
+        utime.sleep(2)
+        aud.aud_tone_play_stop()
+        
+# dial_play_ec600n()
+dial_play_ec600u()
 ```
 
 
@@ -4378,24 +4534,91 @@ record_test.amrEncDtx_enable(1)
 
 
 
-###### Read the List of Recording Files
+###### Recording stream
 
-> **record.list_file()**
+At present, it is only supported by ec200u / ec600u platforms.
 
-View the list of recording files in the object.
+> **record.stream_start(format, samplerate, time)**
 
-* Parameter
+Recording audio stream
 
-None
+* Parameters
 
-* Return Value
+|Parameter | parameter type | parameter description|
+| ---------- | -------- | --------------------------- |
+|Format | int | audio format. At present, AMR format is supported|
+|SampleRate | int | sampling rate. At present, 8K and 16K are supported|
+|Time | int | recording duration, unit s (seconds)|
 
-*str*  String type. Recording file list.  
+* Return value
 
-* Example
+  The integer 0 is returned successfully, and the integer - 1 is returned in case of failure.
+
+* Examples
 
 ```python
-record_test.list_file()
+record_test.stream_start(record_test.AMRNB, 8000, 5)
+```
+
+Note: while recording the audio stream, read the audio stream in time. At present, cyclic buf is adopted, and if it is not read in time, it will lead to data loss
+
+
+
+###### Read recording stream
+
+At present, it is only supported by ec200u / ec600u platforms.
+
+> **record.stream_read(read_buf, len)**
+
+Recording audio stream
+
+* Parameters
+
+|Parameter | parameter type | parameter description|
+| -------- | -------- | ------------- |
+| read_ Buf | buf | recording stream saving buf|
+|Len | int | read length|
+
+* Return value
+
+  The number of bytes actually read is returned successfully, and integer - 1 is returned in case of failure.
+
+* Examples
+
+```python
+read_buf = bytearray(128)
+record_test.stream_read(read_buf, 128)
+```
+
+###### Recording stream example
+
+```python
+import audio
+import utime
+record_test = audio.Record()
+audio_test = audio.Audio(0)
+
+read_time = 5
+
+buf = bytearray(0)
+
+def stream_rec_cb(para):
+    global buf
+    if(para[0] == 'stream'):
+        if(para[2] == 1):
+            read_buf = bytearray(para[1])
+            record_test.stream_read(read_buf,para[1])
+            buf += read_buf
+            del read_buf
+        elif (para[2] == 3):
+            audio_test.stopPlayStream()
+            audio_test.playStream(record_test.AMRNB, buf)
+
+
+
+record_test.end_callback(stream_rec_cb)
+audio_test.stopPlayStream()
+record_test.stream_start(record_test.AMRNB, 8000, read_time)
 ```
 
 
@@ -4942,6 +5165,46 @@ USBNET.set_worktype(type)
 
   Return 0 if the setting is successful, otherwise return -1.
 
+
+
+###### Obtain the working type of USB network card (restart takes effect)
+
+> **USBNET.get_worktype()**
+
+* Parameters
+
+  nothing
+
+* Return value
+
+  The current network card mode is returned successfully, and the integer - 1 is returned in case of failure. Return value Description:
+  
+  1 - ECM mode
+  
+  3 - rndis mode
+
+
+
+###### Get the current status of usbnet
+
+> **USBNET.get_status()**
+
+* Parameters
+
+  nothing
+
+* Return value
+
+  The current state of usbnet is returned successfully, and the integer - 1 is returned in case of failure.
+
+  Status description:
+
+  0 - not connected
+
+  1 - connection successful
+
+
+
 ###### Open USBNET
 
 > **USBNET.open()**
@@ -5230,6 +5493,49 @@ Return 0 if the execution is successful, otherwise return -1.
 
 
 
+###### Set input / output mode
+
+> **Pin.set_dir(value)**
+
+Set the input / output mode of pin pin GPIO.
+
+* Parameters
+
+|Parameter | type | description|
+| ----- | ---- | ------------------------------------------------------------ |
+|Value | int | 0 - (pin. In) is set as the input mode< Br / > 1 - (pin. Out) set to output mode|
+
+* Return value
+
+The integer value 0 will be returned if the setting is successful, and other values will be returned if the setting is failed.
+
+* Examples
+
+```python
+>>> from machine import Pin
+>>> gpio1 = Pin(Pin.GPIO1, Pin.OUT, Pin.PULL_DISABLE, 0)
+>>> gpio1.write(1)
+0
+>>> gpio1.set_dir(Pin.IN)
+0
+```
+
+###### Get input / output mode
+
+> **Pin.get_dir()**
+
+Get the input / output mode of pin pin.
+
+* Parameters
+
+nothing
+
+* Return value
+
+Pin mode, 0-input mode, 1-output mode.
+
+
+
 ###### Usage Example
 
 ```python
@@ -5468,6 +5774,35 @@ Return 0 if the execution is successful, otherwise return -1.。
 
 
 
+###### Set serial port data callback
+
+> **uart.set_callback(fun)**
+
+After the serial port receives the data, it will execute the callback.
+
+-Parameters
+
+|Parameter | type | description|
+| ---- | -------- | ------------------------------------------------------------ |
+|Fun | function | serial port receiving data callback [result, port, Num] < br / > result: receiving interface (0: success, others: failure) < br / > port: receiving port < br / > num: how much data is returned|
+
+-Return value
+
+The integer 0 is returned successfully, and the integer - 1 is returned in case of failure.
+
+-Examples
+
+```python
+>>> from machine import UART
+>>> uart1 = UART(UART.UART1, 115200, 8, 0, 1, 0)
+>>> 
+>>>def uart_call(para):
+>>>     print(para)
+>>> uart1.set_callback(uart_call)
+```
+
+
+
 ###### Usage Example
 
 ```python
@@ -5585,16 +5920,18 @@ Function: Hardware timer
 
 Note when using this timer: Timer 0-3, each can only perform one task at the same time, and multiple objects cannot use the same timer.
 
-###### Constant Description
 
-| Constant       | Description                                  |
-| -------------- | -------------------------------------------- |
-| Timer.Timer0   | Timer 0                                      |
-| Timer.Timer1   | Timer 1                                      |
-| Timer.Timer2   | Timer 2                                      |
-| Timer.Timer3   | Timer 3                                      |
-| Timer.ONE_SHOT | Single mode, the timer executes only once    |
-| Timer.PERIODIC | Periodic mode, the timer executes cyclically |
+
+###### Constant description
+
+|Constant | description|
+| -------------- | -------------------------- |
+| Timer. Timer0 | timer 0|
+| Timer. Timer1 | timer 1|
+| Timer. Timer2 | timer 2|
+| Timer. Timer3 | timer 3|
+| Timer. ONE_ Shot | single mode, the timer only executes once|
+| Timer. Periodic | cycle mode, timer cycle execution|
 
 
 
@@ -5722,44 +6059,7 @@ if __name__ == '__main__':
 
 Function: The module configures I/O pins to interrupt when an external event occurs.
 
-###### Constant Description
 
-| Constant         | Applicable Platform                           | Description    |
-| ---------------- | --------------------------------------------- | -------------- |
-| Pin.GPIO1        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO1          |
-| Pin.GPIO2        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO2          |
-| Pin.GPIO3        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO3          |
-| Pin.GPIO4        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO4          |
-| Pin.GPIO5        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO5          |
-| Pin.GPIO6        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO6          |
-| Pin.GPIO7        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO7          |
-| Pin.GPIO8        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO8          |
-| Pin.GPIO9        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO9          |
-| Pin.GPIO10       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO10         |
-| Pin.GPIO11       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO11         |
-| Pin.GPIO12       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO12         |
-| Pin.GPIO13       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO13         |
-| Pin.GPIO14       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO14         |
-| Pin.GPIO15       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO15         |
-| Pin.GPIO16       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO16         |
-| Pin.GPIO17       | EC600S / EC600N / EC100Y/BC25PA               | GPIO17         |
-| Pin.GPIO18       | EC600S / EC600N / EC100Y/BC25PA               | GPIO18         |
-| Pin.GPIO19       | EC600S / EC600N / EC100Y                      | GPIO19         |
-| Pin.GPIO20       | EC600S / EC600N                               | GPIO20         |
-| Pin.GPIO21       | EC600S / EC600N                               | GPIO21         |
-| Pin.GPIO22       | EC600S / EC600N                               | GPIO22         |
-| Pin.GPIO23       | EC600S / EC600N                               | GPIO23         |
-| Pin.GPIO24       | EC600S / EC600N                               | GPIO24         |
-| Pin.GPIO25       | EC600S / EC600N                               | GPIO25         |
-| Pin.GPIO26       | EC600S / EC600N                               | GPIO26         |
-| Pin.GPIO27       | EC600S / EC600N                               | GPIO27         |
-| Pin.GPIO28       | EC600S / EC600N                               | GPIO28         |
-| Pin.GPIO29       | EC600S / EC600N                               | GPIO29         |
-| Pin.IN           | --                                            | Input mode     |
-| Pin.OUT          | --                                            | Output mode    |
-| Pin.PULL_DISABLE | --                                            | Floating mode  |
-| Pin.PULL_PU      | --                                            | Pull-up mode   |
-| Pin.PULL_PD      | --                                            | Pull-down mode |
 
 ###### Create ExtInt Object
 
@@ -5843,6 +6143,46 @@ Row number of the pin map.
 >>> extint.line()
 32
 ```
+
+
+
+###### Number of read interrupts
+
+> **extint.read_count(is_reset)**
+
+Returns the number of times an interrupt was triggered.
+
+* Parameters
+
+|Parameter | type | description|
+| -------- | ---- | ---------------------------------------------- |
+| is_ Reset | int | reset count after reading < br / > 0: do not reset < br / > 1: reset|
+
+* Return value
+
+List [rising_count, falling_count]
+
+​       rising_count:   Rising trigger times
+
+​       falling_count:  Fall trigger times
+
+
+
+###### Clear interrupts
+
+> **extint.count_reset()**
+
+Number of times to clear the trigger interrupt.
+
+* Parameters
+
+nothing
+
+* Return value
+
+0: successful
+
+Other: failed
 
 
 
@@ -6756,6 +7096,28 @@ This file is a bin file generated by Image2Lcd tool. If you check the header fil
 0	Successful execution.
 
 Other value	Failed execution.
+
+
+
+###### show jpeg images
+
+> **lcd.lcd_show_jpg( file_name, start_x,start_y)**
+
+Display jpeg pictures by reading files.
+
+- Parameter
+
+| Parameter | Type | Description             |
+| --------- | ---- | ----------------------- |
+| file_name | str  | Image name to display   |
+| start_x   | int  | starting x coordinate   |
+| start_y   | int  | starting y coordinate   |
+
+* Return Value
+
+0   Successful execution.
+
+Other value Failed execution.
 
 
 
@@ -10600,6 +10962,111 @@ Scandecode.callback(callback)
 
 
 
+##### Camera
+
+Camera function.
+
+###### Create object
+
+**import camera**
+**cap= camera.camCaputre(model,cam_w,cam_h,perview_level,lcd_w,lcd_h)**
+
+* Parameters
+
+|Parameter | parameter type | parameter description|
+| ------------- | -------- | ------------------------------------------------------------ |
+|Model | int | camera model: < br / > * 0: gc032a spi * < br / > * 1: bf3901 spi *|
+| cam_ W | int | camera horizontal resolution|
+| *cam_ H * | int | * camera vertical resolution *|
+| perview_ Level | int | preview level [0,2]. The higher the level, the smoother the image and the greater the resource consumption< Br / > when it is equal to 0, there is no LCD preview function < br / > when it is equal to 1 or 2, the LCD must be initialized first|
+| *lcd_ W * | int | LCD horizontal resolution|
+| *lcd_ H * | int | * LCD vertical resolution *|
+
+* Return value
+
+If an object is returned, the creation is successful
+
+
+
+###### Turn on the camera
+
+**camCaputre.open()**
+
+* Parameters
+
+nothing
+
+* Return value
+
+0: successful
+
+Others: failed
+
+
+
+###### Turn off the camera
+
+**camCaputre.close()**
+
+* Parameters
+
+nothing
+
+* Return value
+
+0: successful
+
+Others: closing failed
+
+
+
+###### Take pictures
+
+The photo format is JPEG
+
+**camCaputre.start(width,  height, pic_name)**
+
+* Parameters
+
+|Parameter | parameter type | parameter description|
+| -------- | -------- | ----------------------------------------- |
+|Width | int | saves the horizontal resolution of the picture|
+|Height | int | saves the vertical resolution of the picture|
+| pic_ Name | str | picture name. Pictures need no suffix JPEG, it will be added automatically|
+
+* Return value
+
+0: successful (actually, it depends on the camera callback)
+
+
+
+###### Set camera callback
+
+**camCaputre.callback(callback)**
+
+* Parameters
+
+|Parameter | parameter type | parameter description|
+| -------- | -------- | -------- |
+|Callback | API | callback API|
+
+* Return value
+
+0: successful
+
+Others: failed
+
+* Examples
+
+```python
+def callback(para):
+    print(para)     #Para [0] photographing results      0: success others: failure
+                    #Para [1] name of the saved picture
+camCaputre.callback(callback) 
+```
+
+
+
 #### GNSS - Navigation Positioning and Timing
 
 Module function: Get positioning data from GPS model of L76 module, including whether the module locates successfully, latitude, longitude, UTC time, positioning mode,  number of satellites, number of visible satellites, azimuth angle, speed over the ground, geodetic height and so on. 
@@ -10967,6 +11434,71 @@ gnss.getSpeed()
 
 
 
+#### Securedata - secure data area
+
+Module function: the module provides a bare flash area and a special read-write interface for customers to store important information, and the information will not be lost after burning the firmware (burning the firmware without this function cannot be guaranteed not to be lost). Provide a storage and read interface, not a delete interface.
+>At present, only ec600n and ec600s series projects are supported
+##### Data storage
+SecureData.Store(index,databuf,len)
+-** parameters**
+|Parameter | type | description|
+| :------ | :-------- | ------------------------------------------------------------ |
+|Index | int | index range is 1-16: < br / > 1 - 8 maximum storage of 52 bytes of data < br / > 9 - 12 maximum storage of 100 bytes of data < br / > 13 - 14 maximum storage of 500 bytes of data < br / > 15 - 16 maximum storage of 1000 bytes of data|
+|Databuf | bytearray | data array to be stored|
+|Len | int | length of data to be written|
+
+
+When storing, it is stored according to the shorter of databuf and Len
+
+**Return value**
+
+-1: Parameter error
+
+0: normal execution
+
+##### Data reading
+
+SecureData.Read(index,databuf,len)
+-** parameters**
+|Parameter | type | description|
+| :------ | :-------- | ----------------------------------------------- |
+|Index | int | index range is 1-16: < br / > read the index number corresponding to the stored data|
+|Databuf | bytearray | stores the read data|
+|Len | int | length of data to be read|
+If the stored data is not as large as the incoming len, the actual stored data length is returned
+**Return value**
+-2: The stored data does not exist and the backup data does not exist
+-1: Parameter error
+Other: length of data actually read
+-** example**
+```python
+import SecureData
+#Data to be stored buf
+databuf = '\x31\x32\x33\x34\x35\x36\x37\x38'
+#Store data with length of 8 in the storage area with index of 1
+SecureData.Store(1, databuf, 8)
+#Define an array with a length of 20 to read the stored data
+buf = bytearray(20)
+#Read the data in the storage area with index 1 into buf, and store the length of the read data in the variable len
+len = SecureData.Read(1, buf, 20)
+#Output read data
+print(buf[:len])
+```
+-** implementation results**
+```python
+>>> import SecureData
+>>> databuf = '\x31\x32\x33\x34\x35\x36\x37\x38'
+>>> SecureData.Store(1, databuf, 8)
+0
+>>> buf = bytearray(20)
+>>> len = SecureData.Read(1, buf, 20)
+>>> print(buf[:len])
+bytearray(b'12345678')
+>>> 
+```
+
+
+
 #### NB Internet of things cloud platform
 
 Module function: it provides the function of connecting to the Internet of things cloud platform and connecting to the Internet of things cloud platform. Through the communication function of IOT cloud platform and module equipment, it currently supports China Telecom lot IOT platform, China Telecom AEP IOT platform and China Mobile onenet IOT platform.
@@ -11212,26 +11744,410 @@ bytearray(b'313233')
 0
 ```
 
+
 ###### Close connection
 
-- **Parameter**
+-Parameters
 
-None
+nothing
 
-- **Return Value**
+-Return value
 
-Success -True
+Success - true
 
-Failed -False
+Failed - false
 
-- Example
-Sample model[Download address](https://python.quectel.com/wiki/#/static-file/Ctwing_Object_model/aep_example.json)
+-Examples
+
+```python
+>>> aep.close()
+True
+```
+
+
+
+###### Use example
+
+Sample model
+
+```json
+{
+  "productInfo": {
+    "productId": 15082482
+  },
+  "properties": [
+    {
+      "propertyId": 1,
+      "identifier": "ecl",
+      "Propertyname": "wireless signal coverage level",
+      "description": null,
+      "dataType": "integer",
+      "dataSchema": "\"unit\":\"null\",\"min\":\"-32768\",\"len\":4,\"unitName\":\"\",\"max\":\"32767\""
+    },
+    {
+      "propertyId": 2,
+      "identifier": "pci",
+      "Propertyname": "physical cell ID",
+      "description": null,
+      "dataType": "integer",
+      "dataSchema": "\"unit\":\"null\",\"min\":\"-32768\",\"len\":4,\"unitName\":\"\",\"max\":\"32767\""
+    },
+    {
+      "propertyId": 3,
+      "identifier": "IMEI",
+      "propertyName": "IMEI",
+      "description": null,
+      "dataType": "vary-string",
+      "dataSchema": "\"len\":0,\"unit\":\"null\",\"unitName\":\"\""
+    },
+    {
+      "propertyId": 4,
+      "identifier": "rsrp",
+      "Propertyname": "reference signal reception power",
+      "description": null,
+      "dataType": "integer",
+      "dataSchema": "\"unit\":\"null\",\"min\":\"-32768\",\"len\":4,\"unitName\":\"\",\"max\":\"32767\""
+    },
+    {
+      "propertyId": 5,
+      "identifier": "sinr",
+      "Propertyname": "signal to interference plus noise ratio",
+      "description": null,
+      "dataType": "integer",
+      "dataSchema": "\"unit\":\"null\",\"min\":\"-32768\",\"len\":4,\"unitName\":\"\",\"max\":\"32767\""
+    },
+    {
+      "propertyId": 6,
+      "identifier": "time",
+      "Propertyname": "current time",
+      "description": null,
+      "dataType": "timestamp",
+      "dataSchema": "\"len\":8"
+    },
+    {
+      "propertyId": 7,
+      "identifier": "ICCID",
+      "propertyName": "ICCID",
+      "description": null,
+      "dataType": "vary-string",
+      "dataSchema": "\"len\":0,\"unit\":\"null\",\"unitName\":\"\""
+    },
+    {
+      "propertyId": 8,
+      "identifier": "cell_id",
+      "Propertyname": "cell location information",
+      "description": null,
+      "dataType": "integer",
+      "dataSchema": "\"unit\":\"null\",\"min\":\"-2147483648\",\"len\":4,\"unitName\":\"\",\"max\":\"2147483647\""
+    },
+    {
+      "propertyId": 9,
+      "identifier": "velocity",
+      "Propertyname": "water velocity",
+      "description": null,
+      "dataType": "float",
+      "dataSchema": "\"unit\":\"m/s\",\"min\":\"0\",\"len\":4,\"unitName\":\"meters per second\",\"max\":\"100\""
+    },
+    {
+      "propertyId": 10,
+      "identifier": "act_result",
+      "Propertyname": "instruction execution result",
+      "description": null,
+      "dataType": "enum",
+      "dataSchema": "\"len\":1,\"enumDetail\":{\"0\":\"execution succeeded\",\"1\":\"execution failed\"}"
+    },
+    {
+      "propertyId": 11,
+      "identifier": "error_code",
+      "Propertyname": "failure",
+      "description": null,
+      "dataType": "enum",
+      "dataSchema": "\"len\":1,\"enumDetail\":{\"0\":\"normal\",\"1\":\"sensor failure\"}"
+    },
+    {
+      "propertyId": 12,
+      "identifier": "water_flow",
+      "Propertyname": "water flow",
+      "description": null,
+      "dataType": "float",
+      "dataSchema": "\"unit\":\"m³/h\",\"min\":\"0\",\"len\":4,\"unitName\":\"cubic meters per hour\",\"max\":\"9999999\""
+    },
+    {
+      "propertyId": 13,
+      "identifier": "module_type",
+      "Propertyname": "module model",
+      "description": null,
+      "dataType": "vary-string",
+      "dataSchema": "\"len\":0,\"unit\":\"null\",\"unitName\":\"\""
+    },
+    {
+      "propertyId": 14,
+      "identifier": "temperature",
+      "Propertyname": "water temperature",
+      "description": null,
+      "dataType": "float",
+      "dataSchema": "\"unit\":\"°C\",\"min\":\"0\",\"len\":4,\"unitName\":\"Celsius\",\"max\":\"100\""
+    },
+    {
+      "propertyId": 15,
+      "identifier": "valve_onoff",
+      "Propertyname": "valve switch",
+      "description": null,
+      "dataType": "enum",
+      "dataSchema": "\"len\":1,\"enumDetail\":{\"0\":\"close\",\"1\":\"turn on\"}"
+    },
+    {
+      "propertyId": 16,
+      "identifier": "battery_state",
+      "Propertyname": "battery status",
+      "description": null,
+      "dataType": "enum",
+      "dataSchema": "\"len\":1,\"enumDetail\":{\"0\":\"normal\",\"1\":\"low batter\"}"
+    },
+    {
+      "propertyId": 17,
+      "identifier": "battery_value",
+      "Propertyname": "battery power",
+      "description": null,
+      "dataType": "integer",
+      "dataSchema": "\"unit\":\"%\",\"min\":\"0\",\"len\":4,\"unitName\":\"percentage\",\"max\":\"100\""
+    },
+    {
+      "propertyId": 18,
+      "identifier": "terminal_type",
+      "Propertyname": "terminal model",
+      "description": null,
+      "dataType": "vary-string",
+      "dataSchema": "\"len\":0,\"unit\":\"null\",\"unitName\":\"\""
+    },
+    {
+      "propertyId": 19,
+      "identifier": "back_total_flow",
+      "Propertyname": "reverse cumulative traffic",
+      "description": null,
+      "dataType": "float",
+      "dataSchema": "\"unit\":\"m³\",\"min\":\"0\",\"len\":4,\"unitName\":\"cubic meter\",\"max\":\"99999999\""
+    },
+    {
+      "propertyId": 20,
+      "identifier": "battery_voltage",
+      "Propertyname": "battery voltage",
+      "description": null,
+      "dataType": "float",
+      "dataSchema": "\"unit\":\"V\",\"min\":\"0\",\"len\":4,\"unitName\":\"volt\",\"max\":\"24\""
+    },
+    {
+      "propertyId": 21,
+      "identifier": "hydraulic_value",
+      "Propertyname": "water pressure value",
+      "description": null,
+      "dataType": "float",
+      "dataSchema": "\"unit\":\"MPa\",\"min\":\"0\",\"len\":4,\"unitName\":\"MPa\",\"max\":\"10\""
+    },
+    {
+      "propertyId": 22,
+      "identifier": "hardware_version",
+      "Propertyname": "hardware version",
+      "description": null,
+      "dataType": "vary-string",
+      "dataSchema": "\"len\":0,\"unit\":\"null\",\"unitName\":\"\""
+    },
+    {
+      "propertyId": 23,
+      "identifier": "software_version",
+      "Propertyname": "software version",
+      "description": null,
+      "dataType": "vary-string",
+      "dataSchema": "\"len\":0,\"unit\":\"null\",\"unitName\":\"\""
+    },
+    {
+      "propertyId": 24,
+      "identifier": "manufacturer_name",
+      "Propertyname": "manufacturer name",
+      "description": null,
+      "dataType": "vary-string",
+      "dataSchema": "\"len\":0,\"unit\":\"null\",\"unitName\":\"\""
+    },
+    {
+      "propertyId": 25,
+      "identifier": "water_consumption",
+      "Propertyname": "water consumption",
+      "description": null,
+      "dataType": "float",
+      "dataSchema": "\"unit\":\"m³\",\"min\":\"0\",\"len\":4,\"unitName\":\"cubic meter\",\"max\":\"99999999\""
+    },
+    {
+      "propertyId": 26,
+      "identifier": "forward_total_flow",
+      "Propertyname": "forward cumulative traffic",
+      "description": null,
+      "dataType": "float",
+      "dataSchema": "\"unit\":\"m³\",\"min\":\"0\",\"len\":4,\"unitName\":\"cubic meter\",\"max\":\"99999999\""
+    }
+  ],
+  "services": [
+    {
+      "serviceId": 1,
+      "identifier": "data_report",
+      "Servicename": "business data reporting",
+      "serviceType": "DataReport",
+      "description": null,
+      "properties": [
+        {
+          "propertyId": 12,
+          "serial": 1
+        }
+      ],
+      "parameters": []
+    },
+    {
+      "serviceId": 1002,
+      "identifier": "battery_voltage_low_alarm",
+      "Servicename": "battery low voltage alarm",
+      "serviceType": "EventReport",
+      "description": null,
+      "properties": [
+        {
+          "propertyId": 16,
+          "serial": 1
+        },
+        {
+          "propertyId": 20,
+          "serial": 2
+        }
+      ],
+      "parameters": []
+    },
+    {
+      "serviceId": 2,
+      "identifier": "signal_report",
+      "Servicename": "signal data reporting",
+      "serviceType": "DataReport",
+      "description": null,
+      "properties": [
+        {
+          "propertyId": 4,
+          "serial": 1
+        },
+        {
+          "propertyId": 5,
+          "serial": 2
+        },
+        {
+          "propertyId": 2,
+          "serial": 3
+        },
+        {
+          "propertyId": 1,
+          "serial": 4
+        },
+        {
+          "propertyId": 8,
+          "serial": 5
+        }
+      ],
+      "parameters": []
+    },
+    {
+      "serviceId": 9001,
+      "identifier": "valve_onoff_resp",
+      "Servicename": "valve switch control response",
+      "serviceType": "CommandResponse",
+      "description": null,
+      "properties": [
+        {
+          "propertyId": 15,
+          "serial": 1
+        },
+        {
+          "propertyId": 10,
+          "serial": 2
+        }
+      ],
+      "parameters": []
+    },
+    {
+      "serviceId": 8001,
+      "identifier": "valve_onoff_cmd",
+      "Servicename": "valve switch control",
+      "serviceType": "Command",
+      "description": null,
+      "properties": [
+        {
+          "propertyId": 15,
+          "serial": 1
+        }
+      ],
+      "parameters": []
+    },
+    {
+      "serviceId": 1001,
+      "identifier": "error_code_report",
+      "Servicename": "fault reporting",
+      "serviceType": "EventReport",
+      "description": null,
+      "properties": [
+        {
+          "propertyId": 11,
+          "serial": 1
+        },
+        {
+          "propertyId": 6,
+          "serial": 2
+        }
+      ],
+      "parameters": []
+    },
+    {
+      "serviceId": 3,
+      "identifier": "info_report",
+      "Servicename": "equipment information reporting",
+      "serviceType": "DataReport",
+      "description": null,
+      "properties": [
+        {
+          "propertyId": 24,
+          "serial": 1
+        },
+        {
+          "propertyId": 18,
+          "serial": 2
+        },
+        {
+          "propertyId": 13,
+          "serial": 3
+        },
+        {
+          "propertyId": 22,
+          "serial": 4
+        },
+        {
+          "propertyId": 23,
+          "serial": 5
+        },
+        {
+          "propertyId": 3,
+          "serial": 6
+        },
+        {
+          "propertyId": 7,
+          "serial": 7
+        }
+      ],
+      "parameters": []
+    }
+  ]
+}
+```
+
+Sample code
+
 ```python
 from nb import AEP
 import utime
 import ustruct
 
-#以下5个函数需要判断如果机器是大端格式数据就不转
+#The following five functions need to be judged. If the machine is in large format, the data will not be transferred
 def aep_htons(source):
     return source & 0xffff
 def aep_htoni(source):
@@ -11267,25 +12183,25 @@ def HexToStr(source, t=None):
 def StrToHex(source):
     return int(source)
 
-#对照物模型定义,打包解包根据相应的服务id中的属性进行解析
-serid_dict={'阀门开关控制':8001,
-            '故障上报':1001,
-            '设备信息上报':3,
-            '阀门开关控制响应':9001,
-            '信号数据上报':2,
-            '电池低电压告警':1002,
-            '业务数据上报':1
+#According to the definition of the reference model, packaging and unpacking are resolved according to the attributes in the corresponding service ID
+serid_ Dict = {'valve switch control': 8001,
+               'fault reporting': 1001,
+               'equipment information reporting': 3,
+               'valve switch control response': 9001,
+               'Signal data reporting ': 2,
+               'battery low voltage alarm': 1002,
+               'business data reporting': 1
            }
-dict_cmd={'数据上报':0x02,
-          '事件上报':0x07,
-          '无线参数上报':0x03,
-          '下行指令固定':0x06,
-          '指令响应':0x86
+dict_ CMD = {'data reporting': 0x02,
+             'event reporting': 0x07,
+             'wireless parameter reporting': 0x03,
+             'fixed downlink command': 0x06,
+             'command response': 0x86
          }
 send_type={
-	'RAI_NONE':0,
-	'RAI_1':1,
-	'RAI_2':2
+    'RAI_NONE':0,
+    'RAI_1':1,
+    'RAI_2':2
 }
 servcei_info={
     'ip':"221.229.214.202",
@@ -11293,17 +12209,17 @@ servcei_info={
 }
 
 def aep_pack_cmdtype02(service_id,data_in):
-    data=HexToStr(dict_cmd['数据上报'],1)
-    data+=HexToStr(service_id,2)    			#serviceid转成字符串
+    Data = hextostr (dict_cmd ['data reporting'], 1)
+    data+=HexToStr(service_id,2)                #Convert serviceid to string
     if service_id == 1:
-        data+=HexToStr(4,2)	                    #发送数据8.14,float类型四个字节长度,此处只举例一个情况
-        data+=HexToStr(aep_htonf(data_in),4)    #float数据转成字符串
+        data+=HexToStr(4,2)                     #The sending data is 8.14, and the float type is four bytes long. Here is only one example
+        data+=HexToStr(aep_htonf(data_in),4)    #Convert float data to string
     else:
         print('not support')                    #
     return data
  
 def aep_pack(cmdtype,service_id,data):
-    if cmdtype == dict_cmd['数据上报']:                            #数据上报-0x02,此处只举例一个情况
+    if cmdtype == dict_cmd['data reporting']:                            #Data reporting - 0x02, here is only one example
         return aep_pack_cmdtype02(service_id,data)
     else:
         print('not support')
@@ -11322,16 +12238,16 @@ def aep_unpack_cmdtype06(data_in):
     payload_len = int(str(data_in.decode()[8:12]),16)
     payload_len = aep_htons(payload_len)
     value = 0
-    if service_id == serid_dict['阀门开关控制']:                 #物模型下发属性id=15,两个16进制字节,枚举型,0或者1
+    if service_id == serid_dict['Valve switch control']:                 #The object model issues attribute id = 15, two hexadecimal bytes, enumeration type, 0 or 1
        value = int(str(data_in.decode()[12:14]),16)
        value = aep_htons(value)
-    if service_id == serid_dict['故障上报']:
+    if service_ id == serid_ Dict ['fault reporting']:
         pass
-    if service_id == serid_dict['设备信息上报']:
+    if service_ id == serid_ Dict ['equipment information reporting']:
         pass
-    if service_id == serid_dict['阀门开关控制响应']:
+    if service_ id == serid_ Dict ['valve switch control response']:
         pass
-    if service_id == serid_dict['信号数据上报']:
+    if service_ id == serid_ Dict ['signal data reporting']:
         pass
     print('-------------------unpack recv data after------------------')
     print("service_id ",service_id)
@@ -11343,7 +12259,7 @@ def aep_unpack_cmdtype06(data_in):
 def aep_unpack(data_in):
     cmdtype=StrToHex(str(data_in.decode()[:2]))
     data=data_in[2:]
-    if cmdtype == dict_cmd['下行指令固定']:
+    if cmdtype == dict_ CMD ['fixed downlink instruction']:
         aep_unpack_cmdtype06(data)
     else:
         print('not support')
@@ -11351,7 +12267,7 @@ def aep_unpack(data_in):
 aep=AEP(servcei_info['ip'],servcei_info['port'])
 
 def recv():
-    data=bytearray(20)	
+    data=bytearray(20)  
     ret=aep.recv(18,data)
     if ret == -1:
         return
@@ -11364,7 +12280,7 @@ def connect():
 
 def send():
     water_flow_value=8.14
-    data=aep_pack(dict_cmd['数据上报'],serid_dict['业务数据上报'],water_flow_value)
+    data=aep_ Pack (dict_cmd ['data reporting'], serid_dict ['business data reporting'], water_flow_value)
     print('send: ',data)
     print('len: ',len(data))
     data_len=len(data)
@@ -11393,34 +12309,5 @@ if __name__ == '__main__':
     do_task()
 
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
