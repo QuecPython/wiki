@@ -736,7 +736,7 @@ if __name__ == '__main__':
 
 ##### 通用SIM访问接口
 
-> **sim.genericAccess(sim_id, cmd)**
+> **sim.genericAccess(simId, cmd)**
 
 将命令APDU通过modem传递给SIM卡，然会返回响应APDU。
 
@@ -744,14 +744,14 @@ if __name__ == '__main__':
 
 * 参数
 
-| 参数   | 参数类型 | 参数说明                                                     |
-| ------ | -------- | ------------------------------------------------------------ |
-| sim_id | int      | simid, 范围：0 or 1                                          |
-| cmd    | string   | command passed on by the MT to the SIM in the format as described in GSM 51.011 |
+| 参数  | 参数类型 | 参数说明                                                     |
+| ----- | -------- | ------------------------------------------------------------ |
+| simId | int      | sim id, 范围：0 or 1                                         |
+| cmd   | string   | command passed on by the MT to the SIM in the format as described in GSM 51.011 |
 
 * 返回值
 
-  成功返回（length,响应APDU），失败返回整型-1。
+  成功返回（length，响应APDU），失败返回整型-1。
 
 * 示例
 
@@ -1141,18 +1141,18 @@ sim.setCallback(cb)
 
 
 
-##### 设置SIMdet
+##### SIM卡热插拔开关
 
-> **sim.setSimDet(detenable, insertlevel)**
+> **sim.setSimDet(switch, triggerLevel)**
 
 设置SIM卡热插拔相关配置。
 
 * 参数
 
-|    参数    | 参数类型 | 参数说明                                                     |
-| --------   | -------- | ------------------------------------------------------------ |
-| detenable  | int      | 开启或者关闭SIM卡热插拔功能，0:关闭 1:打开                   |
-| insertlevel| int      | 高低电平配置(0/1)                                            |
+| 参数         | 参数类型 | 参数说明                                   |
+| ------------ | -------- | ------------------------------------------ |
+| switch       | int      | 开启或者关闭SIM卡热插拔功能，0:关闭 1:打开 |
+| triggerLevel | int      | 高低电平配置(0/1)                          |
 
 * 返回值
 
@@ -1171,7 +1171,7 @@ sim.setCallback(cb)
 
 
 
-##### 获取SIMdet
+##### 获取SIM卡热插拔配置
 
 > **sim.getSimDet()**
 

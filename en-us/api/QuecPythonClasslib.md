@@ -734,7 +734,7 @@ Note: The prerequisite for successfully obtaining IMSI, ICCID, and phone number 
 
 ##### Send APDU command to SIM
 
-> **sim.genericAccess(sim_id, cmd)**
+> **sim.genericAccess(simId, cmd)**
 
 Send APDU command to SIM card.
 
@@ -744,7 +744,7 @@ Note : Currently, only the ASR platform supports this function.
 
 | Parameter | Type   | Description                                                  |
 | --------- | ------ | ------------------------------------------------------------ |
-| sim_id    | int    | SIM card id, range : 0 or 1                                  |
+| simId     | int    | SIM card id, range : 0 or 1                                  |
 | cmd       | string | command passed on by the MT to the SIM in the format as described in GSM 51.011 |
 
 * Return Value
@@ -765,7 +765,7 @@ Note : Currently, only the ASR platform supports this function.
 
 > **sim.getImsi()**
 
-This function obtains the IMSI of SIM card.
+Call this API to get the IMSI of the SIM card.
 
 * Parameter
 
@@ -789,7 +789,7 @@ This function obtains the IMSI of SIM card.
 
 > **sim.getIccid()**
 
-This function obtains the ICCID of SIM card.
+Call this API to get the ICCID of SIM card.
 
 * Parameter
 
@@ -812,7 +812,7 @@ This function obtains the ICCID of SIM card.
 
 > **sim.getPhoneNumber()**
 
-This function obtain the phone number of SIM card.
+Call this API to get the phone number of SIM card.
 
 * Parameter
 
@@ -839,7 +839,7 @@ This function obtain the phone number of SIM card.
 
 > **sim.getStatus()**
 
-This function obtain the Status of SIM Card
+Call this API to get the Status of SIM Card.
 
 * Parameter
 
@@ -878,7 +878,7 @@ This function obtain the Status of SIM Card
 
 > **sim.enablePin(pin)**
 
-This function enables PIN authentication, and then you need to enter the correct PIN before the SIM card can be used normally. The SIM card will be locked if the wrong PIN is entered consecutive 3 times and then PUK is required to unlock the SIM card.
+Call this API to enables PIN authentication, and then you need to enter the correct PIN before the SIM card can be used normally. The SIM card will be locked if the wrong PIN is entered consecutive 3 times and then PUK is required to unlock the SIM card.
 
 * Parameter
 
@@ -890,7 +890,7 @@ This function enables PIN authentication, and then you need to enter the correct
 
   Returns 0 on success, -1 otherwise.
 
-* note
+* Note
 
   The BC25PA platform pin password supports up to eight digits.
 
@@ -907,7 +907,7 @@ This function enables PIN authentication, and then you need to enter the correct
 
 > **sim.disablePin(pin)**
 
-This function disables PIN authentication
+Call this API to disables PIN authentication
 
 * Parameter
 
@@ -919,7 +919,7 @@ This function disables PIN authentication
 
   Returns 0 on success, -1 otherwise.
 
-* note
+* Note
 
   The BC25PA platform pin password supports up to eight digits.
 
@@ -948,7 +948,7 @@ PIN authentication. Only can be called after sim.enablePin(pin) is executed succ
 
   Returns 0 on success, -1 otherwise.
 
-* note
+* Note
 
   The BC25PA platform pin password supports up to eight digits.
 
@@ -965,7 +965,7 @@ PIN authentication. Only can be called after sim.enablePin(pin) is executed succ
 
 > **sim.unblockPin(puk, newPin)**
 
-This function unlocks the SIM card. When PIN/PIN2 code is wrongly input for times, PUK/PUK2 code and new PIN/PIN2 code are required to unlock the SIM card. If all PUK code input in10 times are incorrect, SIM card will be permanently locked and automatically scrapped.s
+This function unlocks the SIM card. When PIN/PIN2 code is wrongly input for times, PUK/PUK2 code and new PIN/PIN2 code are required to unlock the SIM card. If all PUK code input in 10 times are incorrect, SIM card will be permanently locked and automatically scrapped.
 
 * Parameter
 
@@ -978,7 +978,7 @@ This function unlocks the SIM card. When PIN/PIN2 code is wrongly input for time
 
   Returns 0 on success, -1 otherwise.
 
-* note
+* Note
 
   The BC25PA platform pin password supports up to eight digits.
 
@@ -1008,7 +1008,7 @@ Changes PIN.
 
   Returns 0 on success, -1 otherwise.
 
-* note
+* Note
 
   The BC25PA platform pin password supports up to eight digits.
 
@@ -1025,7 +1025,7 @@ Changes PIN.
 
 > **sim.readPhonebook(storage, start, end, username)**
 
-This function obtains one or more phone number records in the specified phonebook on the SIM card.
+Call this API to get one or more phone number records in the specified phonebook on the SIM card.
 
 * Parameter
 
@@ -1052,7 +1052,7 @@ This function obtains one or more phone number records in the specified phoneboo
 
   `phone_number` – String type. Phone number.
 
-* note
+* Note
 
   The BC25PA platform does not support this method.
 
@@ -1075,7 +1075,7 @@ This function obtains one or more phone number records in the specified phoneboo
 
 > **sim. writePhonebook(storage, index, username, number)**
 
-This function writes a phone number record.
+Call this API to writes a phone number record.
 
 * Parameter
 
@@ -1090,7 +1090,7 @@ This function writes a phone number record.
 
   Returns 0 on success, -1 otherwise.
 
-* note
+* Note
 
   The BC25PA platform does not support this method.
 
@@ -1103,11 +1103,11 @@ This function writes a phone number record.
 
 
 
-##### Register Listening Callback Function
+##### Register Callback Function
 
 > **sim.setCallback(usrFun)**
 
-This function registers the listening callback function. This function will be triggered when receiving SMS.
+Call this API to registers the listening callback function. The callback function will be triggered when receiving SMS.
 
 (Only valid when the SIM card hot-plugging is enabled.)
 
@@ -1121,7 +1121,7 @@ This function registers the listening callback function. This function will be t
 
   Returns 0 on success, -1 otherwise.
 
-* note
+* Note
 
   The BC25PA platform does not support this method.
 
@@ -1139,24 +1139,24 @@ sim.setCallback(cb)
 
 
 
-##### Set SIMdet
+##### Enable or disable the SIM card hot plug function
 
-> **sim.setSimDet(detenable, insertlevel)**
+> **sim.setSimDet(switch, triggerLevel)**
 
-This function sets the SIM card hot-plugging related configurations.
+Call this API to enable or disable the SIM card hot swap function.
 
 * Parameter
 
-| Parameter   | Type | Description                                                  |
-| ----------- | ---- | ------------------------------------------------------------ |
-| detenable   | int  | Enable/Disable SIM card hot-plugging. 0: Disable. 1: Enable. |
-| insertlevel | int  | High/low level (0/1).                                        |
+| Parameter    | Type | Description                                                  |
+| ------------ | ---- | ------------------------------------------------------------ |
+| switch       | int  | Enable/Disable SIM card hot-plugging. 0: Disable. 1: Enable. |
+| triggerLevel | int  | High/low level (0/1).                                        |
 
 * Return Value
 
   Returns 0 on success, -1 otherwise.
 
-* note
+* Note
 
   The BC25PA platform does not support this method.
 
