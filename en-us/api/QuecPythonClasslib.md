@@ -50,15 +50,15 @@ myprint()
 
 
 
-#### dataCall - Data Call
+#### dataCall - Activate PDP Context
 
-Function: Provides  the data call related interface.
+Function: Provides functions for activating the PDP Context.
 
-##### Dial-Up
+##### Activate PDP Context
 
 > **dataCall.start(profileIdx, ipType, apn, username, password, authType)**
 
-This function starts the dial-up and activates the data link.
+Call this API to activating the PDP Context.
 
 * Parameter
 
@@ -73,9 +73,7 @@ This function starts the dial-up and activates the data link.
 
 * Return Value
 
-0  Successful execution.
-
--1  Failed execution.
+  Returns 0 on success, -1 otherwise.
 
 * note
 
@@ -91,11 +89,11 @@ This function starts the dial-up and activates the data link.
 
 
 
-##### User APN dialing (multiple user APN Settings are supported)
+##### Use the APN in dictionary or json file to Activate PDP Context
 
 > **dataCall.startByUserApns(apn_dict=None, filename=None)**
 
-If a user does not want to use the default dial-up function (you need to disable the default automatic dial-up function when the user starts up) and needs to use user APN to dial up to the Internet, but worries that setting only one APN may lead to dial-up failure in case of incorrect APN writing, you need to set multiple APN information. In this way, even if one or more of the preceding APN is incorrectly written and the dialing fails, the subsequent APNs are automatically used to continue the dialing attempt. In this case, the interface can be used to meet the requirements; This interface not only supports setting the multiple APN, but also supports two ways to store the APN information of users. The first way is that users directly save their APN information in the dictionary and directly built-in in the code. The second option is for users to store their APN information in json files in a usr directory or a subdirectory of usr.
+The user can save multiple APN information in a dictionary or JSON file and then call this interface to activating the PDP Context. And specify by parameter where to get APN information for PDP activation. If PDP activation fails using the first APN information obtained, other APN information set by the user will be used to continue activating the PDP Context.
 
 * Parameter
 
@@ -294,17 +292,17 @@ if __name__ == '__main__':
 
 
 
-- Enable or disable automatic dialing (take effect after restart)
+##### Enable the function of automatically activating the PDP context 
 
 > **dataCall.poweronAutoDatacall(enable)**
 
-Enable or disable automatic dialing, take effect after restart. It is enabled by default.
+Enable the function of automatically activating the PDP context upon startup, take effect after restart. It is enabled by default.
 
 * Parameter
 
 | Parameter | Type | Description                                                  |
 | --------- | ---- | ------------------------------------------------------------ |
-| enable    | int  | 0 - disable automatic dialing<br>1 - enable automatic dialing |
+| enable    | int  | 0 - disable the function of automatically activating the PDP context<br>1 - enable the function of automatically activating the PDP context |
 
 * Return Value
 
@@ -312,7 +310,7 @@ Enable or disable automatic dialing, take effect after restart. It is enabled by
 
 * note
 
-  This interface is only applicable to development and debugging, because it takes effect only after being reset. If the user wants to turn off the automatic dialing function when the module is in mass production, he/she can take the following steps:
+  This interface is only applicable to development and debugging, because it takes effect only after being reset. If the user wants to disable the function of automatically activating the PDP context when the module is in mass production, user can take the following steps:
 
   step 1: Create a file called system_config.json on your computer.
 
@@ -334,11 +332,11 @@ Enable or disable automatic dialing, take effect after restart. It is enabled by
 
 
 
-##### Configure APN Information
+##### Set APN
 
 > **dataCall.setApn(profileIdx, ipType, apn, username, password, authType, flag=0)**
 
-After calling this interface, the user_apn.json will be created in the user partition to save the APN configurations.
+After calling this interface, the user_apn.json will be created in the user partition to save the APN information. When the device is restarted, APN is preferentially obtained from this json file for PDP context activation.
 
 * Parameter
 
@@ -350,15 +348,13 @@ After calling this interface, the user_apn.json will be created in the user part
 | username   | string | Optional. APN user name.  The maximum length is 15 bytes.    |
 | password   | string | Optional. APN password. The maximum length is 15 bytes.      |
 | authType   | int    | Authentication type. 0-No authentication, 1-PAP, 2-CHAP.     |
-| flag       | int    | This parameter is optional. The default value is 0, indicating that only a user_apn.json file is created to save user APN information. If the value is 1, the user_apn.json file is created to save user APN information, and the APN information is used for dial-up immediately. No matter the value is 0 or 1, the APN configured by the user is used for startup dialing during the restart. |
+| flag       | int    | This parameter is optional. The default value is 0, indicating that only a user_apn.json file is created to save user APN information. If the value is 1, the user_apn.json file is created to save user APN information, and the APN information is used for PDP context activation immediately. |
 
 * Return Value
 
-0  Successful execution.
+  Returns 0 on success, -1 otherwise.
 
--1  Failed execution.
-
-* note
+* Note
 
   The BC25PA platform does not support this method.
 * Example
@@ -371,30 +367,59 @@ After calling this interface, the user_apn.json will be created in the user part
 
 
 
-##### get APN Information
+##### Set DNS
+
+> **dataCall.setDnsserver(profileIdx, sim_id, priDns, secDns)**
+
+Manually modify DNS information, you can check whether the modification is successful through `dataCall.getInfo(profileIdx, ipType)`. The device uses the DNS information delivered by the base station by default. 
+
+* Parameter
+
+| Parameter  | Type   | Description                                                  |
+| ---------- | ------ | ------------------------------------------------------------ |
+| profileIdx | int    | PPDP context index. Range: 1-8 [volte version with the largest default PID is used to register IMS, please do not repeat the operation]. It is generally set to 1, if set as 2-8, the private APN and password may be required. |
+| sim_id     | int    | simid, range：0/1, default 0.                                |
+| priDns     | string | Primary DNS                                                  |
+| secDns     | string | Secondary DNS                                                |
+
+* Return Value
+
+  Returns 0 on success, -1 otherwise.
+
+* Note
+
+  Currently only EC600S EC600N/EC800N EC200U/EC600U platform support this feature.
+
+* Example
+
+```python
+>>> import dataCall
+>>> dataCall.setDnsserver(1, 0, "8.8.8.8", "114.114.114.114")
+0
+```
+
+
+
+##### Get APN
 
 > **dataCall.getApn(simid, profileIdx)**
 
-get APN Information(Variable parameter function)
-By default, there is at least one parameter(simid) and a maximum of two parameters(simid,pid);
-When there is only one parameter simID, the APN loaded by default is obtained; when there are two parameters, the APN of the corresponding PID is obtained  
+Get APN Information of user. If only simID is specified, the default APN is obtained. If profileIdx is specified, the APN corresponding to profileIdx is obtained.
 
 * Parameter
 
 | Parameter  | Type | Description                                                     |
 | ---------- | -------- | ------------------------------------------------------------ |
-| simid      | int      | simid,range：0/1|
-| profileIdx | int      | PDP context index. Range for ASR: 1-8,range for 8910:1-7|
+| simid      | int      | simid, range：0/1 |
+| profileIdx | int      | PDP context index. Range for ASR : 1-8,range for unisoc : 1-7 |
 
 * Return Value
 
-APN  Successful execution.
+  Returns APN on success, integer -1 on failure.
 
--1  Failed execution.
+* Note
 
-* NOTE
-
-The 8910 and ASR platform support this method.
+  The unisoc and ASR platform support this method.
 
 * Example
 
@@ -457,11 +482,11 @@ This function registers the callback function to send the notification when the 
 
 
 
-##### Obtain the Dial-Up Information
+##### Get IP and DNS Information
 
 > **dataCall.getInfo(profileIdx, ipType)**
 
-This function obtains the dial-up information, such as the connection state, IP address and DNS.
+This API is used to get PDP activation status, IP, and DNS information.
 
 * Parameter
 
@@ -472,47 +497,47 @@ This function obtains the dial-up information, such as the connection state, IP 
 
 * Return Value
 
-If it failed to obtain the dial-up information, returns -1. If successfully, the dial-up information is returned  in the format shown as follows.
+  If it failed to obtain the dial-up information, returns -1. If successfully, the dial-up information is returned  in the format shown as follows.
 
- If ipType =0, the format of the return value is as follows.
+   If ipType =0, the format of the return value is as follows.
 
-`(profileIdx, ipType, [nwState, reconnect, ipv4Addr, priDns, secDns])`
+  `(profileIdx, ipType, [nwState, reconnect, ipv4Addr, priDns, secDns])`
 
-`profileIdx`：PDP context index. Range: 1-8
+  `profileIdx`：PDP context index. Range: 1-8
 
-`ipType`：IP type. 0-IPV4, 1-IPV6, 2-IPV4 and IPV6.
+  `ipType`：IP type. 0-IPV4, 1-IPV6, 2-IPV4 and IPV6.
 
-`nwState`： The result of dial-up. 0 indicates the failed dial-up. 1 indicates the successful dial-up.
+  `nwState`： The result of dial-up. 0 indicates the failed dial-up. 1 indicates the successful dial-up.
 
-`reconnect`：The reconnection flag.
+  `reconnect`：The reconnection flag.
 
-`ipv4Addr`：IPv4 address, string type.
+  `ipv4Addr`：IPv4 address, string type.
 
-`priDns`：Primary DNS, string type.
+  `priDns`：Primary DNS, string type.
 
-`secDns`：Secondary DNS, string type.
+  `secDns`：Secondary DNS, string type.
 
- If ipType =1, the format of the return value is as follows.
+   If ipType =1, the format of the return value is as follows.
 
-`(profileIdx, ipType, [nwState, reconnect, ipv6Addr, priDns, secDns])`
+  `(profileIdx, ipType, [nwState, reconnect, ipv6Addr, priDns, secDns])`
 
-`profileIdx`：PDP context index. Range: 1-8
+  `profileIdx`：PDP context index. Range: 1-8
 
-`ipType`：IP type. 0-IPV4, 1-IPV6, 2-IPV4 and IPV6.
+  `ipType`：IP type. 0-IPV4, 1-IPV6, 2-IPV4 and IPV6.
 
-`nwState`：The result of dial-up. 0 indicates the failed dial-up. 1 indicates the successful dial-up.
+  `nwState`：The result of dial-up. 0 indicates the failed dial-up. 1 indicates the successful dial-up.
 
-`reconnect`：The reconnection flag.
+  `reconnect`：The reconnection flag.
 
-`ipv6Addr`：IPv6 address, string type.
+  `ipv6Addr`：IPv6 address, string type.
 
-`priDns`：Primary DNS, string type.
+  `priDns`：Primary DNS, string type.
 
-`secDns`：Secondary DNS, string type.
+  `secDns`：Secondary DNS, string type.
 
- If ipType =2, the format of the return value is as follows.
+   If ipType =2, the format of the return value is as follows.
 
-`(profileIdx, ipType, [nwState, reconnect, ipv4Addr, priDns, secDns], [nwState, reconnect, ipv6Addr, priDns, secDns])`
+  `(profileIdx, ipType, [nwState, reconnect, ipv4Addr, priDns, secDns], [nwState, reconnect, ipv6Addr, priDns, secDns])`
 
 * Example
 
@@ -532,9 +557,7 @@ import net
 import utime
 import checkNet
 
-'''
-The following two global variables are required. You can modify the values of these two global variables accordingly.
-'''
+
 PROJECT_NAME = "QuecPython_DataCall_example"
 PROJECT_VERSION = "1.0.0"
 checknet = checkNet.CheckNetwork(PROJECT_NAME, PROJECT_VERSION)
@@ -582,17 +605,15 @@ if __name__ == '__main__':
 
 
 
-#### cellLocator - Base Station Positioning
+#### cellLocator - Cell Tower Locator
 
-Function: Provides base station positioning interface to obtain coordinate information.
+Function: Provides Cell Tower Locator function to obtain coordinate information.
 
-* note
+Note: the current only  EC600S EC600N/EC800N EC200U/EC600U platform support this function.
 
-  The BC25PA platform does not support this module function.
-  
 ##### Obtain Coordinate Information
 
-> **cellLocator.getLocation(serverAddr, port, token, timeout, profileID)**
+> **cellLocator.getLocation(serverAddr, port, token, timeout, profileIdx)**
 
 This function obtains coordinate information of the base station.
 
@@ -604,31 +625,31 @@ This function obtains coordinate information of the base station.
 | port       | int    | Server port, currently only supports port 80                 |
 | token      | string | Token, composed of 16 characters                             |
 | timeout    | int    | Timeout. Range: 1-300. Default value: 300. Unit: s.          |
-| profileID  | int    | PDP index. Range: 1-8.                                       |
+| profileIdx | int    | PDP context index. Range for ASR : 1-8,range for unisoc : 1-7 |
 
 * Return Value
 
-If obtain the coordinate information successfully, return the information in the format of：`(longtitude, latitude, accuracy)`，`(0.0, 0.0, 0)` indicates it failed to obtain the coordinate information. 
+  If obtain the coordinate information successfully, return the information in the format of：`(longtitude, latitude, accuracy)`，`(0.0, 0.0, 0)` indicates it failed to obtain the coordinate information. 
 
-`longtitude` : longtitude
+  `longtitude` : longtitude
 
-`latitude` : latitude
+  `latitude` : latitude
 
-`accuracy` : accuracy, Unit of m
+  `accuracy` : accuracy, Unit of m
 
-The error code returned is explained as follows:
+  The error code returned is explained as follows:
 
--1 – Initialization failed 
+  -1 – Initialization failed 
 
--2 – Server address exceeds 255 bytes
+  -2 – Server address exceeds 255 bytes
 
--3 – Token length error, it must be 16 bytes.
+  -3 – Token length error, it must be 16 bytes.
 
--4 – Timeout is out of range.
+  -4 – Timeout is out of range.
 
--5 – PDP error.
+  -5 – PDP error.
 
--6 – Obtaining error.
+  -6 – Obtaining error.
 
 * Example
 
@@ -641,11 +662,104 @@ The error code returned is explained as follows:
 
 
 
+#### wifilocator - wifi locator
+
+Function: Provides wifi locator function to obtain coordinate information.
+
+Note: the current only  EC600S EC600N/EC800N EC200U/EC600U platform support this function.
+
+##### Set token
+
+> **wifilocator(token)**
+
+Set the token required for WiFi location.
+
+* Parameter
+
+| Parameter | Type   | Description                                                  |
+| --------- | ------ | ------------------------------------------------------------ |
+| token     | string | toekn, made up of 16 characters, you need to apply for this token. |
+
+* Return Value
+
+  Return an object.
+
+
+
+##### Obtain Coordinate Information
+
+> **wifilocator.getwifilocator()**
+
+Obtain Coordinate Information.
+
+* Parameter
+
+  None
+
+* Return Value
+
+  If obtain the coordinate information successfully, return the information in the format of：`(longtitude, latitude, accuracy)`，`(0.0, 0.0, 0)` indicates it failed to obtain the coordinate information. 
+
+  `longtitude` : longtitude
+
+  `latitude` : latitude
+
+  `accuracy` : accuracy, Unit of m
+
+  The error code returned is explained as follows:
+
+  -1 – Network exception
+
+  -2 – Token length error, it must be 16 bytes
+
+  -3 – Obtaining error
+
+* Example
+
+```python
+>>> from wifilocator import wifilocator
+>>> wifilocator = wifilocator("xxxxxxxxxxxxxxxx")
+>>> wifilocator.getwifilocator()
+(117.1152877807617, 31.82142066955567, 100)
+# The token "XXXXXXXXXXXXXXXX" need to be applied to Quectel.
+```
+
+
+
 #### sim - SIM Card
 
 Function: Provides SIM operations related APIs, such as querying SIM card status, ICCID, IMSI.
 
 Note: The prerequisite for successfully obtaining IMSI, ICCID, and phone number is that the status of the SIM card is 1, which can be queried through sim.getStatus(). 
+
+##### Send APDU command to SIM
+
+> **sim.genericAccess(sim_id, cmd)**
+
+Send APDU command to SIM card.
+
+Note : Currently, only the ASR platform supports this function.
+
+* Parameter
+
+| Parameter | Type   | Description                                                  |
+| --------- | ------ | ------------------------------------------------------------ |
+| sim_id    | int    | SIM card id, range : 0 or 1                                  |
+| cmd       | string | command passed on by the MT to the SIM in the format as described in GSM 51.011 |
+
+* Return Value
+
+  The APDU of the response is returned on success, integer -1 on failure.
+
+* Example
+
+```python
+>>> sim.genericAccess(0,'80F2000016')
+(48, '623E8202782183027FF08410A0000000871002FF86FF9000')
+>>>
+```
+
+
 
 ##### Obtain IMSI
 
@@ -655,11 +769,11 @@ This function obtains the IMSI of SIM card.
 
 * Parameter
 
-NA
+  None
 
 * Return Value
 
-Returns IMSI in string type, or returns -1 if failed.
+  Returns IMSI in string type, or returns -1 if failed.
 
 * Example
 
@@ -679,11 +793,11 @@ This function obtains the ICCID of SIM card.
 
 * Parameter
 
-NA
+  None
 
 * Return Value
 
-Returns ICCID in string type, or returns -1 if failed.
+  Returns ICCID in string type, or returns -1 if failed.
 
 * Example
 
@@ -702,16 +816,16 @@ This function obtain the phone number of SIM card.
 
 * Parameter
 
-NA
+  None
 
 * Return Value
 
-Returns the phone number in string type, or returns -1 if failed.
+  Returns the phone number in string type, or returns -1 if failed.
 
-* note
+* Note
 
   The BC25PA platform does not support this method.
-  
+
 * Example
 
 ```python
@@ -729,7 +843,7 @@ This function obtain the Status of SIM Card
 
 * Parameter
 
-NA
+  None
 
 * Return Value
 
@@ -774,14 +888,12 @@ This function enables PIN authentication, and then you need to enter the correct
 
 * Return Value
 
-0  Successful execution.
-
--1  Failed execution.
+  Returns 0 on success, -1 otherwise.
 
 * note
 
   The BC25PA platform pin password supports up to eight digits.
-  
+
 * Example
 
 ```python
@@ -805,14 +917,12 @@ This function disables PIN authentication
 
 * Return Value
 
-0  Successful execution.
-
--1  Failed execution.
+  Returns 0 on success, -1 otherwise.
 
 * note
 
   The BC25PA platform pin password supports up to eight digits.
-  
+
 * Example
 
 ```python
@@ -836,14 +946,12 @@ PIN authentication. Only can be called after sim.enablePin(pin) is executed succ
 
 * Return Value
 
-0  Successful execution.
-
--1  Failed execution.
+  Returns 0 on success, -1 otherwise.
 
 * note
 
   The BC25PA platform pin password supports up to eight digits.
-  
+
 * Example
 
 ```python
@@ -868,14 +976,12 @@ This function unlocks the SIM card. When PIN/PIN2 code is wrongly input for time
 
 * Return Value
 
-0  Successful execution.
-
--1  Failed execution.
+  Returns 0 on success, -1 otherwise.
 
 * note
 
   The BC25PA platform pin password supports up to eight digits.
-  
+
 * Example
 
 ```python
@@ -900,14 +1006,12 @@ Changes PIN.
 
 * Return Value
 
-0  Successful execution.
-
--1  Failed execution.
+  Returns 0 on success, -1 otherwise.
 
 * note
 
   The BC25PA platform pin password supports up to eight digits.
-  
+
 * Example
 
 ```python
@@ -934,24 +1038,24 @@ This function obtains one or more phone number records in the specified phoneboo
 
 * Return Value
 
-If it failed to read, return -1. If read successfully, the record will be returned in the format shown as follows.
+  If it failed to read, return -1. If read successfully, the record will be returned in the format shown as follows.
 
-`(record_number, [(index, username, phone_number), ... , (index, username, phone_number)])`
+  `(record_number, [(index, username, phone_number), ... , (index, username, phone_number)])`
 
-Description:
+  Description:
 
-`record_number` – Integer type. The record number read out.
+  `record_number` – Integer type. The record number read out.
 
-`index` – Integer type. The index position in the phonebook.
+  `index` – Integer type. The index position in the phonebook.
 
-`username` – String type. User name.
+  `username` – String type. User name.
 
-`phone_number` – String type. Phone number.
+  `phone_number` – String type. Phone number.
 
 * note
 
   The BC25PA platform does not support this method.
-  
+
 * Example
 
 ```python
@@ -984,14 +1088,12 @@ This function writes a phone number record.
 
 * Return Value
 
-0  Successful execution.
-
--1  Failed execution.
+  Returns 0 on success, -1 otherwise.
 
 * note
 
   The BC25PA platform does not support this method.
-  
+
 * Example
 
 ```python
@@ -1017,14 +1119,12 @@ This function registers the listening callback function. This function will be t
 
 * Return Value
 
-0  Successful execution.
-
--1  Failed execution.
+  Returns 0 on success, -1 otherwise.
 
 * note
 
   The BC25PA platform does not support this method.
-  
+
 * Example
 
 ```python
@@ -1054,14 +1154,12 @@ This function sets the SIM card hot-plugging related configurations.
 
 * Return Value
 
-0  Successful execution.
-
--1  Failed execution.
+  Returns 0 on success, -1 otherwise.
 
 * note
 
   The BC25PA platform does not support this method.
-  
+
 * Example
 
 ```python
@@ -1079,25 +1177,25 @@ This function obtains the SIM card hot-plugging related configuration.
 
 * Parameter
 
-NA
+  None
 
 * Return Value
 
-If it failed to obtain, return -1. If the configuration is obtained successfully, a tuple will be returned in the format shown as follows.
+  If it failed to obtain, return -1. If the configuration is obtained successfully, a tuple will be returned in the format shown as follows.
 
-`(detenable, insertlevel)`
+  `(detenable, insertlevel)`
 
-Description：
+  Description：
 
-`detenable` - Enable/Disable SIM card hot-plugging. 0: Disable. 1: Enable.
+  `detenable` - Enable/Disable SIM card hot-plugging. 0: Disable. 1: Enable.
 
-`insertlevel` – High/low level (0/1).
+  `insertlevel` – High/low level (0/1).
 
-* note
+* Note
 
   The BC25PA platform does not support this method.
 
-Example
+* Example
 
 ```python
 >>> sim.getSimDet()
@@ -1126,9 +1224,7 @@ This function sets the Auto-Answer Time.
 
 * Return Value
 
-0  Successful execution.
-
--1  Failed execution.
+  Returns 0 on success, -1 otherwise.
 
 * Example
 
