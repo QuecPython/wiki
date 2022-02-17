@@ -736,7 +736,7 @@ if __name__ == '__main__':
 
 ##### 通用SIM访问接口
 
-> **sim.genericAccess(sim_id, cmd)**
+> **sim.genericAccess(simId, cmd)**
 
 将命令APDU通过modem传递给SIM卡，然会返回响应APDU。
 
@@ -744,14 +744,14 @@ if __name__ == '__main__':
 
 * 参数
 
-| 参数   | 参数类型 | 参数说明                                                     |
-| ------ | -------- | ------------------------------------------------------------ |
-| sim_id | int      | simid, 范围：0 or 1                                          |
-| cmd    | string   | command passed on by the MT to the SIM in the format as described in GSM 51.011 |
+| 参数  | 参数类型 | 参数说明                                                     |
+| ----- | -------- | ------------------------------------------------------------ |
+| simId | int      | sim id, 范围：0 or 1                                         |
+| cmd   | string   | command passed on by the MT to the SIM in the format as described in GSM 51.011 |
 
 * 返回值
 
-  成功返回（length,响应APDU），失败返回整型-1。
+  成功返回（length，响应APDU），失败返回整型-1。
 
 * 示例
 
@@ -1141,18 +1141,18 @@ sim.setCallback(cb)
 
 
 
-##### 设置SIMdet
+##### SIM卡热插拔开关
 
-> **sim.setSimDet(detenable, insertlevel)**
+> **sim.setSimDet(switch, triggerLevel)**
 
 设置SIM卡热插拔相关配置。
 
 * 参数
 
-|    参数    | 参数类型 | 参数说明                                                     |
-| --------   | -------- | ------------------------------------------------------------ |
-| detenable  | int      | 开启或者关闭SIM卡热插拔功能，0:关闭 1:打开                   |
-| insertlevel| int      | 高低电平配置(0/1)                                            |
+| 参数         | 参数类型 | 参数说明                                   |
+| ------------ | -------- | ------------------------------------------ |
+| switch       | int      | 开启或者关闭SIM卡热插拔功能，0:关闭 1:打开 |
+| triggerLevel | int      | 高低电平配置(0/1)                          |
 
 * 返回值
 
@@ -1171,7 +1171,7 @@ sim.setCallback(cb)
 
 
 
-##### 获取SIMdet
+##### 获取SIM卡热插拔配置
 
 > **sim.getSimDet()**
 
@@ -1212,7 +1212,7 @@ sim.setCallback(cb)
 
 说明：4G only的版本必须打开volte才能正常使用电话功能。
 
-注意：BC25PA平台不支持此模块。
+注意：BC25PA平台不支持此功能。
 
 ##### 设置自动应答时间
 
@@ -1222,13 +1222,13 @@ sim.setCallback(cb)
 
 * 参数 
 
-| 参数        | 参数类型 | 参数说明                                                     |
-| ----------- | -------- | ------------------------------------------------------------ |
-| seconds     | int      | 自动应答时间，单位/s 范围：0-255)                            |
+| 参数    | 参数类型 | 参数说明                         |
+| ------- | -------- | -------------------------------- |
+| seconds | int      | 自动应答时间，单位/s 范围：0-255 |
 
 * 返回值
 
-成功返回整型0，失败返回整型-1。
+  成功返回整型0，失败返回整型-1。
 
 * 示例
 
@@ -1254,7 +1254,7 @@ sim.setCallback(cb)
 
 * 返回值
 
-成功返回整型0，失败返回整型-1。
+  成功返回整型0，失败返回整型-1。
 
 * 示例
 
@@ -1273,11 +1273,11 @@ sim.setCallback(cb)
 
 * 参数 
 
-无
+  无
 
 * 返回值
 
-成功返回整型0，失败返回整型-1。
+  成功返回整型0，失败返回整型-1。
 
 * 示例
 
@@ -1296,11 +1296,11 @@ sim.setCallback(cb)
 
 * 参数 
 
-无
+  无
 
 * 返回值
 
-成功返回整型0，失败返回整型-1。
+  成功返回整型0，失败返回整型-1。
 
 * 示例
 
@@ -1315,7 +1315,7 @@ sim.setCallback(cb)
 
 > **voiceCall.startDtmf(dtmf, duration)**
 
-设置DTMF音。
+​	设置DTMF音。
 
 * 参数
 
@@ -1326,9 +1326,9 @@ sim.setCallback(cb)
 
 * 返回值
 
-设置成功返回整型0，设置失败返回整型-1。
+  设置成功返回整型0，设置失败返回整型-1。
 
-示例
+* 示例
 
 ```python
 >>> voiceCall.startDtmf('A',100)
@@ -1353,11 +1353,11 @@ sim.setCallback(cb)
 
 * 返回值
 
-设置成功返回整型0，设置失败返回整型-1。
+  设置成功返回整型0，设置失败返回整型-1。
 
-示例
+* 示例
 
-无
+  无
 
 
 
@@ -1425,24 +1425,24 @@ sim.setCallback(cb)
 
 > **voiceCall.setAutoRecord(enable, record_type, record_mode, filename)**
 
-自动录音使能接口。(默认关闭自动录音)，自动录音使能需要在通话前设置完毕
+自动录音使能接口。默认关闭自动录音，自动录音使能需要在通话前设置完毕。
 
 注：非volte版本无该接口
 
 * 参数
 
-| 参数         | 参数类型 | 参数说明                                              |
-| --------     | -------- | ----------------------------------------------------- |
-| enable       | int      | 使能开关。    范围：【0/1】；  0：关闭自动录音接口 1：开启自动录音功能     |
-| record_type  | int      | 录音文件类型。范围：【0/1】；  0：AMR  1:WAV                |
-| record_mode  | int      | mode。        范围：【0/1/2】；0：RX   1:TX    2:MIX                |
-| filename     | string   | 文件名。                |
+| 参数        | 参数类型 | 参数说明                                                     |
+| ----------- | -------- | ------------------------------------------------------------ |
+| enable      | int      | 使能开关，范围：<br/>0 - 关闭自动录音接口<br/>1 - 开启自动录音功能 |
+| record_type | int      | 录音文件类型，范围：<br/>0 - AMR<br/>1 - WAV                 |
+| record_mode | int      | mode，范围：<br/>0 - RX<br/>1 - TX<br/>2 - MIX               |
+| filename    | string   | 文件名                                                       |
 
 * 返回值
 
-设置成功返回整型0，设置失败返回整型-1, 不支持该接口返回字符串"NOT SUPPORT"。
+  设置成功返回整型0，设置失败返回整型-1， 不支持该接口返回字符串"NOT SUPPORT"。
 
-示例
+* 示例
 
 ```python
 >>> voiceCall.setAutoRecord(1,0,2,'U:/test.amr')
@@ -1461,17 +1461,17 @@ sim.setCallback(cb)
 
 * 参数
 
-| 参数         | 参数类型 | 参数说明                                              |
-| --------     | -------- | ----------------------------------------------------- |
-| record_type  | int      | 录音文件类型。范围：【0/1】；  0：AMR  1:WAV                |
-| record_mode  | int      | mode。        范围：【0/1/2】；0：RX   1:TX    2:MIX                |
-| filename     | string   | 文件名。                |
+| 参数        | 参数类型 | 参数说明                                       |
+| ----------- | -------- | ---------------------------------------------- |
+| record_type | int      | 录音文件类型，范围：<br/>0 - AMR<br/>1 - WAV   |
+| record_mode | int      | mode，范围：<br/>0 - RX<br/>1 - TX<br/>2 - MIX |
+| filename    | string   | 文件名                                         |
 
 * 返回值
 
-设置成功返回整型0，设置失败返回整型-1, 不支持该接口返回字符串"NOT SUPPORT"。
+  设置成功返回整型0，设置失败返回整型-1，不支持该接口返回字符串"NOT SUPPORT"。
 
-示例
+* 示例
 
 ```python
 >>> voiceCall.startRecord(0,2,'U:/test.amr')
@@ -1490,13 +1490,13 @@ sim.setCallback(cb)
 
 * 参数
 
-无
+  无
 
 * 返回值
 
-设置成功返回整型0，设置失败返回整型-1, 不支持该接口返回字符串"NOT SUPPORT"。
+  设置成功返回整型0，设置失败返回整型-1， 不支持该接口返回字符串"NOT SUPPORT"。
 
-示例
+* 示例
 
 ```python
 >>> voiceCall.stopRecord()
@@ -1511,25 +1511,29 @@ sim.setCallback(cb)
 
 开始录音接口（流形式）。
 
-注：1、非volte版本无该接口
-    2、录音流第一包数据均是对应格式文件的文件头
-	3、wav格式录音流第一包数据不包含文件大小，需结束录音后自行计算
+* 说明
+
+  1、非volte版本无该接口
+
+  2、录音流第一包数据均是对应格式文件的文件头
+
+  3、wav格式录音流第一包数据不包含文件大小，需结束录音后自行计算
 
 * 参数
 
-| 参数         | 参数类型 | 参数说明                                              |
-| --------     | -------- | ----------------------------------------------------- |
-| record_type  | int      | 录音流类型。范围：【0/1】；  0：AMR  1:WAV                |
-| record_mode  | int      | mode。        范围：【0/1/2】；0：RX   1:TX    2:MIX                |
-| record_cb    | function | 回调函数。                |
+| 参数        | 参数类型 | 参数说明                                     |
+| ----------- | -------- | -------------------------------------------- |
+| record_type | int      | 录音流类型，范围：<br>0 - AMR<br/>1 - WAV    |
+| record_mode | int      | mode，范围<br/>0 - RX<br/>1 - TX<br/>2 - MIX |
+| record_cb   | function | 回调函数                                     |
 
 * 返回值
 
-设置成功返回整型0，设置失败返回整型-1, 不支持该接口返回字符串"NOT SUPPORT"。
+  设置成功返回整型0，设置失败返回整型-1，不支持该接口返回字符串"NOT SUPPORT"。
 
-示例
+* 示例
 
-*callback函数中args定义如下
+callback函数中args定义如下
 ```
 args[0]:stream data
 args[1]:stream data len
@@ -1588,16 +1592,16 @@ typedef enum
 
 * 参数 
 
-| 参数        | 参数类型 | 参数说明                                                     |
-| ----------- | -------- | ------------------------------------------------------------ |
-| usrFun      | function | 监听回调函数，                      |
+| 参数   | 参数类型 | 参数说明     |
+| ------ | -------- | ------------ |
+| usrFun | function | 监听回调函数 |
 
 * 返回值
 
-成功返回整型0，失败返回整型-1。
+  成功返回整型0，失败返回整型-1。
 
+* callback函数中的event_id枚举值
 
-*callback函数中的event_ID枚举值
 ```c
 typedef enum
 {
@@ -1621,58 +1625,16 @@ typedef enum
 }HELIOS_VC_EVENT_ID_E;
 ```
 
-*callback函数中args定义如下
+* 回调函数参数说明
 
-1、当event=10,11,12,13,14,15,16时，args释义如下：
-```
-args[0]:event id(具体释义见上述枚举)
-args[1]:call id(call identification number as described in 3GPP TS 22.030 subclause 4.5.5.1; this number can be used in +CHLD command operations)
-args[2]:dir(MO/MT)
-args[3]:state of the call
-args[4]:type(这里一般都是0，表示voice call，语音通话业务)
-args[5]:mpty(判断是否是多方通话，0：call is not one of multiparty (conference) call parties，1：call is one of multiparty (conference) call parties)
-args[6]:phone num
-args[7]:num type([129/145],129:Dialing string without international access code “+”,145:Dialing string includes international access code character “+”)
-```
-
-2、当event=2,3,4,5,6,7,8,9时，args释义如下：
-2.1、event=2,3
-```
-args[0]:event id(具体释义见上述枚举)
-args[1]:call id(call identification number as described in 3GPP TS 22.030 subclause 4.5.5.1; this number can be used in +CHLD command operations)
-args[2]:phone num
-```
-2.2、event=4
-```
-args[0]:event id(具体释义见上述枚举)
-args[1]:call id(call identification number as described in 3GPP TS 22.030 subclause 4.5.5.1; this number can be used in +CHLD command operations)
-args[2]:cause
-```
-2.3、event=6
-```
-args[0]:event id(具体释义见上述枚举)
-args[1]:call id(call identification number as described in 3GPP TS 22.030 subclause 4.5.5.1; this number can be used in +CHLD command operations)
-args[2]:phone num
-args[3]:num type([129/145],129:Dialing string without international access code “+”,145:Dialing string includes international access code character “+”)
-args[4]:CLI状态
-```
-2.3、event=7
-```
-args[0]:event id(具体释义见上述枚举)
-```
-2.3、event=8
-```
-args[0]:event id(具体释义见上述枚举)
-args[1]:call id(call identification number as described in 3GPP TS 22.030 subclause 4.5.5.1; this number can be used in +CHLD command operations)
-args[2]:cause
-args[3]:Indicates if in-band tones are available from network
-```
-2.3、event=9
-```
-args[0]:event id(具体释义见上述枚举)
-args[1]:call id(call identification number as described in 3GPP TS 22.030 subclause 4.5.5.1; this number can be used in +CHLD command operations)
-args[2]:phone num
-```
+| event                      | 参数个数 | 参数说明                                                     |
+| -------------------------- | -------- | ------------------------------------------------------------ |
+| 2, 3, 9                    | 3        | args[0] ：event id<br>args[1] ：call id ( call identification number as described in 3GPP TS 22.030 subclause 4.5.5.1; this number can be used in +CHLD command operations )<br/>args[2] ：phone number |
+| 4                          | 3        | args[0] ：event id<br/>args[1] ：call id ( call identification number as described in 3GPP TS 22.030 subclause 4.5.5.1; this number can be used in +CHLD command operations )<br/>args[2] ：cause |
+| 6                          | 5        | args[0] ：event id<br/>args[1] ：call id ( call identification number as described in 3GPP TS 22.030 subclause 4.5.5.1; this number can be used in +CHLD command operations )<br/>args[2] ：phone number<br/>args[3] ：num type ( [129/145],129:Dialing string without international access code “+”,145:Dialing string includes international access code character “+” )<br/>args[4] ：CLI状态 |
+| 7                          | 1        | args[0] ：event id                                           |
+| 8                          | 4        | args[0] ：event id<br/>args[1] ：call id ( call identification number as described in 3GPP TS 22.030 subclause 4.5.5.1; this number can be used in +CHLD command operations )<br/>args[2] ：cause<br/>args[3] ：Indicates if in-band tones are available from network |
+| 10, 11, 12, 13, 14, 15, 16 | 8        | args[0] ：event id<br/>args[1] ：call id ( call identification number as described in 3GPP TS 22.030 subclause 4.5.5.1; this number can be used in +CHLD command operations )<br/>args[2] ：dir(MO/MT)<br/>args[3] ：state of the call<br>args[4] ：type ( 这里一般都是0，表示voice call，语音通话业务 )<br/>args[5] ：mpty ( 判断是否是多方通话，0：call is not one of multiparty (conference) call parties，1：call is one of multiparty (conference) call parties )<br/>args[6] ：phone number<br/>args[7] ：num type ( [129/145],129:Dialing string without international access code “+”,145:Dialing string includes international access code character “+” ) |
 
 * 示例
 ```python
@@ -1698,11 +1660,12 @@ def voice_callback(args):
 0
 ```
 
-*注意
+* 注意
 1、pyhton目前的语音通话支持的是volte call，所以示例中只给出了volte通话的内容
 2、QPY_V0004_EC600N_CNLC_FW_VOLTE(2021-09-09发布)之前发布的版本都按照以下规则使用voiceCall
 
-*callback函数中的event_ID数值
+callback函数中的event_ID数值
+
 ```
 #define QUEC_VOICE_CALL_INDICATION_BASE                          ((uint_32)(0x1000))
 #define QUEC_VOLTE_INCOMING_CALL_IND                             ((uint_32)(0x0007 + QUEC_VOICE_CALL_INDICATION_BASE))
@@ -1711,10 +1674,11 @@ def voice_callback(args):
 #define QUEC_VOLTE_WAITING_CALL_IND                              ((uint_32)(0x000A + QUEC_VOICE_CALL_INDICATION_BASE))
 ```
 
-*callback函数中args定义如下
+callback函数中args定义如下
 args定义未改变
 
-*示例
+* 示例
+
 ```python
 def voice_callback(args):
 	if args[0] == 4106:
@@ -1753,7 +1717,7 @@ def voice_callback(args):
 
 * 返回值
 
-发送成功返回整型0，失败返回整型-1。
+  发送成功返回整型0，失败返回整型-1。
 
 * 示例
 
@@ -1784,7 +1748,7 @@ sms.sendTextMsg('18158626517', '这是一条夹杂中文与英文的测试短信
 
 * 返回值
 
-发送成功返回整型0，失败返回整型-1。
+  发送成功返回整型0，失败返回整型-1。
 
 * 示例
 
@@ -1806,17 +1770,17 @@ if __name__ == '__main__':
 
 删除指定索引的消息。
 
-参数
+* 参数
 
 | 参数  | 参数类型 | 参数说明                                                     |
 | ----- | -------- | ------------------------------------------------------------ |
 | index | int      | 需删除短信的索引号<br/>如果设置短信存储在SIM卡，则范围0 ~ 49<br/>如果设置短信存储在ME，则范围0 ~ 179，注意，当短信存储在ME时，只有对应的index索引处有短信存在，才能删除成功，否则删除会失败 |
 
-返回值
+* 返回值
 
-删除成功返回整型0，失败返回整型-1。
+  删除成功返回整型0，失败返回整型-1。
 
-示例
+* 示例
 
 ```python
 >>> import sms
@@ -1831,7 +1795,7 @@ if __name__ == '__main__':
 > **sms.setSaveLoc(mem1, mem2, mem3)**
 
 设置短信存储位置。开机默认存储位置为SIM卡。一般SIM卡最大可存储50条短信，用户在使用时，如果短信存储在SIM卡中，要注意及时清理历史短信，防止SIM卡存储短信满了导致收不到新的短信。
-注意：ASR平台如果要改变接收消息的存储位置，需要重置MEM2 & MEM3,展锐平台只需设定MEM3即可（具体原因和平台底部的实现有关，此处不再赘述）
+注意：ASR平台如果要改变接收消息的存储位置，需要重置MEM2 & MEM3，展锐平台只需设定MEM3即可（具体原因和平台底部的实现有关，此处不再赘述）
 
 * 参数
 
@@ -1843,7 +1807,7 @@ if __name__ == '__main__':
 
 * 返回值
 
-成功返回整型0，失败返回整型-1。
+  成功返回整型0，失败返回整型-1。
 
 * 示例
 
@@ -1863,25 +1827,25 @@ if __name__ == '__main__':
 
 * 参数
 
-无
+  无
 
 * 返回值
 
-成功返回一个元组，包含3个部分，返回值形式如下：
+  成功返回一个元组，包含3个部分，返回值形式如下：
 
-`([loc1, current_nums, max_nums],[loc2, current_nums, max_nums],[loc3, current_nums, max_nums])`
+  `([loc1, current_nums, max_nums],[loc2, current_nums, max_nums],[loc3, current_nums, max_nums])`
 
-返回值参数说明：
+  返回值参数说明：
 
-`loc1` - 读取和删除消息所在的位置;
+  `loc1` - 读取和删除消息所在的位置
 
-`loc2` - 写入和发送消息所在的位置；
+  `loc2` - 写入和发送消息所在的位置
 
-`loc3` - 接收消息的存储位置；
+  `loc3` - 接收消息的存储位置
 
-`current_nums` - 当前空间已有短信数量；
+  `current_nums` - 当前空间已有短信数量
 
-`max_nums` - 当前空间最大短信存储数量；
+  `max_nums` - 当前空间最大短信存储数量
 
 * 示例
 
@@ -1908,7 +1872,7 @@ if __name__ == '__main__':
 
 * 返回值
 
-成功返回整型的短信数量值，失败返回整型-1。
+  成功返回整型的短信数量值，失败返回整型-1。
 
 * 示例
 
@@ -1934,7 +1898,7 @@ if __name__ == '__main__':
 
 * 返回值
 
-成功返回PDU类型的短信内容，string类型，失败返回整型-1。
+  成功返回PDU类型的短信内容，string类型，失败返回整型-1。
 
 
 
@@ -1952,15 +1916,15 @@ if __name__ == '__main__':
 
 * 返回值
 
-成功返回TEXT类型的消息内容，返回格式如下，失败返回-1。
+  成功返回TEXT类型的消息内容，返回格式如下，失败返回-1。
 
-返回格式：(phoneNumber, msg, msgLen)
+  返回格式：(phoneNumber, msg, msgLen)
 
-`phoneNumber` ：短信来源手机号
+  `phoneNumber` ：短信来源手机号
 
-`msg` ：短信内容
+  `msg` ：短信内容
 
-`msgLen` ：短信消息长度
+  `msgLen` ：短信消息长度
 
 * 示例
 
@@ -1983,11 +1947,11 @@ if __name__ == '__main__':
 
 * 参数
 
-无
+  无
 
 * 返回值
 
-成功返回string类型的短信中心号码，失败返回-1。
+  成功返回string类型的短信中心号码，失败返回-1。
 
 * 示例
 
@@ -2013,11 +1977,11 @@ if __name__ == '__main__':
 
 * 返回值
 
-设置成功返回整型0，失败返回整型-1。
+  设置成功返回整型0，失败返回整型-1。
 
 * 示例
 
-无
+  无
 
 
 
@@ -2027,17 +1991,17 @@ if __name__ == '__main__':
 
 获取指定PDU短信的长度。
 
-参数
+* 参数
 
 | 参数   | 参数类型 | 参数说明 |
 | ------ | -------- | -------- |
 | pduMsg | string   | PDU短信  |
 
-返回值
+* 返回值
 
-成功返回整型PDU短信长度，失败返回整型-1。
+  成功返回整型PDU短信长度，失败返回整型-1。
 
-示例
+* 示例
 
 ```python
 >>> import sms
@@ -2055,28 +2019,28 @@ if __name__ == '__main__':
 
 PDU解码
 
-参数
+* 参数
 
 | 参数   | 参数类型 | 参数说明   |
 | ------ | -------- | --------   |
 | pduMsg | string   | PDU短信    |
 | pduLen | int      | PDU码长度  |
 
-返回值
+* 返回值
 
-成功返回PDU解码后的内容，返回格式如下，失败返回-1。
+  成功返回PDU解码后的内容，返回格式如下，失败返回-1。
 
-返回格式：(phoneNumber, msg, time, msgLen)
+  返回格式：(phoneNumber, msg, time, msgLen)
 
-`phoneNumber` ：短信来源手机号
+  `phoneNumber` ：短信来源手机号
 
-`msg` ：短信内容
+  `msg` ：短信内容
 
-`time` ：收到短信的时间
+  `time` ：收到短信的时间
 
-`msgLen` ：短信消息长度
+  `msgLen` ：短信消息长度
 
-示例
+* 示例
 
 ```python
 >>> import sms
@@ -2101,11 +2065,11 @@ PDU解码
 
 * 返回值
 
-注册成功返回整型0，失败返回整型-1。
+  注册成功返回整型0，失败返回整型-1。
 
 * 示例
 
-短信回调函数新老架构的使用方法不同，如下所示，新架构参照示例一，QPY_V0004_EC600N_CNLC_FW_VOLTE(2021-09-09发布)之前发布的版本参照示例二
+  短信回调函数新老架构的使用方法不同，如下所示，新架构参照示例一，QPY_V0004_EC600N_CNLC_FW_VOLTE(2021-09-09发布)之前发布的版本参照示例二。
 
 示例一：
 
@@ -2167,11 +2131,11 @@ sms.setCallback(cb)
 
 设置APN，设置后需要重启或者通过 net.setModemFun(mode) 接口先切换到模式0，再切换到模式1才能生效。 
 
-*注意
+* 注意
 
-该接口和datacall模块的设置APN接口是不相关的：
-datacall模块设置APN是用入参的APN和PID去拨号，并记录到json文件中，下次再开机会用首先用这一路去拨号；
-net模块的设置APN主要使用场景是专网卡设定特定APN才能注网，但是这个得重启生效
+  该接口和datacall模块的设置APN接口是不相关的：
+  datacall模块设置APN是用入参的APN和PID去拨号，并记录到json文件中，下次再开机会用首先用这一路去拨号；
+  net模块的设置APN主要使用场景是专网卡设定特定APN才能注网，但是这个得重启生效
 
 * 参数
 
@@ -2182,15 +2146,13 @@ net模块的设置APN主要使用场景是专网卡设定特定APN才能注网�
 
 * 返回值
 
-设置成功返回整型值0，设置失败返回整型值-1。
+  设置成功返回整型值0，设置失败返回整型值-1。
 
 * 注意
 
   BC25PA平台不支持此方法。
-  
-  
 
-
+  
 
 ##### 获取当前APN
 
@@ -2206,15 +2168,13 @@ net模块的设置APN主要使用场景是专网卡设定特定APN才能注网�
 
 * 返回值
 
-成功返回获取到的APN，失败返回整型值-1。
+  成功返回获取到的APN，失败返回整型值-1。
 
 * 注意
 
   BC25PA平台不支持此方法。
-  
-  
 
-
+  
 
 ##### 获取csq信号强度
 
@@ -2224,13 +2184,13 @@ net模块的设置APN主要使用场景是专网卡设定特定APN才能注网�
 
 * 参数
 
-无
+  无
 
 * 返回值
 
-成功返回整型的csq信号强度值，失败返回整型值-1，返回值为99表示异常；
+  成功返回整型的csq信号强度值，失败返回整型值-1，返回值为99表示异常；
 
-信号强度值范围0 ~ 31，值越大表示信号强度越好。
+  信号强度值范围0 ~ 31，值越大表示信号强度越好。
 
 * 示例
 
@@ -2250,15 +2210,15 @@ net模块的设置APN主要使用场景是专网卡设定特定APN才能注网�
 
 * 参数
 
-无
+  无
 
 * 返回值
 
-失败返回整型值-1，成功返回包含三种网络系统（GSM、UMTS、LTE）的信息的list，如果对应网络系统信息为空，则返回空的List。返回值格式如下：
+  失败返回整型值-1，成功返回包含三种网络系统（GSM、UMTS、LTE）的信息的list，如果对应网络系统信息为空，则返回空的List。返回值格式如下：
 
-`([(flag, cid, mcc, mnc, lac, arfcn, bsic, rssi)], [(flag, cid, licd, mcc, mnc, lac, arfcn, bsic, rssi)], [(flag, cid, mcc, mnc, pci, tac, earfcn, rssi, rsrq),...])`
+  `([(flag, cid, mcc, mnc, lac, arfcn, bsic, rssi)], [(flag, cid, licd, mcc, mnc, lac, arfcn, bsic, rssi)], [(flag, cid, mcc, mnc, pci, tac, earfcn, rssi, rsrq),...])`
 
-GSM网络系统返回值说明
+* GSM网络系统返回值说明
 
 | 参数  | 参数意义                                                     |
 | ----- | ------------------------------------------------------------ |
@@ -2271,7 +2231,7 @@ GSM网络系统返回值说明
 | bsic  | 基站识别码，范围 0 ~ 255                                     |
 | rssi  | GSM网络下，该值表示接收电平，描述接收到信号强度，99表示未知或者无法检测到，该值的计算方式如下<br/>rssi = RXLEV - 111，单位dBm，RXLEV 的范围是 0 ~ 63，所以rssi范围是 -111 ~ -48 dBm； |
 
-UMTS网络系统返回值说明
+* UMTS网络系统返回值说明
 
 | 参数   | 参数意义                                                     |
 | ------ | ------------------------------------------------------------ |
@@ -2285,7 +2245,7 @@ UMTS网络系统返回值说明
 | psc    | 基站识别码，范围 0 ~ 255                                     |
 | rssi   | UMTS网络下，该值表示 CPICH/PCCPCH 接收信号码功率，范围 -5 ~ 99，单位dBm |
 
-LTE网络系统返回值说明
+* LTE网络系统返回值说明
 
 | 参数   | 参数意义                                                     |
 | ------ | ------------------------------------------------------------ |
@@ -2319,13 +2279,13 @@ LTE网络系统返回值说明
 
 * 参数
 
-无
+  无
 
 * 返回值
 
-失败返回整型值-1，成功返回一个元组，包含当前首选的网络制式与漫游打开状态。
+  失败返回整型值-1，成功返回一个元组，包含当前首选的网络制式与漫游打开状态。
 
-网络制式
+* 网络制式
 
 | 值   | 网络制式                                                     |
 | ---- | ------------------------------------------------------------ |
@@ -2375,7 +2335,7 @@ LTE网络系统返回值说明
 
 * 返回值
 
-设置成功返回整型值0，设置失败返回整型值-1。
+  设置成功返回整型值0，设置失败返回整型值-1。
 
 
 
@@ -2388,19 +2348,19 @@ LTE网络系统返回值说明
 
 * 参数
 
-无
+  无
 
 * 返回值
 
-失败返回整型值-1，成功返回一个元组，格式为：`(selection_mode, mcc, mnc, act)`
+  失败返回整型值-1，成功返回一个元组，格式为：`(selection_mode, mcc, mnc, act)`
 
-返回值参数说明：
-`selection_mode` ：方式，0 - 自动，1 - 手动
-`mcc` ：移动设备国家代码，string类型
-`mnc` ：移动设备网络代码，string类型
-`act` ：首选网络的ACT模式
+  返回值参数说明：
+  `selection_mode` ：方式，0 - 自动，1 - 手动
+  `mcc` ：移动设备国家代码，string类型
+  `mnc` ：移动设备网络代码，string类型
+  `act` ：首选网络的ACT模式
 
-ACT模式
+* ACT模式
 
 | 值   | ACT模式            |
 | ---- | ------------------ |
@@ -2433,35 +2393,35 @@ ACT模式
 
 * 参数
 
-无
+  无
 
 * 返回值
 
-失败返回整型值-1，成功返回一个元组，包含两个List(GW 、LTE)，返回值格式如下：
+  失败返回整型值-1，成功返回一个元组，包含两个List(GW 、LTE)，返回值格式如下：
 
-`([rssi, bitErrorRate, rscp, ecno], [rssi, rsrp, rsrq, cqi])`
+  `([rssi, bitErrorRate, rscp, ecno], [rssi, rsrp, rsrq, cqi])`
 
-返回值参数说明：
+  返回值参数说明：
 
-GW list：
+  GW list：
 
-`rssi` ：<br>GSM和WCDMA网络下，该值表示接收电平，描述接收到信号强度，99表示未知或者无法检测到，该值的计算方式如下<br>rssi = RXLEV - 111，单位dBm，RXLEV 的范围是 0 ~ 63；
+  `rssi` ：<br>GSM和WCDMA网络下，该值表示接收电平，描述接收到信号强度，99表示未知或者无法检测到，该值的计算方式如下<br>rssi = RXLEV - 111，单位dBm，RXLEV 的范围是 0 ~ 63；
 
-`bitErrorRate` ：误码率，范围 0 ~ 7，99表示未知或者无法检测到
+  `bitErrorRate` ：误码率，范围 0 ~ 7，99表示未知或者无法检测到
 
-`rscp` ：接收信号码功率，范围 -121 ~ -25 dBm，255表示未知或者无法检测到
+  `rscp` ：接收信号码功率，范围 -121 ~ -25 dBm，255表示未知或者无法检测到
 
-`ecno` ：导频信道，范围 -24 ~ 0，255表示未知或者无法检测到
+  `ecno` ：导频信道，范围 -24 ~ 0，255表示未知或者无法检测到
 
-LTE list：
+  LTE list：
 
-`rssi` ：接收的信号强度，范围 -140 ~ -44 dBm，99表示未知或者无法检测到
+  `rssi` ：接收的信号强度，范围 -140 ~ -44 dBm，99表示未知或者无法检测到
 
-`rsrp` ：下行参考信号的接收功率，范围 -141 ~ -44 dBm，99表示未知或者无法检测到
+  `rsrp` ：下行参考信号的接收功率，范围 -141 ~ -44 dBm，99表示未知或者无法检测到
 
-`rsrq` ：下行特定小区参考信号的接收质量，范围 -20 ~ -3 dBm，值越大越好
+  `rsrq` ：下行特定小区参考信号的接收质量，范围 -20 ~ -3 dBm，值越大越好
 
-`cqi` ：信道质量
+  `cqi` ：信道质量
 
 * 示例
 
@@ -2480,19 +2440,19 @@ LTE list：
 
 * 参数
 
-无
+  无
 
 * 返回值
 
-失败返回整型值-1，成功返回一个元组，包含基站时间与对应时间戳与闰秒数（0表示不可用），格式为：
+  失败返回整型值-1，成功返回一个元组，包含基站时间与对应时间戳与闰秒数（0表示不可用），格式为：
 
-`(date, abs_time, leap_sec)`
+  `(date, abs_time, leap_sec)`
 
-`date` ：基站时间，string类型，其中关于时区的部分，EC600N/EC800N系列与EC200U/EC600U系列有所区别，具体见示例。如果需要设置和获取时区，请使用utime模块的`setTimeZone(offset)`和`getTimeZone()`接口，不同平台，这两个接口的单位都是小时，具体参考utime模块的说明。
+  `date` ：基站时间，string类型，其中关于时区的部分，EC600N/EC800N系列与EC200U/EC600U系列有所区别，具体见示例。如果需要设置和获取时区，请使用utime模块的`setTimeZone(offset)`和`getTimeZone()`接口，不同平台，这两个接口的单位都是小时，具体参考utime模块的说明。
 
-`abs_time` ：基站时间的绝对秒数表示，整型
+  `abs_time` ：基站时间的绝对秒数表示，整型
 
-`leap_sec` ：闰秒数，整型
+  `leap_sec` ：闰秒数，整型
 
 * 示例
 
@@ -2512,21 +2472,21 @@ LTE list：
 
 * 参数
 
-无
+  无
 
 * 返回值
 
-失败返回整型值-1，成功返回一个元组，包含注网的运营商信息，格式为：
+  失败返回整型值-1，成功返回一个元组，包含注网的运营商信息，格式为：
 
-`(long_eons, short_eons, mcc, mnc)`
+  `(long_eons, short_eons, mcc, mnc)`
 
-`long_eons` ：运营商信息全称，string类型
+  `long_eons` ：运营商信息全称，string类型
 
-`short_eons` ：运营商信息简称，string类型
+  `short_eons` ：运营商信息简称，string类型
 
-`mcc` ：移动设备国家代码，string类型
+  `mcc` ：移动设备国家代码，string类型
 
-`mnc` ：移动设备网络代码，string类型
+  `mnc` ：移动设备网络代码，string类型
 
 * 示例
 
@@ -2545,29 +2505,29 @@ LTE list：
 
 * 参数
 
-无
+  无
 
 * 返回值
 
-失败返回整型值-1，成功返回一个元组，包含电话和网络注册信息，元组中voice开头的表示电话注册信息，data开头的表示网络注册信息，格式为：
+  失败返回整型值-1，成功返回一个元组，包含电话和网络注册信息，元组中voice开头的表示电话注册信息，data开头的表示网络注册信息，格式为：
 
-`([voice_state, voice_lac, voice_cid, voice_rat, voice_reject_cause, voice_psc], [data_state, data _lac, data _cid, data _rat, data _reject_cause, data _psc])`
+  `([voice_state, voice_lac, voice_cid, voice_rat, voice_reject_cause, voice_psc], [data_state, data _lac, data _cid, data _rat, data _reject_cause, data _psc])`
 
-返回值参数说明：
+  返回值参数说明：
 
-`state` ：网络注册状态
+  `state` ：网络注册状态
 
-`lac` ：位置区码，范围 1 ~ 65534
+  `lac` ：位置区码，范围 1 ~ 65534
 
-`cid` ：cell id，范围 0x00000000 ~ 0x0FFFFFFF
+  `cid` ：cell id，范围 0x00000000 ~ 0x0FFFFFFF
 
-`rat` ：access technology，即接入技术
+  `rat` ：access technology，即接入技术
 
-`reject_cause` ：注册被拒绝的原因，EC200U/EC600U/BC25PA平台该参数保留，不作为有效参数
+  `reject_cause` ：注册被拒绝的原因，EC200U/EC600U/BC25PA平台该参数保留，不作为有效参数
 
-`psc` ：主扰码，Primary Scrambling Code，EC200U/EC600U/BC25PA平台该参数保留，不作为有效参数
+  `psc` ：主扰码，Primary Scrambling Code，EC200U/EC600U/BC25PA平台该参数保留，不作为有效参数
 
-网络注册状态` state`
+* 网络注册状态` state`
 
 | 值   | 状态说明                                                     |
 | ---- | ------------------------------------------------------------ |
@@ -2584,7 +2544,7 @@ LTE list：
 | 10   | registered for “CSFB not preferred”, roaming (not applicable) |
 | 11   | emergency bearer services only                               |
 
-接入技术 access technology 值说明
+* 接入技术 access technology
 
 | 值   | 说明               |
 | ---- | ------------------ |
@@ -2617,13 +2577,13 @@ LTE list：
 
 * 参数
 
-无
+  无
 
 * 返回值
 
-成功返回一个list类型的数组，包含小区id，格式为：`[id, ……, id]`。数组成员数量并非固定不变，位置不同、信号强弱不同等都可能导致获取的结果不一样。
+  成功返回一个list类型的数组，包含小区id，格式为：`[id, ……, id]`。数组成员数量并非固定不变，位置不同、信号强弱不同等都可能导致获取的结果不一样。
 
-失败返回整型值-1。
+  失败返回整型值-1。
 
 * 示例
 
@@ -2642,13 +2602,13 @@ LTE list：
 
 * 参数
 
-无
+  无
 
 * 返回值
 
-成功返回服务小区ID。
+  成功返回服务小区ID。
 
-失败返回整型值-1。
+  失败返回整型值-1。
 
 * 示例
 
@@ -2667,13 +2627,13 @@ LTE list：
 
 * 参数
 
-无
+  无
 
 * 返回值
 
-成功返回一个list类型的数组，包含小区mnc，格式为：`[mnc, ……, mnc]`。数组成员数量并非固定不变，位置不同、信号强弱不同等都可能导致获取的结果不一样。
+  成功返回一个list类型的数组，包含小区mnc，格式为：`[mnc, ……, mnc]`。数组成员数量并非固定不变，位置不同、信号强弱不同等都可能导致获取的结果不一样。
 
-失败返回整型值-1。
+  失败返回整型值-1。
 
 * 示例
 
@@ -2692,13 +2652,13 @@ LTE list：
 
 * 参数
 
-无
+  无
 
 * 返回值
 
-成功返回服务小区mnc。
+  成功返回服务小区mnc。
 
-失败返回整型值-1。
+  失败返回整型值-1。
 
 * 示例
 
@@ -2717,15 +2677,15 @@ LTE list：
 
 * 参数
 
-无
+  无
 
 * 返回值
 
-成功返回一个list类型的数组，包含小区mcc，格式为：`[mcc, ……, mcc]`。数组成员数量并非固定不变，位置不同、信号强弱不同等都可能导致获取的结果不一样。
+  成功返回一个list类型的数组，包含小区mcc，格式为：`[mcc, ……, mcc]`。数组成员数量并非固定不变，位置不同、信号强弱不同等都可能导致获取的结果不一样。
 
-失败返回整型值-1。
+  失败返回整型值-1。
 
-注意：EC100Y/EC600S/EC600N系列的模组，该值是用十六进制来表示，比如下面示例中的十进制数1120，十六进制即0x460，表示移动设备国家代码460，其他型号模组，该值直接用十进制表示，比如移动设备国家代码460，就是用十进制的460来表示。
+  注意：EC100Y/EC600S/EC600N系列的模组，该值是用十六进制来表示，比如下面示例中的十进制数1120，十六进制即0x460，表示移动设备国家代码460，其他型号模组，该值直接用十进制表示，比如移动设备国家代码460，就是用十进制的460来表示。
 
 * 示例
 
@@ -2744,15 +2704,15 @@ LTE list：
 
 * 参数
 
-无
+  无
 
 * 返回值
 
-成功返回服务小区的mcc。
+  成功返回服务小区的mcc。
 
-失败返回整型值-1。
+  失败返回整型值-1。
 
-注意：EC100Y/EC600S/EC600N系列的模组，该值是用十六进制来表示，比如下面示例中的十进制数1120，十六进制即0x460，表示移动设备国家代码460，其他型号模组，该值直接用十进制表示，比如移动设备国家代码460，就是用十进制的460来表示。
+  注意：EC100Y/EC600S/EC600N系列的模组，该值是用十六进制来表示，比如下面示例中的十进制数1120，十六进制即0x460，表示移动设备国家代码460，其他型号模组，该值直接用十进制表示，比如移动设备国家代码460，就是用十进制的460来表示。
 
 * 示例
 
@@ -2771,13 +2731,13 @@ LTE list：
 
 * 参数
 
-无
+  无
 
 * 返回值
 
-成功返回一个list类型的数组，包含小区lac，格式为：`[lac, ……, lac]`。数组成员数量并非固定不变，位置不同、信号强弱不同等都可能导致获取的结果不一样。
+  成功返回一个list类型的数组，包含小区lac，格式为：`[lac, ……, lac]`。数组成员数量并非固定不变，位置不同、信号强弱不同等都可能导致获取的结果不一样。
 
-失败返回整型值-1。
+  失败返回整型值-1。
 
 * 示例
 
@@ -2796,13 +2756,13 @@ LTE list：
 
 * 参数
 
-无
+  无
 
 * 返回值
 
-成功返回服务小区lac
+  成功返回服务小区lac
 
-失败返回整型值-1。
+  失败返回整型值-1。
 
 * 示例
 
@@ -2821,19 +2781,19 @@ LTE list：
 
 * 参数
 
-无
+  无
 
 * 返回值
 
-成功返回当前SIM模式：
+  成功返回当前SIM模式：
 
-0 ：全功能关闭
+  0 ：全功能关闭
 
-1 ：全功能开启（默认）
+  1 ：全功能开启（默认）
 
-4 ：飞行模式
+  4 ：飞行模式
 
-失败返回整型值-1。
+  失败返回整型值-1。
 
 * 示例
 
@@ -2854,12 +2814,12 @@ LTE list：
 
 | 参数     | 参数类型 | 参数说明                                                     |
 | -------- | -------- | ------------------------------------------------------------ |
-| function | int      | 设置SIM卡模式，0 - 全功能关闭， 1 - 全功能开启， 4 - 飞行模式 (RDA平台不支持cfun4)|
-| rst      | int      | 可选参数 ，0 - 设置立即生效（默认为0），1 - 设置完重启       |
+| function | int      | 设置SIM卡模式<br/>0 - 全功能关闭<br/>1 - 全功能开启<br/>4 - 飞行模式 (RDA平台不支持cfun4) |
+| rst      | int      | 可选参数 <br>0 - 设置立即生效（默认为0）<br/>1 - 设置完重启  |
 
 * 返回值
 
-设置成功返回整型值0，设置失败返回整型值-1。
+  设置成功返回整型值0，设置失败返回整型值-1。
 
 * 示例
 
@@ -2899,7 +2859,7 @@ LTE list：
 
   无。
 
-示例
+* 示例
 
 ```python
 import checkNet
