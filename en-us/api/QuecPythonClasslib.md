@@ -1236,7 +1236,7 @@ This function sets the Auto-Answer Time.
 
 
 
-##### Initiate a Call
+##### Call
 
 > **voiceCall.callStart(phonenum)**
 
@@ -1250,9 +1250,7 @@ This function initiates a call.
 
 * Return Value
 
-0  Successful execution.
-
--1  Failed execution.
+  Returns 0 on success, -1 otherwise.
 
 * Example
 
@@ -1263,7 +1261,7 @@ This function initiates a call.
 
 
 
-##### Answer a Call
+##### Answer
 
 > **voiceCall.callAnswer()**
 
@@ -1271,13 +1269,11 @@ This function answers a call.
 
 * Parameter
 
-NA
+  None
 
 * Return Value
 
-0  Successful execution.
-
--1  Failed execution.
+  Returns 0 on success, -1 otherwise.
 
 * Example
 
@@ -1288,7 +1284,7 @@ NA
 
 
 
-##### Hang up a Call
+##### Hang up
 
 > **voiceCall.callEnd()**
 
@@ -1296,13 +1292,11 @@ This function hangs up a call.
 
 * Parameter
 
-NA
+  None
 
 * Return Value
 
-0  Successful execution.
-
--1  Failed execution.
+  Returns 0 on success, -1 otherwise.
 
 * Example
 
@@ -1328,9 +1322,7 @@ This function sets DTMF.
 
 * Return Value
 
-0  Successful execution.
-
--1  Failed execution.
+  Returns 0 on success, -1 otherwise.
 
 * Example
 
@@ -1345,88 +1337,31 @@ This function sets DTMF.
 
 > **voiceCall.setFw(reason, fwmode, phonenum)**
 
-Call Forwarding Number and Conditions Control
+Call Forwarding Number and Conditions Control.
 
 * Parameter
 
 | Parameter | Type   | Description                                                  |
 | --------- | ------ | ------------------------------------------------------------ |
-| reason    | int    | Forwarding conditions/reasion: <br/>0 : Unconditional<br/>1 : Mobile busy<br/>2 : Not reply<br/>3 : Not reachable<br/>4 : All call forwarding (Refer to 3GPP TS 22.030)<br/>5 : All conditional call forwarding (Refer to 3GPP TS 22.030) |
-| fwmode    | int    | Controls the call forwarding supplementary service:<br/>0 : Disable<br/>1 : Enable<br/>2 : Query status<br/>3 : Registration<br/>4 : Erasure |
+| reason    | int    | Forwarding conditions/reasion: <br/>0 - Unconditional<br/>1 - Mobile busy<br/>2 - Not reply<br/>3 - Not reachable<br/>4 - All call forwarding (Refer to 3GPP TS 22.030)<br/>5 - All conditional call forwarding (Refer to 3GPP TS 22.030) |
+| fwmode    | int    | Controls the call forwarding supplementary service:<br/>0 - Disable<br/>1 - Enable<br/>2 - Query status<br/>3 - Registration<br/>4 - Erasure |
 | phonenum  | string | The targeted number for forwarding                           |
 
 * Return Value
 
-0  Successful execution.
-
--1  Failed execution.
+  Returns 0 on success, -1 otherwise.
 
 * Example
 
-NA
+  None
 
 
 
-
-##### enable automatic recording api
-
-> **voiceCall.setAutoRecord(enable, record_type, record_mode, filename)**
-
-enable automatic recording api.(The automatic recording function is disabled by default)
-
-note：The non-Volte version does not have this interface
-
-* Parameter
-
-| Parameter    | Type     | Description                                              |
-| --------     | -------- | -------------------------------------------------------- |
-| enable       | int      | enable switch.        range:【0/1】:  0：Disable the automatic recording function 1：enable the automatic recording function     |
-| record_type  | int      | Recording File Type.  range:【0/1】:  0：AMR  1:WAV                |
-| record_mode  | int      | mode.                 range:【0/1/2】:0：RX   1:TX    2:MIX                |
-| filename     | string   | file name.                |
-
-* Return Value
-
-0 : Successful execution.
--1: Failed execution.
-"NOT SUPPORT": The interface is not supported.
-
-* Example
-
-```python
->>> voiceCall.setAutoRecord(1,0,2,'U:/test.amr')
-0
-```
-
-
-
-##### Start the recording
-
-> **voiceCall.startRecord(record_type, record_mode, filename)**
-
-Start the recording api.
-
-note：The non-Volte version does not have this interface
-
-* Parameter
-
-| Parameter    | Type     | Description                                           |
-| --------     | -------- | ----------------------------------------------------- |
-| record_type  | int      | Recording File Type.  range:【0/1】;   0:AMR  1:WAV                |
-| record_mode  | int      | mode                  range:【0/1/2】; 0:RX   1:TX    2:MIX                |
-| filename     | string   | file name                |
-
-* Return Value
-
-0 : Successful execution.
--1: Failed execution.
-"NOT SUPPORT": The interface is not supported.
-
-##### switch voice channel
+##### Switch the voice output channel
 
 > **voiceCall.setChannel(device)**
 
-Set the voice output channel during a call. The default channel is channel 0.
+Set the voice output channel during a call. The default channel is handset.
 
 * Parameter
 
@@ -1436,10 +1371,7 @@ Set the voice output channel during a call. The default channel is channel 0.
 
 * Return Value
 
-0  Successful execution.
-
--1  Failed execution.
-
+  Returns 0 on success, -1 otherwise.
 
 * Example
 
@@ -1450,24 +1382,117 @@ Set the voice output channel during a call. The default channel is channel 0.
 
 
 
+##### Get Volume
 
-##### End Current Recording
+> **voiceCall.getVolume()**
 
-> **voiceCall.stopRecord()**
-
-End Current Recording
-
-note：The non-Volte version does not have this interface
+Get the current volume of the voice.
 
 * Parameter
 
-NA
+  None
 
 * Return Value
 
-0 : Successful execution.
--1: Failed execution.
-"NOT SUPPORT": The interface is not supported.
+  return volume of the voice.
+
+
+
+##### Set Volume
+
+> **voiceCall.setVolume(vol)**
+
+Set the volume of the voice.
+
+* Parameter
+
+| Parameter | Type | Description                                                  |
+| --------- | ---- | ------------------------------------------------------------ |
+| vol       | int  | Volume. Range : 0–11. The higher the number, the higher the volume. |
+
+* Return Value
+
+  Returns 0 on success, -1 otherwise.
+
+
+
+
+##### Enable automatic recording
+
+> **voiceCall.setAutoRecord(enable, record_type, record_mode, filename)**
+
+Enable automatic recording, it is disabled by default.
+
+Note：The non-Volte version does not have this interface.
+
+* Parameter
+
+| Parameter   | Type   | Description                                                  |
+| ----------- | ------ | ------------------------------------------------------------ |
+| enable      | int    | enable switch, range:<br>0 - disable the automatic recording function<br/>1 - enable the automatic recording function |
+| record_type | int    | Recording File Type, range:<br/>0 - AMR<br/>1 - WAV          |
+| record_mode | int    | mode, range:<br/>0 - RX <br/>1 - TX<br/>2 - MIX              |
+| filename    | string | file name.                                                   |
+
+* Return Value
+
+  0 : Successful execution.
+  -1 :Failed execution.
+  "NOT SUPPORT" :The interface is not supported.
+
+* Example
+
+```python
+>>> voiceCall.setAutoRecord(1,0,2,'U:/test.amr')
+0
+```
+
+
+
+##### Start recording
+
+> **voiceCall.startRecord(record_type, record_mode, filename)**
+
+Call this API to start recording.
+
+Note：The non-Volte version does not have this interface.
+
+* Parameter
+
+| Parameter   | Type   | Description                                         |
+| ----------- | ------ | --------------------------------------------------- |
+| record_type | int    | Recording File Type, range:<br/>0 - AMR<br/>1 - WAV |
+| record_mode | int    | mode, range:<br/>0 - RX<br/>1 - TX<br/>2 - MIX      |
+| filename    | string | file name                                           |
+
+* Return Value
+
+  0 : Successful execution.
+  -1 : Failed execution.
+  "NOT SUPPORT" : The interface is not supported.
+
+
+
+
+
+
+##### End Recording
+
+> **voiceCall.stopRecord()**
+
+End Current Recording.
+
+Note : The non-Volte version does not have this interface.
+
+* Parameter
+
+  None
+
+* Return Value
+
+  0 : Successful execution.
+  -1 : Failed execution.
+  "NOT SUPPORT" : The interface is not supported.
 
 * Example
 
@@ -1478,31 +1503,31 @@ NA
 
 
 
-##### Start the recording(stream)
+##### Start Bitstream recording
 
 > **voiceCall.startRecordStream(record_type, record_mode, record_cb)**
 
-Start the recording(stream)
+Start Bitstream recording.
 
-note：The non-Volte version does not have this interface
+Note : The non-Volte version does not have this interface.
 
 * Parameter
 
-| Parameter    | Type     | Description                                              |
-| --------     | -------- | ----------------------------------------------------- |
-| record_type  | int      | Recording File Type.  range:【0/1】;   0:AMR  1:WAV                |
-| record_mode  | int      | mode                  range:【0/1/2】; 0:RX   1:TX    2:MIX               |
-| record_cb    | function | callback function                |
+| Parameter   | Type     | Description                                         |
+| ----------- | -------- | --------------------------------------------------- |
+| record_type | int      | Recording File Type, range:<br/>0 - AMR<br/>1 - WAV |
+| record_mode | int      | mode, range:<br/>0 - RX<br/>1 - TX <br/>2 - MIX     |
+| record_cb   | function | callback function                                   |
 
 * Return Value
 
-0 : Successful execution.
--1: Failed execution.
-"NOT SUPPORT": The interface is not supported.
+  0 : Successful execution.
+  -1 : Failed execution.
+  "NOT SUPPORT" : The interface is not supported.
 
 * Example
 
-*The return value of the callback function is defined as follows
+The return value of the callback function is defined as follows
 ```
 args[0]:stream data
 args[1]:stream data len
@@ -1551,40 +1576,6 @@ typedef enum
 0
 ```
 
-##### Get Volume
-
-> **voiceCall.getVolume()**
-
-Get the current volume of the voice.
-
-* Parameter
-
-  None
-
-* Return Value
-
-  return volume of the voice.
-
-
-
-##### Set Volume
-
-> **voiceCall.setVolume(vol)**
-
-Set the volume of the voice.
-
-* Parameter
-
-| Parameter | Type | Description                                                  |
-| --------- | ---- | ------------------------------------------------------------ |
-| vol       | int  | Volume. Range : 0–11. The higher the number, the higher the volume. |
-
-* Return Value
-
-  0  Successful execution.
-
-  -1  Failed execution.
-
 
 
 
@@ -1602,27 +1593,95 @@ This function registers the listening callback function. This function will be t
 
 * Return Value
 
-0  Successful execution.
+  Returns 0 on success, -1 otherwise.
 
--1  Failed execution.
+* event_id
+
+```c
+typedef enum
+{
+	HELIOS_VC_INIT_OK_IND = 1,
+	HELIOS_VC_RING_IND,
+	HELIOS_VC_CONNECT_IND,
+	HELIOS_VC_NOCARRIER_IND,
+	HELIOS_VC_ERROR_IND,
+	HELIOS_VC_CCWA_IND,
+	HELIOS_VC_DIALING_IND,
+	HELIOS_VC_MO_FAILED_IND,
+	HELIOS_VC_HOLDING_IND,
+	
+	HELIOS_VC_RING_VOLTE_IND = 10,
+	HELIOS_VC_CONNECT_VOLTE_IND,
+	HELIOS_VC_NOCARRIER_VOLTE_IND,
+	HELIOS_VC_CCWA_VOLTE_IND,
+	HELIOS_VC_DIALING_VOLTE_IND,
+	HELIOS_VC_ALERTING_VOLTE_IND,
+	HELIOS_VC_HOLDING_VOLTE_IND
+}HELIOS_VC_EVENT_ID_E;
+```
+
+* Description of callback function parameter 
+
+| event                      | Number of Parameter | Parameter Description                                        |
+| -------------------------- | ------------------- | ------------------------------------------------------------ |
+| 2, 3, 9                    | 3                   | args[0] : event id<br>args[1] : call id ( call identification number as described in 3GPP TS 22.030 subclause 4.5.5.1; this number can be used in +CHLD command operations )<br/>args[2] : phone number |
+| 4                          | 3                   | args[0] : event id<br/>args[1] : call id ( call identification number as described in 3GPP TS 22.030 subclause 4.5.5.1; this number can be used in +CHLD command operations )<br/>args[2] : cause |
+| 6                          | 5                   | args[0] : event id<br/>args[1] : call id ( call identification number as described in 3GPP TS 22.030 subclause 4.5.5.1; this number can be used in +CHLD command operations )<br/>args[2] : phone number<br/>args[3] : num type ( [129/145],129:Dialing string without international access code “+”,145:Dialing string includes international access code character “+” )<br/>args[4] : CLI status |
+| 7                          | 1                   | args[0] : event id                                           |
+| 8                          | 4                   | args[0] : event id<br/>args[1] : call id ( call identification number as described in 3GPP TS 22.030 subclause 4.5.5.1; this number can be used in +CHLD command operations )<br/>args[2] : cause<br/>args[3] : Indicates if in-band tones are available from network |
+| 10, 11, 12, 13, 14, 15, 16 | 8                   | args[0] : event id<br/>args[1] : call id ( call identification number as described in 3GPP TS 22.030 subclause 4.5.5.1; this number can be used in +CHLD command operations )<br/>args[2] : dir(MO/MT)<br/>args[3] : state of the call<br>args[4] : type ( It's usually 0,  indicates the voice call service)<br/>args[5] : mpty ( Indicates whether the call is multi-party, 0 : call is not one of multiparty (conference) call parties, 1 : call is one of multiparty (conference) call parties )<br/>args[6] : phone number<br/>args[7] : num type ( [129/145], 129 : Dialing string without international access code “+”, 145 : Dialing string includes international access code character “+” ) |
 
 * Example
 
 ```python
 def voice_callback(args):
-     if args[0] == 4106:
-         print('voicecall is waiting')
-     elif args[0] == 4105:
-         print('voicecall disconnect')
-     elif args[0] == 4104:
-         print('voicecall connected, CallNO.: ', args[6])
-     elif args[0] == 4103:
+     if args[0] == 10:
          print('voicecall incoming call, PhoneNO.: ', args[6])
-
+     elif args[0] == 11:
+	     print('voicecall connected, PhoneNO.: ', args[6])
+     elif args[0] == 12:
+	     print('voicecall disconnect')
+	 elif args[0] == 13:
+	     print('voicecall is waiting, PhoneNO.: ', args[6])
+     elif args[0] == 14:
+         print('voicecall dialing, PhoneNO.: ', args[6])
+     elif args[0] == 15:
+	     print('voicecall alerting, PhoneNO.: ', args[6])
+     elif args[0] == 16:
+	     print('voicecall holding, PhoneNO.: ', args[6])
+     
 >>> voiceCall.setCallback(voice_callback)
 0
 >>> voiceCall.callStart('10086')
 0
+```
+
+
+
+For firmware versions released before 2021-09-09, use the event and callback functions as follows:
+
+* event id
+
+```
+#define QUEC_VOICE_CALL_INDICATION_BASE                          ((uint_32)(0x1000))
+#define QUEC_VOLTE_INCOMING_CALL_IND                             ((uint_32)(0x0007 + QUEC_VOICE_CALL_INDICATION_BASE))
+#define QUEC_VOLTE_CONNECT_CALL_IND                              ((uint_32)(0x0008 + QUEC_VOICE_CALL_INDICATION_BASE))
+#define QUEC_VOLTE_DISCONNECT_CALL_IND                           ((uint_32)(0x0009 + QUEC_VOICE_CALL_INDICATION_BASE))
+#define QUEC_VOLTE_WAITING_CALL_IND                              ((uint_32)(0x000A + QUEC_VOICE_CALL_INDICATION_BASE))
+```
+
+* Example
+
+```python
+def voice_callback(args):
+	if args[0] == 4106:
+		print('voicecall is waiting')
+	elif args[0] == 4105:
+		print('voicecall disconnect')
+	elif args[0] == 4104:
+		print('voicecall connected, CallNO.: ', args[6])
+	elif args[0] == 4103:
+		print('voicecall incoming call, PhoneNO.: ', args[6])
 ```
 
 
@@ -1648,9 +1707,9 @@ This function sends the messages in TEXT mode.
 
 * Return Value
 
-0  Successful execution.
+  0  Successful execution.
 
--1  Failed execution.
+  -1  Failed execution.
 
 * Example
 
@@ -1681,9 +1740,9 @@ This function sends the messages in PDU mode.
 
 * Return Value
 
-0  Successful execution.
+  0  Successful execution.
 
--1  Failed execution.
+  -1  Failed execution.
 
 * Example
 
@@ -1714,9 +1773,9 @@ This function deletes the specified messages.
 
 * Return Value
 
-0  Successful execution.
+  0  Successful execution.
 
--1  Failed execution.
+  -1  Failed execution.
 
 * Example
 
@@ -1744,9 +1803,9 @@ This function selects the memory storages, and the default is SIM message storag
 
 * Return Value
 
-0  Successful execution.
+  0  Successful execution.
 
--1  Failed execution.
+  -1  Failed execution.
 
 * Example
 
@@ -1766,25 +1825,25 @@ This function obtains the current information in the message storage.
 
 * Parameter
 
-NA
+  None
 
 * Return Value
 
-If the information is obtained successfully, a tuple is returned in the following format:
+  If the information is obtained successfully, a tuple is returned in the following format:
 
-`([loc1, current_nums, max_nums],[loc2, current_nums, max_nums],[loc3, current_nums, max_nums])`
+  `([loc1, current_nums, max_nums],[loc2, current_nums, max_nums],[loc3, current_nums, max_nums])`
 
-Description：
+  Description：
 
-`loc1` - The memory storage where the messages to be read and deleted stored in;
+  `loc1` - The memory storage where the messages to be read and deleted stored in;
 
-`loc2` - The memory storage where the messages twill be written and sent stored in;
+  `loc2` - The memory storage where the messages twill be written and sent stored in;
 
-`loc3` - The memory storage where the Received messages stored in;
+  `loc3` - The memory storage where the Received messages stored in;
 
-`current_nums` - The current number of messages in the storage.
+  `current_nums` - The current number of messages in the storage.
 
-`max_nums` - The maximum number of messages can be stored in the storage.
+  `max_nums` - The maximum number of messages can be stored in the storage.
 
 * Example
 
@@ -1808,13 +1867,13 @@ This function obtains the number of messages.
 * Parameter
 
 
-NA
+  None
 
 * Return Value
 
-The number of messages  Successful execution.
+  The number of messages  Successful execution.
 
--1  Failed execution.
+  -1  Failed execution.
 
 * Example
 
@@ -1840,7 +1899,7 @@ This function reads messages in PDU mode.
 
 * Return Value
 
-If successfully, returns the message content in string. If failed, returns -1.
+  If successfully, returns the message content in string. If failed, returns -1.
 
 
 
@@ -1858,15 +1917,15 @@ This function reads messages in TEXT mode.
 
 * Return Value
 
-If successfully, returns the message content in following format. If failed, returns -1.
+  If successfully, returns the message content in following format. If failed, returns -1.
 
-Return format：(phoneNumber, msg, msgLen)
+  Return format：(phoneNumber, msg, msgLen)
 
-`phoneNumber` ：Phone number.
+  `phoneNumber` ：Phone number.
 
-`msg` ：Message content
+  `msg` ：Message content
 
-`msgLen` ：Message Length
+  `msgLen` ：Message Length
 
 * Example
 
@@ -1889,11 +1948,11 @@ This function obtains the short message center number.
 
 * Parameter
 
-NA
+  None
 
 * Return Value
 
-Returns the short message center number in string type if successfully, or returns -1 if failed.
+  Returns the short message center number in string type if successfully, or returns -1 if failed.
 
 * Example
 
@@ -1919,13 +1978,13 @@ This function sets the short message center number. And it is not recommended to
 
 * Return Value
 
-0  Successful execution.
+  0  Successful execution.
 
--1  Failed execution.
+  -1  Failed execution.
 
 * Example
 
-NA
+  None
 
 
 
@@ -1945,7 +2004,7 @@ This function obtains the length of the specified PDU messages.
 - Return Value
 
 
-Returns the length of PDU message if successfully, or returns -1 if failed.
+  Returns the length of PDU message if successfully, or returns -1 if failed.
 
 - Example
 
@@ -1977,17 +2036,17 @@ This function decodes PDU.
 - Return Value
 
 
-Returns the decoded PDU message in the following format if successfully, or returns -1 if failed.
+  Returns the decoded PDU message in the following format if successfully, or returns -1 if failed.
 
-Format：(phoneNumber, msg, time, msgLen)
+  Format：(phoneNumber, msg, time, msgLen)
 
-`phoneNumber` ：The phone number.
+  `phoneNumber` ：The phone number.
 
-`msg` ：Message content.
+  `msg` ：Message content.
 
-`time` ：Time when the message was received.
+  `time` ：Time when the message was received.
 
-`msgLen` ：The length of the message.
+  `msgLen` ：The length of the message.
 
 - Example
 
@@ -2015,13 +2074,13 @@ This function registers the listening callback function. This function will be t
 
 * Return Value
 
-0  Successful execution.
+  0  Successful execution.
 
--1  Failed execution.
+  -1  Failed execution.
 
 * Example
 
-The new architecture refers to example 1, and the old architecture refers to example 2
+  The new architecture refers to example 1, and the old architecture refers to example 2
 
 example 1:
 
@@ -2084,15 +2143,16 @@ This function sets APN. After setting, you need to restart or switch to mode 0 a
 
 * Return Value
 
-0  Successful execution.
+  0  Successful execution
 
--1  Failed execution
+  -1  Failed execution
 
 * note
 
   The BC25PA platform does not support this module function.
+
   
-  
+
 ##### Obtain the Current  APN
 
 > **net.getApn(simid)**
@@ -2107,14 +2167,14 @@ This function obtains the current APN.
 
 * Return Value
 
-0  Successful execution.
+  0  Successful execution
 
--1  Failed execution.
+  -1  Failed execution
 
 * note
 
   The BC25PA platform does not support this module function.
-  
+
   
 
 ##### Obtain CSQ
@@ -2125,13 +2185,13 @@ This function obtains CSQ.
 
 * Parameter
 
-NA
+  None
 
 * Return Value
 
-If the execution is successful, the CSQ value is returned. If the execution is failed, -1 is returned. And the returned value 99 indicates the exception.
+  If the execution is successful, the CSQ value is returned. If the execution is failed, -1 is returned. And the returned value 99 indicates the exception.
 
-The range of CSQ is 0-31, and the larger the value, the better the signal. 
+  The range of CSQ is 0-31, and the larger the value, the better the signal. 
 
 * Example
 
@@ -2151,15 +2211,15 @@ This function obtains the information of Cell information.
 
 * Parameter
 
-NA
+  None
 
 * Return Value
 
-If the execution is failed, -1 is returned.  If the execution is successful, the list of neighbor cell information including RATs GSM/UMTS/LTE are returned in the following format. And when the neighbor cell information for one RAT is null, the corresponding list returned is null.  
+  If the execution is failed, -1 is returned.  If the execution is successful, the list of neighbor cell information including RATs GSM/UMTS/LTE are returned in the following format. And when the neighbor cell information for one RAT is null, the corresponding list returned is null.  
 
-`([(flag, cid, mcc, mnc, lac, arfcn, bsic, rssi)], [(flag, cid, licd, mcc, mnc, lac, arfcn, bsic, rssi)], [(flag, cid, mcc, mnc, pci, tac, earfcn, rssi),...])`
+  `([(flag, cid, mcc, mnc, lac, arfcn, bsic, rssi)], [(flag, cid, licd, mcc, mnc, lac, arfcn, bsic, rssi)], [(flag, cid, mcc, mnc, pci, tac, earfcn, rssi),...])`
 
-The description of the return value for GSM:
+* The description of the return value for GSM:
 
 | Parameter | Description                                                  |
 | --------- | ------------------------------------------------------------ |
@@ -2172,7 +2232,7 @@ The description of the return value for GSM:
 | bsic      | Base Station Identity Code, range : 0 ~ 255                  |
 | rssi      | On a GSM network, this value represents the received level and describes the received signal strength. 99 indicates unknown or undetected signal. This value is calculated as follows:<br>rssi = RXLEV - 111<br>The unit is dBm, RXLEV range is 0 ~ 63, so the RSSI range is -111 ~ -48 dBm |
 
-The description of the return value for UMTS:
+* The description of the return value for UMTS:
 
 | Parameter | Description                                                  |
 | --------- | ------------------------------------------------------------ |
@@ -2186,7 +2246,7 @@ The description of the return value for UMTS:
 | psc       | Base Station Identity Code, range : 0 ~ 255                  |
 | rssi      | On a UMTS network, the value indicates the CPICH/PCCPCH receiving power,  unit : dBm, ranges is -5 to 99 |
 
-The description of the return value for LTE:
+* The description of the return value for LTE:
 
 | Parameter | Description                                                  |
 | --------- | ------------------------------------------------------------ |
@@ -2216,17 +2276,17 @@ The function obtains the current RAT and the roaming configuration.
 
 * Parameter
 
-NA
+  None
 
 * Return Value
 
-If the execution is failed, -1 is returned. If the execution is successful, a tuple including the current primary RAT and roaming configuration  is returned.
+  If the execution is failed, -1 is returned. If the execution is successful, a tuple including the current primary RAT and roaming configuration  is returned.
 
 * note
 
   The BC25PA platform does not support this module function.
 
-RAT
+* RAT
 
 | Value | RAT                                                          |
 | ----- | ------------------------------------------------------------ |
@@ -2274,9 +2334,9 @@ The function sets the current RAT and the roaming configuration.
 
 * Return Value
 
-0  Successful execution.
+  0  Successful execution.
 
--1  Failed execution.
+  -1  Failed execution.
 
 * note
 
@@ -2291,19 +2351,19 @@ This function obtains the network mode.
 
 * Parameter
 
-NA
+  None
 
 * Return Value
 
-If the execution is failed, -1 is returned. If  the execution is successful, a tuple is returned in the format：`(selection_mode, mcc, mnc, act)`
+  If the execution is failed, -1 is returned. If  the execution is successful, a tuple is returned in the format：`(selection_mode, mcc, mnc, act)`
 
-The description of the return value:
-`selection_mode` : Selection Mode. 0- Automatic. 1- Manual.
-`mcc` : Mobile Country Code, sting type
-`mnc` : Mobile Network Code, sting type
-`act` : ACT mode for the primary RAT
+  The description of the return value:
+  `selection_mode` : Selection Mode. 0- Automatic. 1- Manual.
+  `mcc` : Mobile Country Code, sting type
+  `mnc` : Mobile Network Code, sting type
+  `act` : ACT mode for the primary RAT
 
-ACT Mode
+* ACT Mode
 
 | Value | ACT Mode           |
 | ----- | ------------------ |
@@ -2336,35 +2396,35 @@ This function obtains the signal strength.
 
 * Parameter
 
-NA
+  None
 
 * Return Value
 
-If the execution is failed, -1 is returned. If the execution is successful, a tuple including 2 list (GW/LTE) is returned in the following format:
+  If the execution is failed, -1 is returned. If the execution is successful, a tuple including 2 list (GW/LTE) is returned in the following format:
 
-`([rssi, bitErrorRate, rscp, ecno], [rssi, rsrp, rsrq, cqi])`
+  `([rssi, bitErrorRate, rscp, ecno], [rssi, rsrp, rsrq, cqi])`
 
-The description of the return value:
+  The description of the return value:
 
-GW list：
+  GW list：
 
-`rssi` : On a GSM/WCDMA network, this value represents the received level and describes the received signal strength. 99 indicates unknown or undetected signal. This value is calculated as follows:<br>rssi = RXLEV - 111<br>The unit is dBm, RXLEV range is 0 ~ 63, so the range of rssi  is -111 ~ -48 dBm
+  `rssi` : On a GSM/WCDMA network, this value represents the received level and describes the received signal strength. 99 indicates unknown or undetected signal. This value is calculated as follows:<br>rssi = RXLEV - 111<br>The unit is dBm, RXLEV range is 0 ~ 63, so the range of rssi  is -111 ~ -48 dBm
 
-`bitErrorRate` : Error Rate(BER), range : 0  ~ 7, 99 indicates unknown or undetected signal
+  `bitErrorRate` : Error Rate(BER), range : 0  ~ 7, 99 indicates unknown or undetected signal
 
-`rscp` : Received Signal Code Power, range : -121 ~ -25 dBm, 255 indicates unknown or undetected signal
+  `rscp` : Received Signal Code Power, range : -121 ~ -25 dBm, 255 indicates unknown or undetected signal
 
-`ecno` :   Pilot Channel , range : -24 ~ 0, 255 indicates unknown or undetected signal
+  `ecno` :   Pilot Channel , range : -24 ~ 0, 255 indicates unknown or undetected signal
 
-LTE list：
+  LTE list：
 
-`rssi` : Received Signal Strength Indicator, range : -140 ~ -44 dBm, 99 indicates unknown or undetected signal
+  `rssi` : Received Signal Strength Indicator, range : -140 ~ -44 dBm, 99 indicates unknown or undetected signal
 
-`rsrp` : Reference Signal Receiving Power, range : -141 ~ -44 dBm, 99 indicates unknown or undetected signal
+  `rsrp` : Reference Signal Receiving Power, range : -141 ~ -44 dBm, 99 indicates unknown or undetected signal
 
-`rsrq` : Reference Signal Receiving Quality, range : -20 ~ -3 dBm, A larger value indicates better signal reception quality
+  `rsrq` : Reference Signal Receiving Quality, range : -20 ~ -3 dBm, A larger value indicates better signal reception quality
 
-`cqi` : Channel Quality
+  `cqi` : Channel Quality
 
 * Example
 
@@ -2383,19 +2443,19 @@ This function obtains the current time of the base station. This time is the tim
 
 * Parameter
 
-NA
+  None
 
 * Return Value
 
-If the execution is failed, -1 is returned. If the execution is successful, a tuple is returned in the following format: 
+  If the execution is failed, -1 is returned. If the execution is successful, a tuple is returned in the following format: 
 
-`(date, abs_time, leap_sec)`
+  `(date, abs_time, leap_sec)`
 
-`date` : String type. The time of the base station. The TIME zone of the EC600N series is different from that of the EC200U/EC600U series. For details, see the example. If you need to set and obtain the time zone, use the 'setTimeZone(offset)' and 'getTimeZone()' interfaces of the utime module.
+  `date` : String type. The time of the base station. The TIME zone of the EC600N series is different from that of the EC200U/EC600U series. For details, see the example. If you need to set and obtain the time zone, use the 'setTimeZone(offset)' and 'getTimeZone()' interfaces of the utime module.
 
-`abs_time` : Integer type. The absolute number of seconds of time.
+  `abs_time` : Integer type. The absolute number of seconds of time.
 
-`leap_sec` : Integer type. The leap second.
+  `leap_sec` : Integer type. The leap second.
 
 * Example
 
@@ -2415,21 +2475,21 @@ This function obtains the current operator information.
 
 * Parameter
 
-NA
+  None
 
 * Return Value
 
-If the execution is failed, -1 is returned. If the execution is successful, a tuple is returned in the following format:
+  If the execution is failed, -1 is returned. If the execution is successful, a tuple is returned in the following format:
 
-`(long_eons, short_eons, mcc, mnc)`
+  `(long_eons, short_eons, mcc, mnc)`
 
-`long_eons` :  String type. Full name of the operator information.
+  `long_eons` :  String type. Full name of the operator information.
 
-`short_eons` :  String type. Short name of the operator information. 
+  `short_eons` :  String type. Short name of the operator information. 
 
-`mcc` : String type. Mobile Country Code.
+  `mcc` : String type. Mobile Country Code.
 
-`mnc` : String type. Mobile Network Code.
+  `mnc` : String type. Mobile Network Code.
 
 * Example
 
@@ -2448,29 +2508,29 @@ This function obtains the registration state.
 
 * Parameter
 
-NA
+  None
 
 * Return Value
 
-If the execution is failed, -1 is returned. If the execution is successful, a tuple is returned in the following format. The tuple contains voice and network registration information. The tuple starting with 'voice\_' indicates voice registration information, and the tuple starting with 'data\_' indicates network registration information:
+  If the execution is failed, -1 is returned. If the execution is successful, a tuple is returned in the following format. The tuple contains voice and network registration information. The tuple starting with 'voice\_' indicates voice registration information, and the tuple starting with 'data\_' indicates network registration information:
 
-`([voice_state, voice_lac, voice_cid, voice_rat, voice_reject_cause, voice_psc], [data_state, data _lac, data _cid, data _rat, data _reject_cause, data _psc])`
+  `([voice_state, voice_lac, voice_cid, voice_rat, voice_reject_cause, voice_psc], [data_state, data _lac, data _cid, data _rat, data _reject_cause, data _psc])`
 
-The description of the return value:
+  The description of the return value:
 
-`state` : Network registration state.
+  `state` : Network registration state.
 
-`lac` : Location Area Code, range : 1 ~ 65534
+  `lac` : Location Area Code, range : 1 ~ 65534
 
-`cid` : cell id, range : 0x0000000 ~ 0xFFFFFFF
+  `cid` : cell id, range : 0x0000000 ~ 0xFFFFFFF
 
-`rat` : access technology
+  `rat` : access technology
 
-`reject_cause` : Reject cause. This parameter is reserved on EC200U/EC600U/BC25PA
+  `reject_cause` : Reject cause. This parameter is reserved on EC200U/EC600U/BC25PA
 
-`psc` ：Primary Scrambling Code. This parameter is reserved on EC200U/EC600U/BC25PA
+  `psc` ：Primary Scrambling Code. This parameter is reserved on EC200U/EC600U/BC25PA
 
-Network registration state
+* Network registration state
 
 | Value | Description                                                  |
 | ----- | ------------------------------------------------------------ |
@@ -2489,7 +2549,7 @@ Network registration state
 
 
 
-access technology
+* access technology
 
 | Value | Description        |
 | ----- | ------------------ |
@@ -2524,11 +2584,11 @@ This function obtains the ID of the Neighbor Cell. The result obtained by this i
 
 * Parameter
 
-NA
+  None
 
 * Return Value
 
-If the execution is failed, -1 is returned. If the execution is successful, an array in list type including cell ID is returned, and the format of this array is `[id, ……, id]`。
+  If the execution is failed, -1 is returned. If the execution is successful, an array in list type including cell ID is returned, and the format of this array is `[id, ……, id]`。
 
 * Example
 
@@ -2547,13 +2607,13 @@ Obtain the ID of the Serving Cell.
 
 * Parameter
 
-NA
+  None
 
 * Return Value
 
-Serving cell ID : Successful execution.
+  Serving cell ID : Successful execution.
 
--1: Failed execution.
+  -1: Failed execution.
 
 * Example
 
@@ -2572,11 +2632,11 @@ This function obtains the MNC of the neighbor cell. The result obtained by this 
 
 * Parameter
 
-NA
+  None
 
 * Return Value
 
-If the execution is failed, -1 is returned. If the execution is successful, an array in list type including cell MNC is returned, and the format of this array is `[mnc, ……, mnc]`.
+  If the execution is failed, -1 is returned. If the execution is successful, an array in list type including cell MNC is returned, and the format of this array is `[mnc, ……, mnc]`.
 
 * Example
 
@@ -2595,13 +2655,13 @@ Obtain the MNC of the Serving Cell.
 
 * Parameter
 
-NA
+  None
 
 * Return Value
 
-Serving cell MNC : Successful execution.
+  Serving cell MNC : Successful execution.
 
--1: Failed execution.
+  -1: Failed execution.
 
 * Example
 
@@ -2620,13 +2680,13 @@ This function obtains the MCC of the neighbor cell. The result obtained by this 
 
 * Parameter
 
-NA
+  None
 
 * Return Value
 
-If the execution is failed, -1 is returned. If the execution is successful, an array in list type including cell MCC is returned, and the format of this array is `[mcc, ……, mcc]`.
+  If the execution is failed, -1 is returned. If the execution is successful, an array in list type including cell MCC is returned, and the format of this array is `[mcc, ……, mcc]`.
 
-Note : For modules of the EC100Y/EC600S/EC600N series, the value is expressed in hexadecimal. For example, the decimal number 1120 in the following example is 0x460, indicating the mobile device country code 460. For modules of other models, the value is directly expressed in decimal, such as the mobile device country code 460.That's 460 in decimal notation.
+  Note : For modules of the EC100Y/EC600S/EC600N series, the value is expressed in hexadecimal. For example, the decimal number 1120 in the following example is 0x460, indicating the mobile device country code 460. For modules of other models, the value is directly expressed in decimal, such as the mobile device country code 460. That's 460 in decimal notation.
 
 * Example
 
@@ -2645,15 +2705,15 @@ Obtain the MCC of the Serving Cell.
 
 * Parameter
 
-NA
+  None
 
 * Return Value
 
-Serving cell MCC : Successful execution.
+  Serving cell MCC : Successful execution.
 
--1: Failed execution.
+  -1: Failed execution.
 
-Note : For modules of the EC100Y/EC600S/EC600N series, the value is expressed in hexadecimal. For example, the decimal number 1120 in the following example is 0x460, indicating the mobile device country code 460. For modules of other models, the value is directly expressed in decimal, such as the mobile device country code 460.That's 460 in decimal notation.
+  Note : For modules of the EC100Y/EC600S/EC600N series, the value is expressed in hexadecimal. For example, the decimal number 1120 in the following example is 0x460, indicating the mobile device country code 460. For modules of other models, the value is directly expressed in decimal, such as the mobile device country code 460.That's 460 in decimal notation.
 
 * Example
 
@@ -2672,11 +2732,11 @@ This function obtains the LAC of the neighbor cell. The result obtained by this 
 
 * Parameter
 
-NA
+  None
 
 * Return Value
 
-If the execution is failed, -1 is returned. If the execution is successful, an array in list type including cell LAC is returned, and the format of this array is `[lac, ……, lac]`.
+  If the execution is failed, -1 is returned. If the execution is successful, an array in list type including cell LAC is returned, and the format of this array is `[lac, ……, lac]`.
 
 * Example
 
@@ -2695,13 +2755,13 @@ Obtain the LAC of the Serving Cell.
 
 * Parameter
 
-NA
+  None
 
 * Return Value
 
-Serving cell LAC : Successful execution.
+  Serving cell LAC : Successful execution.
 
--1: Failed execution.
+  -1: Failed execution.
 
 * Example
 
@@ -2720,17 +2780,17 @@ This function obtains the current modem functionality.
 
 * Parameter
 
-NA
+  None
 
 * Return Value
 
-If the execution is failed, -1 is returned. If the execution is successful, the current modem functionality is returned:
+  If the execution is failed, -1 is returned. If the execution is successful, the current modem functionality is returned:
 
-0 : Minimum functionality
+  0 : Minimum functionality
 
-1 : Full functionality (Default)
+  1 : Full functionality (Default)
 
-4 : Airplane
+  4 : Airplane
 
 * Example
 
@@ -2751,14 +2811,14 @@ This function sets the current modem functionality.
 
 | Parameter | Type | Description                                                  |
 | --------- | ---- | ------------------------------------------------------------ |
-| function  | int  | 0 - Minimum functionality. 1 - Full functionality. 4 - Airplane mode.(The RDA platform does not support CFUN4) |
-| rst       | int  | Optional. 0 - Take effect immediately (Default). 1 - Take effect after rebooting. |
+| function  | int  | 0 - Minimum functionality. <br/>1 - Full functionality.<br/>4 - Airplane mode.(The RDA platform does not support CFUN4) |
+| rst       | int  | Optional. <br>0 - Take effect immediately (Default).<br/>1- Take effect after rebooting. |
 
 * Return Value
 
-0  Successful execution.
+  0  Successful execution.
 
--1  Failed execution.
+  -1  Failed execution.
 
 * Example
 
@@ -2824,11 +2884,11 @@ checknet = checkNet.CheckNetwork(PROJECT_NAME, PROJECT_VERSION)
 
 * Parameter
 
-  NA
+  None
 
 * Return Value
 
-  NA
+  None
 
 * Example
 
