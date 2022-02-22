@@ -393,8 +393,6 @@ In [42]: a is None
 Out[42]: True
 ```
 
-![](images\1241.jpg)
-
 | Operation     | Description                                                  |
 | ------------- | ------------------------------------------------------------ |
 | a + b         | a plus b                                                     |
@@ -444,8 +442,6 @@ Remember, you can modify an object doesn't mean you have to modify it. This is c
 ### Scalar Type
 
 Python's standard library has built-in types for handling numeric data, strings, Boolean values, and datetimes. These single-valued types are called scalar types, which are called scalars in this book. Table 2-4 lists the main scalars. Date and time processing is discussed separately because they are provided by the standard library's ` datetime ` module.
-
-![](images\1242.jpg)
 
 | Type  | Description                                                  |
 | ----- | ------------------------------------------------------------ |
@@ -787,8 +783,6 @@ Out[109]: datetime.datetime(2009, 10, 31, 0, 0)
 ```
 
 Table 2-5 lists all the formatting commands.
-
-![](images\1243.jpg)
 
 | Type | Description                                                  |
 | ---- | ------------------------------------------------------------ |
@@ -1801,8 +1795,6 @@ Out[140]: {3, 4, 5}
 
 Table 3-1 lists common set methods.
 
-![Table 3-1 Set Methods of Python](images\1245.jpg)
-
 | Function                         | Alternative Syntax | Description                                                  |
 | -------------------------------- | ------------------ | ------------------------------------------------------------ |
 | a.add(x)                         | N/A                | Add element x to set a                                       |
@@ -2332,7 +2324,13 @@ S ['Steven']
 
 Table 3-2 lists some itertools functions that I often use. It is recommended to refer to Python official documents for further study.
 
-![Table 3-2 Some Useful Itertools Function](images\1246.jpg)
+| Function                      | Description                                                  |
+| ----------------------------- | ------------------------------------------------------------ |
+| combinations(iterable, k)     | Generate a sequence of all possible k-tuples in the iterable, regardless of order (see another function combination_with_replacement)                                       |
+| permutations(iterable, k)     | Generate a sequence of all possible k-tuples in the iterable, taking order into account                    |
+| groupby(iterable[, keyfunc])  | Generate a (key, sub-iterator) for each unique key                                 |
+| product(*iterable, repeat=1)  | Generates the Cartesian product of the input iterables, the result is a tuple, similar to a nested for loop |
+
 
 ### Error and Exception Handling
 Handling Python errors and exceptions gracefully is an important part of building robust programs. In data analysis, many functions are only used for partial input. For example, Python's float function converts a string to a floating-point number, but there is a ` ValueError ` error when the input is incorrect:
@@ -2531,7 +2529,15 @@ This can automatically close the file when exiting the code block.
 
 If you type **F = open (path, 'W')**, a new file will be created in *examples/segismundo.txt*, overwriting any original data at that location. There is also an x file schema that can create writable files, but cannot if the file path exists. Table 3-3 lists all the read/write modes.
 
-![Table 3-3 File Modes of Python](images\1247.jpg)
+| Model       | Description                                                                    |
+| ------------| ------------------------------------------------------------------------------ |
+| r           | read-only mode                                                                 |
+| w           | Write-only mode. Create a new file (delete any file with the same name)        |
+| a           | Append to existing file (create one if it doesn't exist)                       |
+| r+          | read and write mode                                                            |
+| b           | Additional note that a mode is used for binary files, i.e. 'rb' or 'wb'        |
+| u           | Use 'U' alone or appended to other read modes (like 'rU')                      |
+
 
 For readable files, some common methods are **read**, **seek** and **tell**. **Read** returns characters from the file. The content of the character is determined by the encoding of the file (such as UTF-8). If it is opened in binary mode, it is the original byte:
 
@@ -2609,7 +2615,16 @@ Out[227]:
 
 Table 3-4 lists some of the most commonly used file methods.
 
-![Table 3-4 Important File Methods or Attributes of Python](images\1248.jpg)
+| Function              | Description                                                                                                   |
+| --------------------- | ------------------------------------------------------------------------------------------------------------- |
+| read([size])          | Returns the file data as a string, the optional size parameter is used to specify the number of bytes read    |
+| readlines([size])     | Return the file as a list of lines, optional parameter size                                                   |
+| write(str)            | write string to file                                                                                          |
+| close()               | close handle                                                                                                  |
+| flush()               | Flush the internal I/O buffer and force the data back to disk                                                 |
+| seek(pos)             | Move to the specified file location                                                                           |
+| tell()                | Returns the current file position as an integer                                                               |
+| closed                | True if the file is closed                                                                                    |
 
 ### Bytes and Unicode of the file
 The default operation for Python files is "text mode," which means you need to process Python strings (i.e. Unicode). It is opposite to "binary mode", and file mode is added with a b. Let's look at the file in the previous section (UTF-8 encoded with non-ASCII characters):
