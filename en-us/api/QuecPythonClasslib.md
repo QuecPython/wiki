@@ -114,7 +114,7 @@ The user can save multiple APN information in a dictionary or JSON file and then
 | Return Value | type | Description                                                  |
 | ------------ | ---- | ------------------------------------------------------------ |
 | stagecode    | int  | Stage code, indicates the stage of the dialing.<br>1 - In the stage of obtaining SIM card status, the program returns the value when SIM card status is abnormal;<br>2 - The value returned when the program failed to obtain the network state or failed to obtain the network state in the stage of obtaining network state;<br>3 - The value returned by the program during the dialing;<br>Stagecode should normally return 3 when used by the user. The first two values are abnormal. |
-| subcode      | int  | Subcode，it is combined with the value of stagecode  to represent the specific state of dialing in different stages.<br/>When stagecode = 1:<br/>subcode indicates the state of the SIM card, range: [0, 21], for the description of each value, refer to the return value in sim.getStatus():[https://python.quectel.com/wiki/#/zh-cn/api/QuecPythonClasslib?id=sim-sim%e5%8d%a1](https://python.quectel.com/wiki/#/zh-cn/api/QuecPythonClasslib?id=sim-sim卡) <br/><br/>Subcode，it is combined with the value of stagecode  to represent the specific state of dialing in different stages.<br/>When stagecode = 1:<br/>subcode indicates the state of the SIM card, range: [0, 21], for the description of each value, refer to the return value in sim.getStatus():[https://python.quectel.com/wiki/#/zh-cn/api/QuecPythonClasslib?id=sim-sim%e5%8d%a1](https://python.quectel.com/wiki/#/zh-cn/api/QuecPythonClasslib?id=sim-sim卡) <br/><br/>When stagecode = 2:<br/>subcode indicates the state of the network registration, range: [0, 11], for the description of each values, refer to the return value in net.getState():[https://python.quectel.com/wiki/#/zh-cn/api/QuecPythonClasslib?id=net-%e7%bd%91%e7%bb%9c%e7%9b%b8%e5%85%b3%e5%8a%9f%e8%83%bd](https://python.quectel.com/wiki/#/zh-cn/api/QuecPythonClasslib?id=net-网络相关功能) <br/>Subcode = -1: indicates that the network status fails to be obtained.<br/>For other value, see the above link.<br/><br>When stagecode = 3 :<br/>subcode = -1: Indicates that all user APN attempts are made to dial up, but all attempts fail.<br>subcode = 0: Indicates that the module successfully dials before using the user APN. In this case, the following three situations may occur:<br>（1）The user does not disable the default automatic dialing function upon startup.<br>（2）The user successfully calls the dialing interface after starting the machine.<br/>（3）After startup, the user has executed the startByUserApns() interface and dialed successfully, and then executed the interface again.<br>subcode = 1: Dialing succeeded. |
+| subcode      | int  | Subcode，it is combined with the value of stagecode  to represent the specific state of dialing in different stages.<br/>When stagecode = 1:<br/>subcode indicates the state of the SIM card, range: [0, 21], for the description of each value, refer to the return value in sim.getStatus():[https://python.quectel.com/wiki/#/en-us/api/QuecPythonClasslib?id=sim-sim-card](https://python.quectel.com/wiki/#/en-us/api/QuecPythonClasslib?id=sim-sim-card) <br/><br/>Subcode，it is combined with the value of stagecode  to represent the specific state of dialing in different stages.<br/>When stagecode = 1:<br/>subcode indicates the state of the SIM card, range: [0, 21], for the description of each value, refer to the return value in sim.getStatus():[https://python.quectel.com/wiki/#/en-us/api/QuecPythonClasslib?id=sim-sim-card](https://python.quectel.com/wiki/#/en-us/api/QuecPythonClasslib?id=sim-sim-card) <br/><br/>When stagecode = 2:<br/>subcode indicates the state of the network registration, range: [0, 11], for the description of each values, refer to the return value in net.getState():[https://python.quectel.com/wiki/#/en-us/api/QuecPythonClasslib?id=net-network](https://python.quectel.com/wiki/#/en-us/api/QuecPythonClasslib?id=net-network) <br/>Subcode = -1: indicates that the network status fails to be obtained.<br/>For other value, see the above link.<br/><br>When stagecode = 3 :<br/>subcode = -1: Indicates that all user APN attempts are made to dial up, but all attempts fail.<br>subcode = 0: Indicates that the module successfully dials before using the user APN. In this case, the following three situations may occur:<br>（1）The user does not disable the default automatic dialing function upon startup.<br>（2）The user successfully calls the dialing interface after starting the machine.<br/>（3）After startup, the user has executed the startByUserApns() interface and dialed successfully, and then executed the interface again.<br>subcode = 1: Dialing succeeded. |
 
 * note
 
@@ -2054,7 +2054,7 @@ This function decodes PDU.
 ```python
 >>> import sms
 >>>sms.decodePdu('0891683110305005F00405A10110F000081270319043442354516C76CA77ED4FE1FF1A00320030003200315E7496328303975E6CD596C68D445BA34F2067086D3B52A863D09192FF1A4E3B52A88FDC79BB975E6CD596C68D44FF0C5171540C5B8862A47F8E597D751F6D3B3002',20)
->>>('10010', '公益短信：2021年防范非法集资宣传月活动提醒：主动远离非法集资，共同守护美好生活。', '2021-07-13 09:34:44', 118)
+('10010', '公益短信：2021年防范非法集资宣传月活动提醒：主动远离非法集资，共同守护美好生活。', '2021-07-13 09:34:44', 118)
 >>> 
 ```
 
@@ -2941,7 +2941,7 @@ SIM_CARD_STATUS  : 1
   | Return Value | Type | Description                                                  |
   | ------------ | ---- | ------------------------------------------------------------ |
   | stagecode    | Int  | Stage code, indicates the stage of the checkNet module. <br>1 - Obtaining the state of the  SIM card. This value is returned when the timeout expires or the state of the SIM card is abnormal. <br>2 - Obtaining the state of the network registration. This value is returned when the timeout expires.<br>3 - Obtaining the state of the dial-up.<br>The normal return value is 3 indicates the normal. |
-  | subcode      | Int  | Subcode，it is combined with the value of stagecode  to represent the specific state of checknet in different stages.<br/>When  stagecode = 1 ：<br/>subcode indicates the state of the SIM card, range: [0, 21], for the description of each value, refer to the return value in sim.getStatus() https://python.quectel.com/wiki/#/zh-cn/api/QuecPythonClasslib?id=sim-sim%e5%8d%a1](https://python.quectel.com/wiki/#/zh-cn/api/QuecPythonClasslib?id=sim-sim卡) <br/><br/><br/>When stagecode = 2 ：<br/>subcode indicates the state of the network registration, range: [0, 11], for the description of each values, refer to the return value in net.getState()https://python.quectel.com/wiki/#/zh-cn/api/QuecPythonClasslib?id=net-%e7%bd%91%e7%bb%9c%e7%9b%b8%e5%85%b3%e5%8a%9f%e8%83%bd](https://python.quectel.com/wiki/#/zh-cn/api/QuecPythonClasslib?id=net-网络相关功能)    <br/>When subcode = -1, indicates the dial-up is failed within the timeout.<br/>For other value, see the above link.<br/>If within the timeout, the network registration is successful, enter the stage of stagecode = 3 directly.<br/><br/>When stagecode = 3 : <br/>subcode = 0, indicates the  dial-up is failed within the timeout.<br/>subcode = 1, indicates the network connection is successful within the timeout, that is the network registration and dial-up is successful. |
+  | subcode      | Int  | Subcode，it is combined with the value of stagecode  to represent the specific state of checknet in different stages.<br/>When  stagecode = 1 ：<br/>subcode indicates the state of the SIM card, range: [0, 21], for the description of each value, refer to the return value in sim.getStatus() [https://python.quectel.com/wiki/#/en-us/api/QuecPythonClasslib?id=sim-sim-card](https://python.quectel.com/wiki/#/en-us/api/QuecPythonClasslib?id=sim-sim-card) <br/><br/><br/>When stagecode = 2 ：<br/>subcode indicates the state of the network registration, range: [0, 11], for the description of each values, refer to the return value in net.getState()[https://python.quectel.com/wiki/#/en-us/api/QuecPythonClasslib?id=net-network](https://python.quectel.com/wiki/#/en-us/api/QuecPythonClasslib?id=net-network)    <br/>When subcode = -1, indicates the dial-up is failed within the timeout.<br/>For other value, see the above link.<br/>If within the timeout, the network registration is successful, enter the stage of stagecode = 3 directly.<br/><br/>When stagecode = 3 : <br/>subcode = 0, indicates the  dial-up is failed within the timeout.<br/>subcode = 1, indicates the network connection is successful within the timeout, that is the network registration and dial-up is successful. |
 
 * Example
 
@@ -3300,7 +3300,7 @@ In this example, assuming that `http://www.example.com/test.txt`fails to be down
 > After setting the upgrade flag, call the restart interface, and the upgrade can be started after the restart.
 > After the upgrade is complete, you will directly enter the application.
 
-> Reference link of the restart interface : http://qpy.quectel.com/wiki/#/zh-cn/api/?id=power
+> Reference link of the restart interface : http://qpy.quectel.com/wiki/#/en-us/api/?id=power
 
 
 
@@ -4029,7 +4029,7 @@ Audio stream playback, supporting MP3, AMR and wav format audio stream playback.
 
 |Parameter | parameter type | parameter description|
 | ------ | -------- | ------------------------------------------------------------ |
-|Format | int | audio stream format < br / > 1 - PCM (not supported temporarily) < br / > 2 - wavpcm < br / > 3 - MP3 < br / > 4 - amrnb|
+|Format | int | audio stream format <br/> 1 - PCM (not supported temporarily) <br/> 2 - wavpcm <br/> 3 - MP3 <br/> 4 - amrnb|
 |Buf | buf | audio stream content|
 
 * Return value
@@ -4069,7 +4069,7 @@ Stop audio streaming
   format = 4
   
   def play_from_fs():
-      file_ size = uos. Stat ("/ usr / test. AMR") [6] # get the total bytes of the file
+      file_ size = uos. Stat ("/usr/test.AMR") [6] # get the total bytes of the file
       print(file_size)
       with open("/usr/test.amr", "rb")as f:   
           while 1:
@@ -4090,7 +4090,7 @@ Stop audio streaming
 
 ###### Tone playback
 
-Support platform ec600u / ec200u / ec600n / ec800n
+Support platform ec600u/ec200u/ec600n/ec800n
 
 > aud.aud_tone_play(tone, time)
 
@@ -4100,8 +4100,8 @@ Play tone tone and stop playing automatically after playing for a period of time
 
 |Parameter | parameter type | parameter description|
 | ---- | -------- | ------------------------------------------------------------ |
-|Tone | int | tone type < br / > 0 ~ 15 - key tone (0 ~ 9, a, B, C, D, #, *) (only supported by ec600u / ec200u platform) < br / > 16 - dial tone, (Note: the ec600n / ec800n platform is a continuous tone tone, while the ec600u / ec200u platform is a tone with alternating play and pause) < br / > 17 - busy < br / > 18 - Radio ack < br / > 19 - call drop < br / > 20 - special information < br / > 21 - call waiting (only supported on ec600u / ec200u platforms) < br / > 22 - ringing (only supported on ec600u / ec200u platforms)|
-|Time | int | playback duration, unit MS < br / > 0 - you can only call aud without stopping playback aud_ tone_ play_ Stop() interface can be stopped (only ec600n / ec800n platform supports, ec600u / ec200u platform fills 0, then there is no action) < br / > greater than 0 - playback duration time MS|
+|Tone | int | tone type <br/> 0 ~ 15 - key tone (0 ~ 9, a, B, C, D, #, *) (only supported by ec600u/ec200u platform) <br/> 16 - dial tone, (Note: the ec600n/ec800n platform is a continuous tone tone, while the ec600u/ec200u platform is a tone with alternating play and pause) <br/> 17 - busy <br/> 18 - Radio ack <br/> 19 - call drop <br/> 20 - special information <br/> 21 - call waiting (only supported on ec600u/ec200u platforms) <br/> 22 - ringing (only supported on ec600u/ec200u platforms)|
+|Time | int | playback duration, unit MS <br/> 0 - you can only call aud without stopping playback aud_ tone_ play_ Stop() interface can be stopped (only ec600n/ec800n platform supports, ec600u/ec200u platform fills 0, then there is no action) <br/> greater than 0 - playback duration time MS|
 
 * Return value
 
@@ -4113,7 +4113,7 @@ Play tone tone and stop playing automatically after playing for a period of time
 
 ###### Stop tone playback
 
-Only ec600n / ec800n platform supports
+Only ec600n/ec800n platform supports
 
 > aud.aud_tone_play_stop()
 
@@ -4140,11 +4140,11 @@ import utime
 
 aud = audio.Audio(0)
 
-#200ecu / 600ecu platform
+#200ecu/600ecu platform
 def dial_play_ec600u():
     aud.aud_tone_play(16, 5000)
 
-#Ec600n / ec800n platform
+#Ec600n/ec800n platform
 def dial_play_ec600n():
     for i in range(0,20):
         aud.aud_tone_play(16, 1000)
@@ -4536,7 +4536,7 @@ record_test.amrEncDtx_enable(1)
 
 ###### Recording stream
 
-At present, it is only supported by ec200u / ec600u platforms.
+At present, it is only supported by ec200u/ec600u platforms.
 
 > **record.stream_start(format, samplerate, time)**
 
@@ -4566,7 +4566,7 @@ Note: while recording the audio stream, read the audio stream in time. At presen
 
 ###### Read recording stream
 
-At present, it is only supported by ec200u / ec600u platforms.
+At present, it is only supported by ec200u/ec600u platforms.
 
 > **record.stream_read(read_buf, len)**
 
@@ -4885,10 +4885,10 @@ Note: The BC25PA platform does not support this module function.
 
 | Constent | Description | Usage Platform                         |
 | -------- | ----------- | -------------------------------------- |
-| PWM.PWM0 | PWM0        | EC600S / EC600N / EC100Y/EC600U/EC200U |
-| PWM.PWM1 | PWM1        | EC600S / EC600N / EC100Y               |
-| PWM.PWM2 | PWM2        | EC600S / EC600N / EC100Y               |
-| PWM.PWM3 | PWM3        | EC600S / EC600N / EC100Y               |
+| PWM.PWM0 | PWM0        | EC600S/EC600N/EC100Y/EC600U/EC200U |
+| PWM.PWM1 | PWM1        | EC600S/EC600N/EC100Y               |
+| PWM.PWM2 | PWM2        | EC600S/EC600N/EC100Y               |
+| PWM.PWM3 | PWM3        | EC600S/EC600N/EC100Y               |
 
 
 
@@ -5503,7 +5503,7 @@ Set the input / output mode of pin pin GPIO.
 
 |Parameter | type | description|
 | ----- | ---- | ------------------------------------------------------------ |
-|Value | int | 0 - (pin. In) is set as the input mode< Br / > 1 - (pin. Out) set to output mode|
+|Value | int | 0 - (pin. In) is set as the input mode<br/> 1 - (pin. Out) set to output mode|
 
 * Return value
 
@@ -5784,7 +5784,7 @@ After the serial port receives the data, it will execute the callback.
 
 |Parameter | type | description|
 | ---- | -------- | ------------------------------------------------------------ |
-|Fun | function | serial port receiving data callback [result, port, Num] < br / > result: receiving interface (0: success, others: failure) < br / > port: receiving port < br / > num: how much data is returned|
+|Fun | function | serial port receiving data callback [result, port, Num] <br/> result: receiving interface (0: success, others: failure) <br/> port: receiving port <br/> num: how much data is returned|
 
 -Return value
 
@@ -6156,7 +6156,7 @@ Returns the number of times an interrupt was triggered.
 
 |Parameter | type | description|
 | -------- | ---- | ---------------------------------------------- |
-| is_ Reset | int | reset count after reading < br / > 0: do not reset < br / > 1: reset|
+| is_ Reset | int | reset count after reading <br/> 0: do not reset <br/> 1: reset|
 
 * Return value
 
@@ -6318,7 +6318,7 @@ The timer can be started only when the callback function is set (bc25pa platform
 
 ###### Set RTC alarm time
 
-Support platform ec600u / ec200u / ec600n / ec800n / bc25
+Support platform ec600u/ec200u/ec600n/ec800n/bc25
 
 > rtc.set_alarm([year, month, day, week, hour, minute, second, microsecond])
 
@@ -6345,7 +6345,7 @@ The integer value 0 is returned after setting successfully, and the integer valu
 
 ###### Register RTC alarm callback
 
-Support platform ec600u / ec200u / ec600n / ec800n / bc25
+Support platform ec600u/ec200u/ec600n/ec800n/bc25
 
 > rtc.register_callback(fun)
 
@@ -6365,11 +6365,11 @@ The integer value 0 is returned after successful registration, and the integer v
 
 ###### Switch RTC alarm function
 
-Support platform ec600u / ec200u / ec600n / ec800n / bc25
+Support platform ec600u/ec200u/ec600n/ec800n/bc25
 
 > rtc.enable_alarm(on_off)
 
-Turn on / off RTC alarm function
+Turn on/off RTC alarm function
 
 * Parameters
 
@@ -6396,7 +6396,7 @@ rtc.set_alarm([2021, 7, 9, 5, 12, 30, 0, 0])
 rtc.enable_alarm(1)
 ```
 
-Note: ec600u / ec200u platform supports automatic startup, that is, after setting the alarm function, the module will be shut down. After the alarm time is up, it can be started automatically. This feature is not supported on other platforms.
+Note: ec600u/ec200u platform supports automatic startup, that is, after setting the alarm function, the module will be shut down. After the alarm time is up, it can be started automatically. This feature is not supported on other platforms.
 
 
 
@@ -6629,7 +6629,7 @@ import utime as time
 3. read data
 """
 
-#API manual http://qpy.quectel.com/wiki/#/zh -cn/api/? id=i2c
+#API manual http://qpy.quectel.com/wiki/#/en-us/api/?id=i2c
 #Aht10 instructions
 #  https://server4.eca.ir/eshop/AHT10/Aosong_AHT10_en_draft_0c.pdf
 
@@ -10975,10 +10975,10 @@ Camera function.
 
 |Parameter | parameter type | parameter description|
 | ------------- | -------- | ------------------------------------------------------------ |
-|Model | int | camera model: < br / > * 0: gc032a spi * < br / > * 1: bf3901 spi *|
+|Model | int | camera model: <br/> * 0: gc032a spi * <br/> * 1: bf3901 spi *|
 | cam_ W | int | camera horizontal resolution|
 | *cam_ H * | int | * camera vertical resolution *|
-| perview_ Level | int | preview level [0,2]. The higher the level, the smoother the image and the greater the resource consumption< Br / > when it is equal to 0, there is no LCD preview function < br / > when it is equal to 1 or 2, the LCD must be initialized first|
+| perview_ Level | int | preview level [0,2]. The higher the level, the smoother the image and the greater the resource consumption<br/> when it is equal to 0, there is no LCD preview function <br/> when it is equal to 1 or 2, the LCD must be initialized first|
 | *lcd_ W * | int | LCD horizontal resolution|
 | *lcd_ H * | int | * LCD vertical resolution *|
 
@@ -11443,7 +11443,7 @@ SecureData.Store(index,databuf,len)
 -** parameters**
 |Parameter | type | description|
 | :------ | :-------- | ------------------------------------------------------------ |
-|Index | int | index range is 1-16: < br / > 1 - 8 maximum storage of 52 bytes of data < br / > 9 - 12 maximum storage of 100 bytes of data < br / > 13 - 14 maximum storage of 500 bytes of data < br / > 15 - 16 maximum storage of 1000 bytes of data|
+|Index | int | index range is 1-16: <br/> 1 - 8 maximum storage of 52 bytes of data <br/> 9 - 12 maximum storage of 100 bytes of data <br/> 13 - 14 maximum storage of 500 bytes of data <br/> 15 - 16 maximum storage of 1000 bytes of data|
 |Databuf | bytearray | data array to be stored|
 |Len | int | length of data to be written|
 
@@ -11462,7 +11462,7 @@ SecureData.Read(index,databuf,len)
 -** parameters**
 |Parameter | type | description|
 | :------ | :-------- | ----------------------------------------------- |
-|Index | int | index range is 1-16: < br / > read the index number corresponding to the stored data|
+|Index | int | index range is 1-16: <br/> read the index number corresponding to the stored data|
 |Databuf | bytearray | stores the read data|
 |Len | int | length of data to be read|
 If the stored data is not as large as the incoming len, the actual stored data length is returned
