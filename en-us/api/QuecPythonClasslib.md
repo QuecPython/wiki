@@ -11439,13 +11439,15 @@ gnss.getSpeed()
 Module function: the module provides a bare flash area and a special read-write interface for customers to store important information, and the information will not be lost after burning the firmware (burning the firmware without this function cannot be guaranteed not to be lost). Provide a storage and read interface, not a delete interface.
 >At present, only ec600n and ec600s series projects are supported
 ##### Data storage
-SecureData.Store(index,databuf,len)
--** parameters**
-|Parameter | type | description|
-| :------ | :-------- | ------------------------------------------------------------ |
-|Index | int | index range is 1-16: <br/> 1 - 8 maximum storage of 52 bytes of data <br/> 9 - 12 maximum storage of 100 bytes of data <br/> 13 - 14 maximum storage of 500 bytes of data <br/> 15 - 16 maximum storage of 1000 bytes of data|
-|Databuf | bytearray | data array to be stored|
-|Len | int | length of data to be written|
+SecureData.Store(index, databuf, len)
+
+**parameters**
+
+| Parameter | type | description |
+| ------ | -------- | ------------------------------------------------------------ |
+| Index | int | index range is 1-16: <br/> 1 - 8 maximum storage of 52 bytes of data <br/> 9 - 12 maximum storage of 100 bytes of data <br/> 13 - 14 maximum storage of 500 bytes of data <br/> 15 - 16 maximum storage of 1000 bytes of data |
+| Databuf | bytearray | data array to be stored|
+| Len | int | length of data to be written|
 
 
 When storing, it is stored according to the shorter of databuf and Len
@@ -11484,7 +11486,7 @@ len = SecureData.Read(1, buf, 20)
 #Output read data
 print(buf[:len])
 ```
--** implementation results**
+**implementation results**
 ```python
 >>> import SecureData
 >>> databuf = '\x31\x32\x33\x34\x35\x36\x37\x38'
