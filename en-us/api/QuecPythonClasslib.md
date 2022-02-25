@@ -14,7 +14,7 @@ This function specifies the Python script to be executed.
 
 * Return Value
 
-  NA
+  * NA
 
 * Example
 
@@ -73,11 +73,11 @@ Call this API to activating the PDP Context.
 
 * Return Value
 
-  Returns 0 on success, -1 otherwise.
+  * Returns 0 on success, -1 otherwise.
 
-* note
+* Note
 
-  The BC25PA platform does not support this method.
+  * The BC25PA platform does not support this method.
 
 * Example
 
@@ -116,7 +116,7 @@ The user can save multiple APN information in a dictionary or JSON file and then
 | stagecode    | int  | Stage code, indicates the stage of the dialing.<br>1 - In the stage of obtaining SIM card status, the program returns the value when SIM card status is abnormal;<br>2 - The value returned when the program failed to obtain the network state or failed to obtain the network state in the stage of obtaining network state;<br>3 - The value returned by the program during the dialing;<br>Stagecode should normally return 3 when used by the user. The first two values are abnormal. |
 | subcode      | int  | Subcode，it is combined with the value of stagecode  to represent the specific state of dialing in different stages.<br/>When stagecode = 1:<br/>subcode indicates the state of the SIM card, range: [0, 21], for the description of each value, refer to the return value in sim.getStatus():[https://python.quectel.com/wiki/#/en-us/api/QuecPythonClasslib?id=sim-sim-card](https://python.quectel.com/wiki/#/en-us/api/QuecPythonClasslib?id=sim-sim-card) <br/><br/>Subcode，it is combined with the value of stagecode  to represent the specific state of dialing in different stages.<br/>When stagecode = 1:<br/>subcode indicates the state of the SIM card, range: [0, 21], for the description of each value, refer to the return value in sim.getStatus():[https://python.quectel.com/wiki/#/en-us/api/QuecPythonClasslib?id=sim-sim-card](https://python.quectel.com/wiki/#/en-us/api/QuecPythonClasslib?id=sim-sim-card) <br/><br/>When stagecode = 2:<br/>subcode indicates the state of the network registration, range: [0, 11], for the description of each values, refer to the return value in net.getState():[https://python.quectel.com/wiki/#/en-us/api/QuecPythonClasslib?id=net-network](https://python.quectel.com/wiki/#/en-us/api/QuecPythonClasslib?id=net-network) <br/>Subcode = -1: indicates that the network status fails to be obtained.<br/>For other value, see the above link.<br/><br>When stagecode = 3 :<br/>subcode = -1: Indicates that all user APN attempts are made to dial up, but all attempts fail.<br>subcode = 0: Indicates that the module successfully dials before using the user APN. In this case, the following three situations may occur:<br>（1）The user does not disable the default automatic dialing function upon startup.<br>（2）The user successfully calls the dialing interface after starting the machine.<br/>（3）After startup, the user has executed the startByUserApns() interface and dialed successfully, and then executed the interface again.<br>subcode = 1: Dialing succeeded. |
 
-* note
+* Note
 
   The user APN can be saved in the dictionary built-in code, or can be saved in json file, the following describes the format of APN information:
 
@@ -130,7 +130,7 @@ The user can save multiple APN information in a dictionary or JSON file and then
 
   （3）Since the dictionary is an unordered structure, the APN information is not taken out first which APN is written before, which is random.
 
-  Example：
+* Example：
 
   ```python
   apn_infos = {
@@ -203,7 +203,7 @@ The user can save multiple APN information in a dictionary or JSON file and then
 
   4. This interface is used to replace the default dial-up function upon startup. If you choose to use this interface, you need to run this interface in the user script first. After this interface returns a success message, the dial-up networking is successful, and then perform other network services.
 
-Example
+* Example
 
 ```python
 import dataCall
@@ -306,9 +306,9 @@ Enable the function of automatically activating the PDP context upon startup, ta
 
 * Return Value
 
-  None
+  * None
 
-* note
+* Note
 
   This interface is only applicable to development and debugging, because it takes effect only after being reset. If the user wants to disable the function of automatically activating the PDP context when the module is in mass production, user can take the following steps:
 
@@ -320,7 +320,7 @@ Enable the function of automatically activating the PDP context upon startup, ta
   {"replFlag": 0, "datacallFlag": 0}
   ```
 
-  Parameter:
+* Parameter:
 
   ​	replFlag - Enable or disable REPL, Please refer to the official Wiki documentation for details——QuecPythonThirdlib.md——system - Set system;
 
@@ -352,11 +352,12 @@ After calling this interface, the user_apn.json will be created in the user part
 
 * Return Value
 
-  Returns 0 on success, -1 otherwise.
+  * Returns 0 on success, -1 otherwise.
 
 * Note
 
-  The BC25PA platform does not support this method.
+  * The BC25PA platform does not support this method.
+
 * Example
 
 ```python
@@ -384,11 +385,11 @@ Manually modify DNS information, you can check whether the modification is succe
 
 * Return Value
 
-  Returns 0 on success, -1 otherwise.
+  * Returns 0 on success, -1 otherwise.
 
 * Note
 
-  Currently only EC600S EC600N/EC800N EC200U/EC600U platform support this feature.
+  * Currently only EC600S/EC600N/EC800N/EC200U/EC600U platform support this feature.
 
 * Example
 
@@ -415,11 +416,11 @@ Get APN Information of user. If only simID is specified, the default APN is obta
 
 * Return Value
 
-  Returns APN on success, integer -1 on failure.
+  * Returns APN on success, integer -1 on failure.
 
 * Note
 
-  The unisoc and ASR platform support this method.
+  * The unisoc and ASR platform support this method.
 
 * Example
 
@@ -448,13 +449,12 @@ This function registers the callback function to send the notification when the 
 
 * Return Value
 
-  0  Successful execution.
+  * 0  Successful execution.
+  * -1  Failed execution.
 
-  -1  Failed execution.
+* Note
 
-* note
-
-  The BC25PA platform does not support this method.
+  * The BC25PA platform does not support this method.
   
 * Example
 
@@ -497,47 +497,33 @@ This API is used to get PDP activation status, IP, and DNS information.
 
 * Return Value
 
-  If it failed to obtain the dial-up information, returns -1. If successfully, the dial-up information is returned  in the format shown as follows.
+  * If it failed to obtain the dial-up information, returns -1. If successfully, the dial-up information is returned  in the format shown as follows.
 
-   If ipType =0, the format of the return value is as follows.
+  * If ipType =0, the format of the return value is as follows.
 
-  `(profileIdx, ipType, [nwState, reconnect, ipv4Addr, priDns, secDns])`
+    `(profileIdx, ipType, [nwState, reconnect, ipv4Addr, priDns, secDns])`<br/>
+    `profileIdx`：PDP context index. Range: 1-8<br/>
+    `ipType`：IP type. 0-IPV4, 1-IPV6, 2-IPV4 and IPV6.<br/>
+    `nwState`： The result of dial-up. 0 indicates the failed dial-up. 1 indicates the successful dial-up.<br/>
+    `reconnect`：The reconnection flag.<br/>
+    `ipv4Addr`：IPv4 address, string type.<br/>
+    `priDns`：Primary DNS, string type.<br/>
+    `secDns`：Secondary DNS, string type.
 
-  `profileIdx`：PDP context index. Range: 1-8
+  * If ipType =1, the format of the return value is as follows.
 
-  `ipType`：IP type. 0-IPV4, 1-IPV6, 2-IPV4 and IPV6.
+    `(profileIdx, ipType, [nwState, reconnect, ipv6Addr, priDns, secDns])`<br/>
+    `profileIdx`：PDP context index. Range: 1-8<br/>
+    `ipType`：IP type. 0-IPV4, 1-IPV6, 2-IPV4 and IPV6.<br/>
+    `nwState`：The result of dial-up. 0 indicates the failed dial-up. 1 indicates the successful dial-up.<br/>
+    `reconnect`：The reconnection flag.<br/>
+    `ipv6Addr`：IPv6 address, string type.<br/>
+    `priDns`：Primary DNS, string type.<br/>
+    `secDns`：Secondary DNS, string type.
 
-  `nwState`： The result of dial-up. 0 indicates the failed dial-up. 1 indicates the successful dial-up.
+  * If ipType =2, the format of the return value is as follows.
 
-  `reconnect`：The reconnection flag.
-
-  `ipv4Addr`：IPv4 address, string type.
-
-  `priDns`：Primary DNS, string type.
-
-  `secDns`：Secondary DNS, string type.
-
-   If ipType =1, the format of the return value is as follows.
-
-  `(profileIdx, ipType, [nwState, reconnect, ipv6Addr, priDns, secDns])`
-
-  `profileIdx`：PDP context index. Range: 1-8
-
-  `ipType`：IP type. 0-IPV4, 1-IPV6, 2-IPV4 and IPV6.
-
-  `nwState`：The result of dial-up. 0 indicates the failed dial-up. 1 indicates the successful dial-up.
-
-  `reconnect`：The reconnection flag.
-
-  `ipv6Addr`：IPv6 address, string type.
-
-  `priDns`：Primary DNS, string type.
-
-  `secDns`：Secondary DNS, string type.
-
-   If ipType =2, the format of the return value is as follows.
-
-  `(profileIdx, ipType, [nwState, reconnect, ipv4Addr, priDns, secDns], [nwState, reconnect, ipv6Addr, priDns, secDns])`
+    `(profileIdx, ipType, [nwState, reconnect, ipv4Addr, priDns, secDns], [nwState, reconnect, ipv6Addr, priDns, secDns])`
 
 * Example
 
@@ -629,27 +615,20 @@ This function obtains coordinate information of the base station.
 
 * Return Value
 
-  If obtain the coordinate information successfully, return the information in the format of：`(longtitude, latitude, accuracy)`，`(0.0, 0.0, 0)` indicates it failed to obtain the coordinate information. 
+  * If obtain the coordinate information successfully, return the information in the format of：`(longtitude, latitude, accuracy)`，`(0.0, 0.0, 0)` indicates it failed to obtain the coordinate information. 
 
-  `longtitude` : longtitude
+    `longtitude` : longtitude<br/>
+    `latitude` : latitude<br/>
+    `accuracy` : accuracy, Unit of m
 
-  `latitude` : latitude
+  * The error code returned is explained as follows:
 
-  `accuracy` : accuracy, Unit of m
-
-  The error code returned is explained as follows:
-
-  -1 – Initialization failed 
-
-  -2 – Server address exceeds 255 bytes
-
-  -3 – Token length error, it must be 16 bytes.
-
-  -4 – Timeout is out of range.
-
-  -5 – PDP error.
-
-  -6 – Obtaining error.
+    -1 – Initialization failed<br/>
+    -2 – Server address exceeds 255 bytes<br/>
+    -3 – Token length error, it must be 16 bytes.<br/>
+    -4 – Timeout is out of range.<br/>
+    -5 – PDP error.<br/>
+    -6 – Obtaining error.
 
 * Example
 
@@ -682,7 +661,7 @@ Set the token required for WiFi location.
 
 * Return Value
 
-  Return an object.
+  * Return an object.
 
 
 
@@ -694,25 +673,21 @@ Obtain Coordinate Information.
 
 * Parameter
 
-  None
+  * None
 
 * Return Value
 
-  If obtain the coordinate information successfully, return the information in the format of：`(longtitude, latitude, accuracy)`，`(0.0, 0.0, 0)` indicates it failed to obtain the coordinate information. 
+  * If obtain the coordinate information successfully, return the information in the format of：`(longtitude, latitude, accuracy)`，`(0.0, 0.0, 0)` indicates it failed to obtain the coordinate information. 
 
-  `longtitude` : longtitude
+    `longtitude` : longtitude<br/>
+    `latitude` : latitude<br/>
+    `accuracy` : accuracy, Unit of m
 
-  `latitude` : latitude
+  * The error code returned is explained as follows:
 
-  `accuracy` : accuracy, Unit of m
-
-  The error code returned is explained as follows:
-
-  -1 – Network exception
-
-  -2 – Token length error, it must be 16 bytes
-
-  -3 – Obtaining error
+    -1 – Network exception<br/>
+    -2 – Token length error, it must be 16 bytes<br/>
+    -3 – Obtaining error
 
 * Example
 
@@ -749,7 +724,7 @@ Note : Currently, only the ASR platform supports this function.
 
 * Return Value
 
-  The APDU of the response is returned on success, integer -1 on failure.
+  * The APDU of the response is returned on success, integer -1 on failure.
 
 * Example
 
@@ -769,11 +744,11 @@ Call this API to get the IMSI of the SIM card.
 
 * Parameter
 
-  None
+  * None
 
 * Return Value
 
-  Returns IMSI in string type, or returns -1 if failed.
+  * Returns IMSI in string type, or returns -1 if failed.
 
 * Example
 
@@ -793,11 +768,11 @@ Call this API to get the ICCID of SIM card.
 
 * Parameter
 
-  None
+  * None
 
 * Return Value
 
-  Returns ICCID in string type, or returns -1 if failed.
+  * Returns ICCID in string type, or returns -1 if failed.
 
 * Example
 
@@ -816,15 +791,15 @@ Call this API to get the phone number of SIM card.
 
 * Parameter
 
-  None
+  * None
 
 * Return Value
 
-  Returns the phone number in string type, or returns -1 if failed.
+  * Returns the phone number in string type, or returns -1 if failed.
 
 * Note
 
-  The BC25PA platform does not support this method.
+  * The BC25PA platform does not support this method.
 
 * Example
 
@@ -843,7 +818,7 @@ Call this API to get the Status of SIM Card.
 
 * Parameter
 
-  None
+  * None
 
 * Return Value
 
@@ -888,11 +863,11 @@ Call this API to enables PIN authentication, and then you need to enter the corr
 
 * Return Value
 
-  Returns 0 on success, -1 otherwise.
+  * Returns 0 on success, -1 otherwise.
 
 * Note
 
-  The BC25PA platform pin password supports up to eight digits.
+  * The BC25PA platform pin password supports up to eight digits.
 
 * Example
 
@@ -917,11 +892,11 @@ Call this API to disables PIN authentication
 
 * Return Value
 
-  Returns 0 on success, -1 otherwise.
+  * Returns 0 on success, -1 otherwise.
 
 * Note
 
-  The BC25PA platform pin password supports up to eight digits.
+  * The BC25PA platform pin password supports up to eight digits.
 
 * Example
 
@@ -946,11 +921,11 @@ PIN authentication. Only can be called after sim.enablePin(pin) is executed succ
 
 * Return Value
 
-  Returns 0 on success, -1 otherwise.
+  * Returns 0 on success, -1 otherwise.
 
 * Note
 
-  The BC25PA platform pin password supports up to eight digits.
+  * The BC25PA platform pin password supports up to eight digits.
 
 * Example
 
@@ -976,11 +951,11 @@ This function unlocks the SIM card. When PIN/PIN2 code is wrongly input for time
 
 * Return Value
 
-  Returns 0 on success, -1 otherwise.
+  * Returns 0 on success, -1 otherwise.
 
 * Note
 
-  The BC25PA platform pin password supports up to eight digits.
+  * The BC25PA platform pin password supports up to eight digits.
 
 * Example
 
@@ -1006,11 +981,11 @@ Changes PIN.
 
 * Return Value
 
-  Returns 0 on success, -1 otherwise.
+  * Returns 0 on success, -1 otherwise.
 
 * Note
 
-  The BC25PA platform pin password supports up to eight digits.
+  * The BC25PA platform pin password supports up to eight digits.
 
 * Example
 
@@ -1038,23 +1013,20 @@ Call this API to get one or more phone number records in the specified phonebook
 
 * Return Value
 
-  If it failed to read, return -1. If read successfully, the record will be returned in the format shown as follows.
+  * If it failed to read, return -1. If read successfully, the record will be returned in the format shown as follows.
 
   `(record_number, [(index, username, phone_number), ... , (index, username, phone_number)])`
 
 * Description:
 
-  `record_number` – Integer type. The record number read out.
-
-  `index` – Integer type. The index position in the phonebook.
-
-  `username` – String type. User name.
-
-  `phone_number` – String type. Phone number.
+  * `record_number` – Integer type. The record number read out.
+  * `index` – Integer type. The index position in the phonebook.
+  * `username` – String type. User name.
+  * `phone_number` – String type. Phone number.
 
 * Note
 
-  The BC25PA platform does not support this method.
+  * The BC25PA platform does not support this method.
 
 * Example
 
@@ -1088,11 +1060,11 @@ Call this API to writes a phone number record.
 
 * Return Value
 
-  Returns 0 on success, -1 otherwise.
+  * Returns 0 on success, -1 otherwise.
 
 * Note
 
-  The BC25PA platform does not support this method.
+  * The BC25PA platform does not support this method.
 
 * Example
 
@@ -1119,11 +1091,11 @@ Call this API to registers the listening callback function. The callback functio
 
 * Return Value
 
-  Returns 0 on success, -1 otherwise.
+  * Returns 0 on success, -1 otherwise.
 
 * Note
 
-  The BC25PA platform does not support this method.
+  * The BC25PA platform does not support this method.
 
 * Example
 
@@ -1154,11 +1126,11 @@ Call this API to enable or disable the SIM card hot swap function.
 
 * Return Value
 
-  Returns 0 on success, -1 otherwise.
+  * Returns 0 on success, -1 otherwise.
 
 * Note
 
-  The BC25PA platform does not support this method.
+  * The BC25PA platform does not support this method.
 
 * Example
 
@@ -1177,23 +1149,22 @@ This function obtains the SIM card hot-plugging related configuration.
 
 * Parameter
 
-  None
+  * None
 
 * Return Value
 
-  If it failed to obtain, return -1. If the configuration is obtained successfully, a tuple will be returned in the format shown as follows.
+  * If it failed to obtain, return -1. If the configuration is obtained successfully, a tuple will be returned in the format shown as follows.
 
   `(detenable, insertlevel)`
 
 * Description：
 
-  `detenable` - Enable/Disable SIM card hot-plugging. 0: Disable. 1: Enable.
-
-  `insertlevel` – High/low level (0/1).
+  * `detenable` - Enable/Disable SIM card hot-plugging. 0: Disable. 1: Enable.
+  * `insertlevel` – High/low level (0/1).
 
 * Note
 
-  The BC25PA platform does not support this method.
+  * The BC25PA platform does not support this method.
 
 * Example
 
@@ -1224,7 +1195,7 @@ This function sets the Auto-Answer Time.
 
 * Return Value
 
-  Returns 0 on success, -1 otherwise.
+  * Returns 0 on success, -1 otherwise.
 
 * Example
 
@@ -1250,7 +1221,7 @@ This function initiates a call.
 
 * Return Value
 
-  Returns 0 on success, -1 otherwise.
+  * Returns 0 on success, -1 otherwise.
 
 * Example
 
@@ -1269,11 +1240,11 @@ This function answers a call.
 
 * Parameter
 
-  None
+  * None
 
 * Return Value
 
-  Returns 0 on success, -1 otherwise.
+  * Returns 0 on success, -1 otherwise.
 
 * Example
 
@@ -1292,11 +1263,11 @@ This function hangs up a call.
 
 * Parameter
 
-  None
+  * None
 
 * Return Value
 
-  Returns 0 on success, -1 otherwise.
+  * Returns 0 on success, -1 otherwise.
 
 * Example
 
@@ -1322,7 +1293,7 @@ This function sets DTMF.
 
 * Return Value
 
-  Returns 0 on success, -1 otherwise.
+  * Returns 0 on success, -1 otherwise.
 
 * Example
 
@@ -1349,11 +1320,11 @@ Call Forwarding Number and Conditions Control.
 
 * Return Value
 
-  Returns 0 on success, -1 otherwise.
+  * Returns 0 on success, -1 otherwise.
 
 * Example
 
-  None
+  * None
 
 
 
@@ -1371,7 +1342,7 @@ Set the voice output channel during a call. The default channel is handset.
 
 * Return Value
 
-  Returns 0 on success, -1 otherwise.
+  * Returns 0 on success, -1 otherwise.
 
 * Example
 
@@ -1390,11 +1361,11 @@ Get the current volume of the voice.
 
 * Parameter
 
-  None
+  * None
 
 * Return Value
 
-  return volume of the voice.
+  * return volume of the voice.
 
 
 
@@ -1436,9 +1407,9 @@ Note：The non-Volte version does not have this interface.
 
 * Return Value
 
-  0 : Successful execution.
-  -1 :Failed execution.
-  "NOT SUPPORT" :The interface is not supported.
+  * 0 : Successful execution.
+  * -1 :Failed execution.
+  * "NOT SUPPORT" :The interface is not supported.
 
 * Example
 
@@ -1467,9 +1438,9 @@ Note：The non-Volte version does not have this interface.
 
 * Return Value
 
-  0 : Successful execution.
-  -1 : Failed execution.
-  "NOT SUPPORT" : The interface is not supported.
+  * 0 : Successful execution.
+  * -1 : Failed execution.
+  * "NOT SUPPORT" : The interface is not supported.
 
 
 
@@ -1486,13 +1457,13 @@ Note : The non-Volte version does not have this interface.
 
 * Parameter
 
-  None
+  * None
 
 * Return Value
 
-  0 : Successful execution.
-  -1 : Failed execution.
-  "NOT SUPPORT" : The interface is not supported.
+  * 0 : Successful execution.
+  * -1 : Failed execution.
+  * "NOT SUPPORT" : The interface is not supported.
 
 * Example
 
@@ -1521,9 +1492,9 @@ Note : The non-Volte version does not have this interface.
 
 * Return Value
 
-  0 : Successful execution.
-  -1 : Failed execution.
-  "NOT SUPPORT" : The interface is not supported.
+  * 0 : Successful execution.
+  * -1 : Failed execution.
+  * "NOT SUPPORT" : The interface is not supported.
 
 * Example
 
@@ -1593,9 +1564,9 @@ This function registers the listening callback function. This function will be t
 
 * Return Value
 
-  Returns 0 on success, -1 otherwise.
+  * Returns 0 on success, -1 otherwise.
 
-* event_id
+* Event_id
 
 ```c
 typedef enum
@@ -1660,7 +1631,7 @@ def voice_callback(args):
 
 For firmware versions released before 2021-09-09, use the event and callback functions as follows:
 
-* event id
+* Event_id
 
 ```
 #define QUEC_VOICE_CALL_INDICATION_BASE                          ((uint_32)(0x1000))
@@ -1707,9 +1678,8 @@ This function sends the messages in TEXT mode.
 
 * Return Value
 
-  0  Successful execution.
-
-  -1  Failed execution.
+  * 0  Successful execution.
+  * -1  Failed execution.
 
 * Example
 
@@ -1740,9 +1710,8 @@ This function sends the messages in PDU mode.
 
 * Return Value
 
-  0  Successful execution.
-
-  -1  Failed execution.
+  * 0  Successful execution.
+  * -1  Failed execution.
 
 * Example
 
@@ -1773,9 +1742,8 @@ This function deletes the specified messages.
 
 * Return Value
 
-  0  Successful execution.
-
-  -1  Failed execution.
+  * 0  Successful execution.
+  * -1  Failed execution.
 
 * Example
 
@@ -1803,9 +1771,8 @@ This function selects the memory storages, and the default is SIM message storag
 
 * Return Value
 
-  0  Successful execution.
-
-  -1  Failed execution.
+  * 0  Successful execution.
+  * -1  Failed execution.
 
 * Example
 
@@ -1825,25 +1792,21 @@ This function obtains the current information in the message storage.
 
 * Parameter
 
-  None
+  * None
 
 * Return Value
 
-  If the information is obtained successfully, a tuple is returned in the following format:
+  * If the information is obtained successfully, a tuple is returned in the following format:
 
-  `([loc1, current_nums, max_nums],[loc2, current_nums, max_nums],[loc3, current_nums, max_nums])`
+    `([loc1, current_nums, max_nums],[loc2, current_nums, max_nums],[loc3, current_nums, max_nums])`
 
-  Description：
+* Description：
 
-  `loc1` - The memory storage where the messages to be read and deleted stored in;
-
-  `loc2` - The memory storage where the messages twill be written and sent stored in;
-
-  `loc3` - The memory storage where the Received messages stored in;
-
-  `current_nums` - The current number of messages in the storage.
-
-  `max_nums` - The maximum number of messages can be stored in the storage.
+  * `loc1` - The memory storage where the messages to be read and deleted stored in;
+  * `loc2` - The memory storage where the messages twill be written and sent stored in;
+  * `loc3` - The memory storage where the Received messages stored in;
+  * `current_nums` - The current number of messages in the storage.
+  * `max_nums` - The maximum number of messages can be stored in the storage.
 
 * Example
 
@@ -1866,13 +1829,12 @@ This function obtains the number of messages.
 
 * Parameter
 
-  None
+  * None
 
 * Return Value
 
-  The number of messages  Successful execution.
-
-  -1  Failed execution.
+  * The number of messages  Successful execution.
+  * -1  Failed execution.
 
 * Example
 
@@ -1898,7 +1860,7 @@ This function reads messages in PDU mode.
 
 * Return Value
 
-  If successfully, returns the message content in string. If failed, returns -1.
+  * If successfully, returns the message content in string. If failed, returns -1.
 
 
 
@@ -1916,15 +1878,13 @@ This function reads messages in TEXT mode.
 
 * Return Value
 
-  If successfully, returns the message content in following format. If failed, returns -1.
+  * If successfully, returns the message content in following format. If failed, returns -1.
 
-  Return format：(phoneNumber, msg, msgLen)
+  * Return format：(phoneNumber, msg, msgLen)
 
-  `phoneNumber` ：Phone number.
-
-  `msg` ：Message content
-
-  `msgLen` ：Message Length
+    `phoneNumber` ：Phone number.<br/>
+    `msg` ：Message content<br/>
+    `msgLen` ：Message Length
 
 * Example
 
@@ -1947,11 +1907,11 @@ This function obtains the short message center number.
 
 * Parameter
 
-  None
+  * None
 
 * Return Value
 
-  Returns the short message center number in string type if successfully, or returns -1 if failed.
+  * Returns the short message center number in string type if successfully, or returns -1 if failed.
 
 * Example
 
@@ -1977,13 +1937,12 @@ This function sets the short message center number. And it is not recommended to
 
 * Return Value
 
-  0  Successful execution.
-
-  -1  Failed execution.
+  * 0  Successful execution.
+  * -1  Failed execution.
 
 * Example
 
-  None
+  * None
 
 
 
@@ -2002,8 +1961,7 @@ This function obtains the length of the specified PDU messages.
 
 - Return Value
 
-
-  Returns the length of PDU message if successfully, or returns -1 if failed.
+  * Returns the length of PDU message if successfully, or returns -1 if failed.
 
 - Example
 
@@ -2034,17 +1992,14 @@ This function decodes PDU.
 
 - Return Value
 
-  Returns the decoded PDU message in the following format if successfully, or returns -1 if failed.
+  * Returns the decoded PDU message in the following format if successfully, or returns -1 if failed.
 
-  Format：(phoneNumber, msg, time, msgLen)
+  * Format：(phoneNumber, msg, time, msgLen)
 
-  `phoneNumber` ：The phone number.
-
-  `msg` ：Message content.
-
-  `time` ：Time when the message was received.
-
-  `msgLen` ：The length of the message.
+    `phoneNumber` ：The phone number.<br/>
+    `msg` ：Message content.<br/>
+    `time` ：Time when the message was received.<br/>
+    `msgLen` ：The length of the message.
 
 - Example
 
@@ -2072,15 +2027,14 @@ This function registers the listening callback function. This function will be t
 
 * Return Value
 
-  0  Successful execution.
-
-  -1  Failed execution.
+  * 0  Successful execution.
+  * -1  Failed execution.
 
 * Example
 
   The new architecture refers to example 1, and the old architecture refers to example 2
 
-example 1:
+    * Example 1:
 
 ```python
 import sms
@@ -2093,7 +2047,7 @@ def cb(args):
 sms.setCallback(cb)
 ```
 
-example 2:
+    * Example 2:
 
 ```python
 import sms
@@ -2141,11 +2095,10 @@ This function sets APN. After setting, you need to restart or switch to mode 0 a
 
 * Return Value
 
-  0  Successful execution
+  * 0  Successful execution
+  * -1  Failed execution
 
-  -1  Failed execution
-
-* note
+* Note
 
   The BC25PA platform does not support this module function.
 
@@ -2165,13 +2118,12 @@ This function obtains the current APN.
 
 * Return Value
 
-  0  Successful execution
+  * 0  Successful execution
+  * -1  Failed execution
 
-  -1  Failed execution
+* Note
 
-* note
-
-  The BC25PA platform does not support this module function.
+  * The BC25PA platform does not support this module function.
 
   
 
@@ -2183,13 +2135,13 @@ This function obtains CSQ.
 
 * Parameter
 
-  None
+  * None
 
 * Return Value
 
-  If the execution is successful, the CSQ value is returned. If the execution is failed, -1 is returned. And the returned value 99 indicates the exception.
+  * If the execution is successful, the CSQ value is returned. If the execution is failed, -1 is returned. And the returned value 99 indicates the exception.
 
-  The range of CSQ is 0-31, and the larger the value, the better the signal. 
+  * The range of CSQ is 0-31, and the larger the value, the better the signal. 
 
 * Example
 
@@ -2209,13 +2161,13 @@ This function obtains the information of Cell information.
 
 * Parameter
 
-  None
+  * None
 
 * Return Value
 
-  If the execution is failed, -1 is returned.  If the execution is successful, the list of neighbor cell information including RATs GSM/UMTS/LTE are returned in the following format. And when the neighbor cell information for one RAT is null, the corresponding list returned is null.  
+  * If the execution is failed, -1 is returned.  If the execution is successful, the list of neighbor cell information including RATs GSM/UMTS/LTE are returned in the following format. And when the neighbor cell information for one RAT is null, the corresponding list returned is null.  
 
-  `([(flag, cid, mcc, mnc, lac, arfcn, bsic, rssi)], [(flag, cid, licd, mcc, mnc, lac, arfcn, bsic, rssi)], [(flag, cid, mcc, mnc, pci, tac, earfcn, rssi),...])`
+  * `([(flag, cid, mcc, mnc, lac, arfcn, bsic, rssi)], [(flag, cid, licd, mcc, mnc, lac, arfcn, bsic, rssi)], [(flag, cid, mcc, mnc, pci, tac, earfcn, rssi),...])`
 
 * The description of the return value for GSM:
 
@@ -2274,15 +2226,15 @@ The function obtains the current RAT and the roaming configuration.
 
 * Parameter
 
-  None
+  * None
 
 * Return Value
 
-  If the execution is failed, -1 is returned. If the execution is successful, a tuple including the current primary RAT and roaming configuration  is returned.
+  * If the execution is failed, -1 is returned. If the execution is successful, a tuple including the current primary RAT and roaming configuration  is returned.
 
-* note
+* Note
 
-  The BC25PA platform does not support this module function.
+  * The BC25PA platform does not support this module function.
 
 * RAT
 
@@ -2332,11 +2284,10 @@ The function sets the current RAT and the roaming configuration.
 
 * Return Value
 
-  0  Successful execution.
+  * 0  Successful execution.
+  * -1  Failed execution.
 
-  -1  Failed execution.
-
-* note
+* Note
 
   The BC25PA platform does not support this module function. The EC200U/EC600U does not support roaming parameters.
 
@@ -2349,17 +2300,16 @@ This function obtains the network mode.
 
 * Parameter
 
-  None
+  * None
 
 * Return Value
 
-  If the execution is failed, -1 is returned. If  the execution is successful, a tuple is returned in the format：`(selection_mode, mcc, mnc, act)`
-
-  The description of the return value:
-  `selection_mode` : Selection Mode. 0- Automatic. 1- Manual.
-  `mcc` : Mobile Country Code, sting type
-  `mnc` : Mobile Network Code, sting type
-  `act` : ACT mode for the primary RAT
+  * If the execution is failed, -1 is returned. If  the execution is successful, a tuple is returned in the format：`(selection_mode, mcc, mnc, act)`
+  * The description of the return value:<br/>
+    `selection_mode` : Selection Mode. 0- Automatic. 1- Manual.<br/>
+    `mcc` : Mobile Country Code, sting type<br/>
+    `mnc` : Mobile Network Code, sting type<br/>
+    `act` : ACT mode for the primary RAT
 
 * ACT Mode
 
@@ -2394,35 +2344,31 @@ This function obtains the signal strength.
 
 * Parameter
 
-  None
+  * None
 
 * Return Value
 
-  If the execution is failed, -1 is returned. If the execution is successful, a tuple including 2 list (GW/LTE) is returned in the following format:
+  * If the execution is failed, -1 is returned. If the execution is successful, a tuple including 2 list (GW/LTE) is returned in the following format:
 
-  `([rssi, bitErrorRate, rscp, ecno], [rssi, rsrp, rsrq, cqi])`
+    `([rssi, bitErrorRate, rscp, ecno], [rssi, rsrp, rsrq, cqi])`
 
-  The description of the return value:
+  * The description of the return value:
 
-  GW list：
+    * GW list：
 
-  `rssi` : On a GSM/WCDMA network, this value represents the received level and describes the received signal strength. 99 indicates unknown or undetected signal. This value is calculated as follows:<br>rssi = RXLEV - 111<br>The unit is dBm, RXLEV range is 0 ~ 63, so the range of rssi  is -111 ~ -48 dBm
+      `rssi` : On a GSM/WCDMA network, this value represents the received level and describes the received signal strength. 99 indicates unknown or undetected signal. This value is calculated as follows: <br/>
+      &emsp;rssi = RXLEV - 111 <br/>
+      &emsp;The unit is dBm, RXLEV range is 0 ~ 63, so the range of rssi  is -111 ~ -48 dBm <br/>
+      `bitErrorRate` : Error Rate(BER), range : 0  ~ 7, 99 indicates unknown or undetected signal <br/>
+      `rscp` : Received Signal Code Power, range : -121 ~ -25 dBm, 255 indicates unknown or undetected signal <br/>
+      `ecno` :   Pilot Channel , range : -24 ~ 0, 255 indicates unknown or undetected signal
 
-  `bitErrorRate` : Error Rate(BER), range : 0  ~ 7, 99 indicates unknown or undetected signal
+    * LTE list：
 
-  `rscp` : Received Signal Code Power, range : -121 ~ -25 dBm, 255 indicates unknown or undetected signal
-
-  `ecno` :   Pilot Channel , range : -24 ~ 0, 255 indicates unknown or undetected signal
-
-  LTE list：
-
-  `rssi` : Received Signal Strength Indicator, range : -140 ~ -44 dBm, 99 indicates unknown or undetected signal
-
-  `rsrp` : Reference Signal Receiving Power, range : -141 ~ -44 dBm, 99 indicates unknown or undetected signal
-
-  `rsrq` : Reference Signal Receiving Quality, range : -20 ~ -3 dBm, A larger value indicates better signal reception quality
-
-  `cqi` : Channel Quality
+      `rssi` : Received Signal Strength Indicator, range : -140 ~ -44 dBm, 99 indicates unknown or undetected signal <br/>
+      `rsrp` : Reference Signal Receiving Power, range : -141 ~ -44 dBm, 99 indicates unknown or undetected signal <br/>
+      `rsrq` : Reference Signal Receiving Quality, range : -20 ~ -3 dBm, A larger value indicates better signal reception quality <br/>
+      `cqi` : Channel Quality
 
 * Example
 
@@ -2441,19 +2387,17 @@ This function obtains the current time of the base station. This time is the tim
 
 * Parameter
 
-  None
+  * None
 
 * Return Value
 
-  If the execution is failed, -1 is returned. If the execution is successful, a tuple is returned in the following format: 
+  * If the execution is failed, -1 is returned. If the execution is successful, a tuple is returned in the following format: 
 
-  `(date, abs_time, leap_sec)`
+    `(date, abs_time, leap_sec)`
 
-  `date` : String type. The time of the base station. The TIME zone of the EC600N series is different from that of the EC200U/EC600U series. For details, see the example. If you need to set and obtain the time zone, use the 'setTimeZone(offset)' and 'getTimeZone()' interfaces of the utime module.
-
-  `abs_time` : Integer type. The absolute number of seconds of time.
-
-  `leap_sec` : Integer type. The leap second.
+      `date` : String type. The time of the base station. The TIME zone of the EC600N series is different from that of the EC200U/EC600U series. For details, see the example. If you need to set and obtain the time zone, use the 'setTimeZone(offset)' and 'getTimeZone()' interfaces of the utime module. <br/>
+      `abs_time` : Integer type. The absolute number of seconds of time. <br/>
+      `leap_sec` : Integer type. The leap second.
 
 * Example
 
@@ -2473,21 +2417,17 @@ This function obtains the current operator information.
 
 * Parameter
 
-  None
+  * None
 
 * Return Value
 
-  If the execution is failed, -1 is returned. If the execution is successful, a tuple is returned in the following format:
+  * If the execution is failed, -1 is returned. If the execution is successful, a tuple is returned in the following format:
 
-  `(long_eons, short_eons, mcc, mnc)`
-
-  `long_eons` :  String type. Full name of the operator information.
-
-  `short_eons` :  String type. Short name of the operator information. 
-
-  `mcc` : String type. Mobile Country Code.
-
-  `mnc` : String type. Mobile Network Code.
+    `(long_eons, short_eons, mcc, mnc)` <br/>
+    `long_eons` :  String type. Full name of the operator information. <br/>
+    `short_eons` :  String type. Short name of the operator information. <br/>
+    `mcc` : String type. Mobile Country Code. <br/>
+    `mnc` : String type. Mobile Network Code.
 
 * Example
 
@@ -2506,27 +2446,22 @@ This function obtains the registration state.
 
 * Parameter
 
-  None
+  * None
 
 * Return Value
 
-  If the execution is failed, -1 is returned. If the execution is successful, a tuple is returned in the following format. The tuple contains voice and network registration information. The tuple starting with 'voice\_' indicates voice registration information, and the tuple starting with 'data\_' indicates network registration information:
+  * If the execution is failed, -1 is returned. If the execution is successful, a tuple is returned in the following format. The tuple contains voice and network registration information. The tuple starting with 'voice\_' indicates voice registration information, and the tuple starting with 'data\_' indicates network registration information:
 
-  `([voice_state, voice_lac, voice_cid, voice_rat, voice_reject_cause, voice_psc], [data_state, data _lac, data _cid, data _rat, data _reject_cause, data _psc])`
+    `([voice_state, voice_lac, voice_cid, voice_rat, voice_reject_cause, voice_psc], [data_state, data _lac, data _cid, data _rat, data _reject_cause, data _psc])`
 
-  The description of the return value:
+    The description of the return value:
 
-  `state` : Network registration state.
-
-  `lac` : Location Area Code, range : 1 ~ 65534
-
-  `cid` : cell id, range : 0x0000000 ~ 0xFFFFFFF
-
-  `rat` : access technology
-
-  `reject_cause` : Reject cause. This parameter is reserved on EC200U/EC600U/BC25PA
-
-  `psc` ：Primary Scrambling Code. This parameter is reserved on EC200U/EC600U/BC25PA
+    `state` : Network registration state. <br/>
+    `lac` : Location Area Code, range : 1 ~ 65534 <br/>
+    `cid` : cell id, range : 0x0000000 ~ 0xFFFFFFF <br/>
+    `rat` : access technology <br/>
+    `reject_cause` : Reject cause. This parameter is reserved on EC200U/EC600U/BC25PA <br/>
+    `psc` ：Primary Scrambling Code. This parameter is reserved on EC200U/EC600U/BC25PA
 
 * Network registration state
 
@@ -2582,11 +2517,11 @@ This function obtains the ID of the Neighbor Cell. The result obtained by this i
 
 * Parameter
 
-  None
+  * None
 
 * Return Value
 
-  If the execution is failed, -1 is returned. If the execution is successful, an array in list type including cell ID is returned, and the format of this array is `[id, ……, id]`。
+  * If the execution is failed, -1 is returned. If the execution is successful, an array in list type including cell ID is returned, and the format of this array is `[id, ……, id]`。
 
 * Example
 
@@ -2605,13 +2540,12 @@ Obtain the ID of the Serving Cell.
 
 * Parameter
 
-  None
+  * None
 
 * Return Value
 
-  Serving cell ID : Successful execution.
-
-  -1: Failed execution.
+  * Serving cell ID : Successful execution.
+  * -1: Failed execution.
 
 * Example
 
@@ -2630,11 +2564,11 @@ This function obtains the MNC of the neighbor cell. The result obtained by this 
 
 * Parameter
 
-  None
+  * None
 
 * Return Value
 
-  If the execution is failed, -1 is returned. If the execution is successful, an array in list type including cell MNC is returned, and the format of this array is `[mnc, ……, mnc]`.
+  * If the execution is failed, -1 is returned. If the execution is successful, an array in list type including cell MNC is returned, and the format of this array is `[mnc, ……, mnc]`.
 
 * Example
 
@@ -2653,13 +2587,12 @@ Obtain the MNC of the Serving Cell.
 
 * Parameter
 
-  None
+  * None
 
 * Return Value
 
-  Serving cell MNC : Successful execution.
-
-  -1: Failed execution.
+  * Serving cell MNC : Successful execution.
+  * -1: Failed execution.
 
 * Example
 
@@ -2678,13 +2611,15 @@ This function obtains the MCC of the neighbor cell. The result obtained by this 
 
 * Parameter
 
-  None
+  * None
 
 * Return Value
 
-  If the execution is failed, -1 is returned. If the execution is successful, an array in list type including cell MCC is returned, and the format of this array is `[mcc, ……, mcc]`.
+  * If the execution is failed, -1 is returned. If the execution is successful, an array in list type including cell MCC is returned, and the format of this array is `[mcc, ……, mcc]`.
 
-  Note : For modules of the EC100Y/EC600S/EC600N series, the value is expressed in hexadecimal. For example, the decimal number 1120 in the following example is 0x460, indicating the mobile device country code 460. For modules of other models, the value is directly expressed in decimal, such as the mobile device country code 460. That's 460 in decimal notation.
+* Note 
+
+  * For modules of the EC100Y/EC600S/EC600N series, the value is expressed in hexadecimal. For example, the decimal number 1120 in the following example is 0x460, indicating the mobile device country code 460. For modules of other models, the value is directly expressed in decimal, such as the mobile device country code 460. That's 460 in decimal notation.
 
 * Example
 
@@ -2703,15 +2638,16 @@ Obtain the MCC of the Serving Cell.
 
 * Parameter
 
-  None
+  * None
 
 * Return Value
 
-  Serving cell MCC : Successful execution.
+  * Serving cell MCC : Successful execution.
+  * -1: Failed execution.
 
-  -1: Failed execution.
+* Note
 
-  Note : For modules of the EC100Y/EC600S/EC600N series, the value is expressed in hexadecimal. For example, the decimal number 1120 in the following example is 0x460, indicating the mobile device country code 460. For modules of other models, the value is directly expressed in decimal, such as the mobile device country code 460.That's 460 in decimal notation.
+  * For modules of the EC100Y/EC600S/EC600N series, the value is expressed in hexadecimal. For example, the decimal number 1120 in the following example is 0x460, indicating the mobile device country code 460. For modules of other models, the value is directly expressed in decimal, such as the mobile device country code 460.That's 460 in decimal notation.
 
 * Example
 
@@ -2730,11 +2666,11 @@ This function obtains the LAC of the neighbor cell. The result obtained by this 
 
 * Parameter
 
-  None
+  * None
 
 * Return Value
 
-  If the execution is failed, -1 is returned. If the execution is successful, an array in list type including cell LAC is returned, and the format of this array is `[lac, ……, lac]`.
+  * If the execution is failed, -1 is returned. If the execution is successful, an array in list type including cell LAC is returned, and the format of this array is `[lac, ……, lac]`.
 
 * Example
 
@@ -2753,13 +2689,12 @@ Obtain the LAC of the Serving Cell.
 
 * Parameter
 
-  None
+  * None
 
 * Return Value
 
-  Serving cell LAC : Successful execution.
-
-  -1: Failed execution.
+  * Serving cell LAC : Successful execution.
+  * -1: Failed execution.
 
 * Example
 
@@ -2778,17 +2713,15 @@ This function obtains the current modem functionality.
 
 * Parameter
 
-  None
+  * None
 
 * Return Value
 
-  If the execution is failed, -1 is returned. If the execution is successful, the current modem functionality is returned:
+  * If the execution is failed, -1 is returned. If the execution is successful, the current modem functionality is returned:
 
-  0 : Minimum functionality
-
-  1 : Full functionality (Default)
-
-  4 : Airplane
+    0 : Minimum functionality<br/>
+    1 : Full functionality (Default)<br/>
+    4 : Airplane
 
 * Example
 
@@ -2814,9 +2747,8 @@ This function sets the current modem functionality.
 
 * Return Value
 
-  0  Successful execution.
-
-  -1  Failed execution.
+  * 0  Successful execution.
+  * -1  Failed execution.
 
 * Example
 
@@ -2851,7 +2783,7 @@ Function: The checkNet module is mainly used for the script programs [auto-start
 
 * Return Value
 
-  NA
+  * NA
 
 - Example
 
@@ -2874,19 +2806,19 @@ checknet = checkNet.CheckNetwork(PROJECT_NAME, PROJECT_VERSION)
 
   Prints the following log information when the module is powering on.
 
-  PROJECT_NAME     	  : Project Name.
-  PROJECT_VERSION 	 : Project Version.
-  FIRMWARE_VERSION  : Firmware Version .
-  POWERON_REASON   : The reason of the power-on.
+  PROJECT_NAME     	  : Project Name.<br/>
+  PROJECT_VERSION 	 : Project Version.<br/>
+  FIRMWARE_VERSION  : Firmware Version .<br/>
+  POWERON_REASON   : The reason of the power-on.<br/>
   SIM_CARD_STATUS     : The status of SIM card.
 
 * Parameter
 
-  None
+  * None
 
 * Return Value
 
-  None
+  * None
 
 * Example
 
@@ -2930,11 +2862,11 @@ SIM_CARD_STATUS  : 1
 
 * Return Value
 
-  There are two return values in the following format:
+  * There are two return values in the following format:
 
-  `stagecode, subcode`
+    `stagecode, subcode`
 
-  The description for each return values:
+  * The description for each return values:
 
   | Return Value | Type | Description                                                  |
   | ------------ | ---- | ------------------------------------------------------------ |
@@ -3035,7 +2967,11 @@ Realize the whole process of firmware download and upgrade with one interface
 
 - Return Value
 
-  Return integer value 0 if the download is successful and return integer value -1 if the download fails. Note: on EC600S/EC600N module, the return value only represents the success or failure of the command, and the download status needs to be fed back through the callback.
+  * Return integer value 0 if the download is successful and return integer value -1 if the download fails.
+
+* Note
+
+  * on EC600S/EC600N module, the return value only represents the success or failure of the command, and the download status needs to be fed back through the callback.
 
 - Example
 
@@ -3067,13 +3003,12 @@ Write upgrade package data stream
 
 * Return Value
 
-  0 	Successful execution
+  * 0 	Successful execution
+  * -1	Failed execution
 
-  -1	Failed execution
+* Note
 
-* note
-
-  The BC25PA platform does not support this method.
+  * The BC25PA platform does not support this method.
 
 
 ##### Interface to Upgrade Step by Step and Refresh Cached Data to Flash
@@ -3084,17 +3019,16 @@ Refresh cached data to the flash.
 
 - Parameter
 
-None
+  * None
 
 - Return Value
 
-  0 	Successful execution
-
-  -1	Failed execution
+  * 0 	Successful execution
+  * -1	Failed execution
 
 * note
 
-  The BC25PA platform does not support this method.
+  * The BC25PA platform does not support this method.
 
 ##### Interface to Upgrade Step by Step and Verify the Data
 
@@ -3104,17 +3038,16 @@ None
 
 * Parameter
 
-None
+  * None
 
 * Return Value
 
-  0 	Successful execution
-
-  -1	Failed execution
+  * 0 	Successful execution
+  * -1	Failed execution
 
 * note
 
-  The BC25PA platform does not support this method.
+  * The BC25PA platform does not support this method.
 
 * Example
 
@@ -3255,9 +3188,8 @@ fota = app_fota.new()
 
  - Return Value
 
-   0 	Successful execution
-
-   -1	Failed execution
+   * 0 	Successful execution
+   * -1	Failed execution
 
 
 
@@ -3274,7 +3206,7 @@ fota = app_fota.new()
 
  - Return Value
 
-   Return the list of failed downloading
+   * Return the list of failed downloading
 
  - Example
 
@@ -3292,11 +3224,11 @@ In this example, assuming that `http://www.example.com/test.txt`fails to be down
 
  - Parameter
 
-   None
+   * None
 
  - Return Value
 
-   None
+   * None
 
 > After setting the upgrade flag, call the restart interface, and the upgrade can be started after the restart.
 
@@ -3344,13 +3276,12 @@ Disable TTS function.
 
 * Parameter
 
-  None
+  * None
 
 * Return Value
 
-  0 	Successful execution
-
-  -1	Failed execution
+  * 0 	Successful execution
+  * -1	Failed execution
 
 
 
@@ -3383,13 +3314,10 @@ Audio playback supports priority 0–4, the higher the number, the higher the pr
 
 * Return Value
 
-  0 	Successful execution
-
-  -1	Failed execution
-
-  1	 Cannot be played immediately, but join the playback queue
-
-  -2	Cannot be played immediately, and the priority group queue task of the request has reached the upper limit and cannot 		be added to the play queue
+  * 0 	Successful execution
+  * -1	Failed execution
+  * 1	 Cannot be played immediately, but join the playback queue
+  * -2	Cannot be played immediately, and the priority group queue task of the request has reached the upper limit and cannot 		be added to the play queue
 
 * Example
 
@@ -3471,13 +3399,12 @@ Stop playing TTS.
 
 * Parameter
 
-  None
+  * None
 
 * Return Value
 
-  0 	Successful execution
-
-  -1	Failed execution
+  * 0 Successful execution
+  * -1 Failed execution
 
 
 
@@ -3495,9 +3422,8 @@ Register the callback function of the user. It is used to notify the user of the
 
 * Return Value
 
-  0 	Successful execution
-
-  -1	Failed execution
+  * 0 	Successful execution
+  * -1	Failed execution
 
 * Example
 
@@ -3533,13 +3459,12 @@ Ger the volume of the current TTS playback. The volume value is 0–9. 0 means m
 
 * Parameter
 
-  None
+  * None
 
 * Return Value
 
-  0 	Successful execution
-
-  -1	Failed execution
+  * 0 Successful execution
+  * -1 Failed execution
 
 * Example
 
@@ -3564,9 +3489,8 @@ Set TTS playback volume.
 
 * Return Value
 
-  0 	Successful execution
-
-  -1	Failed execution
+  * 0 	Successful execution
+  * -1	Failed execution
 
 * Example
 
@@ -3585,13 +3509,12 @@ Get the current playback speed. The speed value is 0–9, and the larger the val
 
 * Parameter
 
-  None
+  * None
 
 * Return Value
 
-  0 	Successful execution
-
-  -1	Failed execution
+  * 0 Successful execution
+  * -1 Failed execution
 
 * Example
 
@@ -3616,9 +3539,8 @@ Set TTS playback speed.
 
 * Return Value
 
-  0 	Successful execution
-
-  -1	Failed execution
+  * 0 	Successful execution
+  * -1	Failed execution
 
 * Example
 
@@ -3637,13 +3559,12 @@ Get TTS state.
 
 * Parameter
 
-  None
+  * None
 
 * Return Value
 
-  0	 Integer value. Indicates that there is currently no TTS playback.
-
-  1	Integer value. Indicates that TTS is playing.
+  * 0	 Integer value. Indicates that there is currently no TTS playback.
+  * 1	Integer value. Indicates that TTS is playing.
 
 * Example
 
@@ -3817,9 +3738,8 @@ Set the GPIO pin for outputting PA and enable the PA function. Currently, it sup
 
 - Return Value
 
-  0 	Successful execution
-
-  -1	Failed execution
+  * 0 	Successful execution
+  * -1	Failed execution
 
 - Example
 
@@ -3851,15 +3771,12 @@ Play audio files. The audio playback supports files in mp3, amr and wav format. 
 | breakin   | int            | Interruption mode. 0 means not allowed to be interrupted; 1 means allowed to be interrupted |
 | filename  | string         | The file name to be played, including the file storage path  |
 
-* Return value
+* Return Value
 
-  0 	Successful execution
-
-  -1	Failed execution
-
-  1	 Cannot be played immediately, but join the playback queue
-
-  -2	Cannot be played immediately, and the priority group queue task of the request has reached the 		upper limit and cannot be added to the play queue
+  * 0 	Successful execution
+  * -1	Failed execution
+  * 1	 Cannot be played immediately, but join the playback queue
+  * -2	Cannot be played immediately, and the priority group queue task of the request has reached the 		upper limit and cannot be added to the play queue
 
 * Example
 
@@ -3889,13 +3806,12 @@ Stop playing the audio file.
 
 * Parameter
 
-  None
+  * None
 
 * Return Value
 
-  0 	Successful execution
-
-  -1	Failed execution
+  * 0 	Successful execution
+  * -1	Failed execution
 
 
 
@@ -3907,13 +3823,12 @@ Stop the playback of the entire queue, that is, if TTS or audio is currently bei
 
 * Parameter
 
-None
+  * None
 
 * Return Value
 
-  0     Successful execution
-
-  -1    Failed execution
+  * 0     Successful execution
+  * -1    Failed execution
 
 
 
@@ -3931,9 +3846,8 @@ Register the callback function of the user. It is used to notify the user of the
 
 * Return Value
 
-  0 Successful execution
-
-  -1 Failed execution
+  * 0 Successful execution
+  * -1 Failed execution
 
 * Example
 
@@ -3968,13 +3882,12 @@ Get audio initialization status.
 
 * Parameter
 
-  None
+  * None
 
 * Return Value
 
-  0 Successful execution
-
-  -1 Failed execution
+  * 0 Successful execution
+  * -1 Failed execution
 
 
 
@@ -3986,11 +3899,11 @@ Get the audio volume, and the default value is 7.
 
 * Parameter
 
-  None
+  * None
 
 * Return Value
 
-  Return the volume in integer.
+  * Return the volume in integer.
 
 
 
@@ -4008,9 +3921,8 @@ Set audio volume.
 
 * Return Value
 
-  0 Successful execution
-
-  -1 Failed execution
+  * 0 Successful execution
+  * -1 Failed execution
 
 * Example
 
@@ -4029,18 +3941,17 @@ Set audio volume.
 
 Audio stream playback, supporting MP3, AMR and wav format audio stream playback.
 
-* Parameters
+* Parameter
 
 |Parameter | parameter type | parameter description|
 | ------ | -------- | ------------------------------------------------------------ |
 |Format | int | audio stream format <br/> 1 - PCM (not supported temporarily) <br/> 2 - wavpcm <br/> 3 - MP3 <br/> 4 - amrnb|
 |Buf | buf | audio stream content|
 
-* Return value
+* Return Value
 
-  If the playback is successful, the integer 0 will be returned;
-
-  If playback fails, integer - 1 will be returned;
+  * If the playback is successful, the integer 0 will be returned;
+  * If playback fails, integer - 1 will be returned;
 
   
 
@@ -4050,15 +3961,14 @@ Audio stream playback, supporting MP3, AMR and wav format audio stream playback.
 
 Stop audio streaming
 
-* Parameters
+* Parameter
 
-  nothing
+  * None
 
-* Return value
+* Return Value
 
-  Stop successfully, return integer 0;
-
-  Stop failure returns integer - 1;
+  * Stop successfully, return integer 0;
+  * Stop failure returns integer - 1;
 
 
 - Examples
@@ -4100,18 +4010,18 @@ Support platform ec600u/ec200u/ec600n/ec800n
 
 Play tone tone and stop playing automatically after playing for a period of time
 
-* Parameters
+* Parameter
 
 |Parameter | parameter type | parameter description|
 | ---- | -------- | ------------------------------------------------------------ |
 |Tone | int | tone type <br/> 0 ~ 15 - key tone (0 ~ 9, a, B, C, D, #, *) (only supported by ec600u/ec200u platform) <br/> 16 - dial tone, (Note: the ec600n/ec800n platform is a continuous tone tone, while the ec600u/ec200u platform is a tone with alternating play and pause) <br/> 17 - busy <br/> 18 - Radio ack <br/> 19 - call drop <br/> 20 - special information <br/> 21 - call waiting (only supported on ec600u/ec200u platforms) <br/> 22 - ringing (only supported on ec600u/ec200u platforms)|
 |Time | int | playback duration, unit MS <br/> 0 - you can only call aud without stopping playback aud_ tone_ play_ Stop() interface can be stopped (only ec600n/ec800n platform supports, ec600u/ec200u platform fills 0, then there is no action) <br/> greater than 0 - playback duration time MS|
 
-* Return value
+* Return Value
 
-  If the playback is successful, the integer 0 will be returned;
+  * If the playback is successful, the integer 0 will be returned;
 
-  If playback fails, integer - 1 will be returned;
+  * If playback fails, integer - 1 will be returned;
 
   
 
@@ -4123,15 +4033,14 @@ Only ec600n/ec800n platform supports
 
 Actively stop playing tone
 
-* Parameters
+* Parameter
 
-  nothing
+  * None
 
-* Return value
+* Return Value
 
-  Stop successfully, return integer 0;
-
-  Stop failure returns integer - 1;
+  * Stop successfully, return integer 0;
+  * Stop failure returns integer - 1;
 
 
 
@@ -4175,13 +4084,12 @@ Note: The BC25PA platform does not support this module function.
 
 * Parameter
 
-  NA	
+  * None	
 
 * Return Value
 
-  0 Successful execution
-
-  -1 Failed execution
+  * 0 Successful execution
+  * -1 Failed execution
 
 * Example
 
@@ -4207,21 +4115,14 @@ Start recording.
 
 * Return Value
 
-  0	Successful execution
-
-  -1	File overwrite failed
-
-  -2	File open failed
-
-  -3	The file is in use
-
-  -4	Channel setting error 
-
-  -5	Request for timer resource failed
-
-  -6	Audio format detection error
-
-  -7	The file has been created by another object
+  * 0	Successful execution
+  * -1	File overwrite failed
+  * -2	File open failed
+  * -3	The file is in use
+  * -4	Channel setting error 
+  * -5	Request for timer resource failed
+  * -6	Audio format detection error
+  * -7	The file has been created by another object
 
 * Example
 
@@ -4241,13 +4142,12 @@ Stop recording.
 
 * Parameter
 
-  None
+  * None
 
 * Return Value
 
-  0 Successful execution
-
-  -1 Failed execution
+  * 0 Successful execution
+  * -1 Failed execution
 
 * Example
 
@@ -4271,7 +4171,7 @@ Read storage path of the recording file.
 
 * Return Value
 
-  If the file is successfully executed, the path of the recording file is returned, string type. If the target file does not exist, integer -1 is returned. If the file name length is 0, integer -2 is returned.
+  * If the file is successfully executed, the path of the recording file is returned, string type. If the target file does not exist, integer -1 is returned. If the file name length is 0, integer -2 is returned.
 
 * Example
 
@@ -4297,23 +4197,16 @@ Read the recording data.
 
 * Return Value
 
-  Return the data of record if it is executed successfully, bytearray type.
+  * Return the data of record if it is executed successfully, bytearray type.
 
-  -1	Error reading data
-
-  -2	File open failed
-
-  -3	Wrong offset setting
-
-  -4	The file is in use
-
-  -5	Setting exceeds file size(offset+size > file_size)
-
-  -6	The read size is greater than 10 K
-
-  -7	 Less than 10 K of memory
-
-  -8	 The file does not belong to the object
+    -1	Error reading data
+    -2	File open failed
+    -3	Wrong offset setting
+    -4	The file is in use
+    -5	Setting exceeds file size(offset+size > file_size)
+    -6	The read size is greater than 10 K
+    -7	 Less than 10 K of memory
+    -8	 The file does not belong to the object
 
 * Example
 
@@ -4337,19 +4230,16 @@ Read recording file size.
 
 * Return Value
 
-  Return the file size if it is executed successfully.
+  * Return the file size if it is executed successfully.
 
-  In wav format, this value will be 44 bytes larger than the return value of the callback (44 bytes is the size of the file header)
+  * In wav format, this value will be 44 bytes larger than the return value of the callback (44 bytes is the size of the file header)
 
-  In amr format, this value will be 6 bytes larger than the return value of the callback (6 bytes is the size of the file header); Or else
+  * In amr format, this value will be 6 bytes larger than the return value of the callback (6 bytes is the size of the file header); Or else
 
-  *-1*	Failed execution 
-
-  *-2*	File open failed 
-
-  *-3*	The file is in use
-
-  -4	The length of file name is 0
+    *-1*	Failed execution <br/>
+    *-2*	File open failed <br/>
+    *-3*	The file is in use <br/>
+    *-4*	The length of file name is 0
 
 * Example
 
@@ -4379,13 +4269,10 @@ Note: When the parameter is empty, delete all recording files in the object
 
 * Return Value
 
-  0	Successful execution
-
-  -1	The file does not exist
-
-  -2	File is in use
-
-  -3	The file does not belong to the object
+  * 0	Successful execution
+  * -1	The file does not exist
+  * -2	File is in use
+  * -3	The file does not belong to the object
 
 * Example
 
@@ -4410,11 +4297,9 @@ Determine whether the recording file exists.
 
 * Return Value
 
-  true		The file exists
-
-  false	   The file does not exist
-
-  -1		The file does not belong to the object
+  * true		The file exists
+  * false	   The file does not exist
+  * -1		The file does not belong to the object
 
 * Example
 
@@ -4432,13 +4317,12 @@ Determine whether the recording is in progress
 
 * Parameter
 
-  None
+  * None
 
 * Return Value
 
-  0	idle
-
-  1	busy
+  * 0	idle
+  * 1	busy
 
 * Example
 
@@ -4462,9 +4346,8 @@ Set the callback of recording end
 
 * Return Value
 
-  0	Successful execution
-
-  other	Failed  execution  
+  * 0	Successful execution
+  * other	Failed  execution  
 
 * Example
 
@@ -4502,7 +4385,7 @@ Set recording gain.
 
 * Return Value
 
-  0	Successful execution
+  * 0	Successful execution
 
 * Example
 
@@ -4528,9 +4411,9 @@ Switch amr recording DTX function
 
 - Return Value
 
-  No parameters：Get current configuration
+  * No parameters：Get current configuration
 
-  with parameters：If the parameter is correct, there is no return, if the parameter is wrong, an exception will be thrown.
+  * with parameters：If the parameter is correct, there is no return, if the parameter is wrong, an exception will be thrown.
 
 - Example
 
@@ -4548,7 +4431,7 @@ At present, it is only supported by ec200u/ec600u platforms.
 
 Recording audio stream
 
-* Parameters
+* Parameter
 
 |Parameter | parameter type | parameter description|
 | ---------- | -------- | --------------------------- |
@@ -4556,17 +4439,19 @@ Recording audio stream
 |SampleRate | int | sampling rate. At present, 8K and 16K are supported|
 |Time | int | recording duration, unit s (seconds)|
 
-* Return value
+* Return Value
 
-  The integer 0 is returned successfully, and the integer - 1 is returned in case of failure.
+  * The integer 0 is returned successfully, and the integer - 1 is returned in case of failure.
 
-* Examples
+* Example
 
 ```python
 record_test.stream_start(record_test.AMRNB, 8000, 5)
 ```
 
-Note: while recording the audio stream, read the audio stream in time. At present, cyclic buf is adopted, and if it is not read in time, it will lead to data loss
+* Note
+
+  * while recording the audio stream, read the audio stream in time. At present, cyclic buf is adopted, and if it is not read in time, it will lead to data loss
 
 
 
@@ -4578,16 +4463,16 @@ At present, it is only supported by ec200u/ec600u platforms.
 
 Recording audio stream
 
-* Parameters
+* Parameter
 
 |Parameter | parameter type | parameter description|
 | -------- | -------- | ------------- |
 | read_ Buf | buf | recording stream saving buf|
 |Len | int | read length|
 
-* Return value
+* Return Value
 
-  The number of bytes actually read is returned successfully, and integer - 1 is returned in case of failure.
+  * The number of bytes actually read is returned successfully, and integer - 1 is returned in case of failure.
 
 * Examples
 
@@ -4700,11 +4585,11 @@ The module powers down.
 
 * Parameter
 
-  None
+  * None
 
 * Return Value
 
-  None
+  * None
 
 
 
@@ -4716,11 +4601,11 @@ The module restarts.
 
 * Parameter
 
-  None
+  * None
 
 * Return Value
 
-  None
+  * None
 
 
 
@@ -4732,29 +4617,23 @@ It gets the reason for module powering on.
 
 * Parameter
 
-  None
+  * None
 
 * Return Value
 
-  The values returned are explained as follows:
+  * The values returned are explained as follows:
 
-  1: Power on normally
+    1: Power on normally <br/>
+    2:  Restart <br/>
+    3: VBAT <br/>
+    4: RTC powers on regularly <br/>
+    5: Fault <br/>
+    6: VBUS <br/>
+    0: Unknown
 
-  2:  Restart
+* Note
 
-  3: VBAT 
-
-  4: RTC powers on regularly
-
-  5: Fault 
-
-  6: VBUS
-
-  0: Unknown
-
-* note
-
-  BC25PA platform does not support restart reason 5 and 6.
+  * BC25PA platform does not support restart reason 5 and 6.
 
 ###### Get the Reason for the Last Powering Down of the Module
 
@@ -4764,28 +4643,22 @@ It gets the reason for the last powering down of the module.
 
 * Parameter
 
-  None
+  * None
 
 * Return Value
 
-  1: Power down normally
-
-  2: The voltage is too high
-
-  3: The voltage is low
-
-  4: Over temperature
-
-  5: WDT
-
-  6: VRTC is low
-
-  0: Unknown
+  * 1: Power down normally
+  * 2: The voltage is too high
+  * 3: The voltage is low
+  * 4: Over temperature
+  * 5: WDT
+  * 6: VRTC is low
+  * 0: Unknown
 
 
-* note
+* Note
 
-  The BC25PA platform does not support this method.
+  * The BC25PA platform does not support this method.
 
 ###### Get Voltage of the Battery.
 
@@ -4795,11 +4668,11 @@ It gets the voltage of the battery. Unit: mV.
 
 * Parameter
 
-  None
+  * None
 
 * Return Value 
 
-  Integer type. Voltage value.
+  * Integer type. Voltage value.
 
 * Example
 
@@ -4822,11 +4695,11 @@ It provides a registration callback function.
 
 * Parameter
 
-  None
+  * None
 
 * Return Value
 
-  Return an object.
+  * Return an object.
 
 
 
@@ -4843,13 +4716,13 @@ It provides a registration callback function.
 
 * Return Value
 
-  Return 0 if the execution is successful, otherwise return -1.
+  * Return 0 if the execution is successful, otherwise return -1.
 
 * Note
 
-  For EC600S-CN and EC600N-CN modules, when the powerkey button is pressed or released, the callback function registered by the user will be triggered;
+  * For EC600S-CN and EC600N-CN modules, when the powerkey button is pressed or released, the callback function registered by the user will be triggered;
 
-  The EC200U and EC600U series modules will trigger the callback function only when the powerkey button is released, and the time for the button to be pressed needs to be maintained for more than 500 ms.
+  * The EC200U and EC600U series modules will trigger the callback function only when the powerkey button is released, and the time for the button to be pressed needs to be maintained for more than 500 ms.
 
 * Example
 
@@ -4930,11 +4803,11 @@ It opens PWM output.
 
 * Parameter
 
-  None
+  * None
 
 * Return Value
 
-  Return 0 if the execution is successful, otherwise return -1.
+  * Return 0 if the execution is successful, otherwise return -1.
 
 
 
@@ -4946,11 +4819,11 @@ It closes PWM output.
 
 * Parameter
 
-  None
+  * None
 
 * Return Value
 
-  Return 0 if the execution is successful, otherwise return -1.
+  * Return 0 if the execution is successful, otherwise return -1.
 
 
 
@@ -5034,11 +4907,11 @@ It initializes ADC function.
 
 * Parameter
 
-  None
+  * None
 
 * Return Value
 
-  Return 0 if the execution is successful, otherwise return -1.
+  * Return 0 if the execution is successful, otherwise return -1.
 
 
 
@@ -5056,7 +4929,7 @@ It reads the voltage value of the specified channel. Unit: mV.
 
 * Return Value
 
-  Return the voltage value of the specified channel if the execution is successful, otherwise return -1.
+  * Return the voltage value of the specified channel if the execution is successful, otherwise return -1.
 
 * Example
 
@@ -5077,11 +4950,11 @@ It closes ADC.
 
 * Parameter
 
-  None
+  * None
 
 * Return Value
 
-  Return 0 if the execution is successful, otherwise return -1.
+  * Return 0 if the execution is successful, otherwise return -1.
 
 ##### USB
 
@@ -5095,11 +4968,11 @@ Note: The BC25PA platform does not support this module function.
 
 * Parameter
 
-  None
+  * None
 
 * Return Value
 
-  None
+  * None
 
   
 
@@ -5109,15 +4982,13 @@ Note: The BC25PA platform does not support this module function.
 
 * Parameter
 
-  None
+  * None
 
 * Return Value
 
-  -1: Get status failed
-
-  0 - USB is not connected currently
-
-  1 - USB is connected
+  * -1: Get status failed
+  * 0: USB is not connected currently
+  * 1: USB is connected
 
 
 
@@ -5133,7 +5004,7 @@ Note: The BC25PA platform does not support this module function.
 
 * Return Value
 
-  Return 0 if the execution is successful, otherwise return -1.
+  * Return 0 if the execution is successful, otherwise return -1.
 
 Example
 
@@ -5169,7 +5040,7 @@ USBNET.set_worktype(type)
 
 - Return Value
 
-  Return 0 if the setting is successful, otherwise return -1.
+  * Return 0 if the setting is successful, otherwise return -1.
 
 
 
@@ -5177,17 +5048,16 @@ USBNET.set_worktype(type)
 
 > **USBNET.get_worktype()**
 
-* Parameters
+* Parameter
 
-  nothing
+  * None
 
-* Return value
+* Return Value
 
-  The current network card mode is returned successfully, and the integer - 1 is returned in case of failure. Return value Description:
+  * The current network card mode is returned successfully, and the integer - 1 is returned in case of failure. Return value Description:
   
-  1 - ECM mode
-  
-  3 - rndis mode
+    * 1 - ECM mode
+    * 3 - rndis mode
 
 
 
@@ -5195,19 +5065,18 @@ USBNET.set_worktype(type)
 
 > **USBNET.get_status()**
 
-* Parameters
+* Parameter
 
-  nothing
+  * None
 
-* Return value
+* Return Value
 
-  The current state of usbnet is returned successfully, and the integer - 1 is returned in case of failure.
+  * The current state of usbnet is returned successfully, and the integer - 1 is returned in case of failure.
 
-  Status description:
+  * Status description:
 
-  0 - not connected
-
-  1 - connection successful
+    0 - not connected <br/>
+    1 - connection successful
 
 
 
@@ -5217,11 +5086,11 @@ USBNET.set_worktype(type)
 
 - Parameter
 
-  None
+  * None
 
 - Return Value
 
-  Return 0 if the opening is successful, otherwise return -1.
+  * Return 0 if the opening is successful, otherwise return -1.
   
   
 
@@ -5231,11 +5100,11 @@ USBNET.set_worktype(type)
 
 - Parameter
 
-  None
+  * None
 
 - Return Value
 
-  Return 0 if successful, otherwise return -1.
+  * Return 0 if successful, otherwise return -1.
 
 
 
@@ -5273,11 +5142,11 @@ It gets IMEI of the device.
 
 * Parameter
 
-  None
+  * None
 
 Return Value
 
-  Return the IMEI of string type of the device if the execution is successful, otherwise return -1.
+  * Return the IMEI of string type of the device if the execution is successful, otherwise return -1.
 
 * Example
 
@@ -5297,11 +5166,11 @@ It gets device model.
 
 * Parameter
 
-  None
+  * None
 
 * Return Value
 
-  Return the device model of string type if the execution is successful, otherwise return -1.
+  * Return the device model of string type if the execution is successful, otherwise return -1.
 
 * Example
 
@@ -5320,11 +5189,11 @@ It gets device serial number.
 
 * Parameter
 
-  None
+  * None
 
 * Return Value
 
-  Return the device serial number of string type if the execution is successful, otherwise return -1.
+  * Return the device serial number of string type if the execution is successful, otherwise return -1.
 
 * Example
 
@@ -5343,11 +5212,11 @@ It gets the firmware version number.
 
 * Parameter
 
-  None
+  * None
 
 * Return Value
 
-  Return the firmware version number of string type if the execution is successful, otherwise return -1.
+  * Return the firmware version number of string type if the execution is successful, otherwise return -1.
 
 * Example
 
@@ -5366,11 +5235,11 @@ It gets device manufacturer ID.
 
 * Parameter
 
-  None
+  * None
 
 * Return Value
 
-  Return the device manufacturer ID if the execution is successful, otherwise return -1.
+  * Return the device manufacturer ID if the execution is successful, otherwise return -1.
 
 * Example
 
@@ -5462,11 +5331,11 @@ It gets pin level.
 
 * Parameter
 
-  None
+  * None
 
 * Return Value
 
-  Pin level. 0 indicates low level; 1 indicates high level.
+  * Pin level. 0 indicates low level; 1 indicates high level.
 
 
 
@@ -5484,7 +5353,7 @@ It sets the pin level, you need to ensure that the pin is in output mode before 
 
 * Return Value
 
-  Return 0 if the execution is successful, otherwise return -1.
+  * Return 0 if the execution is successful, otherwise return -1.
 
 * Example
 
@@ -5505,15 +5374,15 @@ It sets the pin level, you need to ensure that the pin is in output mode before 
 
 Set the input / output mode of pin pin GPIO.
 
-* Parameters
+* Parameter
 
 |Parameter | type | description|
 | ----- | ---- | ------------------------------------------------------------ |
 |Value | int | 0 - (pin. In) is set as the input mode<br/> 1 - (pin. Out) set to output mode|
 
-* Return value
+* Return Value
 
-  The integer value 0 will be returned if the setting is successful, and other values will be returned if the setting is failed.
+  * The integer value 0 will be returned if the setting is successful, and other values will be returned if the setting is failed.
 
 * Examples
 
@@ -5532,13 +5401,13 @@ Set the input / output mode of pin pin GPIO.
 
 Get the input / output mode of pin pin.
 
-* Parameters
+* Parameter
 
-  nothing
+  * None
 
-* Return value
+* Return Value
 
-  Pin mode, 0-input mode, 1-output mode.
+  * Pin mode, 0-input mode, 1-output mode.
 
 
 
@@ -5685,11 +5554,11 @@ It returns the size of unread data in the received buffer.
 
 * Parameter
 
-  None
+  * None
 
 * Return Value
 
-  Return the size of unread data in the received buffer.
+  * Return the size of unread data in the received buffer.
 
 * Example
 
@@ -5714,7 +5583,7 @@ It reads data from UART.
 
 * Return Value
 
-  Return the read data.
+  * Return the read data.
 
 
 
@@ -5732,7 +5601,7 @@ It sends data to UART.
 
 * Return Value
 
-  Return the number of bytes has been sent.
+  * Return the number of bytes has been sent.
 
 
 
@@ -5744,11 +5613,11 @@ It closes UART.
 
 * Parameter
 
-  None
+  * None
 
 * Return Value
 
-  Return 0 if the execution is successful, otherwise return -1.
+  * Return 0 if the execution is successful, otherwise return -1.
 
 
 
@@ -5758,7 +5627,7 @@ It closes UART.
 
 Before and after the serial port sends data, pull up and down the specified GPIO to indicate the direction of 485 communication.
 
-- parameter
+- Parameter
 
 | Parameter      | Type | Description                                                         |
 | --------- | ---- | ------------------------------------------------------------ |
@@ -5767,11 +5636,11 @@ Before and after the serial port sends data, pull up and down the specified GPIO
 
 - Return Value
 
-  Return 0 if the execution is successful, otherwise return -1.。
+  * Return 0 if the execution is successful, otherwise return -1.。
 
-* note
+* Note
 
-  The BC25PA platform does not support this method.
+  * The BC25PA platform does not support this method.
   
 - Example
 
@@ -5789,15 +5658,15 @@ Before and after the serial port sends data, pull up and down the specified GPIO
 
 After the serial port receives the data, it will execute the callback.
 
-- Parameters
+- Parameter
 
 |Parameter | type | description|
 | ---- | -------- | ------------------------------------------------------------ |
 |Fun | function | serial port receiving data callback [result, port, Num] <br/> result: receiving interface (0: success, others: failure) <br/> port: receiving port <br/> num: how much data is returned|
 
-- Return value
+- Return Value
 
-  The integer 0 is returned successfully, and the integer - 1 is returned in case of failure.
+  * The integer 0 is returned successfully, and the integer - 1 is returned in case of failure.
 
 - Examples
 
@@ -5981,7 +5850,7 @@ It starts timer.
 
 * Return Value
 
-  Return 0 if the execution is successful, otherwise return -1.
+  * Return 0 if the execution is successful, otherwise return -1.
 
 * Example
 
@@ -6007,11 +5876,11 @@ It stops timer.
 
 * Parameter
 
-  None
+  * None
 
 * Return Value
 
-  Return 0 if the execution is successful, otherwise return -1.
+  * Return 0 if the execution is successful, otherwise return -1.
 
 
 
@@ -6103,13 +5972,12 @@ It enables external interrupt of the extint object, when the interrupt pin recei
 
 * Parameter
 
-  NA
+  * None
 
 * Return Value
 
-  0	Successful execution.
-
-  -1 Failed execution.
+  * 0	Successful execution.
+  * -1 Failed execution.
 
 
 
@@ -6121,13 +5989,12 @@ It disables the interrupt associated with the extint object.
 
 * Parameter
 
-  NA
+  * None
 
 * Return Value
 
-  0	Successful execution.
-
-  -1 Failed execution.
+  * 0	Successful execution.
+  * -1 Failed execution.
 
 
 
@@ -6139,11 +6006,11 @@ It returns the row number of the pin map.
 
 * Parameter
 
-  NA
+  * None
 
 * Return Value
 
-  Row number of the pin map. 
+  * Row number of the pin map. 
 
 * Example
 
@@ -6161,19 +6028,17 @@ It returns the row number of the pin map.
 
 Returns the number of times an interrupt was triggered.
 
-* Parameters
+* Parameter
 
 |Parameter | type | description|
 | -------- | ---- | ---------------------------------------------- |
 | is_ Reset | int | reset count after reading <br/> 0: do not reset <br/> 1: reset|
 
-* Return value
+* Return Value
 
-List [rising_count, falling_count]
-
-​       rising_count:   Rising trigger times
-
-​       falling_count:  Fall trigger times
+  * List [rising_count, falling_count]
+  * ​       rising_count:   Rising trigger times
+  * ​       falling_count:  Fall trigger times
 
 
 
@@ -6183,15 +6048,14 @@ List [rising_count, falling_count]
 
 Number of times to clear the trigger interrupt.
 
-* Parameters
+* Parameter
 
-  nothing
+  * None
 
-* Return value
+* Return Value
 
-  0: successful
-
-  Other: failed
+  * 0: successful
+  * Other: failed
 
 
 
@@ -6228,9 +6092,9 @@ It sets and gets RTC time. When there is no parameter, it gets the time, it sets
 
 * Return Value
 
-  When getting the time, return a tuple containing the date and time in the following format: 
+  * When getting the time, return a tuple containing the date and time in the following format: 
 
-  `[year, month, day, week, hour, minute, second, microsecond]`
+    `[year, month, day, week, hour, minute, second, microsecond]`
 
   0	Successful execution.
 
@@ -6261,13 +6125,14 @@ When RTC expiration time callback function is set (for BC25PA platform, if it is
 | ------ | -------- | ------------------------------------------ |
 | usrFun | function | Callback function, which is called when the set RTC time arrives. |
 
-Note: usrFun requires parameters
+* Note
+
+  * usrFun requires parameters
 
 * Return Value
 
-  0	Successful execution.
-
-  -1 Failed execution.
+  * 0	Successful execution.
+  * -1 Failed execution.
 
 * Example
 
@@ -6328,9 +6193,8 @@ The timer can be started only when the callback function is set (bc25pa platform
 
 * Return Value
 
-  0	Successful execution.
-
-  -1 Failed execution.
+  * 0	Successful execution.
+  * -1 Failed execution.
 
 * Example
 ```python
@@ -6348,7 +6212,7 @@ Support platform ec600u/ec200u/ec600n/ec800n/bc25
 
 Set the RTC alarm time. The parameter week is not involved in the setting. The microsecond parameter is reserved and not used yet. The default is 0.
 
-* Parameters
+* Parameter
 
 |Parameter | type | description|
 | ----------- | ---- | ------------------------------------- |
@@ -6361,9 +6225,9 @@ Set the RTC alarm time. The parameter week is not involved in the setting. The m
 |Second | int | second, range 0 ~ 59|
 |Microsecond | int | microseconds, reserved parameters, unused temporarily, write 0|
 
-* Return value
+* Return Value
 
-  The integer value 0 is returned after setting successfully, and the integer value - 1 is returned after setting fails.
+  * The integer value 0 is returned after setting successfully, and the integer value - 1 is returned after setting fails.
 
 
 
@@ -6375,15 +6239,15 @@ Support platform ec600u/ec200u/ec600n/ec800n/bc25
 
 Register RTC alarm callback handler
 
-* Parameters
+* Parameter
 
 |Parameter | type | description|
 | ---- | -------- | --------------------- |
 |Fun | function | RTC alarm callback processing function|
 
-* Return value
+* Return Value
 
-  The integer value 0 is returned after successful registration, and the integer value - 1 is returned after failed registration.
+  * The integer value 0 is returned after successful registration, and the integer value - 1 is returned after failed registration.
 
 
 
@@ -6395,15 +6259,15 @@ Support platform ec600u/ec200u/ec600n/ec800n/bc25
 
 Turn on/off RTC alarm function
 
-* Parameters
+* Parameter
 
 |Parameter | type | description|
 | ------ | ---- | ---------------------------------------- |
 | on_ Off | int | 1 - turn on RTC alarm function; 0 - turn off RTC alarm function|
 
-* Return value
+* Return Value
 
-  An integer value of 0 is returned when opening / closing is successful, and an integer value of - 1 is returned when opening / closing is failed.
+  * An integer value of 0 is returned when opening / closing is successful, and an integer value of - 1 is returned when opening / closing is failed.
 
 
 
@@ -6420,7 +6284,9 @@ rtc.set_alarm([2021, 7, 9, 5, 12, 30, 0, 0])
 rtc.enable_alarm(1)
 ```
 
-Note: ec600u/ec200u platform supports automatic startup, that is, after setting the alarm function, the module will be shut down. After the alarm time is up, it can be started automatically. This feature is not supported on other platforms.
+* Note
+
+  * ec600u/ec200u platform supports automatic startup, that is, after setting the alarm function, the module will be shut down. After the alarm time is up, it can be started automatically. This feature is not supported on other platforms.
 
 
 
@@ -6478,7 +6344,7 @@ i2c_obj = I2C(I2C.I2C0, I2C.STANDARD_MODE)  # Return i2c object
 
 It reads data from the I2C bus. 
 
-Parameter
+* Parameter
 
 | Parameter    | Type      | Description                                        |
 | ------------ | --------- | -------------------------------------------------- |
@@ -6491,9 +6357,8 @@ Parameter
 
 * Return Value
 
-  0	Successful execution.
-
-  -1 Failed execution
+  * 0	Successful execution.
+  * -1 Failed execution
 
 
 
@@ -6515,9 +6380,8 @@ It writes data from the I2C bus.
 
 * Return Value
 
-  0	Successful execution.
-
-  -1 Failed execution
+  * 0	Successful execution.
+  * -1 Failed execution
 
 
 
@@ -6611,9 +6475,9 @@ Read data from I2C bus.
 |Datalen | int | length of byte array|
 |Delay | int | delay, data conversion buffer time (unit: ms)|
 
-* Return value
+* Return Value
 
-  The integer value 0 is returned successfully, and the integer value - 1 is returned in failure.
+  * The integer value 0 is returned successfully, and the integer value - 1 is returned in failure.
 
 
 
@@ -6633,9 +6497,9 @@ Write data from the I2C bus.
 |Data | bytearray | written data|
 |Datalen | int | length of data written|
 
-* Return value
+* Return Value
 
-  The integer value 0 is returned successfully, and the integer value - 1 is returned in failure.
+  * The integer value 0 is returned successfully, and the integer value - 1 is returned in failure.
 
 
 
@@ -6785,7 +6649,7 @@ Class function: Serial peripheral interface bus protocol.
 
 * Note:
 
-  Bc25pa platform does not support 1 and 2 modes.
+  * Bc25pa platform does not support 1 and 2 modes.
 
 - Example
 
@@ -6812,7 +6676,7 @@ It reads data.
 
 * Return Value
 
-  -1	Failed execution
+  * -1	Failed execution
 
 
 
@@ -6831,7 +6695,7 @@ It writes data.
 
 * Return Value
 
-  -1	Failed execution
+  * -1	Failed execution
 
 
 
@@ -6851,7 +6715,7 @@ It writes and reads data.
 
 * Return Value
 
-  -1	Failed execution
+  * -1	Failed execution
 
 
 
@@ -6907,7 +6771,7 @@ Note: The BC25PA platform does not support this module function.
 
 * Parameter
 
-  NA
+  * None
 
 - Example
 
@@ -6942,15 +6806,11 @@ It initializes LCD.
 
 * Return Value
 
-  0  	 Successful execution.
-
-  -1  	Initialized.
-
-  -2  	Parameter error (empty or too large (bigger than 1000 pixels)) .
-
-  -3  	Failed cache request.
-
-  -5  	Configuration parameter error.
+  * 0  	 Successful execution.
+  * -1  	Initialized.
+  * -2  	Parameter error (empty or too large (bigger than 1000 pixels)) .
+  * -3  	Failed cache request.
+  * -5  	Configuration parameter error.
 
 
 
@@ -6969,9 +6829,8 @@ It clears LCD.
 
 * Return Value
 
-  0	Successful execution.
-
-  -1 Failed execution.
+  * 0	Successful execution.
+  * -1 Failed execution.
 
 
 
@@ -6993,13 +6852,10 @@ It writes LCD regionally.
 
 * Return Value
 
-  0   	Successful execution.
-
-  -1  	The screen is not initialized.
-
-  -2  	Wrong width and height settings.
-
-  -3  	Data cache is empty.
+  * 0   	Successful execution.
+  * -1  	The screen is not initialized.
+  * -2  	Wrong width and height settings.
+  * -3  	Data cache is empty.
 
 
 
@@ -7017,9 +6873,8 @@ It sets the screen brightness level.
 
 * Return Value
 
-  0	Successful execution.
-
-  -1 Failed execution.
+  * 0	Successful execution.
+  * -1 Failed execution.
 
 
 
@@ -7031,13 +6886,12 @@ It turns on the LCD display, call the lcd_display_on callback in lcd.lcd_init() 
 
 - Parameter
 
-  NA
+  * None
 
 * Return Value
 
-  0	Successful execution.
-
-  -1	Failed execution.
+  * 0	Successful execution.
+  * -1	Failed execution.
 
 
 
@@ -7049,13 +6903,12 @@ It turns off the LCD display, call the  lcd_display_off callback in lcd.lcd_init
 
 - Parameter
 
-  NA
+  * None
 
 * Return Value
 
-  0	Successful execution.
-
-  -1	Failed execution.
+  * 0	Successful execution.
+  * -1	Failed execution.
 
 
 
@@ -7074,9 +6927,8 @@ It writes command.
 
 * Return Value
 
-  0	Successful execution.
-
-  Other value	Failed execution.
+  * 0	Successful execution.
+  * Other value	Failed execution.
 
 
 
@@ -7095,9 +6947,8 @@ It writes data.
 
 * Return Value
 
-  0	Successful execution.
-
-  Other value	Failed execution.
+  * 0	Successful execution.
+  * Other value	Failed execution.
 
 
 
@@ -7121,9 +6972,8 @@ This file is a bin file generated by Image2Lcd tool. If you check the header fil
 
 * Return Value
 
-  0	Successful execution.
-
-  Other value	Failed execution.
+  * 0	Successful execution.
+  * Other value	Failed execution.
 
 
 
@@ -7143,9 +6993,8 @@ Display jpeg pictures by reading files.
 
 * Return Value
 
-  0   Successful execution.
-
-  Other value Failed execution.
+  * 0   Successful execution.
+  * Other value Failed execution.
 
 
 
@@ -7234,12 +7083,12 @@ It creates a software watchdog object.
 - Parameter
 
 | Parameter | Type | Description                                      |
-| :-------- | :--- | ------------------------------------------------ |
+| --------- | ---- | ------------------------------------------------ |
 | period    | int  | Set software watchdog detection time, unit (s)。 |
 
 * Return Value
 
-  It returns software watchdog object.
+  * It returns software watchdog object.
 
 
 
@@ -7251,11 +7100,11 @@ It feeds watchdog.
 
 - Parameter
 
-  NA
+  * None
 
 * Return Value
 
-  NA
+  * None
 
 
 
@@ -7267,11 +7116,11 @@ It stops watchdog.
 
 - Parameter
 
-  NA
+  * None
 
 * Return Value
 
-  NA
+  * None
 
 
 
@@ -7354,13 +7203,13 @@ EC200U supports 4x3 at most and EC600U supports 6x6 at most.
 
 Initialize keypad settings.
 
-* Parameters
+* Parameter
 
-  nothing
+  * None
 
-- Return value
+- Return Value
 
-  0 is returned for success and - 1 is returned for failure.
+  * 0 is returned for success and - 1 is returned for failure.
 
 ###### Set callback function
 
@@ -7375,20 +7224,18 @@ After the key is connected to the module, press and release the key to trigger t
 | usrFun | function | callback function. This function will be triggered when the external keyboard key is pressed and placed |
 
 
-Note: The argument to the usrfun function is the list data type.
+* Note: The argument to the usrfun function is the list data type.
 
-List contains three parameters. It has the following meanings:
+* List contains three parameters. It has the following meanings:
 
-list[0] - 1 means press and 0 means lift
-
-list[1] - row
-
-list[2] - col
+  list[0] - 1 means press and 0 means lift<br/>
+  list[1] - row<br/>
+  list[2] - col
 
 
-* Return value
+* Return Value
 
-  0
+  * 0
 
 
 ###### Uninitialization
@@ -7397,13 +7244,13 @@ list[2] - col
 
 Release the initialized resource and callback function settings.
 
-* Parameters
+* Parameter
 
-  nothing
+  * None
 
-* Return value
+* Return Value
 
-  0 is returned for success and - 1 is returned for failure.
+  * 0 is returned for success and - 1 is returned for failure.
 
 ###### example
 ```python
@@ -7452,13 +7299,10 @@ Note: The BC25PA platform does not support this module function.
 
 * Return Value
 
-  0       Successful execution.
-
-  -1     Failed to generate QR code.
-
-  -2     Failed magnification. 
-
-  -3     Failed display.
+  * 0       Successful execution.
+  * -1     Failed to generate QR code.
+  * -2     Failed magnification. 
+  * -3     Failed display.
 
 
 
@@ -7481,13 +7325,12 @@ It creates wake_lock lock.
 
 * Return Value
 
-  wakelock's Identification number   Successful execution.
+  * wakelock's Identification number   Successful execution.
+  * -1   Failed execution.
 
-  -1   Failed execution.
+* Note
 
-* note
-
-  The BC25PA platform does not support this method.
+  * The BC25PA platform does not support this method.
 
 
 ##### Delete wake_lock Lock 
@@ -7504,11 +7347,11 @@ It deletes wake_lock lock.
 
 * Return Value
 
-  0      Successful execution.
+  * 0      Successful execution.
 
-* note
+* Note
 
-  The BC25PA platform does not support this method.
+  * The BC25PA platform does not support this method.
 
 
 ##### Lock 
@@ -7523,13 +7366,12 @@ It deletes wake_lock lock.
 
 * Return Value
 
-  0	Successful execution.
+  * 0	Successful execution.
+  * -1	Failed execution.
 
-  -1	Failed execution.
+* Note
 
-* note
-
-  The BC25PA platform does not support this method.
+  * The BC25PA platform does not support this method.
 
 
 ##### Release Lock 
@@ -7546,11 +7388,10 @@ It releases lock.
 
 * Return Value
 
-  0	Successful execution.
+  * 0	Successful execution.
+  * -1	Failed execution.
 
-  -1	Failed execution.
-
-* note
+* Note
 
   The BC25PA platform does not support this method.
 
@@ -7568,7 +7409,7 @@ It controls automatic sleep mode.
 
 * Return Value
 
-  0	Successful execution.
+  * 0	Successful execution.
 
 
 
@@ -7580,15 +7421,15 @@ It gets the number of locks created.
 
 - Parameter
 
-  NA
+  * None
 
 * Return Value
 
-  It returns the number of wakelock locks that have been created. 
+  * It returns the number of wakelock locks that have been created. 
 
-* note
+* Note
 
-  The BC25PA platform does not support this method.
+  * The BC25PA platform does not support this method.
 
 
 ##### Example
@@ -7670,7 +7511,7 @@ The compile function compiles regular expressions and generate a regular express
 
 * Return Value
 
-  It returns regex object.
+  * It returns regex object.
 
 
 
@@ -7689,9 +7530,8 @@ It matches the regular expression object with string, usually from the beginning
 
 * Return Value
 
-  A matched object   Successful execution.
-
-  None   Failed execution.
+  * A matched object   Successful execution.
+  * None   Failed execution.
 
 
 
@@ -7710,9 +7550,8 @@ ure.search scans the entire string and returns the first successful match.
 
 * Return Value
 
-  A matched object   Successful execution.
-
-  None   Failed execution.
+  * A matched object   Successful execution.
+  * None   Failed execution.
 
 
 
@@ -7734,7 +7573,7 @@ It  matches the string of the entire expression.
 
 * Return Value
 
-  It returns the string of the matched entire expression. 
+  * It returns the string of the matched entire expression. 
 
 
 
@@ -7746,11 +7585,11 @@ It  matches the string of the entire expression.
 
 - Parameter
 
-  NA
+  * None
 
 * Return Value
 
-  It returns a tuple containing all substrings of the matching group. 
+  * It returns a tuple containing all substrings of the matching group. 
 
 
 
@@ -7768,7 +7607,7 @@ It returns the index of the starting original string of the matched substring gr
 
 * Return Value
 
-  It returns the index of the starting original string of the matched substring group. 
+  * It returns the index of the starting original string of the matched substring group. 
 
 ##### Get End Index 
 
@@ -7784,7 +7623,7 @@ It returns the index of the ending original string of the matched substring grou
 
 * Return Value
 
-  It returns the index of the ending original string of the matched substring group. 
+  * It returns the index of the ending original string of the matched substring group. 
 
 ##### Example
 
@@ -7816,13 +7655,12 @@ Note: The BC25PA platform does not support this module function.
 
 * Parameter：
 
-  None
+  * None
 
 * Return Value：
 
-  True	 wifiScan is supported
-
-  False	wifiScan is not supported
+  * True	 wifiScan is supported
+  * False	wifiScan is not supported
 
 * Example：
 
@@ -7850,9 +7688,8 @@ True
 
 * Return Value:
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 * Example:
 
@@ -7875,13 +7712,12 @@ True
 
 * Parameter：
 
-  None
+  * None
 
 * Return Value：
 
-  True	 wifiScan function is enabled
-
-  False	wifiScan function is disabled.
+  * True	 wifiScan function is enabled
+  * False	wifiScan function is disabled.
 
 * Example：
 
@@ -7902,13 +7738,12 @@ True
 
 * Parameter：
 
-  None
+  * None
 
 * Return Value：
 
-  A tuple	Successful execution
-
-  -1		     Failed execution 
+  * A tuple	Successful execution
+  * -1 Failed execution 
 
   The format of the returned tuple is as follows:
 
@@ -7951,9 +7786,8 @@ True
 
 * Return Value：
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 * Example：
 
@@ -7980,9 +7814,8 @@ True
 
 * Return Value：
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 * Example：
 
@@ -8004,13 +7837,12 @@ wifiScan.setCallback(usr_cb)
 
 * Parameter：
 
-  None
+  * None
 
 * Return Value：
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 * Example：
 
@@ -8039,17 +7871,15 @@ wifi list:(2, [('F0:B4:29:86:95:C7': -79),('44:00:4D:D5:26:E0', -92)])
 
 * Parameter：
 
-  None
+  * None
 
 * Return Value：
 
-  Scanning result	Successful execution
+  * Scanning result	Successful execution
+  * -1 Failed execution or error
+  * The return value of successful execution is as follows:
 
-  -1 Failed execution or error
-
-  The return value of successful execution is as follows:
-
-  `（wifi_nums, [(mac, rssi), ... , (mac, rssi)]）`
+    `（wifi_nums, [(mac, rssi), ... , (mac, rssi)]）`
 
   | Parameter | Type         | Description                                  |
   | --------- | ------------ | -------------------------------------------- |
@@ -8080,13 +7910,12 @@ Module function: provide function of BLE GATT Server（slave） and BLE GATT Cli
 
 * Parameter:
 
-  None
+  * None
 
 * Return Value:
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 * Example:
 
@@ -8106,13 +7935,12 @@ See comprehensive example
 
 * Parameter:
 
-  None
+  * None
 
 * Return Value:
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 * Example:
 
@@ -8132,19 +7960,17 @@ See comprehensive example
 
 * Parameter:
 
-  None
+  * None
 
 * Return Value:
 
-  0	BLE has been stopped
-
-  1	BLE has been started
-
-  -1	Get BLE status failed
+  * 0	BLE has been stopped
+  * 1	BLE has been started
+  * -1	Get BLE status failed
 
 * Example:
 
-  None
+  * None
 
 
 
@@ -8156,17 +7982,17 @@ See comprehensive example
 
   Gets the BLE public address.This interface can be called only after BLE has been initialized and started successfully, for example, after receiving an event with event_id 0 in the callback.
 
-* note:
+* Note:
 
   If there is a default Bluetooth MAC address, the MAC address obtained by the interface is the same as the default Bluetooth MAC address. If it is not set, the address obtained by the interface will be a static address generated randomly after Bluetooth is started, so it will be different each time Bluetooth is powered on again.
 
 * Parameter:
 
-  None
+  * None
 
 * Return Value:
 
-  The BLE address of type bytearray (6 bytes) is returned on success, and integer -1 is returned on failure.
+  * The BLE address of type bytearray (6 bytes) is returned on success, and integer -1 is returned on failure.
 
 * Example:
 
@@ -8197,9 +8023,8 @@ See comprehensive example
 
 * Return Value：
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 - Description：
 
@@ -8342,13 +8167,12 @@ ble.serverInit(ble_callback)
 
 * Parameter:
 
-  None
+  * None
 
 * Return Value:
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 * Example：
 
@@ -8366,7 +8190,7 @@ See comprehensive example
 
   Set BLE local name.
 
-* note:
+* Note:
 
   For BLE, if you want  to see the name of the broadcast device when scanning, you need to include the Bluetooth name in the broadcast data, or include the device name in the scan reply data.
 
@@ -8379,9 +8203,8 @@ See comprehensive example
 
 * Return Value:
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 * Example:
 
@@ -8416,9 +8239,8 @@ See comprehensive example
 
 * Return Value:
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 * Example：
 
@@ -8459,9 +8281,8 @@ def ble_gatt_set_param():
 
 * Return Value:
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 * Example：
 
@@ -8503,9 +8324,8 @@ def ble_gatt_set_data():
 
 * Return Value:
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 * Example:
 
@@ -8551,9 +8371,8 @@ def ble_gatt_set_rsp_data():
 
 * Return Value：
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 * Example：
 
@@ -8595,9 +8414,8 @@ def ble_gatt_add_service():
 
 * Return Value：
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 * Example：
 
@@ -8641,9 +8459,8 @@ def ble_gatt_add_characteristic():
 
 * Return Value:
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 * Example:
 
@@ -8691,9 +8508,8 @@ def ble_gatt_add_characteristic_value():
 
 * Return Value:
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 * Example:
 
@@ -8734,9 +8550,8 @@ def ble_gatt_add_characteristic_desc():
 
 * Return Value:
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 * Example:
 
@@ -8764,9 +8579,8 @@ See comprehensive example
 
 * Return Value:
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 * Example:
 
@@ -8794,9 +8608,8 @@ See comprehensive example
 
 * Return Value:
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 * Example:
 
@@ -8816,17 +8629,16 @@ See comprehensive example
 
 * Parameter:
 
-  None
+  * None
 
 * Return Value:
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 * Example:
 
-  None
+  * None
 
   
 
@@ -8841,17 +8653,16 @@ See comprehensive example
 
 * Parameter:
 
-  None
+  * None
 
 * Return Value:
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 * Example:
 
-  None
+  * None
 
 
 
@@ -9320,9 +9131,8 @@ if __name__ == '__main__':
 
 * Return Value：
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 - Description：
 
@@ -9363,7 +9173,7 @@ def ble_callback(args):
 |    36    |          4          | args[0] ：event_id, which indicates read characteristic descriptor<br/>args[1] ：status, which indicates the operation state. 0 - Successful execution; non-0 - Failed execution<br/>args[2] ：data_len, the length of data<br/>args[3] ：data, Raw data |
 |    37    |          3          | args[0] ：event_id, which indicates attribute error<br/>args[1] ：status, which indicates the operation state. 0 - Successful execution; non-0 - Failed execution<br/>args[2] ：error code |
 
-Example：
+* Example：
 
 ```
 See comprehensive example
@@ -9381,13 +9191,12 @@ See comprehensive example
 
 * Parameter:
 
-  None
+  * None
 
 * Return Value:
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 * Example：
 
@@ -9421,9 +9230,8 @@ See comprehensive example
 
 * Return Value:
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 * Example：
 
@@ -9443,13 +9251,12 @@ See comprehensive example
 
 * Parameter:
 
-  None
+  * None
 
 * Return Value:
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 * Example：
 
@@ -9469,13 +9276,12 @@ See comprehensive example
 
 * Parameter:
 
-  None
+  * None
 
 * Return Value:
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 * Example：
 
@@ -9501,9 +9307,8 @@ See comprehensive example
 
 * Return Value:
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 * Example:
 
@@ -9530,9 +9335,8 @@ See comprehensive example
 
 * Return Value:
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 * Example:
 
@@ -9558,9 +9362,8 @@ See comprehensive example
 
 * Return Value:
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 * Example:
 
@@ -9586,9 +9389,8 @@ None
 
 * Return Value:
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 * Example:
 
@@ -9614,9 +9416,8 @@ See comprehensive example
 
 * Return Value:
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 * Example:
 
@@ -9645,9 +9446,8 @@ See comprehensive example
 
 * Return Value:
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 * Example:
 
@@ -9675,9 +9475,8 @@ See comprehensive example
 
 * Return Value:
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 * Example:
 
@@ -9705,9 +9504,8 @@ None
 
 * Return Value:
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 * Example:
 
@@ -9735,9 +9533,8 @@ See comprehensive example
 
 * Return Value:
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 * Example:
 
@@ -9768,9 +9565,8 @@ See comprehensive example
 
 * Return Value:
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 * Example:
 
@@ -9799,9 +9595,8 @@ See comprehensive example
 
 * Return Value:
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 * Example:
 
@@ -9829,9 +9624,8 @@ See comprehensive example
 
 * Return Value:
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 * Example:
 
@@ -9861,9 +9655,8 @@ See comprehensive example
 
 * Return Value:
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 * Example:
 
@@ -9891,9 +9684,8 @@ None
 
 * Return Value:
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 * Example:
 
@@ -9921,9 +9713,8 @@ None
 
 * Return Value:
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 * Example:
 
@@ -10805,9 +10596,8 @@ Before using the preview, you need to initialize LCD.
 
 * Return Value
 
-  *-1*: Initialization failure.
-
-  If the object is returned, it means the creation is successful.
+  * *-1*: Initialization failure.
+  * If the object is returned, it means the creation is successful.
 
 * Example
 
@@ -10820,35 +10610,33 @@ Before using the preview, you need to initialize LCD.
 
 ###### Turn on Preview
 
-**camPreview.open()**
+> **camPreview.open()**
 
 * Parameter
 
-  None.
+  * None.
 
 * Return Value
 
-  0: Successful execution.
-
-  Other values: Failed execution.
-
+  * 0: Successful execution.
+  * Other values: Failed execution.
 
 
-Turn off Preview
 
-**camPreview.close()**
+###### Turn off Preview
+
+> **camPreview.close()**
 
 Turns off the preview.
 
 * Parameter
 
-  None.
+  * None.
 
 * Return Value
 
-  0: Successful execution.
-
-  Other values: Failed execution.
+  * 0: Successful execution.
+  * Other values: Failed execution.
 
 
 
@@ -10876,89 +10664,83 @@ Before using  code scan , you need to initialize LCD.
 
 * Return Value
 
-  *-1*: Failed execution.
-
-  If the object is returned, it means the creation is successful.
+  * *-1*: Failed execution.
+  * If the object is returned, it means the creation is successful.
 
 
 
 ###### Turn on Camera
 
-**camScandecode.open()**
+> **camScandecode.open()**
 
 * Parameter
 
-  None.
+  * None.
 
 * Return Value
 
-  0: Successful execution.
-
-  Other values: Failed execution.
+  * 0: Successful execution.
+  * Other values: Failed execution.
 
 
 
 ###### Turn off Camera
 
-**camScandecode.close()**
+> **camScandecode.close()**
 
 * Parameter
 
-  None.
+  * None.
 
 * Return Value
 
-  0: Successful execution.
-
-  Other values: Failed execution.
+  * 0: Successful execution.
+  * Other values: Failed execution.
 
 
 
 ###### Turn on Code Scan
 
-**camScandecode.start()**
+> **camScandecode.start()**
 
 * Parameter
 
-  None.
+  * None.
 
 * Return Value
 
-  0: Successful execution.
-
-  Other values: Failed execution.
+  * 0: Successful execution.
+  * Other values: Failed execution.
 
 
 
 ###### Turn off Code Scan
 
-**camScandecode.stop()**
+> **camScandecode.stop()**
 
 * Parameter
 
-  None.
+  * None.
 
 * Return Value
 
-  0: Successful execution.
-
-  Other values: Failed execution.
+  * 0: Successful execution.
+  * Other values: Failed execution.
 
 
 
 ###### Pause Code Scan
 
-**camScandecode.pause()**
+> **camScandecode.pause()**
 
 * Parameter
 
-  None.
+  * None.
 
 * Return Value
 
-  0: Successful execution.
-
-  Other values: Failed execution.
+  * 0: Successful execution.
+  * Other values: Failed execution.
 
 
 
@@ -10966,15 +10748,14 @@ Before using  code scan , you need to initialize LCD.
 
 * Return Value
 
-  0: Successful execution.
-
-  Other values: Failed execution.
+  * 0: Successful execution.
+  * Other values: Failed execution.
 
 
 
 ###### Set Code Scan Callback
 
-**camScandecode.callback(callback)**
+> **camScandecode.callback(callback)**
 
 * Parameter
 
@@ -10984,9 +10765,8 @@ Before using  code scan , you need to initialize LCD.
 
 * Return Value
 
-  0: Successful execution.
-
-  Other values: Failed execution.
+  * 0: Successful execution.
+  * Other values: Failed execution.
 
 * Example
 
@@ -11005,11 +10785,11 @@ Camera function.
 
 ###### Create object
 
-**import camera**
+> **import camera**
+>
+> **cap= camera.camCaputre(model,cam_w,cam_h,perview_level,lcd_w,lcd_h)**
 
-**cap= camera.camCaputre(model,cam_w,cam_h,perview_level,lcd_w,lcd_h)**
-
-* Parameters
+* Parameter
 
 |Parameter | parameter type | parameter description|
 | ------------- | -------- | ------------------------------------------------------------ |
@@ -11020,41 +10800,39 @@ Camera function.
 | *lcd_ W * | int | LCD horizontal resolution|
 | *lcd_ H * | int | * LCD vertical resolution *|
 
-* Return value
+* Return Value
 
-  If an object is returned, the creation is successful
+  * If an object is returned, the creation is successful
 
 
 
 ###### Turn on the camera
 
-**camCaputre.open()**
+> **camCaputre.open()**
 
-* Parameters
+* Parameter
 
-  nothing
+  * None
 
-* Return value
+* Return Value
 
-  0: successful
-
-  Others: failed
+  * 0: successful
+  * Others: failed
 
 
 
 ###### Turn off the camera
 
-**camCaputre.close()**
+> **camCaputre.close()**
 
-* Parameters
+* Parameter
 
-  nothing
+  * None
 
-* Return value
+* Return Value
 
-  0: successful
-
-  Others: closing failed
+  * 0: successful
+  * Others: closing failed
 
 
 
@@ -11062,9 +10840,9 @@ Camera function.
 
 The photo format is JPEG
 
-**camCaputre.start(width,  height, pic_name)**
+> **camCaputre.start(width, height, pic_name)**
 
-* Parameters
+* Parameter
 
 |Parameter | parameter type | parameter description|
 | -------- | -------- | ----------------------------------------- |
@@ -11072,27 +10850,26 @@ The photo format is JPEG
 |Height | int | saves the vertical resolution of the picture|
 | pic_ Name | str | picture name. Pictures need no suffix JPEG, it will be added automatically|
 
-* Return value
+* Return Value
 
-  0: successful (actually, it depends on the camera callback)
+  * 0: successful (actually, it depends on the camera callback)
 
 
 
 ###### Set camera callback
 
-**camCaputre.callback(callback)**
+> **camCaputre.callback(callback)**
 
-* Parameters
+* Parameter
 
 |Parameter | parameter type | parameter description|
 | -------- | -------- | -------- |
 |Callback | API | callback API|
 
-* Return value
+* Return Value
 
-  0: successful
-
-  Others: failed
+  * 0: successful
+  * Others: failed
 
 * Examples
 
@@ -11132,7 +10909,7 @@ Note: Currently, only the ASR and Unisoc EC200U/EC600U series support this funct
 
 * Return Value
 
-  None
+  * None
 
 * Example
 
@@ -11156,7 +10933,7 @@ gnss = GnssGetData(1, 9600, 8, 0, 1, 0)
 
 * Return Value
 
-  Returns the length of GNSS data read from the serial port, in bytes.
+  * Returns the length of GNSS data read from the serial port, in bytes.
 
 * Example
 
@@ -11202,11 +10979,11 @@ This interface is used to return the original GNSS data read from the serial por
 
 * Parameter
 
-  None
+  * None
 
 * Return Value
 
-  Returns original GNSS data read from the serial port as a string.
+  * Returns original GNSS data read from the serial port as a string.
 
 * Example
 
@@ -11240,19 +11017,17 @@ The functional interface provided by the GNSS module obtains data from GNGGA, GN
 
 * Parameter
 
-  None
+  * None
 
 * Return Value
 
-  Returns a tuple of the form` (gga_valid, rmc_valid, gsv_valid)`
+  * Returns a tuple of the form` (gga_valid, rmc_valid, gsv_valid)`
 
-  `gga_valid` - Indicates whether GNGGA data is matched and parsed successfully. 0 indicates that GNGGA data is not matched or invalid. 1 indicates that GNGGA data is valid;
+    `gga_valid` - Indicates whether GNGGA data is matched and parsed successfully. 0 indicates that GNGGA data is not matched or invalid. 1 indicates that GNGGA data is valid;<br/>
+    `rmc_valid` - Indicates whether GNRMC data is matched and parsed successfully. 0 indicates that GNRMC data is not matched or invalid. 1 indicates that GNRMC data is valid;<br/>
+    `gsv_valid` - Indicates whether GPGSV data is matched and parsed successfully. 0 indicates that GPGSV data is not matched or invalid. 1 indicates that GPGSV data is valid.
 
-  `rmc_valid` - Indicates whether GNRMC data is matched and parsed successfully. 0 indicates that GNRMC data is not matched or invalid. 1 indicates that GNRMC data is valid;
-
-  `gsv_valid` - Indicates whether GPGSV data is matched and parsed successfully. 0 indicates that GPGSV data is not matched or invalid. 1 indicates that GPGSV data is valid.
-
-  If the user only cares about the location result, that is, whether the GNGGA data is valid, the `gga_valid` parameter is 1 (or whether the location is successful through the gnss.isFix () interface), and all three parameters are not required to be 1. GNRMC data is parsed to obtain the earth speed, and GPGSV data is parsed to obtain the number of visible satellites and their corresponding azimuth angles. Therefore, if you do not care about these parameters, you can ignore `rmc_valid` and `gsv_valid`.
+  * If the user only cares about the location result, that is, whether the GNGGA data is valid, the `gga_valid` parameter is 1 (or whether the location is successful through the gnss.isFix () interface), and all three parameters are not required to be 1. GNRMC data is parsed to obtain the earth speed, and GPGSV data is parsed to obtain the number of visible satellites and their corresponding azimuth angles. Therefore, if you do not care about these parameters, you can ignore `rmc_valid` and `gsv_valid`.
 
 * Example
 
@@ -11269,13 +11044,12 @@ gnss.checkDataValidity()
 
 - Parameter
 
-  None.
+  * None.
 
 - Return Value
 
-  1: Successful positioning 
-
-  0:  Positioning failure
+  * 1: Successful positioning 
+  * 0:  Positioning failure
 
 * Example
 
@@ -11292,11 +11066,11 @@ gnss.isFix()
 
 - Parameter
 
-  None.
+  * None.
 
 - Return Value
 
-  Return UTC Time as a string on success, otherwise return -1.
+  * Return UTC Time as a string on success, otherwise return -1.
 
 * Example
 
@@ -11313,7 +11087,7 @@ gnss.getUtcTime()
 
 - Parameter
 
-  None.
+  * None.
 
 - Return Value
 
@@ -11340,11 +11114,11 @@ gnss.getLocationMode()
 
 - Parameter
 
-  None.
+  * None.
 
 - Return Value
 
-  The number of satellites used for GPS module positioning is returned as an integer on success, and integer -1 is returned on failure.
+  * The number of satellites used for GPS module positioning is returned as an integer on success, and integer -1 is returned on failure.
 
 * Example
 
@@ -11361,21 +11135,17 @@ gnss.getUsedSateCnt()
 
 * Parameter
 
-  None.
+  * None.
 
 * Return Value
 
-  The latitude and longitude information of the GPS module is returned on success, and integer -1 is returned on failure. The return value is in the following format on success:
+  * The latitude and longitude information of the GPS module is returned on success, and integer -1 is returned on failure. The return value is in the following format on success:
 
-  `(longitude, lon_direction, latitude, lat_direction)`
-
-  `longitude` - float type
-
-  `lon_direction` - Longitude direction. The value is a string of characters. E indicates east longitude and W indicates west longitude
-
-  `latitude` - float type
-
-  `lat_direction` -  Latitude direction. The value is a string of characters. N indicates north latitude and S indicates south latitude
+    `(longitude, lon_direction, latitude, lat_direction)` <br/>
+    `longitude` - float type <br/>
+    `lon_direction` - Longitude direction. The value is a string of characters. E indicates east longitude and W indicates west longitude <br/>
+    `latitude` - float type <br/>
+    `lat_direction` -  Latitude direction. The value is a string of characters. N indicates north latitude and S indicates south latitude
 
 * Example
 
@@ -11392,11 +11162,11 @@ gnss.getLocation()
 
 - Parameter
 
-  None.
+  * None.
 
 - Return Value
 
-  Return the number of visible satellites of GPS module on success, otherwise return -1.
+  * Return the number of visible satellites of GPS module on success, otherwise return -1.
 
 * Example
 
@@ -11413,13 +11183,13 @@ gnss.getViewedSateCnt()
 
 - Parameter
 
-  None.
+  * None.
 
 - Return Value
 
-  Returns all visible GNSS satellite azimuth angles on success, Range: 0–359, based on true north, otherwise return -1.The return format is dictionary, where key indicates the satellite number and value indicates the azimuth. Note that the value of value can be either an integer value or ", depending on whether the azimuth in the GPGSV statement in the original GNSS data has a value. The return value is of the following form:
+  * Returns all visible GNSS satellite azimuth angles on success, Range: 0–359, based on true north, otherwise return -1.The return format is dictionary, where key indicates the satellite number and value indicates the azimuth. Note that the value of value can be either an integer value or ", depending on whether the azimuth in the GPGSV statement in the original GNSS data has a value. The return value is of the following form:
   
-  `{key:value, ...,  key:value}`
+    `{key:value, ...,  key:value}`
 
 * Example
 
@@ -11436,11 +11206,11 @@ gnss.getCourse()
 
 - Parameter
 
-  None.
+  * None.
 
 - Return Value
 
-  The float altitude is returned in meters on success, and integer -1 on failure.
+  * The float altitude is returned in meters on success, and integer -1 on failure.
 
 * Example
 
@@ -11457,11 +11227,11 @@ gnss.getGeodeticHeight()
 
 - Parameter
 
-  None.
+  * None.
 
 - Return Value
 
-  Return the speed over the ground of GPS module(Unit: KM/h), float type, otherwise return -1 .
+  * Return the speed over the ground of GPS module(Unit: KM/h), float type, otherwise return -1 .
 
 - Example
 
@@ -11482,7 +11252,7 @@ Module function: the module provides a bare flash area and a special read-write 
 
 SecureData.Store(index, databuf, len)
 
-**parameters**
+**Parameter**
 
 | Parameter | type | description |
 | ------ | -------- | ------------------------------------------------------------ |
@@ -11493,17 +11263,16 @@ SecureData.Store(index, databuf, len)
 
 When storing, it is stored according to the shorter of databuf and Len
 
-**Return value**
+**Return Value**
 
-  -1: Parameter error
-
-  0: normal execution
+  * -1: Parameter error
+  * 0: normal execution
 
 ##### Data reading
 
 SecureData.Read(index,databuf,len)
 
-**parameters**
+**Parameter**
 
 | Parameter | type | description |
 | ------ | -------- | ----------------------------------------------- |
@@ -11513,15 +11282,13 @@ SecureData.Read(index,databuf,len)
 
 If the stored data is not as large as the incoming len, the actual stored data length is returned
 
-**Return value**
+**Return Value**
 
-  -2: The stored data does not exist and the backup data does not exist
+  * -2: The stored data does not exist and the backup data does not exist
+  * -1: Parameter error
+  * Other: length of data actually read
 
-  -1: Parameter error
-
-  Other: length of data actually read
-
-**example**
+**Example**
 
 ```python
 import SecureData
@@ -11586,15 +11353,14 @@ Introduction: it includes two sub modules OC, AEP. The two sub modules all use l
 
 > **oc.connect()**
 
-- **Parameter**
+- Parameter
 
-  None.
+  * None.
 
-- **Return Value**
+- Return Value
 
-  Success - 0
-
-  Failed - not 0
+  * Success - 0
+  * Failed - not 0
 
 - Example
 
@@ -11616,13 +11382,12 @@ Introduction: it includes two sub modules OC, AEP. The two sub modules all use l
 
 - Note
 
-  The received data is a hexadecimal string, so the data length must be even.
+  * The received data is a hexadecimal string, so the data length must be even.
 
-- **Return Value**
+- Return Value
 
-  Success - 0
-
-  Failed - not 0
+  * Success - 0
+  * Failed - not 0
 
 - Example
 
@@ -11645,13 +11410,12 @@ Introduction: it includes two sub modules OC, AEP. The two sub modules all use l
 
 - Note
 
-  The sent data is a hexadecimal string, and the data length is even.
+  * The sent data is a hexadecimal string, and the data length is even.
 
-- **Return Value**
+- Return Value
 
-  Success - 0
-
-  Failed - not 0
+  * Success - 0
+  * Failed - not 0
 
 - Example
 
@@ -11664,15 +11428,14 @@ bytearray(b'313233')
 
 ###### Close connection
 
-- **Parameter**
+- Parameter
 
-  None
+  * None
 
-- **Return Value**
+- Return Value
 
-  Success -True
-
-  Failed -False
+  * Success -True
+  * Failed -False
 
 - Example
 
@@ -11705,15 +11468,14 @@ True
 
 > **aep.connect()**
 
-- **Parameter**
+- Parameter
 
-  None.
+  * None.
 
-- **Return Value**
+- Return Value
 
-  Success - 0
-
-  Failed - not 0
+  * Success - 0
+  * Failed - not 0
 
 - Example
 
@@ -11726,13 +11488,13 @@ True
 
 > **aep.check()**
 
-- **Parameter**
+- Parameter
 
-  None
+  * None
 
-- **Return Value**
+- Return Value
 
-  Returns the number of pieces of data to be read distributed by the cloud platform
+  * Returns the number of pieces of data to be read distributed by the cloud platform
 
 - Example
 
@@ -11758,11 +11520,10 @@ True
 
   The received data is a hexadecimal string, so the data length must be even.
 
-- **Return Value**
+- Return Value
 
-  Success - 0
-
-  Failed - not 0
+  * Success - 0
+  * Failed - not 0
 
 - Example
 
@@ -11787,11 +11548,10 @@ True
 
   The sending data is a hexadecimal string, the data length is an even number, blocking (timeout 3 minutes), and returning success indicates that the sending instruction is executed successfully.
 
-- **Return Value**
+- Return Value
 
-  Success - 0
-
-  Failed - not 0
+  * Success - 0
+  * Failed - not 0
 
 - Example
 
@@ -11805,17 +11565,16 @@ bytearray(b'313233')
 
 ###### Close connection
 
-- Parameters
+- Parameter
 
-  nothing
+  * None
 
-- Return value
+- Return Value
 
-  Success - true
+  * Success - true
+  * Failed - false
 
-  Failed - false
-
-- Examples
+- Example
 
 ```python
 >>> aep.close()

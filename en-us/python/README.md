@@ -20,15 +20,15 @@ Type "help", "copyright", "credits" or "license" for more information.
 5
 ```
 
-`>>>` prompt for code. To exit the Python interpreter and return to the terminal, type ` exit () ` or press Ctrl-D. 
+`>>>` prompt for code. To exit the Python interpreter and return to the terminal, type ` exit() ` or press Ctrl-D. 
 
-To run a Python program, you simply call Python and use a `. py ` file as its first argument. Suppose you create a ` hello_world. py ` file with the following contents: 
+To run a Python program, you simply call Python and use a ` .py ` file as its first argument. Suppose you create a ` hello_world.py ` file with the following contents: 
 
 ```python
 print('Hello world')
 ```
 
-You can run it with the following command ( ` hello_world. py ` file must be in the terminal's working directory ) :
+You can run it with the following command ( ` hello_world.py ` file must be in the terminal's working directory ) :
 
 ```python
 $ python hello_world.py
@@ -306,7 +306,7 @@ if not isinstance(x, list) and isiterable(x):
 
 ### Introduce
 
-In Python, a module is a file with the `. py ` extension that contains Python codes. Assume the following modules:
+In Python, a module is a file with the ` .py ` extension that contains Python codes. Assume the following modules:
 
 ```python
 # some_module.py
@@ -319,7 +319,7 @@ def g(a, b):
     return a + b
 ```
 
-If you want to access the variables and functions defined in ` some_module. py ` from another file in the same directory, you can:
+If you want to access the variables and functions defined in ` some_module.py ` from another file in the same directory, you can:
 
 ```python
 import some_module
@@ -2590,7 +2590,7 @@ In [223]: f.close()
 In [224]: f2.close()
 ```
 
-To write to a file, you can use the write or writines method of the file. For example, we could create a blank-line version of prof_mod. py:
+To write to a file, you can use the write or writines method of the file. For example, we could create a blank-line version of prof_mod.py:
 
 ```python
 In [225]: with open('tmp.txt', 'w') as handle:
