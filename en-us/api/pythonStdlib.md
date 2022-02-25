@@ -1,4 +1,4 @@
-#### uos - Basic "operating system" Services
+#### uos - Basic Operating System Services
 
 This module contains functions for file system access and mount. This module implements a subset of the corresponding [CPython](https://docs.micropython.org/en/latest/reference/glossary.html#term-CPython) module, as described below. For more information, refer to the original CPython documentation: [os](https://docs.python.org/3.5/library/os.html#module-os)
 
