@@ -397,6 +397,59 @@ The error code returned is explained as follows:
 
 
 
+#### atcmd - AT
+
+Function：send AT cmd.
+
+Note：This module only supports 1803S/EC200U/CATM platform.
+
+#### send AT cmd
+
+> **atcmd.sendSync(atcmd,resp,include_str,timeout)
+
+* Parameter
+
+| Parameter | Type   | Description                                       |
+|  ----   | -------- | --------------------------------------------- |
+| atcmd   |  string  | AT cmd，must contain‘\r\n’              |
+| resp    |  string  | output param       |
+| include_str | string | include str                                      |
+| timeout | int      | Timeout period, senconds                            |
+
+* Return value
+
+Return 0, or return [errorlist] if failed：
+
+typedef enum HELIOS_AT_RESP_STATUS_ENUM{
+	HELIOS_AT_RESP_OK = 0,
+	HELIOS_AT_RESP_ERROR,
+	HELIOS_AT_RESP_CME_ERROR,
+	HELIOS_AT_RESP_CMS_ERROR,
+	HELIOS_AT_RESP_INVALID_PARAM,
+	HELIOS_AT_RESP_TIME_OUT,
+	HELIOS_AT_RESP_SYS_ERROR,
+}HELIOS_AT_RESP_STATUS_E;
+
+* Example
+
+```python
+>>> import atcmd
+>>> resp=bytearray(50)
+>>> atcmd.sendSync('at+cpin?\r\n',resp,'',20)
+0
+>>> print(resp)
+bytearray(b'\r\n+CPIN: READY\r\n\n\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00
+\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00')
+
+atcmd.sendSync('at+cpin\r\n',resp,'',20)
+1
+>>> print(resp)
+bytearray(b'\r\nERROR\r\n\n
+\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00')
+```
+
+
+
 #### sim - SIM Card
 
 Function: Provides SIM operations related APIs, such as querying SIM card status, ICCID, IMSI.
@@ -1809,6 +1862,14 @@ The range of CSQ is 0-31, and the larger the value, the better the signal.
 
 This function obtains the information of Cell information.
 
+Note：This interface is a variable parameter function in BC25 platform, the number of parameters:[0/1]
+case with one Parameter:
+	parameter:sinr_enable，
+	type:int
+	range:0/1
+		0，disable to get sinr
+		1，enable to get sinr
+
 * Parameter
 
 NA
@@ -1853,17 +1914,26 @@ The description of the return value for LTE:
 | flag      | 0: present，1: inter，2: intra                               |
 | cid       | Return the Cell identity of LTE network,  Cell identity = RNC_ID * 65536 + Cell_ID,  the range of Cell identity is 0x0000000 ~ 0xFFFFFFF (28bits), the range of RNC_ID is 0 ~ 4095，the range of Cell_ID is 0 ~ 65535 |
 | mcc       | Mobile Country Code, range : 0 ~ 999                         |
-| mnc       | Mobile Network Code, range : 0  ~ 99                           |
+| mnc       | Mobile Network Code, range : 0  ~ 99                         |
 | pci       | Physical Cell Identifier，range : 0 ~ 503                    |
 | tac       | Tracing area code,  range : 0 ~ 65535                        |
 | earfcn    | Extended Absolute Radio Frequency Channel Number, range : 0-65535. |
 | rssi      | Received Signal Strength Indication. In LTE network, denotes RSRP quality (negative value), which is converted according to RSRP measurement report value, and the conversion relationship is as follows<br>RSRP quality = RSRP measurement report value - 140, unit : dBm, range : -140 ~ -44 dBm |
-
+| sinr      | Signal to Noise Ratio(supported in BC25，range : -30 ~ 30)   |
 * Example
 
 ```python
 >>> net.getCellInfo()
 ([], [], [(0, 14071232, 1120, 0, 123, 21771, 1300, -69), (3, 0, 0, 0, 65535, 0, 40936, -140), (3, 0, 0, 0, 65535, 0, 3590, -140), (3, 0, 0, 0, 63, 0, 40936, -112)])
+
+[BC25]:
+>>> net.getCellInfo(1)
+([], [], [(0, 17104243, 460, 4, 169, 19472, 3688, -56, -108, -3)])
+>>> net.getCellInfo(0)
+([], [], [(0, 17104243, 460, 4, 169, 19472, 3688, -75, -102)])
+>>> net.getCellInfo()
+([], [], [(0, 17104243, 460, 4, 121, 19472, 3688, -76, -105)])
+>>> 
 ```
 
 
