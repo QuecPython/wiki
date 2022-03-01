@@ -2025,7 +2025,7 @@ It is used for message subscription, publishing, broadcasting, multithreading, e
 
 > **import sys_bus**
 >
-> **sys_bus.subscibe(topic, handler)**
+> **sys_bus.subscribe(topic, handler)**
 
 - Parameter
 
