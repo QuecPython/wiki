@@ -4616,24 +4616,30 @@ The module restarts.
 It gets the reason for module powering on.
 
 * Parameter
-
   * None
 
 * Return Value
 
-  * The values returned are explained as follows:
+The values returned are explained as follows:
 
-    1: Power on normally <br/>
-    2:  Restart <br/>
-    3: VBAT <br/>
-    4: RTC powers on regularly <br/>
-    5: Fault <br/>
-    6: VBUS <br/>
-    0: Unknown
+| return value | description                                     |
+| ------------ | ----------------------------------------------- |
+| 0            | Fail to get reason for booting or unknow reason |
+| 1            | Press PWRKEY to boot                            |
+| 2            | Press RESET KEY to restart                      |
+| 3            | Booting triggered by VBAT                       |
+| 4            | Booting triggered by RTC                        |
+| 5            | Booting triggered by watchdog or Abnormal boot  |
+| 6            | Booting triggered by VBUS                       |
+| 7            | Booting triggered by charge in                  |
+| 8            | Booting from PSM wakeup                         |
+| 9            | Booting by dump                                 |
 
 * Note
 
   * BC25PA platform does not support restart reason 5 and 6.
+
+
 
 ###### Get the Reason for the Last Powering Down of the Module
 
@@ -4642,23 +4648,28 @@ It gets the reason for module powering on.
 It gets the reason for the last powering down of the module.
 
 * Parameter
-
   * None
 
 * Return Value
 
-  * 1: Power down normally
-  * 2: The voltage is too high
-  * 3: The voltage is low
-  * 4: Over temperature
-  * 5: WDT
-  * 6: VRTC is low
-  * 0: Unknown
+The values returned are explained as follows:
+
+| return value | description                                                  |
+| ------------ | ------------------------------------------------------------ |
+| 0            | Fail to get reason for shutdown or unknow reason             |
+| 1            | Press PWRKEY to shutdown                                     |
+| 2            | Shutdown caused by excessive Vin voltage, exceeding the VSYS_OVER_TH threshold voltage |
+| 3            | Shutdown caused by low Vin voltage                           |
+| 4            | Shutdown caused by high temperature                          |
+| 5            | Shutdown triggered by watchdog                               |
+| 6            | VRTC voltage is lower than VRTC_MIN_TH, which triggers shutdown |
 
 
 * Note
 
-  * The BC25PA platform does not support this method.
+  * The BC25PA and EC200U/EC600U platform does not support this method.
+
+
 
 ###### Get Voltage of the Battery.
 
