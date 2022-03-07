@@ -2036,7 +2036,7 @@ q.put("this is a test msg")
 
 > **import sys_bus**
 >
-> **sys_bus.subscibe(topic, handler)**
+> **sys_bus.subscribe(topic, handler)**
 
 - 参数
 
