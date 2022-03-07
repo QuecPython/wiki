@@ -18,7 +18,7 @@
 	<!-- <link rel="stylesheet" href="static/css/dark.css" title="vue"> -->
 	<!-- <link rel="stylesheet" href="static/css/buble.css" title="vue"> -->
 	<!-- <link rel="stylesheet" href="static/css/pure.css" title="vue"> -->
-	<link rel="stylesheet" href="static/css/sidebar.min.css" />
+	<!-- <link rel="stylesheet" href="static/css/sidebar.min.css" /> -->
 	<link rel="stylesheet" href="static/css/main.css" />
 	
 	<style>
@@ -62,24 +62,24 @@
     ],
       search: {
         noData: {
-          '/de-de/': 'Keine Ergebnisse!',
           '/zh-cn/': '没有结果!',
           '/en-us/': 'No result!',
-          '/': 'No results!'
+          '/': '没有结果!'
         },
         paths: 'auto',		//paths: ['/README.md'],
 		
         placeholder: {
-          '/de-de/': 'Suche',
           '/zh-cn/': '搜索',
           '/en-us/': 'Search',
-          '/': 'Search'
+          '/': '搜索'
         },
 		alias: {
 		  '/zh-cn/.*/_sidebar.md': '/zh-cn/_sidebar.md',
 		  '/en-us/.*/_navbar.md': '/en-us/_navbar.md',
 		},
-		depth: 6
+		namespace: 'website-1',
+		pathNamespaces: ['/zh-cn', '/en-us'],
+		depth: 4
       }
     }
   </script>
