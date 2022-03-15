@@ -1551,7 +1551,7 @@ Pack the values *v1*, *v2*, … according to the format string *fmt*. The return
 
 * `fmt`: For the types of format characters, see the Formatted Character Table above for details
 
-> **unstrcut.unpack(fmt, data)**
+> **ustruct.unpack(fmt, data)**
 
 Unpack from the *data* according to the format string *fmt*. The return value is a tuple of the unpacked values.
 
@@ -1575,7 +1575,7 @@ Pack the values *v1*, *v2*, … according to the format string *fmt* into a *buf
 
 ##### Unpack from the *data* starting at *offset* according to the format string *fmt*
 
-> **unstruct.unpack_from(fmt, data, offset=0)**
+> **ustruct.unpack_from(fmt, data, offset=0)**
 
 Unpack from the *data* starting at *offset* according to the format string *fmt*. *offset* may be negative to count from the end of *buffer*. The return value is a tuple of the unpacked values.
 
