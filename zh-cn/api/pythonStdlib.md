@@ -1567,7 +1567,7 @@ uio 模块包含其他类型的stream（类文件）对象和辅助函数。该�
 
 ##### 根据格式化字符串 fmt 对数据进行解压
 
-> **ustruct.unpack(fmt, data)**
+> **unstrcut.unpack(fmt, data)**
 
 根据格式化字符串 fmt 对数据进行解压，返回值为一个元组。
 
@@ -1591,7 +1591,7 @@ b'\x07\x00\x00\x00\t\x00\x00\x00'
 
 ##### 根据格式化字符串 `fmt` 解析从 `offest` 开始的数据解压
 
-> **ustruct.unpack_from(fmt, data, offset=0)**
+> **unstruct.unpack_from(fmt, data, offset=0)**
 
 根据格式化字符串 `fmt` 解析从 `offest` 开始的数据解压，从缓冲区末尾开始计数的偏移量可能为负值。返回值是解压值的元组。
 
