@@ -66,9 +66,9 @@ Call this API to activating the PDP Context.
 | ---------- | ------ | ------------------------------------------------------------ |
 | profileIdx | int    | PDP context index. Range: 1 - 8 [volte version with the largest default PID is used to register IMS, please do not repeat the operation]. It is generally set to 1, if set as 2 - 8, the private APN and password may be required. |
 | ipType     | int    | IP type. 0-IPV4, 1-IPV6, 2-IPV4 and IPV6.                    |
-| apn        | string | Optional. APN name. The maximum length is 63 bytes.          |
-| username   | string | Optional. APN user name.  The maximum length is 15 bytes.    |
-| password   | string | Optional. APN password. The maximum length is 15 bytes.      |
+| apn        | string | Optional. APN name. The maximum length is 63 bytes. (The maximum length is 64 bytes in EC200U/EC200A) |
+| username   | string | Optional. APN user name.  The maximum length is 15 bytes.(The maximum length is 64 bytes in EC200U/EC200A) |
+| password   | string | Optional. APN password. The maximum length is 15 bytes.(The maximum length is 64 bytes in EC200U/EC200A) |
 | authType   | int    | Authentication type. 0-No authentication, 1-PAP, 2-CHAP.     |
 
 * Return Value
@@ -344,9 +344,9 @@ After calling this interface, the user_apn.json will be created in the user part
 | ---------- | ------ | ------------------------------------------------------------ |
 | profileIdx | int    | PDP context index. Range: 1-8. It is generally set to 1, if set as 2-8, the private APN and password may be required. |
 | ipType     | int    | IP type. 0-IPV4, 1-IPV6, 2-IPV4 and IPV6.                    |
-| apn        | string | Optional. APN name. The maximum length is 63 bytes.          |
-| username   | string | Optional. APN user name.  The maximum length is 15 bytes.    |
-| password   | string | Optional. APN password. The maximum length is 15 bytes.      |
+| apn        | string | Optional. APN name. The maximum length is 63 bytes.(The maximum length is 64 bytes in EC200U/EC200A) |
+| username   | string | Optional. APN user name.  The maximum length is 15 bytes.(The maximum length is 64 bytes in EC200U/EC200A) |
+| password   | string | Optional. APN password. The maximum length is 15 bytes.(The maximum length is 64 bytes in EC200U/EC200A) |
 | authType   | int    | Authentication type. 0-No authentication, 1-PAP, 2-CHAP.     |
 | flag       | int    | This parameter is optional. The default value is 0, indicating that only a user_apn.json file is created to save user APN information. If the value is 1, the user_apn.json file is created to save user APN information, and the APN information is used for PDP context activation immediately. |
 
@@ -697,6 +697,59 @@ Obtain Coordinate Information.
 >>> wifilocator.getwifilocator()
 (117.1152877807617, 31.82142066955567, 100)
 # The token "XXXXXXXXXXXXXXXX" need to be applied to Quectel.
+```
+
+
+
+#### atcmd - AT
+
+Function：send AT cmd.
+
+Note：This module only supports 1803S/EC200U/CATM platform.
+
+#### send AT cmd
+
+> **atcmd.sendSync(atcmd,resp,include_str,timeout)
+
+* Parameter
+
+| Parameter | Type   | Description                                       |
+|  ----   | -------- | --------------------------------------------- |
+| atcmd   |  string  | AT cmd，must contain‘\r\n’              |
+| resp    |  string  | output param       |
+| include_str | string | include str                                      |
+| timeout | int      | Timeout period, senconds                            |
+
+* Return value
+
+Return 0, or return [errorlist] if failed：
+
+typedef enum HELIOS_AT_RESP_STATUS_ENUM{
+	HELIOS_AT_RESP_OK = 0,
+	HELIOS_AT_RESP_ERROR,
+	HELIOS_AT_RESP_CME_ERROR,
+	HELIOS_AT_RESP_CMS_ERROR,
+	HELIOS_AT_RESP_INVALID_PARAM,
+	HELIOS_AT_RESP_TIME_OUT,
+	HELIOS_AT_RESP_SYS_ERROR,
+}HELIOS_AT_RESP_STATUS_E;
+
+* Example
+
+```python
+>>> import atcmd
+>>> resp=bytearray(50)
+>>> atcmd.sendSync('at+cpin?\r\n',resp,'',20)
+0
+>>> print(resp)
+bytearray(b'\r\n+CPIN: READY\r\n\n\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00
+\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00')
+
+atcmd.sendSync('at+cpin\r\n',resp,'',20)
+1
+>>> print(resp)
+bytearray(b'\r\nERROR\r\n\n
+\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00')
 ```
 
 
@@ -2159,6 +2212,14 @@ This function obtains CSQ.
 
 This function obtains the information of Cell information.
 
+Note：This interface is a variable parameter function in BC25 platform, the number of parameters:[0/1]
+case with one Parameter:
+	parameter:sinr_enable，
+	type:int
+	range:0/1
+		0，disable to get sinr
+		1，enable to get sinr
+
 * Parameter
 
   * None
@@ -2208,12 +2269,21 @@ This function obtains the information of Cell information.
 | tac       | Tracing area code,  range : 0 ~ 65535                        |
 | earfcn    | Extended Absolute Radio Frequency Channel Number, range : 0-65535. |
 | rssi      | Received Signal Strength Indication. In LTE network, denotes RSRP quality (negative value), which is converted according to RSRP measurement report value, and the conversion relationship is as follows<br>RSRP quality = RSRP measurement report value - 140, unit : dBm, range : -140 ~ -44 dBm |
+| sinr      | Signal to Noise Ratio(supported in BC25，range : -30 ~ 30)   |
 
 * Example
 
 ```python
 >>> net.getCellInfo()
 ([], [], [(0, 14071232, 1120, 0, 123, 21771, 1300, -69), (3, 0, 0, 0, 65535, 0, 40936, -140), (3, 0, 0, 0, 65535, 0, 3590, -140), (3, 0, 0, 0, 63, 0, 40936, -112)])
+
+//bc25
+>>> net.getCellInfo(1)
+([], [], [(0, 17104243, 460, 4, 169, 19472, 3688, -56, -108, -3)])
+>>> net.getCellInfo(0)
+([], [], [(0, 17104243, 460, 4, 169, 19472, 3688, -75, -102)])
+>>> net.getCellInfo()
+([], [], [(0, 17104243, 460, 4, 121, 19472, 3688, -76, -105)])
 ```
 
 
@@ -2342,6 +2412,14 @@ This function obtains the network mode.
 
 This function obtains the signal strength.
 
+Note：This interface is a variable parameter function in 1803s/qualcomm/unisoc platform, the number of parameters:[0/1]
+case with one Parameter:
+	parameter:sinr_enable，
+	type:int
+	range:0/1
+		0，disable to get sinr
+		1，enable to get sinr
+
 * Parameter
 
   * None
@@ -2369,12 +2447,17 @@ This function obtains the signal strength.
       `rsrp` : Reference Signal Receiving Power, range : -141 ~ -44 dBm, 99 indicates unknown or undetected signal <br/>
       `rsrq` : Reference Signal Receiving Quality, range : -20 ~ -3 dBm, A larger value indicates better signal reception quality <br/>
       `cqi` : Channel Quality
-
+	  `sinr`: Signal to Noise Ratio(supported in 1803s/qualcomm/unisoc，range : -30 ~ 30)
 * Example
 
 ```python
 >>>net.getSignal()
 ([99, 99, 255, 255], [-51, -76, -5, 255])
+
+>>>net.getSignal(0)
+([99, 99, 255, 255], [-51, -76, -5, 255])
+>>>net.getSignal(1)
+([99, 99, 255, 255], [-51, -76, -5, 255, 18])
 ```
 
 

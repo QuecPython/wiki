@@ -68,9 +68,9 @@ myprint()
 | ---------- | -------- | ------------------------------------------------------------ |
 | profileIdx | int      | PDP索引，ASR平台范围1 - 8[volte版本默认PID最大的一路用来注册IMS，请勿重复操作]，展锐平台范围1 - 7，一般设置为1，设置其他值可能需要专用apn与密码才能设置成功 |
 | ipType     | int      | IP类型，0-IPV4，1-IPV6，2-IPV4和IPV6                         |
-| apn        | string   | apn名称，可为空，最大长度不超过63字节                        |
-| username   | string   | apn用户名，可为空，最大长度不超过15字节                      |
-| password   | string   | apn密码，可为空，最大长度不超过15字节                        |
+| apn        | string   | apn名称，可为空，最大长度不超过63字节(EC200U/EC200A最大长度不超过64字节) |
+| username   | string   | apn用户名，可为空，最大长度不超过15字节(EC200U/EC200A最大长度不超过64字节) |
+| password   | string   | apn密码，可为空，最大长度不超过15字节(EC200U/EC200A最大长度不超过64字节) |
 | authType   | int      | 加密方式，0-不加密，1-PAP，2-CHAP                            |
 
 * 返回值
@@ -347,9 +347,9 @@ if __name__ == '__main__':
 | ---------- | -------- | ------------------------------------------------------------ |
 | profileIdx | int      | PDP索引，ASR平台范围1-8，展锐平台范围1-7，一般设置为1，设置其他值可能需要专用apn与密码才能设置成功 |
 | ipType     | int      | IP类型，0-IPV4，1-IPV6，2-IPV4和IPV6                         |
-| apn        | string   | apn名称，可为空，最大长度不超过63字节                        |
-| username   | string   | apn用户名，可为空，最大长度不超过15字节                      |
-| password   | string   | apn密码，可为空，最大长度不超过15字节                        |
+| apn        | string   | apn名称，可为空，最大长度不超过63字节(EC200U/EC200A最大长度不超过64字节)|
+| username   | string   | apn用户名，可为空，最大长度不超过15字节(EC200U/EC200A最大长度不超过64字节)|
+| password   | string   | apn密码，可为空，最大长度不超过15字节(EC200U/EC200A最大长度不超过64字节)|
 | authType   | int      | 加密方式，0-不加密，1-PAP，2-CHAP                            |
 | flag       | int      | 可选参数，默认为0，表示仅创建user_apn.json文件，用于保存用户apn信息；为1时，表示创建user_apn.json文件保存用户apn信息之后，还会使用该apn信息立即进行一次拨号；不管该参数是0还是1，都不会影响重启时使用用户设置的apn进行开机拨号。 |
 
@@ -724,6 +724,59 @@ if __name__ == '__main__':
 >>> wifilocator.getwifilocator()
 (117.1152877807617, 31.82142066955567, 100)
 # 上面使用的密钥"xxxxxxxxxxxxxxxx"指代token，具体需要向移远申请
+```
+
+
+
+#### atcmd - AT
+
+模块功能：提供发送AT指令接口。
+
+注意：目前该模块只支持1803S/EC200U/CATM平台。
+
+#### 发送AT指令接口
+
+> **atcmd.sendSync(atcmd,resp,include_str,timeout)
+
+*参数
+
+|  参数   | 参数类型 | 参数说明                                      |
+|  ----   | -------- | --------------------------------------------- |
+| atcmd   |  string  | 需要发送的AT指令，必须包含‘\r\n’              |
+| resp    |  string  | output param,获取AT指令返回的字符串内容       |
+| include_str | string | 关键字                                      |
+| timeout | int      | 超时时间，单位/秒                             |
+
+* 返回值
+
+成功返回0，失败返回error list，如下：
+
+typedef enum HELIOS_AT_RESP_STATUS_ENUM{
+	HELIOS_AT_RESP_OK = 0,
+	HELIOS_AT_RESP_ERROR,
+	HELIOS_AT_RESP_CME_ERROR,
+	HELIOS_AT_RESP_CMS_ERROR,
+	HELIOS_AT_RESP_INVALID_PARAM,
+	HELIOS_AT_RESP_TIME_OUT,
+	HELIOS_AT_RESP_SYS_ERROR,
+}HELIOS_AT_RESP_STATUS_E;
+
+* 示例
+
+```python
+>>> import atcmd
+>>> resp=bytearray(50)
+>>> atcmd.sendSync('at+cpin?\r\n',resp,'',20)
+0
+>>> print(resp)
+bytearray(b'\r\n+CPIN: READY\r\n\n\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00
+\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00')
+
+atcmd.sendSync('at+cpin\r\n',resp,'',20)
+1
+>>> print(resp)
+bytearray(b'\r\nERROR\r\n\n
+\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00')
 ```
 
 
@@ -2208,6 +2261,12 @@ sms.setCallback(cb)
 
 获取邻近 CELL 的信息。
 
+注：BC25平台该接口为可变参函数，参数个数0-1。
+无入参情况：接口保持原有功能不变
+有入参情况，参数为sinr_enable，int型，范围0/1：
+	0，表示不获取sinr，和无入参情况返回结果一致
+	1，表示需要获取sinr，返回结果见example
+
 * 参数
 
   无
@@ -2216,7 +2275,7 @@ sms.setCallback(cb)
 
   失败返回整型值-1，成功返回包含三种网络系统（GSM、UMTS、LTE）的信息的list，如果对应网络系统信息为空，则返回空的List。返回值格式如下：
 
-  `([(flag, cid, mcc, mnc, lac, arfcn, bsic, rssi)], [(flag, cid, licd, mcc, mnc, lac, arfcn, bsic, rssi)], [(flag, cid, mcc, mnc, pci, tac, earfcn, rssi, rsrq),...])`
+  `([(flag, cid, mcc, mnc, lac, arfcn, bsic, rssi)], [(flag, cid, licd, mcc, mnc, lac, arfcn, bsic, rssi)], [(flag, cid, mcc, mnc, pci, tac, earfcn, rssi, rsrq, sinr),...])`
 
 * GSM网络系统返回值说明
 
@@ -2258,6 +2317,7 @@ sms.setCallback(cb)
 | earfcn | 无线频道编号，范围 0 ~ 65535                                 |
 | rssi   | 接收的信号强度，在LTE网络下，表示RSRP质量（负值），是根据RSRP测量报告值换算而来，换算关系如下：<br>RSRP质量（负数）= RSRP测量报告值 - 140，单位dBm，范围 -140 ~ -44 dBm |
 | rsrq  |(Reference Signal Receiving Quality):LTE参考信号接收质量(仅ASR平台数据有意义，其余平台默认0)，范围 -20 ~ -3  注：理论上rsrq的范围应该是-19.5 ~ -3，但由于计算方法问题，目前能给出的是-20 ~ -3|
+| sinr   |信噪比(目前仅BC25平台支持获取该参数，非服务小区默认写0, 范围-30 ~ 30)       |
 
 * 示例
 
@@ -2265,6 +2325,14 @@ sms.setCallback(cb)
 >>> net.getCellInfo()
 ([], [], [(0, 232301375, 1120, 17, 378, 26909, 1850, -66, -8), (3, 110110494, 1120, 17, 10, 26909, 2452, -87, -17), (3, 94542859, 1120, 1, 465, 56848, 1650, -75, -10), 
 (3, 94472037, 1120, 1, 369, 56848, 3745, -84, -20)])
+
+//bc25
+>>> net.getCellInfo(1)
+([], [], [(0, 17104243, 460, 4, 169, 19472, 3688, -56, -108, -3)])
+>>> net.getCellInfo(0)
+([], [], [(0, 17104243, 460, 4, 169, 19472, 3688, -75, -102)])
+>>> net.getCellInfo()
+([], [], [(0, 17104243, 460, 4, 121, 19472, 3688, -76, -105)])
 ```
 
 
@@ -2391,9 +2459,15 @@ sms.setCallback(cb)
 
 获取详细信号强度。
 
+注：1803s/qualcomm/unisoc平台该接口为可变参函数，参数个数0-1。
+无入参情况：接口保持原有功能不变
+有入参情况，参数为sinr_enable，int型，范围0/1：
+	0，表示不获取sinr，和无入参情况返回结果一致
+	1，表示需要获取sinr，返回结果见example
+
 * 参数
 
-  无
+无
 
 * 返回值
 
@@ -2422,12 +2496,18 @@ sms.setCallback(cb)
   `rsrq` ：下行特定小区参考信号的接收质量，范围 -20 ~ -3 dBm，值越大越好
 
   `cqi` ：信道质量
+  
+  `sinr`: 信噪比(目前仅1803s/qualcomm/unisoc平台支持获取该参数)
 
 * 示例
 
 ```python
 >>>net.getSignal()
 ([99, 99, 255, 255], [-51, -76, -5, 255])
+>>>net.getSignal(0)
+([99, 99, 255, 255], [-51, -76, -5, 255])
+>>>net.getSignal(1)
+([99, 99, 255, 255], [-51, -76, -5, 255, 18])
 ```
 
 

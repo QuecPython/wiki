@@ -1646,6 +1646,29 @@ Set interactive protect. After setting to enable interactive protect, all extern
 | Parameter | Type | Description                       |
 | --------- | ---- | --------------------------------- |
 | flag      | int  | 0 : Disable（default)；1 ：Enable |
+| kw_args   | str  | password，it can be NULL          |
+
+* Return Value
+
+  * Return 0 if the execution is successful.
+  * if the parameter of flag is 2, return values means current repl states:
+     -1：failed
+      1：repl enable
+	  2：repl enable but The password has already been set
+      3：repl refuse
+      4：repl-protection by password
+
+
+
+> ​	**system.replChangPswd(old_password,new_password)**
+
+change repl-protetion password
+
+* 参数
+
+|   Parameter  | Type | Description                       |
+| old_password | str  | old password len:6-12byte         |
+| new_password | str  | new password len:6-12byte         |
 
 * Return Value
 
@@ -1654,9 +1677,64 @@ Set interactive protect. After setting to enable interactive protect, all extern
 **Example**
 
 ```python
-import system
+>>>import system
 
-system.replSetEnable(1)  # Enable interactive protection.
+>>> system.replSetEnable(1,password='miamia123')
+0
+>>> 
+Please enter password:
+>>> ******
+Incorrect password, please try again:
+>>> ********
+Incorrect password, please try again:
+>>> *********
+REPL enable
+>>> system.replSetEnable(2)
+2
+>>>
+
+
+>>> system.replSetEnable(1,password='miamia')
+Incorrect password!
+-1
+>>> system.replSetEnable(1,password='miamia123')
+0
+>>> 
+Please enter password:
+>>> miamia123
+*********
+REPL enable
+>>> system.replSetEnable(2)
+2
+
+
+
+>>> system.replChangPswd(old_password='miamia123',new_password='123456') //change password
+0
+>>> system.replSetEnable(1,password='miamia123')
+Incorrect password!
+-1
+>>> system.replSetEnable(1,password='123456')
+0
+>>> 
+Please enter password:
+>>> ******
+REPL enable
+
+
+
+>>> system.replSetEnable(0,password='123456')
+
+0
+>>> 
+>>> system.replSetEnable(2)
+1
+>>> system.replSetEnable(0)
+0
+>>>system.replSetEnable(1)
+>>>
+REPL refuse
+>>>
 ```
 
 
