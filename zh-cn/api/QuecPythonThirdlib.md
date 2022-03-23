@@ -18,6 +18,7 @@
 | productSecret | string | 可选参数，默认为None，productSecret，产品密钥<br />一机一密认证方案时，此参数传入None<br/>一型一密认证方案时，此参数传入真实的产品密钥 |
 | DeviceName    | string | 设备名称                                                     |
 | DeviceSecret  | string | 可选参数,默认为Non，设备密钥（一型一密认证方案时此参数传入None） |
+| MqttServer    | string | 可选参数,需要连接的服务器名称,默认为"{productKey}.iot-as-mqtt.cn-shanghai.aliyuncs.com" |
 
 * 返回值
 
@@ -1653,28 +1654,578 @@ if __name__ == '__main__':
 
 
 
-> ​	**system.replSetEnable(flag)**
+> ​	**system.replSetEnable(flag，**kw_args)**
 
-交互保护设置，设置开启交互保护后所有外部指令以及代码都无法执行，为不可逆操作，请确认后开启，默认不开启。
+交互保护设置，可变参API
+
+1、只有一个参数flag时：
+
+0表示关闭，1表示开启，2表示查询当前加密状态；设置开启交互保护后所有外部指令以及代码都无法执行，为不可逆操作，请确认后开启，默认不开启。
+
+2、有两个参数时：
+
+表示交互保护可通过密码开启和关闭
 
 * 参数
 
 | 参数 | 类型 | 说明                         |
 | :--- | :--- | ---------------------------- |
-| flag | int  | 0 : 不开启（默认）；1 ：开启 |
+| flag | int  | 0 : 不开启（默认）；1 ：开启；2：查询加密状态|
+| kw_args | str  | password，可为空|
 
 * 返回值
 
 成功返回整型值0；
 
+失败返回整型值-1或者是errorlist
+
+如果是查询加密状态，返回值：
+-1：查询失败
+1：repl enable
+2：repl enable but The password has already been set
+3：repl refuse
+4：repl-protection by password
+
+
+
+> ​	**system.replChangPswd(old_password,new_password)**
+
+更改交互保护密码
+
+* 参数
+
+|     参数     | 类型 | 说明                         |
+|     :---     | :--- | ---------------------------- |
+| old_password | str  | 旧密码 长度限制：6-12字节    |
+| new_password | str  | 新密码 长度限制：6-12字节    |
+
+* 返回值
+
+成功返回整型值0；
+
+失败返回整型值-1或者是errorlist
+
 **使用示例**
 
 ```python
-import system
+>>>import system
 
-system.replSetEnable(1)  # 开启交互保护
+>>> system.replSetEnable(1,password='miamia123')//开机首次设置密码并开启交互保护，可设置任意长度在6-12位之间的密码内容
+0
+>>>                                            //设置成功，交互口被锁，需要输入密码才能正常使用
+Please enter password:
+>>> ******                                     //密码错误
+Incorrect password, please try again:
+>>> ********                                   //密码错误
+Incorrect password, please try again:
+>>> *********                                  //密码正确，可正常交互
+REPL enable
+>>> system.replSetEnable(2)
+2
+>>>
+
+
+>>> system.replSetEnable(1,password='miamia') //已经设置过密码，如果需要重新锁住交互口，需要输入正确密码
+Incorrect password!
+-1
+>>> system.replSetEnable(1,password='miamia123')
+0
+>>> 
+Please enter password:                        //交互口重新锁住
+>>> miamia123
+*********
+REPL enable
+>>> system.replSetEnable(2)
+2
+
+
+
+>>> system.replChangPswd(old_password='miamia123',new_password='123456') //change password
+0
+>>> system.replSetEnable(1,password='miamia123')                         //更改密码成功之后，继续用老密码锁交互口，提示密码不正确
+Incorrect password!
+-1
+>>> system.replSetEnable(1,password='123456')                            //新密码重新加锁交互口，成功
+0
+>>> 
+Please enter password:
+>>> ******
+REPL enable
+
+
+
+>>> system.replSetEnable(0,password='123456')          //取消密码保护（取消加密保护之后可使用任意新密码重新加锁交互口）
+
+0
+>>> 
+>>> system.replSetEnable(2)                            //查询状态为repl enable
+1
+>>> system.replSetEnable(0)                           //默认就已经是0
+0
+>>>system.replSetEnable(1)                            //开启交互保护
+>>>
+REPL refuse
+>>>
 ```
 
+
+
+#### ql_fs - 高级文件操作
+
+模块功能: 用于文件的高级操作
+
+适配版本:BC25不支持
+
+
+
+##### **导入ql_fs**
+
+> **import ql_fs**
+
+
+
+##### **查看文件或文件夹是否存在**
+
+> **ql_fs.path_exists(file_path)**
+
+查看文件或文件夹是否存在
+
+- 参数
+
+| 参数      | 类型   | 说明                   |
+| --------- | ------ | ---------------------- |
+| file_path | string | 文件或文件夹的绝对路径 |
+
+- 返回值
+
+存在返回 True, 不存在返回False
+
+
+
+**使用示例**
+
+```python
+import ql_fs
+ret = ql_fs.path_exists("/usr/xxx.py")
+print(ret)
+
+# 存在打印True 不存在 False
+```
+
+
+
+##### 获取文件所在文件夹路径
+
+> **ql_fs.path_dirname(file_path)**
+
+返回文件和文件夹所在的文件夹路径
+
+- 参数
+
+| 参数      | 类型   | 说明                   |
+| --------- | ------ | ---------------------- |
+| file_path | string | 文件或文件夹的绝对路径 |
+
+- 返回值
+  - string类型的路径地址
+
+
+
+**使用示例**
+
+```python
+import ql_fs
+ret = ql_fs.path_dirname("/usr/bin")
+print("ret")
+
+# 打印结果如下
+# /usr
+```
+
+
+
+##### 创建文件夹
+
+> **ql_fs.mkdirs(dir_path)**
+
+递归式创建文件夹, 传入文件夹路径
+
+- 参数
+
+| 参数     | 类型   | 说明                     |
+| -------- | ------ | ------------------------ |
+| dir_path | string | 所要创建的文件夹绝对路径 |
+
+- 返回值
+  - None
+
+
+
+**使用示例**
+
+```python
+import ql_fs
+
+ql_fs.mkdirs("usr/a/b")
+```
+
+
+
+##### 删除文件夹
+
+
+
+> **ql_fs.rmdirs(dir_path)**
+
+输出文件夹, 传入文件夹路径
+
+- 参数
+
+| 参数     | 类型   | 说明                     |
+| -------- | ------ | ------------------------ |
+| dir_path | string | 所要删除的文件夹绝对路径 |
+
+- 返回值
+  - None
+
+
+
+**使用示例**
+
+```python
+import ql_fs
+
+ql_fs.rmdirs("usr/a/b")
+```
+
+
+
+##### 获取文件大小
+
+> **ql_fs.path_getsize(file_path)**
+
+传入文件路径, 返回文件所占的字节数
+
+- 参数
+
+| 参数      | 类型   | 说明     |
+| --------- | ------ | -------- |
+| file_path | string | 文件路径 |
+
+- 返回值
+  - int类型的数字, 单位是字节
+
+
+
+**使用示例**
+
+```python
+import ql_fs
+
+ql_fs.path_getsize('usr/system_config.json')
+```
+
+
+
+##### 创建文件
+
+> **ql_fs.touch(file, data)**
+
+创建文件或者更新文件数据, 默认是json文件也可传入文本文件更新, 会自动创建文件夹然后创建或更新文件的内容
+
+- 参数
+
+| 参数 | 类型   | 说明                   |
+| :--- | ------ | ---------------------- |
+| file | string | 文件绝对路径           |
+| data | dict   | 目前只支持创建json文件 |
+
+- 返回值
+  - int类型
+  - 0为成功
+  - -1则失败
+
+
+
+**使用示例**
+
+```python
+import ql_fs
+data = {
+    "test":1
+}
+# 创建或更新json文件
+ql_fs.touch("/usr/bin/config.json", data)
+
+```
+
+
+
+##### 读取json文件
+
+> **ql_fs.read_json(file)**
+
+读取json文件并返回
+
+- 参数
+
+| 参数 | 类型   | 说明                   |
+| ---- | ------ | ---------------------- |
+| file | string | 所要读取的json文件路径 |
+
+- 返回值
+  - 读取成功
+    - 返回dict类型
+  - 失败
+    - 返回None
+
+
+
+**使用示例**
+
+```python
+import ql_fs
+
+data = ql_fs.read_json("/usr/system_config.json")
+```
+
+
+
+##### 文件拷贝
+
+> **ql_fs.file_copy(dst, src)**
+
+将文件从原路径拷贝到目标路径
+
+- 参数
+
+| 参数 | 类型   | 说明     |
+| ---- | ------ | -------- |
+| dst  | string | 目标路径 |
+| src  | string | 原路径   |
+
+- 返回值
+  - True代表拷贝成功
+
+
+
+**使用示例**
+
+```python
+import ql_fs
+
+ql_fs.file_copy("usr/a.json", "usr/system_config.json")
+```
+
+
+
+
+
+#### Queue - 普通队列
+
+模块功能: 用于线程间通信
+
+##### 初始化队列
+
+> **from queue import Queue**
+>
+> **q = Queue(maxsize=100)**
+
+- 参数
+
+| 参数    | 类型 | 说明                            |
+| ------- | ---- | ------------------------------- |
+| maxsize | int  | 默认长度是100, 设置最大队列长度 |
+
+- 返回值
+  - Queue对象
+
+
+
+##### 往队列放入数据
+
+往队列中塞入数据
+
+> **q.put(data)**
+
+- 参数
+
+| 参数 | 类型 | 说明                                                     |
+| ---- | ---- | -------------------------------------------------------- |
+| data | void | 插入的数据, 可以为空不传, 不传则可认识是放松了一个空信号 |
+
+- 返回值
+  - True 为成功
+  - False 为失败
+
+
+
+##### 获取数据
+
+从队列中获取数据, 这里需要注意一下获取数据这块的是阻塞获取
+
+> **q.get()**
+
+- 参数
+  - 无
+- 返回值
+  - 为队列中的数据, 如果是空信号则会获取为None
+
+
+
+##### 查看队列是否为空
+
+> **q.empty()**
+
+- 参数
+  - 无
+- 返回值
+  - True则为空
+  - False则不为空
+
+
+
+##### 查看队列中存在的数据个数
+
+> **q.size()**
+
+- 参数
+  - 无
+- 返回值
+  - int类型的当前数据长度
+
+
+
+##### 使用示例
+
+```python
+import _thread
+from queue import Queue
+
+# 初始化队列  默认长度100
+q = Queue()
+
+
+def get():
+    while True:
+        # 阻塞获取
+        data = q.get()
+        print("data = {}".format(data))
+
+# 线程去阻塞
+_thread.start_new_thread(get, ())
+q.put("this is a test msg")
+
+```
+
+
+
+#### sys_bus会话总线
+
+用于消息的订阅和发布广播, 多线程处理等, 类似于内部的mqtt
+
+##### 订阅topic
+
+> **import sys_bus**
+>
+> **sys_bus.subscribe(topic, handler)**
+
+- 参数
+
+| 参数    | 类型       | 说明                                                         |
+| ------- | ---------- | ------------------------------------------------------------ |
+| topic   | string/int | 所需要订阅的topic                                            |
+| handler | func       | 处理函数, 当有对应topic过来时, 会对应调用其中的处理函数去处理<br>handler 需要有两个参数(topic, msg) |
+
+- 返回值
+  - None
+
+
+
+##### 发布topic消息
+
+发布消息, 对应订阅的topic将收到并多线程对此消息处理, 
+
+> **sys_bus.publish(topic , msg)**
+
+- 参数
+
+| 参数  | 类型       | 说明           |
+| ----- | ---------- | -------------- |
+| topic | string/int | topic          |
+| msg   | void       | 任一类型的数据 |
+
+- 返回值
+  - None
+
+
+
+##### 查看会话总线注册表
+
+查看订阅注册表, 注册表中有所有topic和订阅的函数
+
+> **sys_bus.sub_table(topic=None)**
+
+- 参数
+
+| 参数  | 类型       | 说明                                                         |
+| ----- | ---------- | ------------------------------------------------------------ |
+| topic | string/int | 可以不传<br>传表示查看此topic的注册表<br>不传表示查看所有的topic的注册表 |
+
+- 返回值
+  - dict / list类型的订阅函数列表或注册表
+
+
+
+##### 解除订阅
+
+解除订阅订阅的topic, 或者对应topic下的某个函数
+
+> **sys_bus.unsubscribe(topic , cb=None)**
+
+| 参数  | 类型       | 说明                              |
+| ----- | ---------- | --------------------------------- |
+| topic | string/int | 对应的topic                       |
+| cb    | function   | 要删除的订阅函数, 不传则删除topic |
+
+当cb不传时只传入topic时删除topic和从topic下所有的订阅函数,  如果传了cb则删除订阅topic下面订阅列表中的对应的cb函数
+
+- 返回值
+
+True 删除成功, False删除失败
+
+
+
+##### 使用示例
+
+```python
+import sys_bus
+
+
+def test(topic, msg):
+    print("test ... topic = {} msg = {}".format(topic, msg))
+
+# 订阅
+sys_bus.subscribe("test", test)
+# 发布
+sys_bus.publish("test", "this is a test msg")
+
+#  test ... topic = test msg = this is a test msg
+
+# 解绑对应test topic下的订阅的test函数
+sys_bus.unsubscribe("test", test)
+
+# 解绑对应test topic下的所有订阅函数
+sys_bus.unsubscribe("test")
+```
+
+
+
+
+
+#### uasyncio协程
+
+[uasyncio文档中心](https://python.quectel.com/doc/doc/Advanced_development/zh/QuecPythonThird/asyncio.html)
 
 
 #### ussl-SSL算法

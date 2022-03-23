@@ -6,7 +6,6 @@ Easy, Fast, Efficient, Reliable, Safe
 </br>
 
 # Start
-* Step By Step [Manual](en-us/sbs/), everything you need here  
 * **Video Lesson** Comming Soon...
 
 </br>

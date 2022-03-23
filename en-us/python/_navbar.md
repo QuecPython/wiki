@@ -1,12 +1,4 @@
-* Start
+<!-- _navbar.md -->
 
-	* [StepByStep Manual](/en-us/sbs/)
-
-	
-* Download
-	* [Download](//qpy.quectel.com/down.html)
-	
-
-* Language
-	* [中文](/zh-cn/)
-	* [EN](/en-us/)
+* [中文](/zh-cn/)
+* [En](/en-us/)

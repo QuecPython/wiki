@@ -18,8 +18,9 @@
 	<!-- <link rel="stylesheet" href="static/css/dark.css" title="vue"> -->
 	<!-- <link rel="stylesheet" href="static/css/buble.css" title="vue"> -->
 	<!-- <link rel="stylesheet" href="static/css/pure.css" title="vue"> -->
-	<link rel="stylesheet" href="static/css/sidebar.min.css" />
+	<!-- <link rel="stylesheet" href="static/css/sidebar.min.css" /> -->
 	<link rel="stylesheet" href="static/css/main.css" />
+	
 	<style>
 		nav.app-nav li ul {
 			min-width: 100px;
@@ -32,13 +33,14 @@
 </head>
 
 <body>
-	<div id="app">Loading ...</div>
+	<div id="app">QuecPython Loading ...</div>
 	<script>
 		window.$docsify = {
 
-      auto2top: true,
+      <!-- auto2top: true, -->
       coverpage: false,
       executeScript: true,
+	  autoHeader: true,
 	  search: 'auto',
       loadSidebar: true,
       loadNavbar: true,
@@ -46,32 +48,38 @@
 	  themeColor: 'red',
       maxLevel: 7,
 	  subMaxLevel: 8,
-	  sidebarDisplayLevel: 1,
-      name: 'QuecPython',
+	  <!-- sidebarDisplayLevel: 1, -->
+      name: '<span>QuecPython</span>',
+	  nameLink: {
+		'zh-cn/': '#/',
+		'en-us/': '#/en-us/',
+		'/':'/'
+		},
+	  hideSidebar: false,
 	  repo: 'https://github.com/quecpython/wiki',
 	      search : [	
       '/zh-cn/api/',      // => /zh-cn/README.md
     ],
       search: {
         noData: {
-          '/de-de/': 'Keine Ergebnisse!',
           '/zh-cn/': '没有结果!',
           '/en-us/': 'No result!',
-          '/': 'No results!'
+          '/': '没有结果!'
         },
         paths: 'auto',		//paths: ['/README.md'],
 		
         placeholder: {
-          '/de-de/': 'Suche',
           '/zh-cn/': '搜索',
           '/en-us/': 'Search',
-          '/': 'Search'
+          '/': '搜索'
         },
 		alias: {
-		  '/zh-cn/sbs/.*/_sidebar.md': '/zh-cn/sbs/_sidebar.md',
-		  '/zh-cn/sbs/.*/_navbar.md': '/zh-cn/sbs/_navbar.md',
+		  '/zh-cn/.*/_sidebar.md': '/zh-cn/_sidebar.md',
+		  '/en-us/.*/_navbar.md': '/en-us/_navbar.md',
 		},
-		depth: 6
+		namespace: 'website-1',
+		pathNamespaces: ['/zh-cn', '/en-us'],
+		depth: 4
       }
     }
   </script>
@@ -93,7 +101,6 @@
   <!-- https://unpkg.com/docsify-copy-code@2.1.1/dist/docsify-copy-code.min.js -->
   <!-- unpkg.com/prismjs/components/prism-bash.js -->
   <script src="static/js/docsify-copy-code.min.js"></script>
-  
   <!-- <script src="//unpkg.com/docsify-scroll-to-top/dist/docsify-scroll-to-top.min.js"></script> -->
   <script src="static/js/docsify-scroll-to-top.min.js"></script>
 
