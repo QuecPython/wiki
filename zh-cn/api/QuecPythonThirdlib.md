@@ -1806,7 +1806,7 @@ REPL refuse
 
 ```python
 import ql_fs
-ret = ql_fs.ql_fs.path_dirname("/usr/xxx.py")
+ret = ql_fs.path_exists("/usr/xxx.py")
 print(ret)
 
 # 存在打印True 不存在 False
