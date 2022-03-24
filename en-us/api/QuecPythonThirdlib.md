@@ -1775,7 +1775,7 @@ Check whether the file or folder exists
 
 ```python
 import ql_fs
-ret = ql_fs.ql_fs.path_dirname("/usr/xxx.py")
+ret = ql_fs.path_exists("/usr/xxx.py")
 print(ret)
 
 #Print true does not exist false
