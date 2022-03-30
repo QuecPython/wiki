@@ -8,6 +8,6 @@
 * [**QuecPython Third-partylib**](/en-us/api/QuecPythonThirdlib.md)
 * [**QuecPython FAQ**](/en-us/faq/)
 * [**Official Website**](//python.quectel.com)
-* [**Official Doc**](//python.quectel.com/doc/en/)
+* [**Official Doc**](https://python.quectel.com/docsite/en-us/docs/Quecpython_intro/QPY_history.html)
 * [**Download**](//python.quectel.com/down.html)
 
