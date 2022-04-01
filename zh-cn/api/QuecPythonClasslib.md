@@ -728,7 +728,7 @@ if __name__ == '__main__':
 
 
 
-#### atcmd - AT
+#### atcmd - 发送AT指令
 
 模块功能：提供发送AT指令接口。
 
@@ -736,7 +736,7 @@ if __name__ == '__main__':
 
 #### 发送AT指令接口
 
-> **atcmd.sendSync(atcmd,resp,include_str,timeout)
+> **atcmd.sendSync(atcmd,resp,include_str,timeout)**
 
 *参数
 
@@ -7768,7 +7768,7 @@ print(r.group(0))
 
 
 
-####  wifiScan
+####  wifiScan - WiFi扫描
 
 注意：BC25PA平台不支持此方法。
 
