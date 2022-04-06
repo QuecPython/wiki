@@ -709,7 +709,7 @@ Note：This module only supports 1803S/EC200U/CATM platform.
 
 #### send AT cmd
 
-> **atcmd.sendSync(atcmd,resp,include_str,timeout)
+> **atcmd.sendSync(atcmd,resp,include_str,timeout)**
 
 * Parameter
 
