@@ -4718,10 +4718,6 @@ The values returned are explained as follows:
 | 8            | Booting from PSM wakeup                         |
 | 9            | Booting by dump                                 |
 
-* Note
-
-  * BC25PA platform does not support restart reason 5 and 6.
-
 
 
 ###### Get the Reason for the Last Powering Down of the Module
@@ -10976,7 +10972,7 @@ camCaputre.callback(callback)
 
 
 
-#### GNSS - Navigation Positioning and Timing
+#### GNSS - External GNSS
 
 Module function: Get positioning data from GPS model of L76 module, including whether the module locates successfully, latitude, longitude, UTC time, positioning mode,  number of satellites, number of visible satellites, azimuth angle, speed over the ground, geodetic height and so on. 
 
@@ -11065,7 +11061,7 @@ total_sen_num = 3, total_sat_num = 12  # Output the total number of complete GPG
 
 
 
-##### Get the original GNSS data read
+##### Get the original GNSS data
 
 > **gnss.getOriginalData()**
 
@@ -11332,6 +11328,165 @@ gnss.getGeodeticHeight()
 ```python
 gnss.getSpeed()
 0.0
+```
+
+
+
+
+
+#### quecgnss - built-in GNSS
+
+Note: The current only  EC200UCNAA/EC200UCNLA/EC200UEUAA models support this feature.
+
+##### Initialize the GNSS
+
+> **import quecgnss**
+>
+> **quecgnss.init()**
+
+* Function
+
+  Initialization of GNSS module functions.
+
+* Parameter
+
+  None
+
+* Return Value
+
+  Returns integer 0 on success, integer -1 on failure.
+
+
+
+##### Get the GNSS working status
+
+> **quecgnss.get_state()**
+
+* Function
+
+  Get the GNSS module status.
+
+* Parameter
+
+  None
+
+* Return Value
+
+| Value | Type | Description                                                  |
+| ----- | ---- | ------------------------------------------------------------ |
+| 0     | int  | The GNSS module is closed                                    |
+| 1     | int  | The GNSS module is being firmware upgrade                    |
+| 2     | int  | The GNSS module is  positioning. In this mode, the GNSS module starts to read GNSS positioning data. The validity of the positioning data needs to be determined by parsing corresponding statements after obtaining the positioning data, for example, whether the STATUS of the GNRMC statement is A or V. A indicates that the positioning is valid, and V indicates that the positioning is invalid. |
+
+
+
+##### Enable or disable GNSS
+
+> **quecgnss.gnssEnable(opt)**
+
+* Function
+
+  Enable or disable the GNSS module. If you use the GNSS function for the first time after power-on, you do not need to invoke this interface to enable the GNSS function. Instead, you can invoke the init() interface. The init() interface automatically enables the GNSS function during initialization.
+
+* Parameter
+
+  | Parameter | Type | Description                          |
+  | --------- | ---- | ------------------------------------ |
+  | opt       | int  | 0 - disable GNSS<br/>1 - enable GNSS |
+
+* Return Value
+
+  Returns integer 0 on success, integer -1 on failure.
+
+
+
+##### Get the GNSS data
+
+> **quecgnss.read(size)**
+
+* Function
+
+  Get the GNSS data。
+
+* Parameter
+
+  | Parameter | Type | Description                                                |
+  | --------- | ---- | ---------------------------------------------------------- |
+  | size      | int  | Specifies the size of the data to read, the unit is bytes. |
+
+* Return Value
+
+  Returns a tuple on success, integer -1 on failure. The tuple form is as follows:
+
+  `(size, data)`
+
+  `size` - The actual size of the data read
+
+  `data` - positioning data
+
+##### Example
+
+```python
+import quecgnss
+
+
+def main():
+    ret = quecgnss.init()
+    if ret == 0:
+    	print('GNSS init ok.')
+    else:
+        print('GNSS init failed.')
+        return -1
+    data = quecgnss.read(4096)
+    print(data[1].decode())
+    
+    quecgnss.gnssEnable(0)
+
+
+if __name__ == '__main__':
+    main()
+    
+
+#===================================================================================================
+# The result
+167,169,170,,,,,,,,1.773,1.013,1.455*15
+$GPGSV,2,1,8,3,23,303,34,16,32,219,28,22,74,98,26,25,16,43,25*77
+$GPGSV,2,2,8,26,70,236,28,31,59,12,38,32,55,127,34,4,5,,21*49
+$BDGSV,2,1,8,163,51,192,32,166,70,11,31,167,52,197,32,169,59,334,31*61
+$BDGSV,2,2,8,170,40,205,31,161,5,,31,164,5,,27,165,5,,29*59
+$GNRMC,022326.000,A,3149.324624,N,11706.921702,E,0.000,261.541,180222,,E,A*38
+$GNGGA,022326.000,3149.324624,N,11706.921702,E,1,12,1.013,-8.580,M,0,M,,*47
+$GNGLL,3149.324624,N,11706.921702,E,022326.000,A,A*44
+$GNGSA,A,3,31,32,3,16,22,25,26,,,,,,1.773,1.013,1.455*1C
+$GNGSA,A,3,163,166,167,169,170,,,,,,,,1.773,1.013,1.455*15
+$GPGSV,2,1,8,3,23,303,34,16,32,219,27,22,74,98,26,25,16,43,25*78
+$GPGSV,2,2,8,26,70,236,28,31,59,12,37,32,55,127,34,4,5,,20*47
+$BDGSV,2,1,8,163,51,192,32,166,70,11,31,167,52,197,32,169,59,334,31*61
+$BDGSV,2,2,8,170,40,205,31,161,5,,31,164,5,,27,165,5,,29*59
+$GNRMC,022327.000,A,3149.324611,N,11706.921713,E,0.000,261.541,180222,,E,A*3F
+$GNGGA,022327.000,3149.324611,N,11706.921713,E,1,12,1.013,-8.577,M,0,M,,*48
+$GNGLL,3149.324611,N,11706.921713,E,022327.000,A,A*43
+...... # There is too much data, so it is omitted
+$GNGSA,A,3,31,32,3,16,22,25,26,,,,,,1.837,1.120,1.456*11
+$GNGSA,A,3,163,166,167,169,170,,,,,,,,1.837,1.120,1.456*18
+$GPGSV,2,1,8,3,23,302,27,16,32,220,26,22,73,101,27,25,16,43,27*45
+$GPGSV,2,2,8,26,70,237,28,31,59,13,33,32,54,128,28,4,5,,24*44
+$BDGSV,2,1,8,163,51,192,33,166,71,11,35,167,52,198,33,169,59,334,34*6E
+$BDGSV,2,2,8,170,40,205,32,161,5,,33,164,5,,28,165,5,,30*5F
+$GNRMC,022507.000,A,3149.324768,N,11706.922344,E,0.000,261.541,180222,,E,A*31
+$GNGGA,022507.000,3149.324768,N,11706.922344,E,1,12,1.120,-8.794,M,0,M,,*48
+$GNGLL,3149.324768,N,11706.922344,E,022507.000,A,A*4D
+$GNGSA,A,3,31,32,3,16,22,25,26,,,,,,1.837,1.120,1.455*12
+$GNGSA,A,3,163,166,167,169,170,,,,,,,,1.837,1.120,1.455*1B
+$GPGSV,2,1,8,3,23,302,26,16,32,220,26,22,73,101,27,25,16,43,26*45
+$GPGSV,2,2,8,26,70,237,28,31,59,13,32,32,54,128,28,4,5,,24*45
+$BDGSV,2,1,8,163,51,192,24,166,71,11,35,167,52,198,33,169,59,334,34*68
+$BDGSV,2,2,8,170,40,205,31,161,5,,33,164,5,,28,165,5,,30*5C
+$GNRMC,022508.000,A,3149.324754,N,11706.922338,E,0.002,261.541,180222,,E,A*38
+$GNGGA,022508.000,3149.324754,N,11706.922338,E,1,12,1.120,-8.750,M,0,M,,*4B
+$GNGLL,3149.324754,N,11706.922338,E,022508.000,A,A*46
+$GNGSA,A,3,31,3
+
 ```
 
 
