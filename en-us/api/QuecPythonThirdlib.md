@@ -18,10 +18,11 @@ Configure the product and device information of Alibaba Cloud loT suite.
 | productSecret | string | The product secret which is optional. Default: None.<br />In unique-certificate-per-device authentication, input None (Cannot be an empty string).<br/>In unique-certificate-per-product authentication, input the real product key. |
 | DeviceName    | string | Device name                                                  |
 | DeviceSecret  | string | Device key which is optional. Default: None.（In unique-certificate-per-product authentication, input None） |
+| MqttServer    | string | Optional parameter, the name of the server to be connected to, the default is "{productKey}.iot-as-mqtt.cn-shanghai.aliyuncs.com" |
 
-* Return Value
+- Return Value
 
-Return the Alibaba Cloud connection object.
+  - Return the Alibaba Cloud connection object.
 
 ##### Set the Parameters of the MQTT Data Channel
 
@@ -44,7 +45,7 @@ Set the parameters of the MQTT data channel.
 * Parameter
 
 | Parameter     | Type   | Description                                                  |
-| :------------ | :----- | ------------------------------------------------------------ |
+| ------------- | ------ | ------------------------------------------------------------ |
 | clientID      | string | Customized Alibaba Cloud connection ID                       |
 | clean_session | bool   | A Boolean value that determines the client type which is optional. If it is True, the agent deletes all information about this client when it disconnects from the client. If it is False, the client is a persistent client. When the client disconnects, subscription information and queued messages are reserved. Default: False. |
 | keepAlive     | int    | The maximum time allowed between communications (Unit: second). Default: 300, Range: 60–1200. |
@@ -52,7 +53,7 @@ Set the parameters of the MQTT data channel.
 
 * Return Value
 
-Return 0 if the execution is successful, otherwise return -1.
+  * Return 0 if the execution is successful, otherwise return -1.
 
 ##### Register the Callback Function
 
@@ -63,12 +64,11 @@ Register the callback function.
 * Parameter
 
 | Parameter | Type     | Description           |
-| :-------- | :------- | --------------------- |
+| --------- | -------- | --------------------- |
 | sub_cb    | function | The callback function |
 
 * Return Value
-
-None
+  * None
 
 ##### Set the Exception Callback Function
 
@@ -83,8 +83,7 @@ Set the exception callback function. When the internal threads of Alibaba Cloud 
 | callback  | function | The exception callback function |
 
 * Return Value
-
-None
+  * None
 
 The exception callback function example
 
@@ -110,13 +109,13 @@ Subscribe to MQTT topics.
 * Parameter
 
 | Parameter | Type   | Description                                                  |
-| :-------- | :----- | ------------------------------------------------------------ |
+| --------- | ------ | ------------------------------------------------------------ |
 | topic     | string | The subscribed topic                                         |
 | qos       | int    | MQTT message service quality. (Default: 0. It can be 0 or 1). 0: The sender sends the message at most once.  1: The sender sends the message at least once to guarantee that the message will be transferred successfully to the broker. |
 
 * Return Value
 
-Return 0 if the execution is successful, otherwise return -1.
+  * Return 0 if the execution is successful, otherwise return -1.
 
 ##### Publish the Message
 
@@ -134,7 +133,7 @@ Publish the message.
 
 * Return Value
 
-Return 0 if the execution is successful, otherwise return -1.
+  * Return 0 if the execution is successful, otherwise return -1.
 
 ##### Run the Connection
 
@@ -143,12 +142,10 @@ Return 0 if the execution is successful, otherwise return -1.
 Run the connection.
 
 * Parameter
-
-None
+  * None
 
 * Return Value
-
-None
+  * None
 
 ##### Close the Connection
 
@@ -157,12 +154,10 @@ None
 Close the connection.
 
 * Parameter
-
-None
+  * None
 
 * Return Value
-
-None
+  * None
 
 ##### Send Ping Package
 
@@ -171,12 +166,10 @@ None
 Send Ping Package
 
 * Parameter
-
-None
+  * None
 
 * Return Value
-
-None
+  * None
 
 ##### Get Alibaba Cloud Connection Status
 
@@ -185,22 +178,17 @@ None
 Get Alibaba Cloud connection status.
 
 * Parameter
-
-None
+  * None
 
 * Return Value
-
-0 : Connected
-
-1:  Connecting
-
-2:  Server connection is closed 
-
--1: Disconnected
+  * 0 : Connected
+  * 1:  Connecting
+  * 2:  Server connection is closed 
+  * -1: Disconnected
 
 
 
-Example
+* Example
 
 ```python
 '''
@@ -297,7 +285,7 @@ Configure the product and device information of Tencent Cloud loT suite.
 
 * Return Value
 
-Return the Tencent Cloud connection object.
+  * Return the Tencent Cloud connection object.
 
 ##### Set the Parameters of the MQTT Data Channel.
 
@@ -308,14 +296,14 @@ Set the parameters of the MQTT data channel.
 * Parameter
 
 | parameter     | Type | Description                                                  |
-| :------------ | :--- | ------------------------------------------------------------ |
+| ------------- | ---- | ------------------------------------------------------------ |
 | clean_session | bool | A Boolean value that determines the client type which is optional. If it is True, the agent deletes all information about this client when it disconnects from the client. If it is False, the client is a persistent client. When the client disconnects, subscription information and queued messages are reserved. Default: False. |
 | keepAlive     | int  | The maximum time allowed between communications. Range: 60–1000; Unit: second; Default: 300. It is recommended to be above 300. |
 | reconn        | bool | (Optional）Specifies whether to use the internal reconnection flag. The default value is True. |
 
 * Return Value
 
-Return 0 if the execution is successful, otherwise return -1.
+  * Return 0 if the execution is successful, otherwise return -1.
 
 ##### Register the Callback Function
 
@@ -326,12 +314,12 @@ Register the callback function.
 * parameter 
 
 | parameter | Type     | Description                                                  |
-| :-------- | :------- | ------------------------------------------------------------ |
+| --------- | -------- | ------------------------------------------------------------ |
 | sub_cb    | function | Set the message callback function, which is triggered when the server responds |
 
 * Return Value
 
-None
+  * None
 
 ##### Set the exception callback function
 
@@ -342,12 +330,12 @@ Set the exception callback function. When the internal threads of Tencent Cloud 
 * Parameter 
 
 | Parameter | Type     | Description                     |
-| :-------- | -------- | ------------------------------- |
+| --------- | -------- | ------------------------------- |
 | callback  | function | The exception callback function |
 
 * Return Value
 
-None
+  * None
 
 The exception callback function example
 
@@ -373,13 +361,13 @@ Subscribe to MQTT topics.
 * Parameter
 
 | Parameter | Type   | Description                                                  |
-| :-------- | :----- | ------------------------------------------------------------ |
+| --------- | ------ | ------------------------------------------------------------ |
 | topic     | string | The subscribed topic                                         |
 | qos       | int    | MQTT message service quality. (Default: 0. It can be 0 or 1). 0: The sender sends the message at most once.  1: The sender sends the message at least once to guarantee that the message will be transferred successfully to the broker. |
 
 * Return Value
 
-Return 0 if the execution is successful, otherwise return -1.
+  * Return 0 if the execution is successful, otherwise return -1.
 
 ##### Publish the Message
 
@@ -390,14 +378,14 @@ Publish the message.
 * Return Value
 
 | Parameter | Type   | Description                                                  |
-| :-------- | :----- | ------------------------------------------------------------ |
+| --------- | ------ | ------------------------------------------------------------ |
 | topic     | string | The published topic                                          |
 | msg       | string | The data to be sent                                          |
 | qos       | int    | MQTT message service quality. (Default: 0. It can be 0 or 1). 0: The sender sends the message at most once.  1: The sender sends the message at least once to guarantee that the message will be transferred successfully to the broker. |
 
 * Return Value
 
-Return 0 if the execution is successful, otherwise return -1.
+  * Return 0 if the execution is successful, otherwise return -1.
 
 ##### Run the Connection
 
@@ -407,11 +395,11 @@ Run the connection.
 
 * Parameter
 
-None
+  * None
 
 * Return Value
 
-None
+  * None
 
 ##### Close the Connection
 
@@ -421,11 +409,11 @@ Close the connection.
 
 * Parameter
 
-None
+  * None
 
 * Return Value
 
-None
+  * None
 
 ##### Send Ping Package
 
@@ -435,11 +423,11 @@ Send Ping package.
 
 * Parameter
 
-None
+  * None
 
 * Return Value
 
-None
+  * None
 
 ##### Get Tencent Cloud Connection Status
 
@@ -449,21 +437,17 @@ Get Tencent Cloud connection status
 
 * Parameter
 
-None
+  * None
 
 * Return Value
-
-0 : Connected
-
-1:  Connecting
-
-2:  Server connection is closed 
-
--1: Disconnected
+  * 0 : Connected
+  * 1:  Connecting
+  * 2:  Server connection is closed 
+  * -1: Disconnected
 
 
 
-Example
+* Example
 
 ```python
 from TenCentYun import TXyun
@@ -830,7 +814,7 @@ Return a logger with the specified name. If name is None,  return a logger which
 
 * Return Value
 
-Logger
+  * Logger
 
 * Example
 
@@ -854,7 +838,7 @@ Output log debug.
 
 * Return Value
 
-None
+  * None
 
 * Example 
 
@@ -879,7 +863,7 @@ Output log info.
 
 * Return Value
 
-None
+  * None
 
 * Example
 
@@ -904,7 +888,7 @@ Output log warning.
 
 * Return Value
 
-None
+  * None
 
 * Example
 
@@ -927,9 +911,9 @@ Output log error.
 | tag       | string | Module or function name, as the log prefix |
 | msg       | string | The log content                            |
 
-* Return value
+* Return Value
 
-None
+  * None
 
 * Example
 
@@ -952,9 +936,9 @@ Output log critical.
 | tag       | string | Module or function name, as the log prefix |
 | msg       | string | The log content                            |
 
-* Return value
+* Return Value
 
-None
+  * None
 
 * Example
 
@@ -966,7 +950,7 @@ Testlog.critical("Test message: %d(%s)", 100, "foobar")
 
 
 
-**Log example**
+**Log Example**
 
 ```python
 import log
@@ -1030,7 +1014,7 @@ Create the MQTT object.
 
 * Return Value
 
-MQTT object
+  * MQTT object
 
 ##### Set the Callback Function
 
@@ -1046,7 +1030,7 @@ Set a callback function, which will be called when a message is received.
 
 * Return Value
 
-None
+  * None
 
 ##### Set the Exception Callback Function
 
@@ -1062,7 +1046,7 @@ Set the exception callback function. When the internal threads of UMQTT  is abno
 
 * Return Value
 
-None
+  * None
 
 The exception callback function example
 
@@ -1094,7 +1078,7 @@ Set the will to be sent to the server. If the disconnection occurred abnormally 
 
 * Return Value
 
-None
+  * None
 
 ##### Establish a Connection with the Server
 
@@ -1110,7 +1094,7 @@ Establish a connection with the server. Failure to connect will lead to an MQTT 
 
 * Return Value
 
-Return 0 if the execution is successful, otherwise return  ERROR.
+  * Return 0 if the execution is successful, otherwise return  ERROR.
 
 ##### Disconnect from the Server
 
@@ -1120,11 +1104,11 @@ Disconnect from the server.
 
 * Parameter
 
-None
+  * None
 
 * Return Value
 
-None
+  * None
 
 ##### Close Socket
 
@@ -1136,11 +1120,11 @@ PS: This method is only used in active reconnection, please refer to the reconne
 
 * Parameter
 
-None
+  * None
 
 * Return Value
 
-None
+  * None
 
 ##### Send Ping Package
 
@@ -1150,11 +1134,11 @@ When the keep-alive time is not 0 and there is no communication within the time 
 
 * Parameter
 
-None
+  * None
 
 * Return Value
 
-None
+  * None
 
 ##### Publish the Message
 
@@ -1165,7 +1149,7 @@ Publish the message.
 * Parameter
 
 | Parameter | Type   | Description                                                  |
-| :-------- | :----- | ------------------------------------------------------------ |
+| --------- | ------ | ------------------------------------------------------------ |
 | topic     | string | The published topic                                          |
 | msg       | string | The data to be sent.                                         |
 | retain    | bool   | The default is False. Set retain to True when publishing a message, which is to retain the information.<br />MQTT server will save the recently received message with the RETAIN flag as True on the server side. Whenever the MQTT client connects to the MQTT server and subscribes to a topic, if there is a retained message under the topic, then The MQTT server will immediately push the Retained message to the client. <br />Note:  MQTT server only save the recently received message with the RETAIN flag as True for each topic! In other words, if a retained message has been saved for a topic on the MQTT server, when the client publishes a new retained message again, the original message on the server will be overwritten. |
@@ -1173,7 +1157,7 @@ Publish the message.
 
 * Return Value
 
-None
+  * None
 
 ##### Subscribe to MQTT Topics
 
@@ -1190,7 +1174,7 @@ Subscribe to MQTT topics.
 
 * Return Value
 
-None
+  * None
 
 ##### Check the Pending Message
 
@@ -1200,11 +1184,11 @@ Check whether the server has the pending messages.
 
 * Parameter
 
-None
+  * None
 
 * Return Value
 
-None
+  * None
 
 ##### Block Waiting for Server Message Response
 
@@ -1214,11 +1198,11 @@ Block waiting for server message response.
 
 * Parameter
 
-None
+  * None
 
 * Return Value
 
-None
+  * None
 
 ##### Get MQTT Connection Status
 
@@ -1230,17 +1214,13 @@ PS: After users use the disconnect() method, and then  -1 is returned if MQTTCli
 
 * Parameter
 
-None
+  * None
 
 * Return Value
-
-0 : Connected
-
-1:  Connecting
-
-2:  Server connection is closed 
-
--1: Disconnected
+  * 0 : Connected
+  * 1:  Connecting
+  * 2:  Server connection is closed 
+  * -1: Disconnected
 
 
 
@@ -1569,7 +1549,7 @@ Note: The BC25PA platform does not support this module function.
 
 > **ntptime.host**
 
-Return the current NTP server address, default is "ntp.aliyun.com".
+  Return the current NTP server address, default is "ntp.aliyun.com".
 
 ##### Set the NTP Server
 
@@ -1580,12 +1560,12 @@ Set the NTP Server.
 * Parameter
 
 | Parameter | Type   | Description        |
-| :-------- | :----- | ------------------ |
+| --------- | ------ | ------------------ |
 | host      | string | NTP server address |
 
 * Return Value
 
-Return 0 if the execution is successful, otherwise return -1.
+  * Return 0 if the execution is successful, otherwise return -1.
 
 ##### Synchronize NTP Time
 
@@ -1595,11 +1575,11 @@ Synchronize NTP time.
 
 * Parameter
 
-None
+  * None
 
 * Return Value
 
-Return 0 if the execution is successful, otherwise return -1.
+  * Return 0 if the execution is successful, otherwise return -1.
 
 
 
@@ -1664,20 +1644,563 @@ Set interactive protect. After setting to enable interactive protect, all extern
 * Parameter
 
 | Parameter | Type | Description                       |
-| :-------- | :--- | --------------------------------- |
+| --------- | ---- | --------------------------------- |
 | flag      | int  | 0 : Disable（default)；1 ：Enable |
+| kw_args   | str  | password，it can be NULL          |
 
 * Return Value
 
-Return 0 if the execution is successful.
+  * Return 0 if the execution is successful.
+  * if the parameter of flag is 2, return values means current repl states:
+     -1：failed
+      1：repl enable
+	  2：repl enable but The password has already been set
+      3：repl refuse
+      4：repl-protection by password
+
+
+
+> ​	**system.replChangPswd(old_password,new_password)**
+
+change repl-protetion password
+
+* 参数
+
+|   Parameter  | Type | Description                       |
+| old_password | str  | old password len:6-12byte         |
+| new_password | str  | new password len:6-12byte         |
+
+* Return Value
+
+  * Return 0 if the execution is successful.
 
 **Example**
 
 ```python
-import system
+>>>import system
 
-system.replSetEnable(1)  # Enable interactive protection.
+>>> system.replSetEnable(1,password='miamia123')
+0
+>>> 
+Please enter password:
+>>> ******
+Incorrect password, please try again:
+>>> ********
+Incorrect password, please try again:
+>>> *********
+REPL enable
+>>> system.replSetEnable(2)
+2
+>>>
+
+
+>>> system.replSetEnable(1,password='miamia')
+Incorrect password!
+-1
+>>> system.replSetEnable(1,password='miamia123')
+0
+>>> 
+Please enter password:
+>>> miamia123
+*********
+REPL enable
+>>> system.replSetEnable(2)
+2
+
+
+
+>>> system.replChangPswd(old_password='miamia123',new_password='123456') //change password
+0
+>>> system.replSetEnable(1,password='miamia123')
+Incorrect password!
+-1
+>>> system.replSetEnable(1,password='123456')
+0
+>>> 
+Please enter password:
+>>> ******
+REPL enable
+
+
+
+>>> system.replSetEnable(0,password='123456')
+
+0
+>>> 
+>>> system.replSetEnable(2)
+1
+>>> system.replSetEnable(0)
+0
+>>>system.replSetEnable(1)
+>>>
+REPL refuse
+>>>
 ```
+
+
+
+####  ql_fs - advanced file operations
+
+Module function: used for advanced operation of files
+
+Adaptation version: not supported by bc25
+
+
+
+##### **import QL_ fs**
+
+> **import ql_fs**
+
+
+
+##### **check whether the file or folder exists**
+
+> **ql_fs.path_exists(file_path)**
+
+Check whether the file or folder exists
+
+- Parameter
+
+|Parameter | type | description|
+| --------- | ------ | ---------------------- |
+| file_ Path | string | absolute path of file or folder|
+
+- Return Value
+
+  * Returns true if it exists and false if it does not exist
+
+
+
+**Use Example**
+
+```python
+import ql_fs
+ret = ql_fs.path_exists("/usr/xxx.py")
+print(ret)
+
+#Print true does not exist false
+```
+
+
+
+##### Get the path of the folder where the file is located
+
+> **ql_fs.path_dirname(file_path)**
+
+Returns the folder path where files and folders are located
+
+- Parameter
+
+|Parameter | type | description|
+| --------- | ------ | ---------------------- |
+| file_ Path | string | absolute path of file or folder|
+
+- Return Value
+  - Path address of type string
+
+
+
+**Use Example**
+
+```python
+import ql_fs
+ret = ql_fs.path_dirname("/usr/bin")
+print("ret")
+
+#The printing results are as follows
+# /usr
+```
+
+
+
+##### Create folder
+
+> **ql_fs.mkdirs(dir_path)**
+
+Create a folder recursively and pass in the folder path
+
+- Parameter
+
+|Parameter | type | description|
+| -------- | ------ | ------------------------ |
+| dir_ Path | string | absolute path of the folder to be created|
+
+- Return Value
+
+  - None
+
+
+
+**Use Example**
+
+```python
+import ql_fs
+
+ql_fs.mkdirs("usr/a/b")
+```
+
+
+
+##### Delete folder
+
+
+
+> **ql_fs.rmdirs(dir_path)**
+
+Output folder, incoming folder path
+
+- Parameter
+
+|Parameter | type | description|
+| -------- | ------ | ------------------------ |
+| dir_ Path | string | absolute path of the folder to be deleted|
+
+- Return Value
+
+  - None
+
+
+
+**Use Example**
+
+```python
+import ql_fs
+
+ql_fs.rmdirs("usr/a/b")
+```
+
+
+
+##### Get file size
+
+> **ql_fs.path_getsize(file_path)**
+
+Pass in the file path and return the number of bytes occupied by the file
+
+- Parameter
+
+|Parameter | type | description|
+| --------- | ------ | -------- |
+| file_ Path | string | file path|
+
+- Return Value
+
+  - A number of type int in bytes
+
+
+
+**Use Example**
+
+```python
+import ql_fs
+
+ql_fs.path_getsize('usr/system_config.json')
+```
+
+
+
+##### Create file
+
+> **ql_fs.touch(file, data)**
+
+Create files or update file data. The default is JSON files. Text files can also be imported for updating. Folders will be created automatically, and then the contents of files will be created or updated
+
+- Parameter
+
+|Parameter | type | description|
+| ---- | ------ | ---------------------- |
+|File | string | absolute path of file|
+|Data | Dict | currently only supports the creation of JSON files|
+
+- Return Value
+  - Int type
+  - 0 is successful
+  - 1 failed
+
+
+
+**Use Example**
+
+```python
+import ql_fs
+data = {
+    "test":1
+}
+#Create or update JSON files
+ql_fs.touch("/usr/bin/config.json", data)
+
+```
+
+
+
+##### Read JSON file
+
+> **ql_fs.read_json(file)**
+
+Read the JSON file and return
+
+- Parameter
+
+|Parameter | type | description|
+| ---- | ------ | ---------------------- |
+|File | string | JSON file path to be read|
+
+- Return Value
+  - Read successful
+    - Return dict type
+  - Fail
+    - Return to none
+
+
+
+**Use Example**
+
+```python
+import ql_fs
+
+data = ql_fs.read_json("/usr/system_config.json")
+```
+
+
+
+##### File copy
+
+> **ql_fs.file_copy(dst, src)**
+
+Copy the file from the original path to the destination path
+
+- Parameter
+
+|Parameter | type | description|
+| ---- | ------ | -------- |
+|DST | string | target path|
+|SRC | string | original path|
+
+- Return Value
+  - True means the copy was successful
+
+
+
+**Use Example**
+
+```python
+import ql_fs
+
+ql_fs.file_copy("usr/a.json", "usr/system_config.json")
+```
+
+
+
+
+
+#### Queue - normal queue
+
+Module function: used for inter thread communication
+
+##### Initialize queue
+
+> **from queue import Queue**
+>
+> **q = Queue(maxsize=100)**
+
+- Parameter
+
+|Parameter | type | description|
+| ------- | ---- | ------------------------------- |
+|Maxsize | int | the default length is 100. Set the maximum queue length|
+
+- Return Value
+  - Queue object
+
+
+
+##### Put data into the queue
+
+Stuff data into the queue
+
+> **q.put(data)**
+
+- Parameter
+
+|Parameter | type | description|
+| ---- | ---- | -------------------------------------------------------- |
+|Data | void | the inserted data can be empty. If it is not transmitted, it can be recognized that it is relaxing an empty signal|
+
+- Return Value
+  - True is success
+  - False is failure
+
+
+
+##### Get data
+
+Get data from the queue. Here, you need to pay attention to the block acquisition in getting data
+
+> **q.get()**
+
+- Parameter
+  - None
+
+- Return Value
+  - It is the data in the queue. If it is an empty signal, it will be obtained as none
+
+
+
+##### Check whether the queue is empty
+
+> **q.empty()**
+
+- Parameter
+  - None
+
+- Return Value
+  - True is null
+  - False is not empty
+
+
+
+##### View the number of data in the queue
+
+> **q.size()**
+
+- Parameter
+  - None
+
+- Return Value
+  - Current data length of type int
+
+
+
+##### Use Example
+
+```python
+import _thread
+from queue import Queue
+
+#Default length of initialization queue: 100
+q = Queue()
+
+
+def get():
+    while True:
+        #Blocking acquisition
+        data = q.get()
+        print("data = {}".format(data))
+
+#Thread deblocking
+_thread.start_new_thread(get, ())
+q.put("this is a test msg")
+
+```
+
+
+
+####  sys_bus session bus
+
+It is used for message subscription, publishing, broadcasting, multithreading, etc., similar to the internal mqtt
+
+##### Subscribe to topic
+
+> **import sys_bus**
+>
+> **sys_bus.subscribe(topic, handler)**
+
+- Parameter
+
+|Parameter | type | description|
+| ------- | ---------- | ------------------------------------------------------------ |
+|Topic | string / int | topic to subscribe to|
+|Handler | func | processing function. When there is a corresponding topic, it will call the processing function to process it accordingly. < br > handler needs two parameters (topic, MSG)|
+
+- Return Value
+  - None
+
+
+
+##### Publish topic message
+
+Publish a message, and the topic corresponding to the subscription will receive and process the message through multiple threads,
+
+> **sys_bus.publish(topic , msg)**
+
+- Parameter
+
+|Parameter | type | description|
+| ----- | ---------- | -------------- |
+| topic | string/int | topic          |
+|MSG | void | any type of data|
+
+- Return Value
+  - None
+
+
+
+##### View session bus registry
+
+Check the subscription registry, which contains all topics and subscription functions
+
+> **sys_bus.sub_table(topic=None)**
+
+- Parameter
+
+|Parameter | type | description|
+| ----- | ---------- | ------------------------------------------------------------ |
+|Topic | string / int | can be omitted. < br > passing means viewing the registry of this topic. < br > not passing means viewing the registry of all topics|
+
+- Return Value
+  - Subscription function list or registry of type dict / list
+
+
+
+##### Unsubscribe
+
+Unsubscribe from the topic, or a function under the corresponding topic
+
+> **sys_bus.unsubscribe(topic , cb=None)**
+
+|Parameter | type | description|
+| ----- | ---------- | --------------------------------- |
+|Topic | string / int | corresponding topic|
+|CB | function | the subscription function to be deleted. If it is not transmitted, delete topic|
+
+When CB is not transmitted, only topic is passed in, and all subscription functions under topic and from topic are deleted. If CB is transmitted, the corresponding CB function in the subscription list under topic is deleted
+
+- Return Value
+
+  - True deletion succeeded, false deletion failed
+
+
+
+##### Use Example
+
+```python
+import sys_bus
+
+
+def test(topic, msg):
+    print("test ... topic = {} msg = {}".format(topic, msg))
+
+#subscribe
+sys_bus.subscribe("test", test)
+#release
+sys_bus.publish("test", "this is a test msg")
+
+#  test ... topic = test msg = this is a test msg
+
+#Unbind the test function corresponding to the subscription under test topic
+sys_bus.unsubscribe("test", test)
+
+#Unbind all subscription functions under the corresponding test topic
+sys_bus.unsubscribe("test")
+```
+
+
+
+
+
+#### Uasyncio collaboration
+
+[uasyncio document center](https://python.quectel.com/doc/doc/Advanced_development/zh/QuecPythonThird/asyncio.html)
 
 
 

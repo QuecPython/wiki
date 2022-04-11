@@ -14,7 +14,7 @@ This function specifies the Python script to be executed.
 
 * Return Value
 
-NA
+  * NA
 
 * Example
 
@@ -50,36 +50,34 @@ myprint()
 
 
 
-#### dataCall - Data Call
+#### dataCall - Activate PDP Context
 
-Function: Provides  the data call related interface.
+Function: Provides functions for activating the PDP Context.
 
-##### Dial-Up
+##### Activate PDP Context
 
 > **dataCall.start(profileIdx, ipType, apn, username, password, authType)**
 
-This function starts the dial-up and activates the data link.
+Call this API to activating the PDP Context.
 
 * Parameter
 
 | Parameter  | Type   | Description                                                  |
 | ---------- | ------ | ------------------------------------------------------------ |
-| profileIdx | int    | PDP context index. Range: 1-8. It is generally set to 1, if set as 2-8, the private APN and password may be required. |
+| profileIdx | int    | PDP context index. Range: 1 - 8 [volte version with the largest default PID is used to register IMS, please do not repeat the operation]. It is generally set to 1, if set as 2 - 8, the private APN and password may be required. |
 | ipType     | int    | IP type. 0-IPV4, 1-IPV6, 2-IPV4 and IPV6.                    |
-| apn        | string | Optional. APN name. The maximum length is 63 bytes.          |
-| username   | string | Optional. APN user name.  The maximum length is 15 bytes.    |
-| password   | string | Optional. APN password. The maximum length is 15 bytes.      |
+| apn        | string | Optional. APN name. The maximum length is 63 bytes. (The maximum length is 64 bytes in EC200U/EC200A) |
+| username   | string | Optional. APN user name.  The maximum length is 15 bytes.(The maximum length is 64 bytes in EC200U/EC200A) |
+| password   | string | Optional. APN password. The maximum length is 15 bytes.(The maximum length is 64 bytes in EC200U/EC200A) |
 | authType   | int    | Authentication type. 0-No authentication, 1-PAP, 2-CHAP.     |
 
 * Return Value
 
-0  Successful execution.
+  * Returns 0 on success, -1 otherwise.
 
--1  Failed execution.
+* Note
 
-* note
-
-  The BC25PA platform does not support this method.
+  * The BC25PA platform does not support this method.
 
 * Example
 
@@ -91,11 +89,11 @@ This function starts the dial-up and activates the data link.
 
 
 
-##### User APN dialing (multiple user APN Settings are supported)
+##### Use the APN in dictionary or json file to Activate PDP Context
 
 > **dataCall.startByUserApns(apn_dict=None, filename=None)**
 
-If a user does not want to use the default dial-up function (you need to disable the default automatic dial-up function when the user starts up) and needs to use user APN to dial up to the Internet, but worries that setting only one APN may lead to dial-up failure in case of incorrect APN writing, you need to set multiple APN information. In this way, even if one or more of the preceding APN is incorrectly written and the dialing fails, the subsequent APNs are automatically used to continue the dialing attempt. In this case, the interface can be used to meet the requirements; This interface not only supports setting the multiple APN, but also supports two ways to store the APN information of users. The first way is that users directly save their APN information in the dictionary and directly built-in in the code. The second option is for users to store their APN information in json files in a usr directory or a subdirectory of usr.
+The user can save multiple APN information in a dictionary or JSON file and then call this interface to activating the PDP Context. And specify by parameter where to get APN information for PDP activation. If PDP activation fails using the first APN information obtained, other APN information set by the user will be used to continue activating the PDP Context.
 
 * Parameter
 
@@ -116,9 +114,9 @@ If a user does not want to use the default dial-up function (you need to disable
 | Return Value | type | Description                                                  |
 | ------------ | ---- | ------------------------------------------------------------ |
 | stagecode    | int  | Stage code, indicates the stage of the dialing.<br>1 - In the stage of obtaining SIM card status, the program returns the value when SIM card status is abnormal;<br>2 - The value returned when the program failed to obtain the network state or failed to obtain the network state in the stage of obtaining network state;<br>3 - The value returned by the program during the dialing;<br>Stagecode should normally return 3 when used by the user. The first two values are abnormal. |
-| subcode      | int  | Subcode，it is combined with the value of stagecode  to represent the specific state of dialing in different stages.<br/>When stagecode = 1:<br/>subcode indicates the state of the SIM card, range: [0, 21], for the description of each value, refer to the return value in sim.getStatus():[https://python.quectel.com/wiki/#/zh-cn/api/QuecPythonClasslib?id=sim-sim%e5%8d%a1](https://python.quectel.com/wiki/#/zh-cn/api/QuecPythonClasslib?id=sim-sim卡) <br/><br/>Subcode，it is combined with the value of stagecode  to represent the specific state of dialing in different stages.<br/>When stagecode = 1:<br/>subcode indicates the state of the SIM card, range: [0, 21], for the description of each value, refer to the return value in sim.getStatus():[https://python.quectel.com/wiki/#/zh-cn/api/QuecPythonClasslib?id=sim-sim%e5%8d%a1](https://python.quectel.com/wiki/#/zh-cn/api/QuecPythonClasslib?id=sim-sim卡) <br/><br/>When stagecode = 2:<br/>subcode indicates the state of the network registration, range: [0, 11], for the description of each values, refer to the return value in net.getState():[https://python.quectel.com/wiki/#/zh-cn/api/QuecPythonClasslib?id=net-%e7%bd%91%e7%bb%9c%e7%9b%b8%e5%85%b3%e5%8a%9f%e8%83%bd](https://python.quectel.com/wiki/#/zh-cn/api/QuecPythonClasslib?id=net-网络相关功能) <br/>Subcode = -1: indicates that the network status fails to be obtained.<br/>For other value, see the above link.<br/><br>When stagecode = 3 :<br/>subcode = -1: Indicates that all user APN attempts are made to dial up, but all attempts fail.<br>subcode = 0: Indicates that the module successfully dials before using the user APN. In this case, the following three situations may occur:<br>（1）The user does not disable the default automatic dialing function upon startup.<br>（2）The user successfully calls the dialing interface after starting the machine.<br/>（3）After startup, the user has executed the startByUserApns() interface and dialed successfully, and then executed the interface again.<br>subcode = 1: Dialing succeeded. |
+| subcode      | int  | Subcode，it is combined with the value of stagecode  to represent the specific state of dialing in different stages.<br/>When stagecode = 1:<br/>subcode indicates the state of the SIM card, range: [0, 21], for the description of each value, refer to the return value in sim.getStatus():[https://python.quectel.com/wiki/#/en-us/api/QuecPythonClasslib?id=sim-sim-card](https://python.quectel.com/wiki/#/en-us/api/QuecPythonClasslib?id=sim-sim-card) <br/><br/>Subcode，it is combined with the value of stagecode  to represent the specific state of dialing in different stages.<br/>When stagecode = 1:<br/>subcode indicates the state of the SIM card, range: [0, 21], for the description of each value, refer to the return value in sim.getStatus():[https://python.quectel.com/wiki/#/en-us/api/QuecPythonClasslib?id=sim-sim-card](https://python.quectel.com/wiki/#/en-us/api/QuecPythonClasslib?id=sim-sim-card) <br/><br/>When stagecode = 2:<br/>subcode indicates the state of the network registration, range: [0, 11], for the description of each values, refer to the return value in net.getState():[https://python.quectel.com/wiki/#/en-us/api/QuecPythonClasslib?id=net-network](https://python.quectel.com/wiki/#/en-us/api/QuecPythonClasslib?id=net-network) <br/>Subcode = -1: indicates that the network status fails to be obtained.<br/>For other value, see the above link.<br/><br>When stagecode = 3 :<br/>subcode = -1: Indicates that all user APN attempts are made to dial up, but all attempts fail.<br>subcode = 0: Indicates that the module successfully dials before using the user APN. In this case, the following three situations may occur:<br>（1）The user does not disable the default automatic dialing function upon startup.<br>（2）The user successfully calls the dialing interface after starting the machine.<br/>（3）After startup, the user has executed the startByUserApns() interface and dialed successfully, and then executed the interface again.<br>subcode = 1: Dialing succeeded. |
 
-* note
+* Note
 
   The user APN can be saved in the dictionary built-in code, or can be saved in json file, the following describes the format of APN information:
 
@@ -132,7 +130,7 @@ If a user does not want to use the default dial-up function (you need to disable
 
   （3）Since the dictionary is an unordered structure, the APN information is not taken out first which APN is written before, which is random.
 
-  Example：
+* Example：
 
   ```python
   apn_infos = {
@@ -205,7 +203,7 @@ If a user does not want to use the default dial-up function (you need to disable
 
   4. This interface is used to replace the default dial-up function upon startup. If you choose to use this interface, you need to run this interface in the user script first. After this interface returns a success message, the dial-up networking is successful, and then perform other network services.
 
-Example
+* Example
 
 ```python
 import dataCall
@@ -294,25 +292,25 @@ if __name__ == '__main__':
 
 
 
-- Enable or disable automatic dialing (take effect after restart)
+##### Enable the function of automatically activating the PDP context 
 
 > **dataCall.poweronAutoDatacall(enable)**
 
-Enable or disable automatic dialing, take effect after restart. It is enabled by default.
+Enable the function of automatically activating the PDP context upon startup, take effect after restart. It is enabled by default.
 
 * Parameter
 
 | Parameter | Type | Description                                                  |
 | --------- | ---- | ------------------------------------------------------------ |
-| enable    | int  | 0 - disable automatic dialing<br>1 - enable automatic dialing |
+| enable    | int  | 0 - disable the function of automatically activating the PDP context<br>1 - enable the function of automatically activating the PDP context |
 
 * Return Value
 
-  None
+  * None
 
-* note
+* Note
 
-  This interface is only applicable to development and debugging, because it takes effect only after being reset. If the user wants to turn off the automatic dialing function when the module is in mass production, he/she can take the following steps:
+  This interface is only applicable to development and debugging, because it takes effect only after being reset. If the user wants to disable the function of automatically activating the PDP context when the module is in mass production, user can take the following steps:
 
   step 1: Create a file called system_config.json on your computer.
 
@@ -322,7 +320,7 @@ Enable or disable automatic dialing, take effect after restart. It is enabled by
   {"replFlag": 0, "datacallFlag": 0}
   ```
 
-  Parameter:
+* Parameter:
 
   ​	replFlag - Enable or disable REPL, Please refer to the official Wiki documentation for details——QuecPythonThirdlib.md——system - Set system;
 
@@ -334,11 +332,11 @@ Enable or disable automatic dialing, take effect after restart. It is enabled by
 
 
 
-##### Configure APN Information
+##### Set APN
 
 > **dataCall.setApn(profileIdx, ipType, apn, username, password, authType, flag=0)**
 
-After calling this interface, the user_apn.json will be created in the user partition to save the APN configurations.
+After calling this interface, the user_apn.json will be created in the user partition to save the APN information. When the device is restarted, APN is preferentially obtained from this json file for PDP context activation.
 
 * Parameter
 
@@ -346,21 +344,20 @@ After calling this interface, the user_apn.json will be created in the user part
 | ---------- | ------ | ------------------------------------------------------------ |
 | profileIdx | int    | PDP context index. Range: 1-8. It is generally set to 1, if set as 2-8, the private APN and password may be required. |
 | ipType     | int    | IP type. 0-IPV4, 1-IPV6, 2-IPV4 and IPV6.                    |
-| apn        | string | Optional. APN name. The maximum length is 63 bytes.          |
-| username   | string | Optional. APN user name.  The maximum length is 15 bytes.    |
-| password   | string | Optional. APN password. The maximum length is 15 bytes.      |
+| apn        | string | Optional. APN name. The maximum length is 63 bytes.(The maximum length is 64 bytes in EC200U/EC200A) |
+| username   | string | Optional. APN user name.  The maximum length is 15 bytes.(The maximum length is 64 bytes in EC200U/EC200A) |
+| password   | string | Optional. APN password. The maximum length is 15 bytes.(The maximum length is 64 bytes in EC200U/EC200A) |
 | authType   | int    | Authentication type. 0-No authentication, 1-PAP, 2-CHAP.     |
-| flag       | int    | This parameter is optional. The default value is 0, indicating that only a user_apn.json file is created to save user APN information. If the value is 1, the user_apn.json file is created to save user APN information, and the APN information is used for dial-up immediately. No matter the value is 0 or 1, the APN configured by the user is used for startup dialing during the restart. |
+| flag       | int    | This parameter is optional. The default value is 0, indicating that only a user_apn.json file is created to save user APN information. If the value is 1, the user_apn.json file is created to save user APN information, and the APN information is used for PDP context activation immediately. |
 
 * Return Value
 
-0  Successful execution.
+  * Returns 0 on success, -1 otherwise.
 
--1  Failed execution.
+* Note
 
-* note
+  * The BC25PA platform does not support this method.
 
-  The BC25PA platform does not support this method.
 * Example
 
 ```python
@@ -371,30 +368,59 @@ After calling this interface, the user_apn.json will be created in the user part
 
 
 
-##### get APN Information
+##### Set DNS
+
+> **dataCall.setDnsserver(profileIdx, sim_id, priDns, secDns)**
+
+Manually modify DNS information, you can check whether the modification is successful through `dataCall.getInfo(profileIdx, ipType)`. The device uses the DNS information delivered by the base station by default. 
+
+* Parameter
+
+| Parameter  | Type   | Description                                                  |
+| ---------- | ------ | ------------------------------------------------------------ |
+| profileIdx | int    | PPDP context index. Range: 1-8 [volte version with the largest default PID is used to register IMS, please do not repeat the operation]. It is generally set to 1, if set as 2-8, the private APN and password may be required. |
+| sim_id     | int    | simid, range：0/1, default 0.                                |
+| priDns     | string | Primary DNS                                                  |
+| secDns     | string | Secondary DNS                                                |
+
+* Return Value
+
+  * Returns 0 on success, -1 otherwise.
+
+* Note
+
+  * Currently only EC600S/EC600N/EC800N/EC200U/EC600U platform support this feature.
+
+* Example
+
+```python
+>>> import dataCall
+>>> dataCall.setDnsserver(1, 0, "8.8.8.8", "114.114.114.114")
+0
+```
+
+
+
+##### Get APN
 
 > **dataCall.getApn(simid, profileIdx)**
 
-get APN Information(Variable parameter function)
-By default, there is at least one parameter(simid) and a maximum of two parameters(simid,pid);
-When there is only one parameter simID, the APN loaded by default is obtained; when there are two parameters, the APN of the corresponding PID is obtained  
+Get APN Information of user. If only simID is specified, the default APN is obtained. If profileIdx is specified, the APN corresponding to profileIdx is obtained.
 
 * Parameter
 
 | Parameter  | Type | Description                                                     |
 | ---------- | -------- | ------------------------------------------------------------ |
-| simid      | int      | simid,range：0/1|
-| profileIdx | int      | PDP context index. Range for ASR: 1-8,range for 8910:1-7|
+| simid      | int      | simid, range：0/1 |
+| profileIdx | int      | PDP context index. Range for ASR : 1-8,range for unisoc : 1-7 |
 
 * Return Value
 
-APN  Successful execution.
+  * Returns APN on success, integer -1 on failure.
 
--1  Failed execution.
+* Note
 
-* NOTE
-
-The 8910 and ASR platform support this method.
+  * The unisoc and ASR platform support this method.
 
 * Example
 
@@ -423,13 +449,12 @@ This function registers the callback function to send the notification when the 
 
 * Return Value
 
-0  Successful execution.
+  * 0  Successful execution.
+  * -1  Failed execution.
 
--1  Failed execution.
+* Note
 
-* note
-
-  The BC25PA platform does not support this method.
+  * The BC25PA platform does not support this method.
   
 * Example
 
@@ -457,11 +482,11 @@ This function registers the callback function to send the notification when the 
 
 
 
-##### Obtain the Dial-Up Information
+##### Get IP and DNS Information
 
 > **dataCall.getInfo(profileIdx, ipType)**
 
-This function obtains the dial-up information, such as the connection state, IP address and DNS.
+This API is used to get PDP activation status, IP, and DNS information.
 
 * Parameter
 
@@ -472,47 +497,33 @@ This function obtains the dial-up information, such as the connection state, IP 
 
 * Return Value
 
-If it failed to obtain the dial-up information, returns -1. If successfully, the dial-up information is returned  in the format shown as follows.
+  * If it failed to obtain the dial-up information, returns -1. If successfully, the dial-up information is returned  in the format shown as follows.
 
- If ipType =0, the format of the return value is as follows.
+  * If ipType =0, the format of the return value is as follows.
 
-`(profileIdx, ipType, [nwState, reconnect, ipv4Addr, priDns, secDns])`
+    `(profileIdx, ipType, [nwState, reconnect, ipv4Addr, priDns, secDns])`<br/>
+    `profileIdx`：PDP context index. Range: 1-8<br/>
+    `ipType`：IP type. 0-IPV4, 1-IPV6, 2-IPV4 and IPV6.<br/>
+    `nwState`： The result of dial-up. 0 indicates the failed dial-up. 1 indicates the successful dial-up.<br/>
+    `reconnect`：The reconnection flag.<br/>
+    `ipv4Addr`：IPv4 address, string type.<br/>
+    `priDns`：Primary DNS, string type.<br/>
+    `secDns`：Secondary DNS, string type.
 
-`profileIdx`：PDP context index. Range: 1-8
+  * If ipType =1, the format of the return value is as follows.
 
-`ipType`：IP type. 0-IPV4, 1-IPV6, 2-IPV4 and IPV6.
+    `(profileIdx, ipType, [nwState, reconnect, ipv6Addr, priDns, secDns])`<br/>
+    `profileIdx`：PDP context index. Range: 1-8<br/>
+    `ipType`：IP type. 0-IPV4, 1-IPV6, 2-IPV4 and IPV6.<br/>
+    `nwState`：The result of dial-up. 0 indicates the failed dial-up. 1 indicates the successful dial-up.<br/>
+    `reconnect`：The reconnection flag.<br/>
+    `ipv6Addr`：IPv6 address, string type.<br/>
+    `priDns`：Primary DNS, string type.<br/>
+    `secDns`：Secondary DNS, string type.
 
-`nwState`： The result of dial-up. 0 indicates the failed dial-up. 1 indicates the successful dial-up.
+  * If ipType =2, the format of the return value is as follows.
 
-`reconnect`：The reconnection flag.
-
-`ipv4Addr`：IPv4 address, string type.
-
-`priDns`：Primary DNS, string type.
-
-`secDns`：Secondary DNS, string type.
-
- If ipType =1, the format of the return value is as follows.
-
-`(profileIdx, ipType, [nwState, reconnect, ipv6Addr, priDns, secDns])`
-
-`profileIdx`：PDP context index. Range: 1-8
-
-`ipType`：IP type. 0-IPV4, 1-IPV6, 2-IPV4 and IPV6.
-
-`nwState`：The result of dial-up. 0 indicates the failed dial-up. 1 indicates the successful dial-up.
-
-`reconnect`：The reconnection flag.
-
-`ipv6Addr`：IPv6 address, string type.
-
-`priDns`：Primary DNS, string type.
-
-`secDns`：Secondary DNS, string type.
-
- If ipType =2, the format of the return value is as follows.
-
-`(profileIdx, ipType, [nwState, reconnect, ipv4Addr, priDns, secDns], [nwState, reconnect, ipv6Addr, priDns, secDns])`
+    `(profileIdx, ipType, [nwState, reconnect, ipv4Addr, priDns, secDns], [nwState, reconnect, ipv6Addr, priDns, secDns])`
 
 * Example
 
@@ -532,9 +543,7 @@ import net
 import utime
 import checkNet
 
-'''
-The following two global variables are required. You can modify the values of these two global variables accordingly.
-'''
+
 PROJECT_NAME = "QuecPython_DataCall_example"
 PROJECT_VERSION = "1.0.0"
 checknet = checkNet.CheckNetwork(PROJECT_NAME, PROJECT_VERSION)
@@ -582,17 +591,15 @@ if __name__ == '__main__':
 
 
 
-#### cellLocator - Base Station Positioning
+#### cellLocator - Cell Tower Locator
 
-Function: Provides base station positioning interface to obtain coordinate information.
+Function: Provides Cell Tower Locator function to obtain coordinate information.
 
-* note
+Note: the current only  EC600S EC600N/EC800N EC200U/EC600U platform support this function.
 
-  The BC25PA platform does not support this module function.
-  
 ##### Obtain Coordinate Information
 
-> **cellLocator.getLocation(serverAddr, port, token, timeout, profileID)**
+> **cellLocator.getLocation(serverAddr, port, token, timeout, profileIdx)**
 
 This function obtains coordinate information of the base station.
 
@@ -604,31 +611,24 @@ This function obtains coordinate information of the base station.
 | port       | int    | Server port, currently only supports port 80                 |
 | token      | string | Token, composed of 16 characters                             |
 | timeout    | int    | Timeout. Range: 1-300. Default value: 300. Unit: s.          |
-| profileID  | int    | PDP index. Range: 1-8.                                       |
+| profileIdx | int    | PDP context index. Range for ASR : 1-8,range for unisoc : 1-7 |
 
 * Return Value
 
-If obtain the coordinate information successfully, return the information in the format of：`(longtitude, latitude, accuracy)`，`(0.0, 0.0, 0)` indicates it failed to obtain the coordinate information. 
+  * If obtain the coordinate information successfully, return the information in the format of：`(longtitude, latitude, accuracy)`，`(0.0, 0.0, 0)` indicates it failed to obtain the coordinate information. 
 
-`longtitude` : longtitude
+    `longtitude` : longtitude<br/>
+    `latitude` : latitude<br/>
+    `accuracy` : accuracy, Unit of m
 
-`latitude` : latitude
+  * The error code returned is explained as follows:
 
-`accuracy` : accuracy, Unit of m
-
-The error code returned is explained as follows:
-
--1 – Initialization failed 
-
--2 – Server address exceeds 255 bytes
-
--3 – Token length error, it must be 16 bytes.
-
--4 – Timeout is out of range.
-
--5 – PDP error.
-
--6 – Obtaining error.
+    -1 – Initialization failed<br/>
+    -2 – Server address exceeds 255 bytes<br/>
+    -3 – Token length error, it must be 16 bytes.<br/>
+    -4 – Timeout is out of range.<br/>
+    -5 – PDP error.<br/>
+    -6 – Obtaining error.
 
 * Example
 
@@ -641,25 +641,167 @@ The error code returned is explained as follows:
 
 
 
+#### wifilocator - wifi locator
+
+Function: Provides wifi locator function to obtain coordinate information.
+
+Note: the current only  EC600S EC600N/EC800N EC200U/EC600U platform support this function.
+
+##### Set token
+
+> **wifilocator(token)**
+
+Set the token required for WiFi location.
+
+* Parameter
+
+| Parameter | Type   | Description                                                  |
+| --------- | ------ | ------------------------------------------------------------ |
+| token     | string | toekn, made up of 16 characters, you need to apply for this token. |
+
+* Return Value
+
+  * Return an object.
+
+
+
+##### Obtain Coordinate Information
+
+> **wifilocator.getwifilocator()**
+
+Obtain Coordinate Information.
+
+* Parameter
+
+  * None
+
+* Return Value
+
+  * If obtain the coordinate information successfully, return the information in the format of：`(longtitude, latitude, accuracy)`，`(0.0, 0.0, 0)` indicates it failed to obtain the coordinate information. 
+
+    `longtitude` : longtitude<br/>
+    `latitude` : latitude<br/>
+    `accuracy` : accuracy, Unit of m
+
+  * The error code returned is explained as follows:
+
+    -1 – Network exception<br/>
+    -2 – Token length error, it must be 16 bytes<br/>
+    -3 – Obtaining error
+
+* Example
+
+```python
+>>> from wifilocator import wifilocator
+>>> wifilocator = wifilocator("xxxxxxxxxxxxxxxx")
+>>> wifilocator.getwifilocator()
+(117.1152877807617, 31.82142066955567, 100)
+# The token "XXXXXXXXXXXXXXXX" need to be applied to Quectel.
+```
+
+
+
+#### atcmd - AT
+
+Function：send AT cmd.
+
+Note：This module only supports 1803S/EC200U/CATM platform.
+
+#### send AT cmd
+
+> **atcmd.sendSync(atcmd,resp,include_str,timeout)**
+
+* Parameter
+
+| Parameter | Type   | Description                                       |
+|  ----   | -------- | --------------------------------------------- |
+| atcmd   |  string  | AT cmd，must contain‘\r\n’              |
+| resp    |  string  | output param       |
+| include_str | string | include str                                      |
+| timeout | int      | Timeout period, senconds                            |
+
+* Return value
+
+Return 0, or return [errorlist] if failed：
+
+typedef enum HELIOS_AT_RESP_STATUS_ENUM{
+	HELIOS_AT_RESP_OK = 0,
+	HELIOS_AT_RESP_ERROR,
+	HELIOS_AT_RESP_CME_ERROR,
+	HELIOS_AT_RESP_CMS_ERROR,
+	HELIOS_AT_RESP_INVALID_PARAM,
+	HELIOS_AT_RESP_TIME_OUT,
+	HELIOS_AT_RESP_SYS_ERROR,
+}HELIOS_AT_RESP_STATUS_E;
+
+* Example
+
+```python
+>>> import atcmd
+>>> resp=bytearray(50)
+>>> atcmd.sendSync('at+cpin?\r\n',resp,'',20)
+0
+>>> print(resp)
+bytearray(b'\r\n+CPIN: READY\r\n\n\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00
+\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00')
+
+atcmd.sendSync('at+cpin\r\n',resp,'',20)
+1
+>>> print(resp)
+bytearray(b'\r\nERROR\r\n\n
+\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00')
+```
+
+
+
 #### sim - SIM Card
 
 Function: Provides SIM operations related APIs, such as querying SIM card status, ICCID, IMSI.
 
 Note: The prerequisite for successfully obtaining IMSI, ICCID, and phone number is that the status of the SIM card is 1, which can be queried through sim.getStatus(). 
 
+##### Send APDU command to SIM
+
+> **sim.genericAccess(simId, cmd)**
+
+Send APDU command to SIM card.
+
+Note : Currently, only the ASR platform supports this function.
+
+* Parameter
+
+| Parameter | Type   | Description                                                  |
+| --------- | ------ | ------------------------------------------------------------ |
+| simId     | int    | SIM card id, range : 0 or 1                                  |
+| cmd       | string | command passed on by the MT to the SIM in the format as described in GSM 51.011 |
+
+* Return Value
+
+  * The APDU of the response is returned on success, integer -1 on failure.
+
+* Example
+
+```python
+>>> sim.genericAccess(0,'80F2000016')
+(48, '623E8202782183027FF08410A0000000871002FF86FF9000')
+>>>
+```
+
+
+
 ##### Obtain IMSI
 
 > **sim.getImsi()**
 
-This function obtains the IMSI of SIM card.
+Call this API to get the IMSI of the SIM card.
 
 * Parameter
 
-NA
+  * None
 
 * Return Value
 
-Returns IMSI in string type, or returns -1 if failed.
+  * Returns IMSI in string type, or returns -1 if failed.
 
 * Example
 
@@ -675,15 +817,15 @@ Returns IMSI in string type, or returns -1 if failed.
 
 > **sim.getIccid()**
 
-This function obtains the ICCID of SIM card.
+Call this API to get the ICCID of SIM card.
 
 * Parameter
 
-NA
+  * None
 
 * Return Value
 
-Returns ICCID in string type, or returns -1 if failed.
+  * Returns ICCID in string type, or returns -1 if failed.
 
 * Example
 
@@ -698,20 +840,20 @@ Returns ICCID in string type, or returns -1 if failed.
 
 > **sim.getPhoneNumber()**
 
-This function obtain the phone number of SIM card.
+Call this API to get the phone number of SIM card.
 
 * Parameter
 
-NA
+  * None
 
 * Return Value
 
-Returns the phone number in string type, or returns -1 if failed.
+  * Returns the phone number in string type, or returns -1 if failed.
 
-* note
+* Note
 
-  The BC25PA platform does not support this method.
-  
+  * The BC25PA platform does not support this method.
+
 * Example
 
 ```python
@@ -725,11 +867,11 @@ Returns the phone number in string type, or returns -1 if failed.
 
 > **sim.getStatus()**
 
-This function obtain the Status of SIM Card
+Call this API to get the Status of SIM Card.
 
 * Parameter
 
-NA
+  * None
 
 * Return Value
 
@@ -764,7 +906,7 @@ NA
 
 > **sim.enablePin(pin)**
 
-This function enables PIN authentication, and then you need to enter the correct PIN before the SIM card can be used normally. The SIM card will be locked if the wrong PIN is entered consecutive 3 times and then PUK is required to unlock the SIM card.
+Call this API to enables PIN authentication, and then you need to enter the correct PIN before the SIM card can be used normally. The SIM card will be locked if the wrong PIN is entered consecutive 3 times and then PUK is required to unlock the SIM card.
 
 * Parameter
 
@@ -774,14 +916,12 @@ This function enables PIN authentication, and then you need to enter the correct
 
 * Return Value
 
-0  Successful execution.
+  * Returns 0 on success, -1 otherwise.
 
--1  Failed execution.
+* Note
 
-* note
+  * The BC25PA platform pin password supports up to eight digits.
 
-  The BC25PA platform pin password supports up to eight digits.
-  
 * Example
 
 ```python
@@ -795,7 +935,7 @@ This function enables PIN authentication, and then you need to enter the correct
 
 > **sim.disablePin(pin)**
 
-This function disables PIN authentication
+Call this API to disables PIN authentication
 
 * Parameter
 
@@ -805,14 +945,12 @@ This function disables PIN authentication
 
 * Return Value
 
-0  Successful execution.
+  * Returns 0 on success, -1 otherwise.
 
--1  Failed execution.
+* Note
 
-* note
+  * The BC25PA platform pin password supports up to eight digits.
 
-  The BC25PA platform pin password supports up to eight digits.
-  
 * Example
 
 ```python
@@ -836,14 +974,12 @@ PIN authentication. Only can be called after sim.enablePin(pin) is executed succ
 
 * Return Value
 
-0  Successful execution.
+  * Returns 0 on success, -1 otherwise.
 
--1  Failed execution.
+* Note
 
-* note
+  * The BC25PA platform pin password supports up to eight digits.
 
-  The BC25PA platform pin password supports up to eight digits.
-  
 * Example
 
 ```python
@@ -857,7 +993,7 @@ PIN authentication. Only can be called after sim.enablePin(pin) is executed succ
 
 > **sim.unblockPin(puk, newPin)**
 
-This function unlocks the SIM card. When PIN/PIN2 code is wrongly input for times, PUK/PUK2 code and new PIN/PIN2 code are required to unlock the SIM card. If all PUK code input in10 times are incorrect, SIM card will be permanently locked and automatically scrapped.s
+This function unlocks the SIM card. When PIN/PIN2 code is wrongly input for times, PUK/PUK2 code and new PIN/PIN2 code are required to unlock the SIM card. If all PUK code input in 10 times are incorrect, SIM card will be permanently locked and automatically scrapped.
 
 * Parameter
 
@@ -868,14 +1004,12 @@ This function unlocks the SIM card. When PIN/PIN2 code is wrongly input for time
 
 * Return Value
 
-0  Successful execution.
+  * Returns 0 on success, -1 otherwise.
 
--1  Failed execution.
+* Note
 
-* note
+  * The BC25PA platform pin password supports up to eight digits.
 
-  The BC25PA platform pin password supports up to eight digits.
-  
 * Example
 
 ```python
@@ -900,14 +1034,12 @@ Changes PIN.
 
 * Return Value
 
-0  Successful execution.
+  * Returns 0 on success, -1 otherwise.
 
--1  Failed execution.
+* Note
 
-* note
+  * The BC25PA platform pin password supports up to eight digits.
 
-  The BC25PA platform pin password supports up to eight digits.
-  
 * Example
 
 ```python
@@ -921,7 +1053,7 @@ Changes PIN.
 
 > **sim.readPhonebook(storage, start, end, username)**
 
-This function obtains one or more phone number records in the specified phonebook on the SIM card.
+Call this API to get one or more phone number records in the specified phonebook on the SIM card.
 
 * Parameter
 
@@ -934,24 +1066,21 @@ This function obtains one or more phone number records in the specified phoneboo
 
 * Return Value
 
-If it failed to read, return -1. If read successfully, the record will be returned in the format shown as follows.
+  * If it failed to read, return -1. If read successfully, the record will be returned in the format shown as follows.
 
-`(record_number, [(index, username, phone_number), ... , (index, username, phone_number)])`
+  `(record_number, [(index, username, phone_number), ... , (index, username, phone_number)])`
 
-Description:
+* Description:
 
-`record_number` – Integer type. The record number read out.
+  * `record_number` – Integer type. The record number read out.
+  * `index` – Integer type. The index position in the phonebook.
+  * `username` – String type. User name.
+  * `phone_number` – String type. Phone number.
 
-`index` – Integer type. The index position in the phonebook.
+* Note
 
-`username` – String type. User name.
+  * The BC25PA platform does not support this method.
 
-`phone_number` – String type. Phone number.
-
-* note
-
-  The BC25PA platform does not support this method.
-  
 * Example
 
 ```python
@@ -971,7 +1100,7 @@ Description:
 
 > **sim. writePhonebook(storage, index, username, number)**
 
-This function writes a phone number record.
+Call this API to writes a phone number record.
 
 * Parameter
 
@@ -984,14 +1113,12 @@ This function writes a phone number record.
 
 * Return Value
 
-0  Successful execution.
+  * Returns 0 on success, -1 otherwise.
 
--1  Failed execution.
+* Note
 
-* note
+  * The BC25PA platform does not support this method.
 
-  The BC25PA platform does not support this method.
-  
 * Example
 
 ```python
@@ -1001,11 +1128,11 @@ This function writes a phone number record.
 
 
 
-##### Register Listening Callback Function
+##### Register Callback Function
 
 > **sim.setCallback(usrFun)**
 
-This function registers the listening callback function. This function will be triggered when receiving SMS.
+Call this API to registers the listening callback function. The callback function will be triggered when receiving SMS.
 
 (Only valid when the SIM card hot-plugging is enabled.)
 
@@ -1017,14 +1144,12 @@ This function registers the listening callback function. This function will be t
 
 * Return Value
 
-0  Successful execution.
+  * Returns 0 on success, -1 otherwise.
 
--1  Failed execution.
+* Note
 
-* note
+  * The BC25PA platform does not support this method.
 
-  The BC25PA platform does not support this method.
-  
 * Example
 
 ```python
@@ -1039,29 +1164,27 @@ sim.setCallback(cb)
 
 
 
-##### Set SIMdet
+##### Enable or disable the SIM card hot plug function
 
-> **sim.setSimDet(detenable, insertlevel)**
+> **sim.setSimDet(switch, triggerLevel)**
 
-This function sets the SIM card hot-plugging related configurations.
+Call this API to enable or disable the SIM card hot swap function.
 
 * Parameter
 
-| Parameter   | Type | Description                                                  |
-| ----------- | ---- | ------------------------------------------------------------ |
-| detenable   | int  | Enable/Disable SIM card hot-plugging. 0: Disable. 1: Enable. |
-| insertlevel | int  | High/low level (0/1).                                        |
+| Parameter    | Type | Description                                                  |
+| ------------ | ---- | ------------------------------------------------------------ |
+| switch       | int  | Enable/Disable SIM card hot-plugging. 0: Disable. 1: Enable. |
+| triggerLevel | int  | High/low level (0/1).                                        |
 
 * Return Value
 
-0  Successful execution.
+  * Returns 0 on success, -1 otherwise.
 
--1  Failed execution.
+* Note
 
-* note
+  * The BC25PA platform does not support this method.
 
-  The BC25PA platform does not support this method.
-  
 * Example
 
 ```python
@@ -1079,25 +1202,24 @@ This function obtains the SIM card hot-plugging related configuration.
 
 * Parameter
 
-NA
+  * None
 
 * Return Value
 
-If it failed to obtain, return -1. If the configuration is obtained successfully, a tuple will be returned in the format shown as follows.
+  * If it failed to obtain, return -1. If the configuration is obtained successfully, a tuple will be returned in the format shown as follows.
 
-`(detenable, insertlevel)`
+  `(detenable, insertlevel)`
 
-Description：
+* Description：
 
-`detenable` - Enable/Disable SIM card hot-plugging. 0: Disable. 1: Enable.
+  * `detenable` - Enable/Disable SIM card hot-plugging. 0: Disable. 1: Enable.
+  * `insertlevel` – High/low level (0/1).
 
-`insertlevel` – High/low level (0/1).
+* Note
 
-* note
+  * The BC25PA platform does not support this method.
 
-  The BC25PA platform does not support this method.
-
-Example
+* Example
 
 ```python
 >>> sim.getSimDet()
@@ -1126,9 +1248,7 @@ This function sets the Auto-Answer Time.
 
 * Return Value
 
-0  Successful execution.
-
--1  Failed execution.
+  * Returns 0 on success, -1 otherwise.
 
 * Example
 
@@ -1140,7 +1260,7 @@ This function sets the Auto-Answer Time.
 
 
 
-##### Initiate a Call
+##### Call
 
 > **voiceCall.callStart(phonenum)**
 
@@ -1154,9 +1274,7 @@ This function initiates a call.
 
 * Return Value
 
-0  Successful execution.
-
--1  Failed execution.
+  * Returns 0 on success, -1 otherwise.
 
 * Example
 
@@ -1167,7 +1285,7 @@ This function initiates a call.
 
 
 
-##### Answer a Call
+##### Answer
 
 > **voiceCall.callAnswer()**
 
@@ -1175,13 +1293,11 @@ This function answers a call.
 
 * Parameter
 
-NA
+  * None
 
 * Return Value
 
-0  Successful execution.
-
--1  Failed execution.
+  * Returns 0 on success, -1 otherwise.
 
 * Example
 
@@ -1192,7 +1308,7 @@ NA
 
 
 
-##### Hang up a Call
+##### Hang up
 
 > **voiceCall.callEnd()**
 
@@ -1200,13 +1316,11 @@ This function hangs up a call.
 
 * Parameter
 
-NA
+  * None
 
 * Return Value
 
-0  Successful execution.
-
--1  Failed execution.
+  * Returns 0 on success, -1 otherwise.
 
 * Example
 
@@ -1232,9 +1346,7 @@ This function sets DTMF.
 
 * Return Value
 
-0  Successful execution.
-
--1  Failed execution.
+  * Returns 0 on success, -1 otherwise.
 
 * Example
 
@@ -1249,88 +1361,31 @@ This function sets DTMF.
 
 > **voiceCall.setFw(reason, fwmode, phonenum)**
 
-Call Forwarding Number and Conditions Control
+Call Forwarding Number and Conditions Control.
 
 * Parameter
 
 | Parameter | Type   | Description                                                  |
 | --------- | ------ | ------------------------------------------------------------ |
-| reason    | int    | Forwarding conditions/reasion: <br/>0 : Unconditional<br/>1 : Mobile busy<br/>2 : Not reply<br/>3 : Not reachable<br/>4 : All call forwarding (Refer to 3GPP TS 22.030)<br/>5 : All conditional call forwarding (Refer to 3GPP TS 22.030) |
-| fwmode    | int    | Controls the call forwarding supplementary service:<br/>0 : Disable<br/>1 : Enable<br/>2 : Query status<br/>3 : Registration<br/>4 : Erasure |
+| reason    | int    | Forwarding conditions/reasion: <br/>0 - Unconditional<br/>1 - Mobile busy<br/>2 - Not reply<br/>3 - Not reachable<br/>4 - All call forwarding (Refer to 3GPP TS 22.030)<br/>5 - All conditional call forwarding (Refer to 3GPP TS 22.030) |
+| fwmode    | int    | Controls the call forwarding supplementary service:<br/>0 - Disable<br/>1 - Enable<br/>2 - Query status<br/>3 - Registration<br/>4 - Erasure |
 | phonenum  | string | The targeted number for forwarding                           |
 
 * Return Value
 
-0  Successful execution.
-
--1  Failed execution.
+  * Returns 0 on success, -1 otherwise.
 
 * Example
 
-NA
+  * None
 
 
 
-
-##### enable automatic recording api
-
-> **voiceCall.setAutoRecord(enable, record_type, record_mode, filename)**
-
-enable automatic recording api.(The automatic recording function is disabled by default)
-
-note：The non-Volte version does not have this interface
-
-* Parameter
-
-| Parameter    | Type     | Description                                              |
-| --------     | -------- | -------------------------------------------------------- |
-| enable       | int      | enable switch.        range:【0/1】:  0：Disable the automatic recording function 1：enable the automatic recording function     |
-| record_type  | int      | Recording File Type.  range:【0/1】:  0：AMR  1:WAV                |
-| record_mode  | int      | mode.                 range:【0/1/2】:0：RX   1:TX    2:MIX                |
-| filename     | string   | file name.                |
-
-* Return Value
-
-0 : Successful execution.
--1: Failed execution.
-"NOT SUPPORT": The interface is not supported.
-
-* Example
-
-```python
->>> voiceCall.setAutoRecord(1,0,2,'U:/test.amr')
-0
-```
-
-
-
-##### Start the recording
-
-> **voiceCall.startRecord(record_type, record_mode, filename)**
-
-Start the recording api.
-
-note：The non-Volte version does not have this interface
-
-* Parameter
-
-| Parameter    | Type     | Description                                           |
-| --------     | -------- | ----------------------------------------------------- |
-| record_type  | int      | Recording File Type.  range:【0/1】;   0:AMR  1:WAV                |
-| record_mode  | int      | mode                  range:【0/1/2】; 0:RX   1:TX    2:MIX                |
-| filename     | string   | file name                |
-
-* Return Value
-
-0 : Successful execution.
--1: Failed execution.
-"NOT SUPPORT": The interface is not supported.
-
-##### switch voice channel
+##### Switch the voice output channel
 
 > **voiceCall.setChannel(device)**
 
-Set the voice output channel during a call. The default channel is channel 0.
+Set the voice output channel during a call. The default channel is handset.
 
 * Parameter
 
@@ -1340,10 +1395,7 @@ Set the voice output channel during a call. The default channel is channel 0.
 
 * Return Value
 
-0  Successful execution.
-
--1  Failed execution.
-
+  * Returns 0 on success, -1 otherwise.
 
 * Example
 
@@ -1354,24 +1406,117 @@ Set the voice output channel during a call. The default channel is channel 0.
 
 
 
+##### Get Volume
 
-##### End Current Recording
+> **voiceCall.getVolume()**
 
-> **voiceCall.stopRecord()**
-
-End Current Recording
-
-note：The non-Volte version does not have this interface
+Get the current volume of the voice.
 
 * Parameter
 
-NA
+  * None
 
 * Return Value
 
-0 : Successful execution.
--1: Failed execution.
-"NOT SUPPORT": The interface is not supported.
+  * return volume of the voice.
+
+
+
+##### Set Volume
+
+> **voiceCall.setVolume(vol)**
+
+Set the volume of the voice.
+
+* Parameter
+
+| Parameter | Type | Description                                                  |
+| --------- | ---- | ------------------------------------------------------------ |
+| vol       | int  | Volume. Range : 0–11. The higher the number, the higher the volume. |
+
+* Return Value
+
+  Returns 0 on success, -1 otherwise.
+
+
+
+
+##### Enable automatic recording
+
+> **voiceCall.setAutoRecord(enable, record_type, record_mode, filename)**
+
+Enable automatic recording, it is disabled by default.
+
+Note：The non-Volte version does not have this interface.
+
+* Parameter
+
+| Parameter   | Type   | Description                                                  |
+| ----------- | ------ | ------------------------------------------------------------ |
+| enable      | int    | enable switch, range:<br>0 - disable the automatic recording function<br/>1 - enable the automatic recording function |
+| record_type | int    | Recording File Type, range:<br/>0 - AMR<br/>1 - WAV          |
+| record_mode | int    | mode, range:<br/>0 - RX <br/>1 - TX<br/>2 - MIX              |
+| filename    | string | file name.                                                   |
+
+* Return Value
+
+  * 0 : Successful execution.
+  * -1 :Failed execution.
+  * "NOT SUPPORT" :The interface is not supported.
+
+* Example
+
+```python
+>>> voiceCall.setAutoRecord(1,0,2,'U:/test.amr')
+0
+```
+
+
+
+##### Start recording
+
+> **voiceCall.startRecord(record_type, record_mode, filename)**
+
+Call this API to start recording.
+
+Note：The non-Volte version does not have this interface.
+
+* Parameter
+
+| Parameter   | Type   | Description                                         |
+| ----------- | ------ | --------------------------------------------------- |
+| record_type | int    | Recording File Type, range:<br/>0 - AMR<br/>1 - WAV |
+| record_mode | int    | mode, range:<br/>0 - RX<br/>1 - TX<br/>2 - MIX      |
+| filename    | string | file name                                           |
+
+* Return Value
+
+  * 0 : Successful execution.
+  * -1 : Failed execution.
+  * "NOT SUPPORT" : The interface is not supported.
+
+
+
+
+
+
+##### End Recording
+
+> **voiceCall.stopRecord()**
+
+End Current Recording.
+
+Note : The non-Volte version does not have this interface.
+
+* Parameter
+
+  * None
+
+* Return Value
+
+  * 0 : Successful execution.
+  * -1 : Failed execution.
+  * "NOT SUPPORT" : The interface is not supported.
 
 * Example
 
@@ -1382,31 +1527,31 @@ NA
 
 
 
-##### Start the recording(stream)
+##### Start Bitstream recording
 
 > **voiceCall.startRecordStream(record_type, record_mode, record_cb)**
 
-Start the recording(stream)
+Start Bitstream recording.
 
-note：The non-Volte version does not have this interface
+Note : The non-Volte version does not have this interface.
 
 * Parameter
 
-| Parameter    | Type     | Description                                              |
-| --------     | -------- | ----------------------------------------------------- |
-| record_type  | int      | Recording File Type.  range:【0/1】;   0:AMR  1:WAV                |
-| record_mode  | int      | mode                  range:【0/1/2】; 0:RX   1:TX    2:MIX               |
-| record_cb    | function | callback function                |
+| Parameter   | Type     | Description                                         |
+| ----------- | -------- | --------------------------------------------------- |
+| record_type | int      | Recording File Type, range:<br/>0 - AMR<br/>1 - WAV |
+| record_mode | int      | mode, range:<br/>0 - RX<br/>1 - TX <br/>2 - MIX     |
+| record_cb   | function | callback function                                   |
 
 * Return Value
 
-0 : Successful execution.
--1: Failed execution.
-"NOT SUPPORT": The interface is not supported.
+  * 0 : Successful execution.
+  * -1 : Failed execution.
+  * "NOT SUPPORT" : The interface is not supported.
 
 * Example
 
-*The return value of the callback function is defined as follows
+The return value of the callback function is defined as follows
 ```
 args[0]:stream data
 args[1]:stream data len
@@ -1455,40 +1600,6 @@ typedef enum
 0
 ```
 
-##### Get Volume
-
-> **voiceCall.getVolume()**
-
-Get the current volume of the voice.
-
-* Parameter
-
-  None
-
-* Return Value
-
-  return volume of the voice.
-
-
-
-##### Set Volume
-
-> **voiceCall.setVolume(vol)**
-
-Set the volume of the voice.
-
-* Parameter
-
-| Parameter | Type | Description                                                  |
-| --------- | ---- | ------------------------------------------------------------ |
-| vol       | int  | Volume. Range : 0–11. The higher the number, the higher the volume. |
-
-* Return Value
-
-  0  Successful execution.
-
-  -1  Failed execution.
-
 
 
 
@@ -1506,27 +1617,95 @@ This function registers the listening callback function. This function will be t
 
 * Return Value
 
-0  Successful execution.
+  * Returns 0 on success, -1 otherwise.
 
--1  Failed execution.
+* Event_id
+
+```c
+typedef enum
+{
+	HELIOS_VC_INIT_OK_IND = 1,
+	HELIOS_VC_RING_IND,
+	HELIOS_VC_CONNECT_IND,
+	HELIOS_VC_NOCARRIER_IND,
+	HELIOS_VC_ERROR_IND,
+	HELIOS_VC_CCWA_IND,
+	HELIOS_VC_DIALING_IND,
+	HELIOS_VC_MO_FAILED_IND,
+	HELIOS_VC_HOLDING_IND,
+	
+	HELIOS_VC_RING_VOLTE_IND = 10,
+	HELIOS_VC_CONNECT_VOLTE_IND,
+	HELIOS_VC_NOCARRIER_VOLTE_IND,
+	HELIOS_VC_CCWA_VOLTE_IND,
+	HELIOS_VC_DIALING_VOLTE_IND,
+	HELIOS_VC_ALERTING_VOLTE_IND,
+	HELIOS_VC_HOLDING_VOLTE_IND
+}HELIOS_VC_EVENT_ID_E;
+```
+
+* Description of callback function parameter 
+
+| event                      | Number of Parameter | Parameter Description                                        |
+| -------------------------- | ------------------- | ------------------------------------------------------------ |
+| 2, 3, 9                    | 3                   | args[0] : event id<br>args[1] : call id ( call identification number as described in 3GPP TS 22.030 subclause 4.5.5.1; this number can be used in +CHLD command operations )<br/>args[2] : phone number |
+| 4                          | 3                   | args[0] : event id<br/>args[1] : call id ( call identification number as described in 3GPP TS 22.030 subclause 4.5.5.1; this number can be used in +CHLD command operations )<br/>args[2] : cause |
+| 6                          | 5                   | args[0] : event id<br/>args[1] : call id ( call identification number as described in 3GPP TS 22.030 subclause 4.5.5.1; this number can be used in +CHLD command operations )<br/>args[2] : phone number<br/>args[3] : num type ( [129/145],129:Dialing string without international access code “+”,145:Dialing string includes international access code character “+” )<br/>args[4] : CLI status |
+| 7                          | 1                   | args[0] : event id                                           |
+| 8                          | 4                   | args[0] : event id<br/>args[1] : call id ( call identification number as described in 3GPP TS 22.030 subclause 4.5.5.1; this number can be used in +CHLD command operations )<br/>args[2] : cause<br/>args[3] : Indicates if in-band tones are available from network |
+| 10, 11, 12, 13, 14, 15, 16 | 8                   | args[0] : event id<br/>args[1] : call id ( call identification number as described in 3GPP TS 22.030 subclause 4.5.5.1; this number can be used in +CHLD command operations )<br/>args[2] : dir(MO/MT)<br/>args[3] : state of the call<br>args[4] : type ( It's usually 0,  indicates the voice call service)<br/>args[5] : mpty ( Indicates whether the call is multi-party, 0 : call is not one of multiparty (conference) call parties, 1 : call is one of multiparty (conference) call parties )<br/>args[6] : phone number<br/>args[7] : num type ( [129/145], 129 : Dialing string without international access code “+”, 145 : Dialing string includes international access code character “+” ) |
 
 * Example
 
 ```python
 def voice_callback(args):
-     if args[0] == 4106:
-         print('voicecall is waiting')
-     elif args[0] == 4105:
-         print('voicecall disconnect')
-     elif args[0] == 4104:
-         print('voicecall connected, CallNO.: ', args[6])
-     elif args[0] == 4103:
+     if args[0] == 10:
          print('voicecall incoming call, PhoneNO.: ', args[6])
-
+     elif args[0] == 11:
+	     print('voicecall connected, PhoneNO.: ', args[6])
+     elif args[0] == 12:
+	     print('voicecall disconnect')
+	 elif args[0] == 13:
+	     print('voicecall is waiting, PhoneNO.: ', args[6])
+     elif args[0] == 14:
+         print('voicecall dialing, PhoneNO.: ', args[6])
+     elif args[0] == 15:
+	     print('voicecall alerting, PhoneNO.: ', args[6])
+     elif args[0] == 16:
+	     print('voicecall holding, PhoneNO.: ', args[6])
+     
 >>> voiceCall.setCallback(voice_callback)
 0
 >>> voiceCall.callStart('10086')
 0
+```
+
+
+
+For firmware versions released before 2021-09-09, use the event and callback functions as follows:
+
+* Event_id
+
+```
+#define QUEC_VOICE_CALL_INDICATION_BASE                          ((uint_32)(0x1000))
+#define QUEC_VOLTE_INCOMING_CALL_IND                             ((uint_32)(0x0007 + QUEC_VOICE_CALL_INDICATION_BASE))
+#define QUEC_VOLTE_CONNECT_CALL_IND                              ((uint_32)(0x0008 + QUEC_VOICE_CALL_INDICATION_BASE))
+#define QUEC_VOLTE_DISCONNECT_CALL_IND                           ((uint_32)(0x0009 + QUEC_VOICE_CALL_INDICATION_BASE))
+#define QUEC_VOLTE_WAITING_CALL_IND                              ((uint_32)(0x000A + QUEC_VOICE_CALL_INDICATION_BASE))
+```
+
+* Example
+
+```python
+def voice_callback(args):
+	if args[0] == 4106:
+		print('voicecall is waiting')
+	elif args[0] == 4105:
+		print('voicecall disconnect')
+	elif args[0] == 4104:
+		print('voicecall connected, CallNO.: ', args[6])
+	elif args[0] == 4103:
+		print('voicecall incoming call, PhoneNO.: ', args[6])
 ```
 
 
@@ -1552,9 +1731,8 @@ This function sends the messages in TEXT mode.
 
 * Return Value
 
-0  Successful execution.
-
--1  Failed execution.
+  * 0  Successful execution.
+  * -1  Failed execution.
 
 * Example
 
@@ -1585,9 +1763,8 @@ This function sends the messages in PDU mode.
 
 * Return Value
 
-0  Successful execution.
-
--1  Failed execution.
+  * 0  Successful execution.
+  * -1  Failed execution.
 
 * Example
 
@@ -1618,9 +1795,8 @@ This function deletes the specified messages.
 
 * Return Value
 
-0  Successful execution.
-
--1  Failed execution.
+  * 0  Successful execution.
+  * -1  Failed execution.
 
 * Example
 
@@ -1648,9 +1824,8 @@ This function selects the memory storages, and the default is SIM message storag
 
 * Return Value
 
-0  Successful execution.
-
--1  Failed execution.
+  * 0  Successful execution.
+  * -1  Failed execution.
 
 * Example
 
@@ -1670,25 +1845,21 @@ This function obtains the current information in the message storage.
 
 * Parameter
 
-NA
+  * None
 
 * Return Value
 
-If the information is obtained successfully, a tuple is returned in the following format:
+  * If the information is obtained successfully, a tuple is returned in the following format:
 
-`([loc1, current_nums, max_nums],[loc2, current_nums, max_nums],[loc3, current_nums, max_nums])`
+    `([loc1, current_nums, max_nums],[loc2, current_nums, max_nums],[loc3, current_nums, max_nums])`
 
-Description：
+* Description：
 
-`loc1` - The memory storage where the messages to be read and deleted stored in;
-
-`loc2` - The memory storage where the messages twill be written and sent stored in;
-
-`loc3` - The memory storage where the Received messages stored in;
-
-`current_nums` - The current number of messages in the storage.
-
-`max_nums` - The maximum number of messages can be stored in the storage.
+  * `loc1` - The memory storage where the messages to be read and deleted stored in;
+  * `loc2` - The memory storage where the messages twill be written and sent stored in;
+  * `loc3` - The memory storage where the Received messages stored in;
+  * `current_nums` - The current number of messages in the storage.
+  * `max_nums` - The maximum number of messages can be stored in the storage.
 
 * Example
 
@@ -1711,14 +1882,12 @@ This function obtains the number of messages.
 
 * Parameter
 
-
-NA
+  * None
 
 * Return Value
 
-The number of messages  Successful execution.
-
--1  Failed execution.
+  * The number of messages  Successful execution.
+  * -1  Failed execution.
 
 * Example
 
@@ -1744,7 +1913,7 @@ This function reads messages in PDU mode.
 
 * Return Value
 
-If successfully, returns the message content in string. If failed, returns -1.
+  * If successfully, returns the message content in string. If failed, returns -1.
 
 
 
@@ -1762,15 +1931,13 @@ This function reads messages in TEXT mode.
 
 * Return Value
 
-If successfully, returns the message content in following format. If failed, returns -1.
+  * If successfully, returns the message content in following format. If failed, returns -1.
 
-Return format：(phoneNumber, msg, msgLen)
+  * Return format：(phoneNumber, msg, msgLen)
 
-`phoneNumber` ：Phone number.
-
-`msg` ：Message content
-
-`msgLen` ：Message Length
+    `phoneNumber` ：Phone number.<br/>
+    `msg` ：Message content<br/>
+    `msgLen` ：Message Length
 
 * Example
 
@@ -1793,11 +1960,11 @@ This function obtains the short message center number.
 
 * Parameter
 
-NA
+  * None
 
 * Return Value
 
-Returns the short message center number in string type if successfully, or returns -1 if failed.
+  * Returns the short message center number in string type if successfully, or returns -1 if failed.
 
 * Example
 
@@ -1823,13 +1990,12 @@ This function sets the short message center number. And it is not recommended to
 
 * Return Value
 
-0  Successful execution.
-
--1  Failed execution.
+  * 0  Successful execution.
+  * -1  Failed execution.
 
 * Example
 
-NA
+  * None
 
 
 
@@ -1848,8 +2014,7 @@ This function obtains the length of the specified PDU messages.
 
 - Return Value
 
-
-Returns the length of PDU message if successfully, or returns -1 if failed.
+  * Returns the length of PDU message if successfully, or returns -1 if failed.
 
 - Example
 
@@ -1880,18 +2045,14 @@ This function decodes PDU.
 
 - Return Value
 
+  * Returns the decoded PDU message in the following format if successfully, or returns -1 if failed.
 
-Returns the decoded PDU message in the following format if successfully, or returns -1 if failed.
+  * Format：(phoneNumber, msg, time, msgLen)
 
-Format：(phoneNumber, msg, time, msgLen)
-
-`phoneNumber` ：The phone number.
-
-`msg` ：Message content.
-
-`time` ：Time when the message was received.
-
-`msgLen` ：The length of the message.
+    `phoneNumber` ：The phone number.<br/>
+    `msg` ：Message content.<br/>
+    `time` ：Time when the message was received.<br/>
+    `msgLen` ：The length of the message.
 
 - Example
 
@@ -1899,7 +2060,7 @@ Format：(phoneNumber, msg, time, msgLen)
 ```python
 >>> import sms
 >>>sms.decodePdu('0891683110305005F00405A10110F000081270319043442354516C76CA77ED4FE1FF1A00320030003200315E7496328303975E6CD596C68D445BA34F2067086D3B52A863D09192FF1A4E3B52A88FDC79BB975E6CD596C68D44FF0C5171540C5B8862A47F8E597D751F6D3B3002',20)
->>>('10010', '公益短信：2021年防范非法集资宣传月活动提醒：主动远离非法集资，共同守护美好生活。', '2021-07-13 09:34:44', 118)
+('10010', '公益短信：2021年防范非法集资宣传月活动提醒：主动远离非法集资，共同守护美好生活。', '2021-07-13 09:34:44', 118)
 >>> 
 ```
 
@@ -1919,15 +2080,14 @@ This function registers the listening callback function. This function will be t
 
 * Return Value
 
-0  Successful execution.
-
--1  Failed execution.
+  * 0  Successful execution.
+  * -1  Failed execution.
 
 * Example
 
-The new architecture refers to example 1, and the old architecture refers to example 2
+  The new architecture refers to example 1, and the old architecture refers to example 2
 
-example 1:
+    * Example 1:
 
 ```python
 import sms
@@ -1940,7 +2100,7 @@ def cb(args):
 sms.setCallback(cb)
 ```
 
-example 2:
+    * Example 2:
 
 ```python
 import sms
@@ -1988,15 +2148,15 @@ This function sets APN. After setting, you need to restart or switch to mode 0 a
 
 * Return Value
 
-0  Successful execution.
+  * 0  Successful execution
+  * -1  Failed execution
 
--1  Failed execution
-
-* note
+* Note
 
   The BC25PA platform does not support this module function.
+
   
-  
+
 ##### Obtain the Current  APN
 
 > **net.getApn(simid)**
@@ -2011,14 +2171,13 @@ This function obtains the current APN.
 
 * Return Value
 
-0  Successful execution.
+  * 0  Successful execution
+  * -1  Failed execution
 
--1  Failed execution.
+* Note
 
-* note
+  * The BC25PA platform does not support this module function.
 
-  The BC25PA platform does not support this module function.
-  
   
 
 ##### Obtain CSQ
@@ -2029,13 +2188,13 @@ This function obtains CSQ.
 
 * Parameter
 
-NA
+  * None
 
 * Return Value
 
-If the execution is successful, the CSQ value is returned. If the execution is failed, -1 is returned. And the returned value 99 indicates the exception.
+  * If the execution is successful, the CSQ value is returned. If the execution is failed, -1 is returned. And the returned value 99 indicates the exception.
 
-The range of CSQ is 0-31, and the larger the value, the better the signal. 
+  * The range of CSQ is 0-31, and the larger the value, the better the signal. 
 
 * Example
 
@@ -2053,17 +2212,25 @@ The range of CSQ is 0-31, and the larger the value, the better the signal.
 
 This function obtains the information of Cell information.
 
+Note：This interface is a variable parameter function in BC25 platform, the number of parameters:[0/1]
+case with one Parameter:
+	parameter:sinr_enable，
+	type:int
+	range:0/1
+		0，disable to get sinr
+		1，enable to get sinr
+
 * Parameter
 
-NA
+  * None
 
 * Return Value
 
-If the execution is failed, -1 is returned.  If the execution is successful, the list of neighbor cell information including RATs GSM/UMTS/LTE are returned in the following format. And when the neighbor cell information for one RAT is null, the corresponding list returned is null.  
+  * If the execution is failed, -1 is returned.  If the execution is successful, the list of neighbor cell information including RATs GSM/UMTS/LTE are returned in the following format. And when the neighbor cell information for one RAT is null, the corresponding list returned is null.  
 
-`([(flag, cid, mcc, mnc, lac, arfcn, bsic, rssi)], [(flag, cid, licd, mcc, mnc, lac, arfcn, bsic, rssi)], [(flag, cid, mcc, mnc, pci, tac, earfcn, rssi),...])`
+  * `([(flag, cid, mcc, mnc, lac, arfcn, bsic, rssi)], [(flag, cid, licd, mcc, mnc, lac, arfcn, bsic, rssi)], [(flag, cid, mcc, mnc, pci, tac, earfcn, rssi),...])`
 
-The description of the return value for GSM:
+* The description of the return value for GSM:
 
 | Parameter | Description                                                  |
 | --------- | ------------------------------------------------------------ |
@@ -2076,7 +2243,7 @@ The description of the return value for GSM:
 | bsic      | Base Station Identity Code, range : 0 ~ 255                  |
 | rssi      | On a GSM network, this value represents the received level and describes the received signal strength. 99 indicates unknown or undetected signal. This value is calculated as follows:<br>rssi = RXLEV - 111<br>The unit is dBm, RXLEV range is 0 ~ 63, so the RSSI range is -111 ~ -48 dBm |
 
-The description of the return value for UMTS:
+* The description of the return value for UMTS:
 
 | Parameter | Description                                                  |
 | --------- | ------------------------------------------------------------ |
@@ -2090,7 +2257,7 @@ The description of the return value for UMTS:
 | psc       | Base Station Identity Code, range : 0 ~ 255                  |
 | rssi      | On a UMTS network, the value indicates the CPICH/PCCPCH receiving power,  unit : dBm, ranges is -5 to 99 |
 
-The description of the return value for LTE:
+* The description of the return value for LTE:
 
 | Parameter | Description                                                  |
 | --------- | ------------------------------------------------------------ |
@@ -2102,12 +2269,21 @@ The description of the return value for LTE:
 | tac       | Tracing area code,  range : 0 ~ 65535                        |
 | earfcn    | Extended Absolute Radio Frequency Channel Number, range : 0-65535. |
 | rssi      | Received Signal Strength Indication. In LTE network, denotes RSRP quality (negative value), which is converted according to RSRP measurement report value, and the conversion relationship is as follows<br>RSRP quality = RSRP measurement report value - 140, unit : dBm, range : -140 ~ -44 dBm |
+| sinr      | Signal to Noise Ratio(supported in BC25，range : -30 ~ 30)   |
 
 * Example
 
 ```python
 >>> net.getCellInfo()
 ([], [], [(0, 14071232, 1120, 0, 123, 21771, 1300, -69), (3, 0, 0, 0, 65535, 0, 40936, -140), (3, 0, 0, 0, 65535, 0, 3590, -140), (3, 0, 0, 0, 63, 0, 40936, -112)])
+
+//bc25
+>>> net.getCellInfo(1)
+([], [], [(0, 17104243, 460, 4, 169, 19472, 3688, -56, -108, -3)])
+>>> net.getCellInfo(0)
+([], [], [(0, 17104243, 460, 4, 169, 19472, 3688, -75, -102)])
+>>> net.getCellInfo()
+([], [], [(0, 17104243, 460, 4, 121, 19472, 3688, -76, -105)])
 ```
 
 
@@ -2120,17 +2296,17 @@ The function obtains the current RAT and the roaming configuration.
 
 * Parameter
 
-NA
+  * None
 
 * Return Value
 
-If the execution is failed, -1 is returned. If the execution is successful, a tuple including the current primary RAT and roaming configuration  is returned.
+  * If the execution is failed, -1 is returned. If the execution is successful, a tuple including the current primary RAT and roaming configuration  is returned.
 
-* note
+* Note
 
-  The BC25PA platform does not support this module function.
+  * The BC25PA platform does not support this module function.
 
-RAT
+* RAT
 
 | Value | RAT                                                          |
 | ----- | ------------------------------------------------------------ |
@@ -2178,11 +2354,10 @@ The function sets the current RAT and the roaming configuration.
 
 * Return Value
 
-0  Successful execution.
+  * 0  Successful execution.
+  * -1  Failed execution.
 
--1  Failed execution.
-
-* note
+* Note
 
   The BC25PA platform does not support this module function. The EC200U/EC600U does not support roaming parameters.
 
@@ -2195,19 +2370,18 @@ This function obtains the network mode.
 
 * Parameter
 
-NA
+  * None
 
 * Return Value
 
-If the execution is failed, -1 is returned. If  the execution is successful, a tuple is returned in the format：`(selection_mode, mcc, mnc, act)`
+  * If the execution is failed, -1 is returned. If  the execution is successful, a tuple is returned in the format：`(selection_mode, mcc, mnc, act)`
+  * The description of the return value:<br/>
+    `selection_mode` : Selection Mode. 0- Automatic. 1- Manual.<br/>
+    `mcc` : Mobile Country Code, sting type<br/>
+    `mnc` : Mobile Network Code, sting type<br/>
+    `act` : ACT mode for the primary RAT
 
-The description of the return value:
-`selection_mode` : Selection Mode. 0- Automatic. 1- Manual.
-`mcc` : Mobile Country Code, sting type
-`mnc` : Mobile Network Code, sting type
-`act` : ACT mode for the primary RAT
-
-ACT Mode
+* ACT Mode
 
 | Value | ACT Mode           |
 | ----- | ------------------ |
@@ -2238,43 +2412,52 @@ ACT Mode
 
 This function obtains the signal strength.
 
+Note：This interface is a variable parameter function in 1803s/qualcomm/unisoc platform, the number of parameters:[0/1]
+case with one Parameter:
+	parameter:sinr_enable，
+	type:int
+	range:0/1
+		0，disable to get sinr
+		1，enable to get sinr
+
 * Parameter
 
-NA
+  * None
 
 * Return Value
 
-If the execution is failed, -1 is returned. If the execution is successful, a tuple including 2 list (GW/LTE) is returned in the following format:
+  * If the execution is failed, -1 is returned. If the execution is successful, a tuple including 2 list (GW/LTE) is returned in the following format:
 
-`([rssi, bitErrorRate, rscp, ecno], [rssi, rsrp, rsrq, cqi])`
+    `([rssi, bitErrorRate, rscp, ecno], [rssi, rsrp, rsrq, cqi])`
 
-The description of the return value:
+  * The description of the return value:
 
-GW list：
+    * GW list：
 
-`rssi` : On a GSM/WCDMA network, this value represents the received level and describes the received signal strength. 99 indicates unknown or undetected signal. This value is calculated as follows:<br>rssi = RXLEV - 111<br>The unit is dBm, RXLEV range is 0 ~ 63, so the range of rssi  is -111 ~ -48 dBm
+      `rssi` : On a GSM/WCDMA network, this value represents the received level and describes the received signal strength. 99 indicates unknown or undetected signal. This value is calculated as follows: <br/>
+      &emsp;rssi = RXLEV - 111 <br/>
+      &emsp;The unit is dBm, RXLEV range is 0 ~ 63, so the range of rssi  is -111 ~ -48 dBm <br/>
+      `bitErrorRate` : Error Rate(BER), range : 0  ~ 7, 99 indicates unknown or undetected signal <br/>
+      `rscp` : Received Signal Code Power, range : -121 ~ -25 dBm, 255 indicates unknown or undetected signal <br/>
+      `ecno` :   Pilot Channel , range : -24 ~ 0, 255 indicates unknown or undetected signal
 
-`bitErrorRate` : Error Rate(BER), range : 0  ~ 7, 99 indicates unknown or undetected signal
+    * LTE list：
 
-`rscp` : Received Signal Code Power, range : -121 ~ -25 dBm, 255 indicates unknown or undetected signal
-
-`ecno` :   Pilot Channel , range : -24 ~ 0, 255 indicates unknown or undetected signal
-
-LTE list：
-
-`rssi` : Received Signal Strength Indicator, range : -140 ~ -44 dBm, 99 indicates unknown or undetected signal
-
-`rsrp` : Reference Signal Receiving Power, range : -141 ~ -44 dBm, 99 indicates unknown or undetected signal
-
-`rsrq` : Reference Signal Receiving Quality, range : -20 ~ -3 dBm, A larger value indicates better signal reception quality
-
-`cqi` : Channel Quality
-
+      `rssi` : Received Signal Strength Indicator, range : -140 ~ -44 dBm, 99 indicates unknown or undetected signal <br/>
+      `rsrp` : Reference Signal Receiving Power, range : -141 ~ -44 dBm, 99 indicates unknown or undetected signal <br/>
+      `rsrq` : Reference Signal Receiving Quality, range : -20 ~ -3 dBm, A larger value indicates better signal reception quality <br/>
+      `cqi` : Channel Quality
+	  `sinr`: Signal to Noise Ratio(supported in 1803s/qualcomm/unisoc，range : -30 ~ 30)
 * Example
 
 ```python
 >>>net.getSignal()
 ([99, 99, 255, 255], [-51, -76, -5, 255])
+
+>>>net.getSignal(0)
+([99, 99, 255, 255], [-51, -76, -5, 255])
+>>>net.getSignal(1)
+([99, 99, 255, 255], [-51, -76, -5, 255, 18])
 ```
 
 
@@ -2287,19 +2470,17 @@ This function obtains the current time of the base station. This time is the tim
 
 * Parameter
 
-NA
+  * None
 
 * Return Value
 
-If the execution is failed, -1 is returned. If the execution is successful, a tuple is returned in the following format: 
+  * If the execution is failed, -1 is returned. If the execution is successful, a tuple is returned in the following format: 
 
-`(date, abs_time, leap_sec)`
+    `(date, abs_time, leap_sec)`
 
-`date` : String type. The time of the base station. The TIME zone of the EC600N series is different from that of the EC200U/EC600U series. For details, see the example. If you need to set and obtain the time zone, use the 'setTimeZone(offset)' and 'getTimeZone()' interfaces of the utime module.
-
-`abs_time` : Integer type. The absolute number of seconds of time.
-
-`leap_sec` : Integer type. The leap second.
+      `date` : String type. The time of the base station. The TIME zone of the EC600N series is different from that of the EC200U/EC600U series. For details, see the example. If you need to set and obtain the time zone, use the 'setTimeZone(offset)' and 'getTimeZone()' interfaces of the utime module. <br/>
+      `abs_time` : Integer type. The absolute number of seconds of time. <br/>
+      `leap_sec` : Integer type. The leap second.
 
 * Example
 
@@ -2319,21 +2500,17 @@ This function obtains the current operator information.
 
 * Parameter
 
-NA
+  * None
 
 * Return Value
 
-If the execution is failed, -1 is returned. If the execution is successful, a tuple is returned in the following format:
+  * If the execution is failed, -1 is returned. If the execution is successful, a tuple is returned in the following format:
 
-`(long_eons, short_eons, mcc, mnc)`
-
-`long_eons` :  String type. Full name of the operator information.
-
-`short_eons` :  String type. Short name of the operator information. 
-
-`mcc` : String type. Mobile Country Code.
-
-`mnc` : String type. Mobile Network Code.
+    `(long_eons, short_eons, mcc, mnc)` <br/>
+    `long_eons` :  String type. Full name of the operator information. <br/>
+    `short_eons` :  String type. Short name of the operator information. <br/>
+    `mcc` : String type. Mobile Country Code. <br/>
+    `mnc` : String type. Mobile Network Code.
 
 * Example
 
@@ -2352,29 +2529,24 @@ This function obtains the registration state.
 
 * Parameter
 
-NA
+  * None
 
 * Return Value
 
-If the execution is failed, -1 is returned. If the execution is successful, a tuple is returned in the following format. The tuple contains voice and network registration information. The tuple starting with 'voice\_' indicates voice registration information, and the tuple starting with 'data\_' indicates network registration information:
+  * If the execution is failed, -1 is returned. If the execution is successful, a tuple is returned in the following format. The tuple contains voice and network registration information. The tuple starting with 'voice\_' indicates voice registration information, and the tuple starting with 'data\_' indicates network registration information:
 
-`([voice_state, voice_lac, voice_cid, voice_rat, voice_reject_cause, voice_psc], [data_state, data _lac, data _cid, data _rat, data _reject_cause, data _psc])`
+    `([voice_state, voice_lac, voice_cid, voice_rat, voice_reject_cause, voice_psc], [data_state, data _lac, data _cid, data _rat, data _reject_cause, data _psc])`
 
-The description of the return value:
+    The description of the return value:
 
-`state` : Network registration state.
+    `state` : Network registration state. <br/>
+    `lac` : Location Area Code, range : 1 ~ 65534 <br/>
+    `cid` : cell id, range : 0x0000000 ~ 0xFFFFFFF <br/>
+    `rat` : access technology <br/>
+    `reject_cause` : Reject cause. This parameter is reserved on EC200U/EC600U/BC25PA <br/>
+    `psc` ：Primary Scrambling Code. This parameter is reserved on EC200U/EC600U/BC25PA
 
-`lac` : Location Area Code, range : 1 ~ 65534
-
-`cid` : cell id, range : 0x0000000 ~ 0xFFFFFFF
-
-`rat` : access technology
-
-`reject_cause` : Reject cause. This parameter is reserved on EC200U/EC600U/BC25PA
-
-`psc` ：Primary Scrambling Code. This parameter is reserved on EC200U/EC600U/BC25PA
-
-Network registration state
+* Network registration state
 
 | Value | Description                                                  |
 | ----- | ------------------------------------------------------------ |
@@ -2393,7 +2565,7 @@ Network registration state
 
 
 
-access technology
+* access technology
 
 | Value | Description        |
 | ----- | ------------------ |
@@ -2428,11 +2600,11 @@ This function obtains the ID of the Neighbor Cell. The result obtained by this i
 
 * Parameter
 
-NA
+  * None
 
 * Return Value
 
-If the execution is failed, -1 is returned. If the execution is successful, an array in list type including cell ID is returned, and the format of this array is `[id, ……, id]`。
+  * If the execution is failed, -1 is returned. If the execution is successful, an array in list type including cell ID is returned, and the format of this array is `[id, ……, id]`。
 
 * Example
 
@@ -2451,13 +2623,12 @@ Obtain the ID of the Serving Cell.
 
 * Parameter
 
-NA
+  * None
 
 * Return Value
 
-Serving cell ID : Successful execution.
-
--1: Failed execution.
+  * Serving cell ID : Successful execution.
+  * -1: Failed execution.
 
 * Example
 
@@ -2476,11 +2647,11 @@ This function obtains the MNC of the neighbor cell. The result obtained by this 
 
 * Parameter
 
-NA
+  * None
 
 * Return Value
 
-If the execution is failed, -1 is returned. If the execution is successful, an array in list type including cell MNC is returned, and the format of this array is `[mnc, ……, mnc]`.
+  * If the execution is failed, -1 is returned. If the execution is successful, an array in list type including cell MNC is returned, and the format of this array is `[mnc, ……, mnc]`.
 
 * Example
 
@@ -2499,13 +2670,12 @@ Obtain the MNC of the Serving Cell.
 
 * Parameter
 
-NA
+  * None
 
 * Return Value
 
-Serving cell MNC : Successful execution.
-
--1: Failed execution.
+  * Serving cell MNC : Successful execution.
+  * -1: Failed execution.
 
 * Example
 
@@ -2524,13 +2694,15 @@ This function obtains the MCC of the neighbor cell. The result obtained by this 
 
 * Parameter
 
-NA
+  * None
 
 * Return Value
 
-If the execution is failed, -1 is returned. If the execution is successful, an array in list type including cell MCC is returned, and the format of this array is `[mcc, ……, mcc]`.
+  * If the execution is failed, -1 is returned. If the execution is successful, an array in list type including cell MCC is returned, and the format of this array is `[mcc, ……, mcc]`.
 
-Note : For modules of the EC100Y/EC600S/EC600N series, the value is expressed in hexadecimal. For example, the decimal number 1120 in the following example is 0x460, indicating the mobile device country code 460. For modules of other models, the value is directly expressed in decimal, such as the mobile device country code 460.That's 460 in decimal notation.
+* Note 
+
+  * For modules of the EC100Y/EC600S/EC600N series, the value is expressed in hexadecimal. For example, the decimal number 1120 in the following example is 0x460, indicating the mobile device country code 460. For modules of other models, the value is directly expressed in decimal, such as the mobile device country code 460. That's 460 in decimal notation.
 
 * Example
 
@@ -2549,15 +2721,16 @@ Obtain the MCC of the Serving Cell.
 
 * Parameter
 
-NA
+  * None
 
 * Return Value
 
-Serving cell MCC : Successful execution.
+  * Serving cell MCC : Successful execution.
+  * -1: Failed execution.
 
--1: Failed execution.
+* Note
 
-Note : For modules of the EC100Y/EC600S/EC600N series, the value is expressed in hexadecimal. For example, the decimal number 1120 in the following example is 0x460, indicating the mobile device country code 460. For modules of other models, the value is directly expressed in decimal, such as the mobile device country code 460.That's 460 in decimal notation.
+  * For modules of the EC100Y/EC600S/EC600N series, the value is expressed in hexadecimal. For example, the decimal number 1120 in the following example is 0x460, indicating the mobile device country code 460. For modules of other models, the value is directly expressed in decimal, such as the mobile device country code 460.That's 460 in decimal notation.
 
 * Example
 
@@ -2576,11 +2749,11 @@ This function obtains the LAC of the neighbor cell. The result obtained by this 
 
 * Parameter
 
-NA
+  * None
 
 * Return Value
 
-If the execution is failed, -1 is returned. If the execution is successful, an array in list type including cell LAC is returned, and the format of this array is `[lac, ……, lac]`.
+  * If the execution is failed, -1 is returned. If the execution is successful, an array in list type including cell LAC is returned, and the format of this array is `[lac, ……, lac]`.
 
 * Example
 
@@ -2599,13 +2772,12 @@ Obtain the LAC of the Serving Cell.
 
 * Parameter
 
-NA
+  * None
 
 * Return Value
 
-Serving cell LAC : Successful execution.
-
--1: Failed execution.
+  * Serving cell LAC : Successful execution.
+  * -1: Failed execution.
 
 * Example
 
@@ -2624,17 +2796,15 @@ This function obtains the current modem functionality.
 
 * Parameter
 
-NA
+  * None
 
 * Return Value
 
-If the execution is failed, -1 is returned. If the execution is successful, the current modem functionality is returned:
+  * If the execution is failed, -1 is returned. If the execution is successful, the current modem functionality is returned:
 
-0 : Minimum functionality
-
-1 : Full functionality (Default)
-
-4 : Airplane
+    0 : Minimum functionality<br/>
+    1 : Full functionality (Default)<br/>
+    4 : Airplane
 
 * Example
 
@@ -2655,14 +2825,13 @@ This function sets the current modem functionality.
 
 | Parameter | Type | Description                                                  |
 | --------- | ---- | ------------------------------------------------------------ |
-| function  | int  | 0 - Minimum functionality. 1 - Full functionality. 4 - Airplane mode.(The RDA platform does not support CFUN4) |
-| rst       | int  | Optional. 0 - Take effect immediately (Default). 1 - Take effect after rebooting. |
+| function  | int  | 0 - Minimum functionality. <br/>1 - Full functionality.<br/>4 - Airplane mode.(The RDA platform does not support CFUN4) |
+| rst       | int  | Optional. <br>0 - Take effect immediately (Default).<br/>1- Take effect after rebooting. |
 
 * Return Value
 
-0  Successful execution.
-
--1  Failed execution.
+  * 0  Successful execution.
+  * -1  Failed execution.
 
 * Example
 
@@ -2697,7 +2866,7 @@ Function: The checkNet module is mainly used for the script programs [auto-start
 
 * Return Value
 
-  NA
+  * NA
 
 - Example
 
@@ -2720,19 +2889,19 @@ checknet = checkNet.CheckNetwork(PROJECT_NAME, PROJECT_VERSION)
 
   Prints the following log information when the module is powering on.
 
-  PROJECT_NAME     	  : Project Name.
-  PROJECT_VERSION 	 : Project Version.
-  FIRMWARE_VERSION  : Firmware Version .
-  POWERON_REASON   : The reason of the power-on.
+  PROJECT_NAME     	  : Project Name.<br/>
+  PROJECT_VERSION 	 : Project Version.<br/>
+  FIRMWARE_VERSION  : Firmware Version .<br/>
+  POWERON_REASON   : The reason of the power-on.<br/>
   SIM_CARD_STATUS     : The status of SIM card.
 
 * Parameter
 
-  NA
+  * None
 
 * Return Value
 
-  NA
+  * None
 
 * Example
 
@@ -2776,16 +2945,16 @@ SIM_CARD_STATUS  : 1
 
 * Return Value
 
-  There are two return values in the following format:
+  * There are two return values in the following format:
 
-  `stagecode, subcode`
+    `stagecode, subcode`
 
-  The description for each return values:
+  * The description for each return values:
 
   | Return Value | Type | Description                                                  |
   | ------------ | ---- | ------------------------------------------------------------ |
   | stagecode    | Int  | Stage code, indicates the stage of the checkNet module. <br>1 - Obtaining the state of the  SIM card. This value is returned when the timeout expires or the state of the SIM card is abnormal. <br>2 - Obtaining the state of the network registration. This value is returned when the timeout expires.<br>3 - Obtaining the state of the dial-up.<br>The normal return value is 3 indicates the normal. |
-  | subcode      | Int  | Subcode，it is combined with the value of stagecode  to represent the specific state of checknet in different stages.<br/>When  stagecode = 1 ：<br/>subcode indicates the state of the SIM card, range: [0, 21], for the description of each value, refer to the return value in sim.getStatus() https://python.quectel.com/wiki/#/zh-cn/api/QuecPythonClasslib?id=sim-sim%e5%8d%a1](https://python.quectel.com/wiki/#/zh-cn/api/QuecPythonClasslib?id=sim-sim卡) <br/><br/><br/>When stagecode = 2 ：<br/>subcode indicates the state of the network registration, range: [0, 11], for the description of each values, refer to the return value in net.getState()https://python.quectel.com/wiki/#/zh-cn/api/QuecPythonClasslib?id=net-%e7%bd%91%e7%bb%9c%e7%9b%b8%e5%85%b3%e5%8a%9f%e8%83%bd](https://python.quectel.com/wiki/#/zh-cn/api/QuecPythonClasslib?id=net-网络相关功能)    <br/>When subcode = -1, indicates the dial-up is failed within the timeout.<br/>For other value, see the above link.<br/>If within the timeout, the network registration is successful, enter the stage of stagecode = 3 directly.<br/><br/>When stagecode = 3 : <br/>subcode = 0, indicates the  dial-up is failed within the timeout.<br/>subcode = 1, indicates the network connection is successful within the timeout, that is the network registration and dial-up is successful. |
+  | subcode      | Int  | Subcode，it is combined with the value of stagecode  to represent the specific state of checknet in different stages.<br/>When  stagecode = 1 ：<br/>subcode indicates the state of the SIM card, range: [0, 21], for the description of each value, refer to the return value in sim.getStatus() [https://python.quectel.com/wiki/#/en-us/api/QuecPythonClasslib?id=sim-sim-card](https://python.quectel.com/wiki/#/en-us/api/QuecPythonClasslib?id=sim-sim-card) <br/><br/><br/>When stagecode = 2 ：<br/>subcode indicates the state of the network registration, range: [0, 11], for the description of each values, refer to the return value in net.getState()[https://python.quectel.com/wiki/#/en-us/api/QuecPythonClasslib?id=net-network](https://python.quectel.com/wiki/#/en-us/api/QuecPythonClasslib?id=net-network)    <br/>When subcode = -1, indicates the dial-up is failed within the timeout.<br/>For other value, see the above link.<br/>If within the timeout, the network registration is successful, enter the stage of stagecode = 3 directly.<br/><br/>When stagecode = 3 : <br/>subcode = 0, indicates the  dial-up is failed within the timeout.<br/>subcode = 1, indicates the network connection is successful within the timeout, that is the network registration and dial-up is successful. |
 
 * Example
 
@@ -2881,7 +3050,11 @@ Realize the whole process of firmware download and upgrade with one interface
 
 - Return Value
 
-  Return integer value 0 if the download is successful and return integer value -1 if the download fails. Note: on EC600S/EC600N module, the return value only represents the success or failure of the command, and the download status needs to be fed back through the callback.
+  * Return integer value 0 if the download is successful and return integer value -1 if the download fails.
+
+* Note
+
+  * on EC600S/EC600N module, the return value only represents the success or failure of the command, and the download status needs to be fed back through the callback.
 
 - Example
 
@@ -2913,13 +3086,12 @@ Write upgrade package data stream
 
 * Return Value
 
-  0 	Successful execution
+  * 0 	Successful execution
+  * -1	Failed execution
 
-  -1	Failed execution
+* Note
 
-* note
-
-  The BC25PA platform does not support this method.
+  * The BC25PA platform does not support this method.
 
 
 ##### Interface to Upgrade Step by Step and Refresh Cached Data to Flash
@@ -2930,17 +3102,16 @@ Refresh cached data to the flash.
 
 - Parameter
 
-None
+  * None
 
 - Return Value
 
-  0 	Successful execution
-
-  -1	Failed execution
+  * 0 	Successful execution
+  * -1	Failed execution
 
 * note
 
-  The BC25PA platform does not support this method.
+  * The BC25PA platform does not support this method.
 
 ##### Interface to Upgrade Step by Step and Verify the Data
 
@@ -2950,17 +3121,16 @@ None
 
 * Parameter
 
-None
+  * None
 
 * Return Value
 
-  0 	Successful execution
-
-  -1	Failed execution
+  * 0 	Successful execution
+  * -1	Failed execution
 
 * note
 
-  The BC25PA platform does not support this method.
+  * The BC25PA platform does not support this method.
 
 * Example
 
@@ -3101,9 +3271,8 @@ fota = app_fota.new()
 
  - Return Value
 
-   0 	Successful execution
-
-   -1	Failed execution
+   * 0 	Successful execution
+   * -1	Failed execution
 
 
 
@@ -3119,7 +3288,8 @@ fota = app_fota.new()
 
 
  - Return Value
-   Return the list of failed downloading
+
+   * Return the list of failed downloading
 
  - Example
 
@@ -3136,22 +3306,27 @@ In this example, assuming that `http://www.example.com/test.txt`fails to be down
 > **fota.set_update_flag()**
 
  - Parameter
-   None
+
+   * None
 
  - Return Value
-   None
+
+   * None
 
 > After setting the upgrade flag, call the restart interface, and the upgrade can be started after the restart.
+
 > After the upgrade is complete, you will directly enter the application.
 
-> Reference link of the restart interface : http://qpy.quectel.com/wiki/#/zh-cn/api/?id=power
+> Reference link of the restart interface : http://qpy.quectel.com/wiki/#/en-us/api/?id=power
 
 
 
 #### audio - Audio Playback
 
 Module function: audio playback, supports to play files in TTS, mp3 and AMR.
+
 Note: The BC25PA platform does not support this module function.
+
 ##### TTS 
 
 ###### Create the TTS Object
@@ -3184,13 +3359,12 @@ Disable TTS function.
 
 * Parameter
 
-None
+  * None
 
 * Return Value
 
-  0 	Successful execution
-
-  -1	Failed execution
+  * 0 	Successful execution
+  * -1	Failed execution
 
 
 
@@ -3223,13 +3397,10 @@ Audio playback supports priority 0–4, the higher the number, the higher the pr
 
 * Return Value
 
-  0 	Successful execution
-
-  -1	Failed execution
-
-  1	 Cannot be played immediately, but join the playback queue
-
-  -2	Cannot be played immediately, and the priority group queue task of the request has reached the upper limit and cannot 		be added to the play queue
+  * 0 	Successful execution
+  * -1	Failed execution
+  * 1	 Cannot be played immediately, but join the playback queue
+  * -2	Cannot be played immediately, and the priority group queue task of the request has reached the upper limit and cannot 		be added to the play queue
 
 * Example
 
@@ -3311,13 +3482,12 @@ Stop playing TTS.
 
 * Parameter
 
-None
+  * None
 
 * Return Value
 
-  0 	Successful execution
-
-  -1	Failed execution
+  * 0 Successful execution
+  * -1 Failed execution
 
 
 
@@ -3335,9 +3505,8 @@ Register the callback function of the user. It is used to notify the user of the
 
 * Return Value
 
-  0 	Successful execution
-
-  -1	Failed execution
+  * 0 	Successful execution
+  * -1	Failed execution
 
 * Example
 
@@ -3373,13 +3542,12 @@ Ger the volume of the current TTS playback. The volume value is 0–9. 0 means m
 
 * Parameter
 
-None
+  * None
 
 * Return Value
 
-  0 	Successful execution
-
-  -1	Failed execution
+  * 0 Successful execution
+  * -1 Failed execution
 
 * Example
 
@@ -3404,9 +3572,8 @@ Set TTS playback volume.
 
 * Return Value
 
-  0 	Successful execution
-
-  -1	Failed execution
+  * 0 	Successful execution
+  * -1	Failed execution
 
 * Example
 
@@ -3425,13 +3592,12 @@ Get the current playback speed. The speed value is 0–9, and the larger the val
 
 * Parameter
 
-None
+  * None
 
 * Return Value
 
-  0 	Successful execution
-
-  -1	Failed execution
+  * 0 Successful execution
+  * -1 Failed execution
 
 * Example
 
@@ -3456,9 +3622,8 @@ Set TTS playback speed.
 
 * Return Value
 
-  0 	Successful execution
-
-  -1	Failed execution
+  * 0 	Successful execution
+  * -1	Failed execution
 
 * Example
 
@@ -3477,13 +3642,12 @@ Get TTS state.
 
 * Parameter
 
-None
+  * None
 
 * Return Value
 
-  0	 Integer value. Indicates that there is currently no TTS playback.
-
-  1	Integer value. Indicates that TTS is playing.
+  * 0	 Integer value. Indicates that there is currently no TTS playback.
+  * 1	Integer value. Indicates that TTS is playing.
 
 * Example
 
@@ -3657,9 +3821,8 @@ Set the GPIO pin for outputting PA and enable the PA function. Currently, it sup
 
 - Return Value
 
-  0 	Successful execution
-
-  -1	Failed execution
+  * 0 	Successful execution
+  * -1	Failed execution
 
 - Example
 
@@ -3691,15 +3854,12 @@ Play audio files. The audio playback supports files in mp3, amr and wav format. 
 | breakin   | int            | Interruption mode. 0 means not allowed to be interrupted; 1 means allowed to be interrupted |
 | filename  | string         | The file name to be played, including the file storage path  |
 
-* Return value
+* Return Value
 
-  0 	Successful execution
-
-  -1	Failed execution
-
-  1	 Cannot be played immediately, but join the playback queue
-
-  -2	Cannot be played immediately, and the priority group queue task of the request has reached the 		upper limit and cannot be added to the play queue
+  * 0 	Successful execution
+  * -1	Failed execution
+  * 1	 Cannot be played immediately, but join the playback queue
+  * -2	Cannot be played immediately, and the priority group queue task of the request has reached the 		upper limit and cannot be added to the play queue
 
 * Example
 
@@ -3729,13 +3889,29 @@ Stop playing the audio file.
 
 * Parameter
 
-None
+  * None
 
 * Return Value
 
-  0 	Successful execution
+  * 0 	Successful execution
+  * -1	Failed execution
 
-  -1	Failed execution
+
+
+###### stop queue playback
+
+> **aud.stop()**
+
+Stop the playback of the entire queue, that is, if TTS or audio is currently being played, and there are other content to be played in the queue, after calling this interface, it will not only stop the currently playing content, but also clear the content of the queue, and no longer play any more. content. If it is currently playing and the playback queue is empty, calling this interface has the same effect as the stop() interface.
+
+* Parameter
+
+  * None
+
+* Return Value
+
+  * 0     Successful execution
+  * -1    Failed execution
 
 
 
@@ -3753,9 +3929,8 @@ Register the callback function of the user. It is used to notify the user of the
 
 * Return Value
 
-  0 	Successful execution
-
-  -1	Failed execution
+  * 0 Successful execution
+  * -1 Failed execution
 
 * Example
 
@@ -3790,13 +3965,12 @@ Get audio initialization status.
 
 * Parameter
 
-None
+  * None
 
 * Return Value
 
-0 	Successful execution
-
--1	Failed execution
+  * 0 Successful execution
+  * -1 Failed execution
 
 
 
@@ -3808,11 +3982,11 @@ Get the audio volume, and the default value is 7.
 
 * Parameter
 
-None
+  * None
 
 * Return Value
 
-Return the volume in integer.
+  * Return the volume in integer.
 
 
 
@@ -3826,13 +4000,12 @@ Set audio volume.
 
 | Parameter | Parameter Type | Description                                                  |
 | --------- | -------------- | ------------------------------------------------------------ |
-| vol       | int            | Volume. Range: 1–11. The higher the number, the higher the volume. |
+| vol       | int            | Volume. Range: 0 –11. The higher the number, the higher the volume. |
 
 * Return Value
 
-  0 	Successful execution
-
-  -1	Failed execution
+  * 0 Successful execution
+  * -1 Failed execution
 
 * Example
 
@@ -3845,10 +4018,147 @@ Set audio volume.
 
 
 
+###### Audio streaming
+
+> aud.playStream(format, buf)
+
+Audio stream playback, supporting MP3, AMR and wav format audio stream playback.
+
+* Parameter
+
+|Parameter | parameter type | parameter description|
+| ------ | -------- | ------------------------------------------------------------ |
+|Format | int | audio stream format <br/> 1 - PCM (not supported temporarily) <br/> 2 - wavpcm <br/> 3 - MP3 <br/> 4 - amrnb|
+|Buf | buf | audio stream content|
+
+* Return Value
+
+  * If the playback is successful, the integer 0 will be returned;
+  * If playback fails, integer - 1 will be returned;
+
+  
+
+###### Stop audio streaming
+
+> audio_test.stopPlayStream()
+
+Stop audio streaming
+
+* Parameter
+
+  * None
+
+* Return Value
+
+  * Stop successfully, return integer 0;
+  * Stop failure returns integer - 1;
+
+
+- Examples
+
+  ```python
+  import audio
+  import utime
+  
+  audio_test = audio.Audio(0)
+  
+  Size = 10 * 1024 # ensure that the audio data filled at one time is large enough for continuous playback at the bottom layer
+  format = 4
+  
+  def play_from_fs():
+      file_ size = uos. Stat ("/usr/test.AMR") [6] # get the total bytes of the file
+      print(file_size)
+      with open("/usr/test.amr", "rb")as f:   
+          while 1:
+              b = f.read(size)   # read
+              if not b:
+                  break
+              audio_test.playStream(format, b)
+              utime.sleep_ms(20)
+          f.close()
+  
+  
+  play_from_fs()
+  utime. sleep_ MS (5000) # wait for playback to complete
+  audio_ test. Stopplaystream() # stops this playback so as not to affect the next playback
+  ```
+
+
+
+###### Tone playback
+
+Support platform ec600u/ec200u/ec600n/ec800n
+
+> aud.aud_tone_play(tone, time)
+
+Play tone tone and stop playing automatically after playing for a period of time
+
+* Parameter
+
+|Parameter | parameter type | parameter description|
+| ---- | -------- | ------------------------------------------------------------ |
+|Tone | int | tone type <br/> 0 ~ 15 - key tone (0 ~ 9, a, B, C, D, #, *) (only supported by ec600u/ec200u platform) <br/> 16 - dial tone, (Note: the ec600n/ec800n platform is a continuous tone tone, while the ec600u/ec200u platform is a tone with alternating play and pause) <br/> 17 - busy <br/> 18 - Radio ack <br/> 19 - call drop <br/> 20 - special information <br/> 21 - call waiting (only supported on ec600u/ec200u platforms) <br/> 22 - ringing (only supported on ec600u/ec200u platforms)|
+|Time | int | playback duration, unit MS <br/> 0 - you can only call aud without stopping playback aud_ tone_ play_ Stop() interface can be stopped (only ec600n/ec800n platform supports, ec600u/ec200u platform fills 0, then there is no action) <br/> greater than 0 - playback duration time MS|
+
+* Return Value
+
+  * If the playback is successful, the integer 0 will be returned;
+
+  * If playback fails, integer - 1 will be returned;
+
+  
+
+###### Stop tone playback
+
+Only ec600n/ec800n platform supports
+
+> aud.aud_tone_play_stop()
+
+Actively stop playing tone
+
+* Parameter
+
+  * None
+
+* Return Value
+
+  * Stop successfully, return integer 0;
+  * Stop failure returns integer - 1;
+
+
+
+
+- Examples
+
+```python
+import audio
+import utime
+
+aud = audio.Audio(0)
+
+#200ecu/600ecu platform
+def dial_play_ec600u():
+    aud.aud_tone_play(16, 5000)
+
+#Ec600n/ec800n platform
+def dial_play_ec600n():
+    for i in range(0,20):
+        aud.aud_tone_play(16, 1000)
+        utime.sleep(2)
+        aud.aud_tone_play_stop()
+        
+# dial_play_ec600n()
+dial_play_ec600u()
+```
+
+
+
 ##### Record
 
 Applicable versions: EC100Y(V0009) and above; EC600S(V0003) and above.
+
 Note: The BC25PA platform does not support this module function.
+
 ###### Create an Object
 
 > **import audio**
@@ -3857,13 +4167,12 @@ Note: The BC25PA platform does not support this module function.
 
 * Parameter
 
-  NA	
+  * None	
 
 * Return Value
 
-  0 	Successful execution
-
-  -1	Failed execution
+  * 0 Successful execution
+  * -1 Failed execution
 
 * Example
 
@@ -3889,28 +4198,21 @@ Start recording.
 
 * Return Value
 
-  0	Successful execution
-
-  -1	File overwrite failed
-
-  -2	File open failed
-
-  -3	The file is in use
-
-  -4	Channel setting error 
-
-  -5	Request for timer resource failed
-
-  -6	Audio format detection error
-
-  -7	The file has been created by another object
+  * 0	Successful execution
+  * -1	File overwrite failed
+  * -2	File open failed
+  * -3	The file is in use
+  * -4	Channel setting error 
+  * -5	Request for timer resource failed
+  * -6	Audio format detection error
+  * -7	The file has been created by another object
 
 * Example
 
 ```python
-record_test.start(“test.wav”,40)	#Record the file in wav format
-record_test.start(“test.amr”,40)	#Record the file in amr format
-record_test.start(“test”,40)	#Record the file in amr format
+record_test.start("test.wav",40)	#Record the file in wav format
+record_test.start("test.amr",40)	#Record the file in amr format
+record_test.start("test",40)	#Record the file in amr format
 ```
 
 
@@ -3923,13 +4225,12 @@ Stop recording.
 
 * Parameter
 
-None
+  * None
 
 * Return Value
 
-0 	Successful execution
-
--1	Failed execution
+  * 0 Successful execution
+  * -1 Failed execution
 
 * Example
 
@@ -3953,7 +4254,7 @@ Read storage path of the recording file.
 
 * Return Value
 
-  If the file is successfully executed, the path of the recording file is returned, string type. If the target file does not exist, integer -1 is returned. If the file name length is 0, integer -2 is returned.
+  * If the file is successfully executed, the path of the recording file is returned, string type. If the target file does not exist, integer -1 is returned. If the file name length is 0, integer -2 is returned.
 
 * Example
 
@@ -3979,23 +4280,16 @@ Read the recording data.
 
 * Return Value
 
-  Return the data of record if it is executed successfully, bytearray type.
+  * Return the data of record if it is executed successfully, bytearray type.
 
-  -1	Error reading data
-
-  -2	File open failed
-
-  -3	Wrong offset setting
-
-  -4	The file is in use
-
-  -5	Setting exceeds file size(offset+size > file_size)
-
-  -6	The read size is greater than 10 K
-
-  -7	 Less than 10 K of memory
-
-  -8	 The file does not belong to the object
+    -1	Error reading data
+    -2	File open failed
+    -3	Wrong offset setting
+    -4	The file is in use
+    -5	Setting exceeds file size(offset+size > file_size)
+    -6	The read size is greater than 10 K
+    -7	 Less than 10 K of memory
+    -8	 The file does not belong to the object
 
 * Example
 
@@ -4019,19 +4313,16 @@ Read recording file size.
 
 * Return Value
 
-  Return the file size if it is executed successfully.
+  * Return the file size if it is executed successfully.
 
-  In wav format, this value will be 44 bytes larger than the return value of the callback (44 bytes is the size of the file header)
+  * In wav format, this value will be 44 bytes larger than the return value of the callback (44 bytes is the size of the file header)
 
-  In amr format, this value will be 6 bytes larger than the return value of the callback (6 bytes is the size of the file header); Or else
+  * In amr format, this value will be 6 bytes larger than the return value of the callback (6 bytes is the size of the file header); Or else
 
-  *-1*	Failed execution 
-
-  *-2*	File open failed 
-
-  *-3*	The file is in use
-
-  -4	The length of file name is 0
+    *-1*	Failed execution <br/>
+    *-2*	File open failed <br/>
+    *-3*	The file is in use <br/>
+    *-4*	The length of file name is 0
 
 * Example
 
@@ -4061,13 +4352,10 @@ Note: When the parameter is empty, delete all recording files in the object
 
 * Return Value
 
-  0	Successful execution
-
-  -1	The file does not exist
-
-  -2	File is in use
-
-  -3	The file does not belong to the object
+  * 0	Successful execution
+  * -1	The file does not exist
+  * -2	File is in use
+  * -3	The file does not belong to the object
 
 * Example
 
@@ -4092,11 +4380,9 @@ Determine whether the recording file exists.
 
 * Return Value
 
-  true		The file exists
-
-  false	   The file does not exist
-
-  -1			The file does not belong to the object
+  * true		The file exists
+  * false	   The file does not exist
+  * -1		The file does not belong to the object
 
 * Example
 
@@ -4114,13 +4400,12 @@ Determine whether the recording is in progress
 
 * Parameter
 
-None
+  * None
 
 * Return Value
 
-  0	idle
-
-  1	busy
+  * 0	idle
+  * 1	busy
 
 * Example
 
@@ -4144,9 +4429,8 @@ Set the callback of recording end
 
 * Return Value
 
-  0			Successful execution
-
-  other	Failed  execution  
+  * 0	Successful execution
+  * other	Failed  execution  
 
 * Example
 
@@ -4184,7 +4468,7 @@ Set recording gain.
 
 * Return Value
 
-  0	Successful execution
+  * 0	Successful execution
 
 * Example
 
@@ -4210,9 +4494,9 @@ Switch amr recording DTX function
 
 - Return Value
 
-  No parameters：Get current configuration
+  * No parameters：Get current configuration
 
-  with parameters：If the parameter is correct, there is no return, if the parameter is wrong, an exception will be thrown.
+  * with parameters：If the parameter is correct, there is no return, if the parameter is wrong, an exception will be thrown.
 
 - Example
 
@@ -4222,24 +4506,93 @@ record_test.amrEncDtx_enable(1)
 
 
 
-###### Read the List of Recording Files
+###### Recording stream
 
-> **record.list_file()**
+At present, it is only supported by ec200u/ec600u platforms.
 
-View the list of recording files in the object.
+> **record.stream_start(format, samplerate, time)**
+
+Recording audio stream
 
 * Parameter
 
-None
+|Parameter | parameter type | parameter description|
+| ---------- | -------- | --------------------------- |
+|Format | int | audio format. At present, AMR format is supported|
+|SampleRate | int | sampling rate. At present, 8K and 16K are supported|
+|Time | int | recording duration, unit s (seconds)|
 
 * Return Value
 
-*str*  String type. Recording file list.  
+  * The integer 0 is returned successfully, and the integer - 1 is returned in case of failure.
 
 * Example
 
 ```python
-record_test.list_file()
+record_test.stream_start(record_test.AMRNB, 8000, 5)
+```
+
+* Note
+
+  * while recording the audio stream, read the audio stream in time. At present, cyclic buf is adopted, and if it is not read in time, it will lead to data loss
+
+
+
+###### Read recording stream
+
+At present, it is only supported by ec200u/ec600u platforms.
+
+> **record.stream_read(read_buf, len)**
+
+Recording audio stream
+
+* Parameter
+
+|Parameter | parameter type | parameter description|
+| -------- | -------- | ------------- |
+| read_ Buf | buf | recording stream saving buf|
+|Len | int | read length|
+
+* Return Value
+
+  * The number of bytes actually read is returned successfully, and integer - 1 is returned in case of failure.
+
+* Examples
+
+```python
+read_buf = bytearray(128)
+record_test.stream_read(read_buf, 128)
+```
+
+###### Recording stream example
+
+```python
+import audio
+import utime
+record_test = audio.Record()
+audio_test = audio.Audio(0)
+
+read_time = 5
+
+buf = bytearray(0)
+
+def stream_rec_cb(para):
+    global buf
+    if(para[0] == 'stream'):
+        if(para[2] == 1):
+            read_buf = bytearray(para[1])
+            record_test.stream_read(read_buf,para[1])
+            buf += read_buf
+            del read_buf
+        elif (para[2] == 3):
+            audio_test.stopPlayStream()
+            audio_test.playStream(record_test.AMRNB, buf)
+
+
+
+record_test.end_callback(stream_rec_cb)
+audio_test.stopPlayStream()
+record_test.stream_start(record_test.AMRNB, 8000, read_time)
 ```
 
 
@@ -4315,11 +4668,11 @@ The module powers down.
 
 * Parameter
 
-None
+  * None
 
 * Return Value
 
-None
+  * None
 
 
 
@@ -4331,11 +4684,11 @@ The module restarts.
 
 * Parameter
 
-None
+  * None
 
 * Return Value
 
-None
+  * None
 
 
 
@@ -4346,30 +4699,26 @@ None
 It gets the reason for module powering on.
 
 * Parameter
-
-None
+  * None
 
 * Return Value
 
 The values returned are explained as follows:
 
-1: Power on normally
+| return value | description                                     |
+| ------------ | ----------------------------------------------- |
+| 0            | Fail to get reason for booting or unknow reason |
+| 1            | Press PWRKEY to boot                            |
+| 2            | Press RESET KEY to restart                      |
+| 3            | Booting triggered by VBAT                       |
+| 4            | Booting triggered by RTC                        |
+| 5            | Booting triggered by watchdog or Abnormal boot  |
+| 6            | Booting triggered by VBUS                       |
+| 7            | Booting triggered by charge in                  |
+| 8            | Booting from PSM wakeup                         |
+| 9            | Booting by dump                                 |
 
-2:  Restart
 
-3: VBAT 
-
-4: RTC powers on regularly
-
-5: Fault 
-
-6: VBUS
-
-0: Unknown
-
-* note
-
-  BC25PA platform does not support restart reason 5 and 6.
 
 ###### Get the Reason for the Last Powering Down of the Module
 
@@ -4378,29 +4727,28 @@ The values returned are explained as follows:
 It gets the reason for the last powering down of the module.
 
 * Parameter
-
-None
+  * None
 
 * Return Value
 
-1: Power down normally
+The values returned are explained as follows:
 
-2: The voltage is too high
-
-3: The voltage is low
-
-4: Over temperature
-
-5: WDT
-
-6: VRTC is low
-
-0: Unknown
+| return value | description                                                  |
+| ------------ | ------------------------------------------------------------ |
+| 0            | Fail to get reason for shutdown or unknow reason             |
+| 1            | Press PWRKEY to shutdown                                     |
+| 2            | Shutdown caused by excessive Vin voltage, exceeding the VSYS_OVER_TH threshold voltage |
+| 3            | Shutdown caused by low Vin voltage                           |
+| 4            | Shutdown caused by high temperature                          |
+| 5            | Shutdown triggered by watchdog                               |
+| 6            | VRTC voltage is lower than VRTC_MIN_TH, which triggers shutdown |
 
 
-* note
+* Note
 
-  The BC25PA platform does not support this method.
+  * The BC25PA and EC200U/EC600U platform does not support this method.
+
+
 
 ###### Get Voltage of the Battery.
 
@@ -4410,11 +4758,11 @@ It gets the voltage of the battery. Unit: mV.
 
 * Parameter
 
-None
+  * None
 
 * Return Value 
 
-Integer type. Voltage value.
+  * Integer type. Voltage value.
 
 * Example
 
@@ -4437,11 +4785,11 @@ It provides a registration callback function.
 
 * Parameter
 
-  None
+  * None
 
 * Return Value
 
-  Return an object.
+  * Return an object.
 
 
 
@@ -4458,13 +4806,13 @@ It provides a registration callback function.
 
 * Return Value
 
-  Return 0 if the execution is successful, otherwise return -1.
+  * Return 0 if the execution is successful, otherwise return -1.
 
 * Note
 
-  For EC600S-CN and EC600N-CN modules, when the powerkey button is pressed or released, the callback function registered by the user will be triggered;
+  * For EC600S-CN and EC600N-CN modules, when the powerkey button is pressed or released, the callback function registered by the user will be triggered;
 
-  The EC200U and EC600U series modules will trigger the callback function only when the powerkey button is released, and the time for the button to be pressed needs to be maintained for more than 500 ms.
+  * The EC200U and EC600U series modules will trigger the callback function only when the powerkey button is released, and the time for the button to be pressed needs to be maintained for more than 500 ms.
 
 * Example
 
@@ -4506,10 +4854,10 @@ Note: The BC25PA platform does not support this module function.
 
 | Constent | Description | Usage Platform                         |
 | -------- | ----------- | -------------------------------------- |
-| PWM.PWM0 | PWM0        | EC600S / EC600N / EC100Y/EC600U/EC200U |
-| PWM.PWM1 | PWM1        | EC600S / EC600N / EC100Y               |
-| PWM.PWM2 | PWM2        | EC600S / EC600N / EC100Y               |
-| PWM.PWM3 | PWM3        | EC600S / EC600N / EC100Y               |
+| PWM.PWM0 | PWM0        | EC600S/EC600N/EC100Y/EC600U/EC200U |
+| PWM.PWM1 | PWM1        | EC600S/EC600N/EC100Y               |
+| PWM.PWM2 | PWM2        | EC600S/EC600N/EC100Y               |
+| PWM.PWM3 | PWM3        | EC600S/EC600N/EC100Y               |
 
 
 
@@ -4524,7 +4872,7 @@ Note: The BC25PA platform does not support this module function.
 | Parameter | Type | Description                                                  |
 | --------- | ---- | ------------------------------------------------------------ |
 | PWMn      | int  | PWM Number<br/>Note: EC100Y-CN module supports PWM0–PWM3, and the corresponding pins are as follows: <br/>PWM0 – Pin No. 19<br/>PWM1 – Pin No. 18<br/>PWM2 – Pin No. 23<br/>PWM3 – Pin No. 22<br/>Note: EC600S-CN/EC600N-CN  modules support PWM0–PWM3, and the corresponding pins are as follows: <br/>PWM0 – Pin No. 52<br/>PWM1 –Pin No. 53<br/>PWM2 – Pin No. 70<br/>PWM3 – Pin No. 69<br />Note: EC200U series module supports PWM0, and the corresponding pins are as follows: <br />PWM0 – Pin No. 135<br />Note: EC600U series module supports PWM0, and the corresponding pins are as follows:<br />PWM0 – Pin No. 70<br /> |
-| ABOVE_xx  | int  | PWM.ABOVE_MS				Range of MS level: (0,1023]<br/>PWM.ABOVE_1US				Range of US level: (0,157]<br/>PWM.ABOVE_10US				Range of US level: (1,1575]<br/>PWM.ABOVE_BELOW_US			Range of NS level: (0,1024] |
+| ABOVE_xx  | int  | EC600SCN/EC600N/EC800N modules:<br />PWM.ABOVE_MS              Range of MS level: (0,1023]<br/>PWM.ABOVE_1US               Range of US level: (0,157]<br/>PWM.ABOVE_10US               Range of US level: (1,1575]<br/>PWM.ABOVE_BELOW_US          Range of NS level: (0,1024]<br/>EC200U/EC600U modules:<br />PWM.ABOVE_MS            Range of MS level: (0,10]<br/>PWM.ABOVE_1US             Range of US level: (0,10000]<br/>PWM.ABOVE_10US             Range of US level: (1,10000]<br/>PWM.ABOVE_BELOW_US             Range of NS level: [100,65535] |
 | highTime  | int  | In MS level, the unit is ms<br/>In US level, the unit is us<br/>In NS level: it needs to be calculated by the user<br/>               Frequency = 13Mhz / cycleTime<br/>               Duty cycle = highTime/ cycleTime |
 | cycleTime | int  | In MS level, the unit is ms<br/>In US level, the unit is us<br/>In NS level: it needs to be calculated by the user<br/>             Frequency = 13Mhz / cycleTime<br/>             Duty cycle = highTime/ cycleTime |
 
@@ -4545,11 +4893,11 @@ It opens PWM output.
 
 * Parameter
 
-None
+  * None
 
 * Return Value
 
-Return 0 if the execution is successful, otherwise return -1.
+  * Return 0 if the execution is successful, otherwise return -1.
 
 
 
@@ -4561,11 +4909,11 @@ It closes PWM output.
 
 * Parameter
 
-None
+  * None
 
 * Return Value
 
-Return 0 if the execution is successful, otherwise return -1.
+  * Return 0 if the execution is successful, otherwise return -1.
 
 
 
@@ -4649,11 +4997,11 @@ It initializes ADC function.
 
 * Parameter
 
-None
+  * None
 
 * Return Value
 
-Return 0 if the execution is successful, otherwise return -1.
+  * Return 0 if the execution is successful, otherwise return -1.
 
 
 
@@ -4671,7 +5019,7 @@ It reads the voltage value of the specified channel. Unit: mV.
 
 * Return Value
 
-Return the voltage value of the specified channel if the execution is successful, otherwise return -1.
+  * Return the voltage value of the specified channel if the execution is successful, otherwise return -1.
 
 * Example
 
@@ -4692,11 +5040,11 @@ It closes ADC.
 
 * Parameter
 
-None
+  * None
 
 * Return Value
 
-Return 0 if the execution is successful, otherwise return -1.
+  * Return 0 if the execution is successful, otherwise return -1.
 
 ##### USB
 
@@ -4710,11 +5058,11 @@ Note: The BC25PA platform does not support this module function.
 
 * Parameter
 
-  None
+  * None
 
 * Return Value
 
-  None
+  * None
 
   
 
@@ -4724,15 +5072,13 @@ Note: The BC25PA platform does not support this module function.
 
 * Parameter
 
-  None
+  * None
 
 * Return Value
 
-  -1: Get status failed
-
-  0 - USB is not connected currently
-
-  1 - USB is connected
+  * -1: Get status failed
+  * 0: USB is not connected currently
+  * 1: USB is connected
 
 
 
@@ -4748,7 +5094,7 @@ Note: The BC25PA platform does not support this module function.
 
 * Return Value
 
-  Return 0 if the execution is successful, otherwise return -1.
+  * Return 0 if the execution is successful, otherwise return -1.
 
 Example
 
@@ -4784,7 +5130,45 @@ USBNET.set_worktype(type)
 
 - Return Value
 
-  Return 0 if the setting is successful, otherwise return -1.
+  * Return 0 if the setting is successful, otherwise return -1.
+
+
+
+###### Obtain the working type of USB network card (restart takes effect)
+
+> **USBNET.get_worktype()**
+
+* Parameter
+
+  * None
+
+* Return Value
+
+  * The current network card mode is returned successfully, and the integer - 1 is returned in case of failure. Return value Description:
+  
+    * 1 - ECM mode
+    * 3 - rndis mode
+
+
+
+###### Get the current status of usbnet
+
+> **USBNET.get_status()**
+
+* Parameter
+
+  * None
+
+* Return Value
+
+  * The current state of usbnet is returned successfully, and the integer - 1 is returned in case of failure.
+
+  * Status description:
+
+    0 - not connected <br/>
+    1 - connection successful
+
+
 
 ###### Open USBNET
 
@@ -4792,11 +5176,11 @@ USBNET.set_worktype(type)
 
 - Parameter
 
-  None
+  * None
 
 - Return Value
 
-  Return 0 if the opening is successful, otherwise return -1.
+  * Return 0 if the opening is successful, otherwise return -1.
   
   
 
@@ -4806,11 +5190,11 @@ USBNET.set_worktype(type)
 
 - Parameter
 
-  None
+  * None
 
 - Return Value
 
-  Return 0 if successful, otherwise return -1.
+  * Return 0 if successful, otherwise return -1.
 
 
 
@@ -4848,11 +5232,11 @@ It gets IMEI of the device.
 
 * Parameter
 
-None
+  * None
 
 Return Value
 
-Return the IMEI of string type of the device if the execution is successful, otherwise return -1.
+  * Return the IMEI of string type of the device if the execution is successful, otherwise return -1.
 
 * Example
 
@@ -4872,11 +5256,11 @@ It gets device model.
 
 * Parameter
 
-None
+  * None
 
 * Return Value
 
-Return the device model of string type if the execution is successful, otherwise return -1.
+  * Return the device model of string type if the execution is successful, otherwise return -1.
 
 * Example
 
@@ -4895,11 +5279,11 @@ It gets device serial number.
 
 * Parameter
 
-None
+  * None
 
 * Return Value
 
-Return the device serial number of string type if the execution is successful, otherwise return -1.
+  * Return the device serial number of string type if the execution is successful, otherwise return -1.
 
 * Example
 
@@ -4918,11 +5302,11 @@ It gets the firmware version number.
 
 * Parameter
 
-None
+  * None
 
 * Return Value
 
-Return the firmware version number of string type if the execution is successful, otherwise return -1.
+  * Return the firmware version number of string type if the execution is successful, otherwise return -1.
 
 * Example
 
@@ -4941,11 +5325,11 @@ It gets device manufacturer ID.
 
 * Parameter
 
-None
+  * None
 
 * Return Value
 
-Return the device manufacturer ID if the execution is successful, otherwise return -1.
+  * Return the device manufacturer ID if the execution is successful, otherwise return -1.
 
 * Example
 
@@ -4984,8 +5368,8 @@ Function: GPIO read and write operations.
 | Pin.GPIO14       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO14         |
 | Pin.GPIO15       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO15         |
 | Pin.GPIO16       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO16         |
-| Pin.GPIO17       | EC600S / EC600N / EC100Y                      | GPIO17         |
-| Pin.GPIO18       | EC600S / EC600N / EC100Y                      | GPIO18         |
+| Pin.GPIO17       | EC600S / EC600N / EC100Y/BC25PA               | GPIO17         |
+| Pin.GPIO18       | EC600S / EC600N / EC100Y/BC25PA               | GPIO18         |
 | Pin.GPIO19       | EC600S / EC600N / EC100Y                      | GPIO19         |
 | Pin.GPIO20       | EC600S / EC600N                               | GPIO20         |
 | Pin.GPIO21       | EC600S / EC600N                               | GPIO21         |
@@ -5015,7 +5399,7 @@ The GPIO pin numbers provided in this document correspond to the external pin nu
 
 | Parameter | Type | Description                                                  |
 | :-------- | :--- | ------------------------------------------------------------ |
-| GPIOn     | int  | Pin Number<br />The  corresponding pins of EC100Y-CN module are as follows (pin number is external pin number):<br />GPIO1 – Pin No. 22<br />GPIO2 – Pin No. 23<br />GPIO3 – Pin No. 38<br />GPIO4 – Pin No. 53<br />GPIO5 – Pin No. 54<br />GPIO6 – Pin No. 104<br />GPIO7 – Pin No. 105<br />GPIO8 – Pin No. 106<br />GPIO9 – Pin No. 107<br />GPIO10 – Pin No. 178<br />GPIO11 – Pin No. 195<br />GPIO12 – Pin No. 196<br />GPIO13 – Pin No. 197<br />GPIO14 – Pin No. 198<br />GPIO15 – Pin No. 199<br />GPIO16 – Pin No. 203<br />GPIO17 – Pin No. 204<br />GPIO18 – Pin No. 214<br />GPIO19 – Pin No. 215<br />The corresponding pins of EC600S-CN/EC600N-CN modules are as follows (pin number is external pin number): <br />GPIO1 – Pin No. 10<br />GPIO2 – Pin No. 11<br />GPIO3 – Pin No. 12<br />GPIO4 – Pin No. 13<br />GPIO5 – Pin No. 14<br />GPIO6 – Pin No. 15<br />GPIO7 – Pin No. 16<br />GPIO8 – Pin No. 39<br />GPIO9 – Pin No. 40<br />GPIO10 – Pin No. 48<br />GPIO11 – Pin No. 58<br />GPIO12 – Pin No. 59<br />GPIO13 – Pin No. 60<br />GPIO14 – Pin No. 61<br />GPIO15 – Pin No. 62<br/>GPIO16 – Pin No. 63<br/>GPIO17 – Pin No. 69<br/>GPIO18 – Pin No. 70<br/>GPIO19 – Pin No. 1<br/>GPIO20 – Pin No. 3<br/>GPIO21 – Pin No. 49<br/>GPIO22 – Pin No. 50<br/>GPIO23 – Pin No. 51<br/>GPIO24 – Pin No. 52<br/>GPIO25 – Pin No. 53<br/>GPIO26 – Pin No. 54<br/>GPIO27 – Pin No. 55<br/>GPIO28 – Pin No. 56<br/>GPIO29 – Pin No. 57<br />The corresponding pins of EC600U series module are as follows (pin number is external pin number): <br />GPIO1 – Pin No. 61<br />GPIO2 – Pin No. 58<br />GPIO3 – Pin No. 34<br />GPIO4 – Pin No. 60<br />GPIO5 – Pin No. 69<br />GPIO6 – Pin No. 70<br />GPIO7 – Pin No. 123<br />GPIO8 – Pin No. 118<br />GPIO9 – Pin No. 9<br />GPIO10 – Pin No. 1<br />GPIO11 – Pin No. 4<br />GPIO12 – Pin No. 3<br />GPIO13 – Pin No. 2<br />GPIO14 – Pin No. 54<br />GPIO15 – Pin No. 57<br/>GPIO16 – Pin No. 56<br/>The corresponding pins of EC200U series module are as follows (pin number is external pin number): <br />GPIO1 – Pin No. 27<br />GPIO2 – Pin No. 26<br />GPIO3 – Pin No. 24<br />GPIO4 – Pin No. 25<br />GPIO5 – Pin No. 13<br />GPIO6 – Pin No. 135<br />GPIO7 – Pin No. 136<br />GPIO8 – Pin No. 133<br />GPIO9 – Pin No. 3<br />GPIO10 – Pin No. 40<br />GPIO11 – Pin No. 37<br />GPIO12 – Pin No. 38<br />GPIO13 – Pin No. 39<br />GPIO14 – Pin No. 5<br />GPIO15 – Pin No. 141<br/>GPIO16 – Pin No. 142<br/>The pin correspondence of BC25PA platform is as follows (pin numbers are external pin numbers):<br />GPIO1 – Pin number 3<br />GPIO2 – Pin number 4<br />GPIO3 – Pin number 5<br />GPIO4 – Pin number 6<br />GPIO5 – Pin number 16<br />GPIO6 – Pin number 20<br />GPIO7 – Pin number 21<br />GPIO8 – Pin number 22<br />GPIO9 – Pin number 23<br />GPIO10 – Pin number 25<br />GPIO11 – Pin number 28<br />GPIO12 – Pin number 29<br />GPIO13 – Pin number 30<br />GPIO14 – Pin number 31<br />GPIO15 – Pin number 32<br/>GPIO16 – Pin number 33<br/> |
+| GPIOn     | int  | Pin Number<br />The  corresponding pins of EC100Y-CN module are as follows (pin number is external pin number):<br />GPIO1 – Pin No. 22<br />GPIO2 – Pin No. 23<br />GPIO3 – Pin No. 38<br />GPIO4 – Pin No. 53<br />GPIO5 – Pin No. 54<br />GPIO6 – Pin No. 104<br />GPIO7 – Pin No. 105<br />GPIO8 – Pin No. 106<br />GPIO9 – Pin No. 107<br />GPIO10 – Pin No. 178<br />GPIO11 – Pin No. 195<br />GPIO12 – Pin No. 196<br />GPIO13 – Pin No. 197<br />GPIO14 – Pin No. 198<br />GPIO15 – Pin No. 199<br />GPIO16 – Pin No. 203<br />GPIO17 – Pin No. 204<br />GPIO18 – Pin No. 214<br />GPIO19 – Pin No. 215<br />The corresponding pins of EC600S-CN/EC600N-CN modules are as follows (pin number is external pin number): <br />GPIO1 – Pin No. 10<br />GPIO2 – Pin No. 11<br />GPIO3 – Pin No. 12<br />GPIO4 – Pin No. 13<br />GPIO5 – Pin No. 14<br />GPIO6 – Pin No. 15<br />GPIO7 – Pin No. 16<br />GPIO8 – Pin No. 39<br />GPIO9 – Pin No. 40<br />GPIO10 – Pin No. 48<br />GPIO11 – Pin No. 58<br />GPIO12 – Pin No. 59<br />GPIO13 – Pin No. 60<br />GPIO14 – Pin No. 61<br />GPIO15 – Pin No. 62<br/>GPIO16 – Pin No. 63<br/>GPIO17 – Pin No. 69<br/>GPIO18 – Pin No. 70<br/>GPIO19 – Pin No. 1<br/>GPIO20 – Pin No. 3<br/>GPIO21 – Pin No. 49<br/>GPIO22 – Pin No. 50<br/>GPIO23 – Pin No. 51<br/>GPIO24 – Pin No. 52<br/>GPIO25 – Pin No. 53<br/>GPIO26 – Pin No. 54<br/>GPIO27 – Pin No. 55<br/>GPIO28 – Pin No. 56<br/>GPIO29 – Pin No. 57<br />The corresponding pins of EC600U series module are as follows (pin number is external pin number): <br />GPIO1 – Pin No. 61<br />GPIO2 – Pin No. 58<br />GPIO3 – Pin No. 34<br />GPIO4 – Pin No. 60<br />GPIO5 – Pin No. 69<br />GPIO6 – Pin No. 70<br />GPIO7 – Pin No. 123<br />GPIO8 – Pin No. 118<br />GPIO9 – Pin No. 9<br />GPIO10 – Pin No. 1<br />GPIO11 – Pin No. 4<br />GPIO12 – Pin No. 3<br />GPIO13 – Pin No. 2<br />GPIO14 – Pin No. 54<br />GPIO15 – Pin No. 57<br/>GPIO16 – Pin No. 56<br/>The corresponding pins of EC200U series module are as follows (pin number is external pin number): <br />GPIO1 – Pin No. 27<br />GPIO2 – Pin No. 26<br />GPIO3 – Pin No. 24<br />GPIO4 – Pin No. 25<br />GPIO5 – Pin No. 13<br />GPIO6 – Pin No. 135<br />GPIO7 – Pin No. 136<br />GPIO8 – Pin No. 133<br />GPIO9 – Pin No. 3<br />GPIO10 – Pin No. 40<br />GPIO11 – Pin No. 37<br />GPIO12 – Pin No. 38<br />GPIO13 – Pin No. 39<br />GPIO14 – Pin No. 5<br />GPIO15 – Pin No. 141<br/>GPIO16 – Pin No. 142<br/>The pin correspondence of BC25PA platform is as follows (pin numbers are external pin numbers):<br />GPIO1 – Pin number 3<br />GPIO2 – Pin number 4<br />GPIO3 – Pin number 5<br />GPIO4 – Pin number 6<br />GPIO5 – Pin number 16<br />GPIO6 – Pin number 20<br />GPIO7 – Pin number 21<br />GPIO8 – Pin number 22<br />GPIO9 – Pin number 23<br />GPIO10 – Pin number 25<br />GPIO11 – Pin number 28<br />GPIO12 – Pin number 29<br />GPIO13 – Pin number 30<br />GPIO14 – Pin number 31<br />GPIO15 – Pin number 32<br/>GPIO16 – Pin number 33<br/>GPIO17 – Pin number 2<br/>GPIO18 – Pin number 8<br/> |
 | direction | int  | IN – input mode; OUT – output mode                           |
 | pullMode  | int  | PULL_DISABLE – floating mode<br />PULL_PU – pull-up mode<br />PULL_PD – pull-down mode |
 | level     | int  | 0 - Set the pin to low level; 1- Set the pin to high level   |
@@ -5037,11 +5421,11 @@ It gets pin level.
 
 * Parameter
 
-None
+  * None
 
 * Return Value
 
-Pin level. 0 indicates low level; 1 indicates high level.
+  * Pin level. 0 indicates low level; 1 indicates high level.
 
 
 
@@ -5059,7 +5443,7 @@ It sets the pin level, you need to ensure that the pin is in output mode before 
 
 * Return Value
 
-Return 0 if the execution is successful, otherwise return -1.
+  * Return 0 if the execution is successful, otherwise return -1.
 
 * Example
 
@@ -5071,6 +5455,49 @@ Return 0 if the execution is successful, otherwise return -1.
 >>> gpio1.read()
 1
 ```
+
+
+
+###### Set input / output mode
+
+> **Pin.set_dir(value)**
+
+Set the input / output mode of pin pin GPIO.
+
+* Parameter
+
+|Parameter | type | description|
+| ----- | ---- | ------------------------------------------------------------ |
+|Value | int | 0 - (pin. In) is set as the input mode<br/> 1 - (pin. Out) set to output mode|
+
+* Return Value
+
+  * The integer value 0 will be returned if the setting is successful, and other values will be returned if the setting is failed.
+
+* Examples
+
+```python
+>>> from machine import Pin
+>>> gpio1 = Pin(Pin.GPIO1, Pin.OUT, Pin.PULL_DISABLE, 0)
+>>> gpio1.write(1)
+0
+>>> gpio1.set_dir(Pin.IN)
+0
+```
+
+###### Get input / output mode
+
+> **Pin.get_dir()**
+
+Get the input / output mode of pin pin.
+
+* Parameter
+
+  * None
+
+* Return Value
+
+  * Pin mode, 0-input mode, 1-output mode.
 
 
 
@@ -5169,8 +5596,11 @@ if __name__ == '__main__':
 Function: UART serial data transmission
 
 * note
+
   BC25PA platform, only uart1 is supported
-  
+
+
+
 ###### Constant Description
 
 | Constant   | Sedcription |
@@ -5214,11 +5644,11 @@ It returns the size of unread data in the received buffer.
 
 * Parameter
 
-None
+  * None
 
 * Return Value
 
-Return the size of unread data in the received buffer.
+  * Return the size of unread data in the received buffer.
 
 * Example
 
@@ -5243,7 +5673,7 @@ It reads data from UART.
 
 * Return Value
 
-Return the read data.
+  * Return the read data.
 
 
 
@@ -5257,11 +5687,11 @@ It sends data to UART.
 
 | Parameter | Type   | Description        |
 | --------- | ------ | ------------------ |
-| data      | string | Data has been sent |
+| data      | buf/string | Data has been sent |
 
 * Return Value
 
-Return the number of bytes has been sent.
+  * Return the number of bytes has been sent.
 
 
 
@@ -5273,11 +5703,11 @@ It closes UART.
 
 * Parameter
 
-None
+  * None
 
 * Return Value
 
-Return 0 if the execution is successful, otherwise return -1.
+  * Return 0 if the execution is successful, otherwise return -1.
 
 
 
@@ -5287,7 +5717,7 @@ Return 0 if the execution is successful, otherwise return -1.
 
 Before and after the serial port sends data, pull up and down the specified GPIO to indicate the direction of 485 communication.
 
-- parameter
+- Parameter
 
 | Parameter      | Type | Description                                                         |
 | --------- | ---- | ------------------------------------------------------------ |
@@ -5296,11 +5726,11 @@ Before and after the serial port sends data, pull up and down the specified GPIO
 
 - Return Value
 
-Return 0 if the execution is successful, otherwise return -1.。
+  * Return 0 if the execution is successful, otherwise return -1.。
 
-* note
+* Note
 
-  The BC25PA platform does not support this method.
+  * The BC25PA platform does not support this method.
   
 - Example
 
@@ -5308,6 +5738,35 @@ Return 0 if the execution is successful, otherwise return -1.。
 >>> from machine import UART
 >>> uart1 = UART(UART.UART1, 115200, 8, 0, 1, 0)
 >>> uart1.control_485(UART.GPIO24, 1)
+```
+
+
+
+###### Set serial port data callback
+
+> **uart.set_callback(fun)**
+
+After the serial port receives the data, it will execute the callback.
+
+- Parameter
+
+|Parameter | type | description|
+| ---- | -------- | ------------------------------------------------------------ |
+|Fun | function | serial port receiving data callback [result, port, Num] <br/> result: receiving interface (0: success, others: failure) <br/> port: receiving port <br/> num: how much data is returned|
+
+- Return Value
+
+  * The integer 0 is returned successfully, and the integer - 1 is returned in case of failure.
+
+- Examples
+
+```python
+>>> from machine import UART
+>>> uart1 = UART(UART.UART1, 115200, 8, 0, 1, 0)
+>>> 
+>>>def uart_call(para):
+>>>     print(para)
+>>> uart1.set_callback(uart_call)
 ```
 
 
@@ -5429,16 +5888,18 @@ Function: Hardware timer
 
 Note when using this timer: Timer 0-3, each can only perform one task at the same time, and multiple objects cannot use the same timer.
 
-###### Constant Description
 
-| Constant       | Description                                  |
-| -------------- | -------------------------------------------- |
-| Timer.Timer0   | Timer 0                                      |
-| Timer.Timer1   | Timer 1                                      |
-| Timer.Timer2   | Timer 2                                      |
-| Timer.Timer3   | Timer 3                                      |
-| Timer.ONE_SHOT | Single mode, the timer executes only once    |
-| Timer.PERIODIC | Periodic mode, the timer executes cyclically |
+
+###### Constant description
+
+|Constant | description|
+| -------------- | -------------------------- |
+| Timer. Timer0 | timer 0|
+| Timer. Timer1 | timer 1|
+| Timer. Timer2 | timer 2|
+| Timer. Timer3 | timer 3|
+| Timer. ONE_ Shot | single mode, the timer only executes once|
+| Timer. Periodic | cycle mode, timer cycle execution|
 
 
 
@@ -5479,7 +5940,7 @@ It starts timer.
 
 * Return Value
 
-Return 0 if the execution is successful, otherwise return -1.
+  * Return 0 if the execution is successful, otherwise return -1.
 
 * Example
 
@@ -5505,11 +5966,11 @@ It stops timer.
 
 * Parameter
 
-None
+  * None
 
 * Return Value
 
-Return 0 if the execution is successful, otherwise return -1.
+  * Return 0 if the execution is successful, otherwise return -1.
 
 
 
@@ -5566,44 +6027,7 @@ if __name__ == '__main__':
 
 Function: The module configures I/O pins to interrupt when an external event occurs.
 
-###### Constant Description
 
-| Constant         | Applicable Platform                           | Description    |
-| ---------------- | --------------------------------------------- | -------------- |
-| Pin.GPIO1        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO1          |
-| Pin.GPIO2        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO2          |
-| Pin.GPIO3        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO3          |
-| Pin.GPIO4        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO4          |
-| Pin.GPIO5        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO5          |
-| Pin.GPIO6        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO6          |
-| Pin.GPIO7        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO7          |
-| Pin.GPIO8        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO8          |
-| Pin.GPIO9        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO9          |
-| Pin.GPIO10       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO10         |
-| Pin.GPIO11       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO11         |
-| Pin.GPIO12       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO12         |
-| Pin.GPIO13       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO13         |
-| Pin.GPIO14       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO14         |
-| Pin.GPIO15       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO15         |
-| Pin.GPIO16       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO16         |
-| Pin.GPIO17       | EC600S / EC600N / EC100Y                      | GPIO17         |
-| Pin.GPIO18       | EC600S / EC600N / EC100Y                      | GPIO18         |
-| Pin.GPIO19       | EC600S / EC600N / EC100Y                      | GPIO19         |
-| Pin.GPIO20       | EC600S / EC600N                               | GPIO20         |
-| Pin.GPIO21       | EC600S / EC600N                               | GPIO21         |
-| Pin.GPIO22       | EC600S / EC600N                               | GPIO22         |
-| Pin.GPIO23       | EC600S / EC600N                               | GPIO23         |
-| Pin.GPIO24       | EC600S / EC600N                               | GPIO24         |
-| Pin.GPIO25       | EC600S / EC600N                               | GPIO25         |
-| Pin.GPIO26       | EC600S / EC600N                               | GPIO26         |
-| Pin.GPIO27       | EC600S / EC600N                               | GPIO27         |
-| Pin.GPIO28       | EC600S / EC600N                               | GPIO28         |
-| Pin.GPIO29       | EC600S / EC600N                               | GPIO29         |
-| Pin.IN           | --                                            | Input mode     |
-| Pin.OUT          | --                                            | Output mode    |
-| Pin.PULL_DISABLE | --                                            | Floating mode  |
-| Pin.PULL_PU      | --                                            | Pull-up mode   |
-| Pin.PULL_PD      | --                                            | Pull-down mode |
 
 ###### Create ExtInt Object
 
@@ -5638,13 +6062,12 @@ It enables external interrupt of the extint object, when the interrupt pin recei
 
 * Parameter
 
-NA
+  * None
 
 * Return Value
 
-0	Successful execution.
-
--1	Failed execution.
+  * 0	Successful execution.
+  * -1 Failed execution.
 
 
 
@@ -5656,13 +6079,12 @@ It disables the interrupt associated with the extint object.
 
 * Parameter
 
-NA
+  * None
 
 * Return Value
 
-0	Successful execution.
-
--1	Failed execution.
+  * 0	Successful execution.
+  * -1 Failed execution.
 
 
 
@@ -5674,11 +6096,11 @@ It returns the row number of the pin map.
 
 * Parameter
 
-NA
+  * None
 
 * Return Value
 
-Row number of the pin map. 
+  * Row number of the pin map. 
 
 * Example
 
@@ -5687,6 +6109,43 @@ Row number of the pin map.
 >>> extint.line()
 32
 ```
+
+
+
+###### Number of read interrupts
+
+> **extint.read_count(is_reset)**
+
+Returns the number of times an interrupt was triggered.
+
+* Parameter
+
+|Parameter | type | description|
+| -------- | ---- | ---------------------------------------------- |
+| is_ Reset | int | reset count after reading <br/> 0: do not reset <br/> 1: reset|
+
+* Return Value
+
+  * List [rising_count, falling_count]
+  * ​       rising_count:   Rising trigger times
+  * ​       falling_count:  Fall trigger times
+
+
+
+###### Clear interrupts
+
+> **extint.count_reset()**
+
+Number of times to clear the trigger interrupt.
+
+* Parameter
+
+  * None
+
+* Return Value
+
+  * 0: successful
+  * Other: failed
 
 
 
@@ -5723,13 +6182,13 @@ It sets and gets RTC time. When there is no parameter, it gets the time, it sets
 
 * Return Value
 
-When getting the time, return a tuple containing the date and time in the following format: 
+  * When getting the time, return a tuple containing the date and time in the following format: 
 
-`[year, month, day, week, hour, minute, second, microsecond]`
+    `[year, month, day, week, hour, minute, second, microsecond]`
 
-0	Successful execution.
+  0	Successful execution.
 
--1	Failed execution.
+  -1 Failed execution.
 
 * Example
 
@@ -5749,18 +6208,22 @@ When getting the time, return a tuple containing the date and time in the follow
 > **rtc.register_callback(usrFun)**
 
 When RTC expiration time callback function is set (for BC25PA platform, if it is recovered from deep sleep or software shutdown, calling this function will immediately call usrfun once)
+
 * Parameter
 
 | Parameter   | Type | Description                                   |
 | ------ | -------- | ------------------------------------------ |
 | usrFun | function | Callback function, which is called when the set RTC time arrives. |
 
-Note: usrFun requires parameters
+* Note
+
+  * usrFun requires parameters
 
 * Return Value
-0	Successful execution.
 
--1	Failed execution.
+  * 0	Successful execution.
+  * -1 Failed execution.
+
 * Example
 
 ```python
@@ -5774,8 +6237,11 @@ Note: usrFun requires parameters
 0
 ```
 ###### Set RTC expiration time
+
 rtc.set_alarm(data_e)
+
 Set the RTC expiration time. When the expiration time is reached, the registered callback function will be called
+
 * Parameter
 | Parameter   | Type | Description                                   |
 | ----------- | ---- | ------------------------------------------------------------ |
@@ -5789,8 +6255,11 @@ Set the RTC expiration time. When the expiration time is reached, the registered
 | microsecond | int  | microsecond,The parameter is reserved and not used yet. When setting the time, the parameter can be written as 0            |
 
 * Return Value
-0	Successful execution.
--1	Failed execution.
+
+  0	Successful execution.
+
+  -1	Failed execution.
+
 * Example
 ```python
 >>> data_e=rtc.datetime()
@@ -5801,8 +6270,11 @@ Set the RTC expiration time. When the expiration time is reached, the registered
 0
 ```
 ###### Start / stop RTC timer
+
 rtc.enable_alarm(on_off)
+
 The timer can be started only when the callback function is set (bc25pa platform)
+
 * Parameter
 
 | Parameter | Type | Description                                                  |
@@ -5810,13 +6282,103 @@ The timer can be started only when the callback function is set (bc25pa platform
 | on_off        | int  | 0 - Turn off RTC timer. 1 - Start RTC timer.                     |
 
 * Return Value
-0	Successful execution.
--1	Failed execution.
+
+  * 0	Successful execution.
+  * -1 Failed execution.
+
 * Example
 ```python
 >>> rtc.enable_alarm(1)
 0
 ```
+
+
+
+###### Set RTC alarm time
+
+Support platform ec600u/ec200u/ec600n/ec800n/bc25
+
+> rtc.set_alarm([year, month, day, week, hour, minute, second, microsecond])
+
+Set the RTC alarm time. The parameter week is not involved in the setting. The microsecond parameter is reserved and not used yet. The default is 0.
+
+* Parameter
+
+|Parameter | type | description|
+| ----------- | ---- | ------------------------------------- |
+|Year | int ||
+|Month | int | month, range 1 ~ 12|
+|Day | int | day, range 1 ~ 31|
+|Week | int | week, range 0 ~ 6, this parameter does not work, reserved|
+|When hour | int | the range is 0 ~ 23|
+|Minute | int | min, range 0 ~ 59|
+|Second | int | second, range 0 ~ 59|
+|Microsecond | int | microseconds, reserved parameters, unused temporarily, write 0|
+
+* Return Value
+
+  * The integer value 0 is returned after setting successfully, and the integer value - 1 is returned after setting fails.
+
+
+
+###### Register RTC alarm callback
+
+Support platform ec600u/ec200u/ec600n/ec800n/bc25
+
+> rtc.register_callback(fun)
+
+Register RTC alarm callback handler
+
+* Parameter
+
+|Parameter | type | description|
+| ---- | -------- | --------------------- |
+|Fun | function | RTC alarm callback processing function|
+
+* Return Value
+
+  * The integer value 0 is returned after successful registration, and the integer value - 1 is returned after failed registration.
+
+
+
+###### Switch RTC alarm function
+
+Support platform ec600u/ec200u/ec600n/ec800n/bc25
+
+> rtc.enable_alarm(on_off)
+
+Turn on/off RTC alarm function
+
+* Parameter
+
+|Parameter | type | description|
+| ------ | ---- | ---------------------------------------- |
+| on_ Off | int | 1 - turn on RTC alarm function; 0 - turn off RTC alarm function|
+
+* Return Value
+
+  * An integer value of 0 is returned when opening / closing is successful, and an integer value of - 1 is returned when opening / closing is failed.
+
+
+
+- Examples
+
+```python
+from machine import RTC
+rtc = RTC()
+def callback(args):
+   print('RTC alarm')
+
+rtc.register_callback(callback)
+rtc.set_alarm([2021, 7, 9, 5, 12, 30, 0, 0])
+rtc.enable_alarm(1)
+```
+
+* Note
+
+  * ec600u/ec200u platform supports automatic startup, that is, after setting the alarm function, the module will be shut down. After the alarm time is up, it can be started automatically. This feature is not supported on other platforms.
+
+
 
 ##### I2C
 
@@ -5855,7 +6417,8 @@ Class function: A two-wire protocol used for communication between devices.
 | EC600S/EC600N | I2C1:<br />SCL: Pin number 57<br />SDA: Pin number 56          |
 | EC100Y        | I2C0:<br />SCL: Pin number 57<br />SDA: Pin number 56          |
 | BC25PA        | I2C0:<br />SCL: Pin number 23<br />SDA: Pin number 22<br />I2C1:<br />SCL: Pin number 20<br />SDA: Pin number 21 |
-|- Exmaple||
+
+- Exmaple
 
 ```python
 from machine import I2C
@@ -5871,7 +6434,7 @@ i2c_obj = I2C(I2C.I2C0, I2C.STANDARD_MODE)  # Return i2c object
 
 It reads data from the I2C bus. 
 
-Parameter
+* Parameter
 
 | Parameter    | Type      | Description                                        |
 | ------------ | --------- | -------------------------------------------------- |
@@ -5884,9 +6447,8 @@ Parameter
 
 * Return Value
 
-0	Successful execution.
-
--1	Failed execution
+  * 0	Successful execution.
+  * -1 Failed execution
 
 
 
@@ -5908,9 +6470,8 @@ It writes data from the I2C bus.
 
 * Return Value
 
-0	Successful execution.
-
--1	Failed execution
+  * 0	Successful execution.
+  * -1 Failed execution
 
 
 
@@ -5956,13 +6517,203 @@ if __name__ == '__main__':
 
 ```
 
+##### I2C_simulation
+
+Class function: used for GPIO simulation standard I2C protocol.
+
+Except for creating objects, other operations (reading and writing) are consistent with I2C
+
+
+###### Create I2C_ Simulation object
+
+> **from machine import I2C_simulation**
+>
+> **i2c_obj = I2C_simulation(GPIO_clk,  GPIO_sda, CLK)**
+
+* Parameter description
+
+|Parameter | type | description|
+| -------- | ---- | ----------------------------------------------------- |
+| GPIO_ CLK pin of CLK | int | I2C (GPIO pin number to be controlled, refer to the definition of pin module)|
+| GPIO_ SDA pin of SDA | int | I2C (GPIO pin number to be controlled, refer to the definition of pin module)|
+|Frequency of CLK | int | I2C (01000000hz]|
+
+- Examples
+
+```python
+from machine import I2C_simulation
+
+i2c_obj = I2C_simulation(I2C_simulation.GPIO10, I2C_simulation.GPIO11, 300)  #Return I2C object
+```
+
+
+
+###### Read data
+
+> **I2C_simulation.read(slaveaddress, addr,addr_len, r_data, datalen, delay)**
+
+Read data from I2C bus.
+
+**Parameter description**
+
+|Parameter | type | description|
+| ------------ | --------- | -------------------------------- |
+|Slaveaddress | int | I2C device address|
+|Addr | bytearray | I2C register address|
+| addr_ Len | int | register address length|
+| r_ Data | bytearray | byte array of received data|
+|Datalen | int | length of byte array|
+|Delay | int | delay, data conversion buffer time (unit: ms)|
+
+* Return Value
+
+  * The integer value 0 is returned successfully, and the integer value - 1 is returned in failure.
+
+
+
+###### Write data
+
+> **I2C_simulation.write(slaveaddress, addr, addr_len, data, datalen)**
+
+Write data from the I2C bus.
+
+* Parameter description
+
+|Parameter | type | description|
+| ------------ | --------- | -------------- |
+|Slaveaddress | int | I2C device address|
+|Addr | bytearray | I2C register address|
+| addr_ Len | int | register address length|
+|Data | bytearray | written data|
+|Datalen | int | length of data written|
+
+* Return Value
+
+  * The integer value 0 is returned successfully, and the integer value - 1 is returned in failure.
+
+
+
+###### Use example
+
+This example is to drive aht10 to obtain temperature and humidity.
+
+```python
+import log
+#from machine import I2C
+from machine import I2C_simulation
+import utime as time
+"""
+1. calibration
+2. Trigger measurement
+3. read data
+"""
+
+#API manual http://qpy.quectel.com/wiki/#/en-us/api/?id=i2c
+#Aht10 instructions
+#  https://server4.eca.ir/eshop/AHT10/Aosong_AHT10_en_draft_0c.pdf
+
+
+class aht10class():
+    i2c_log = None
+    i2c_dev = None
+    i2c_addre = None
+
+    # Initialization command
+    AHT10_CALIBRATION_CMD = 0xE1
+    # Trigger measurement
+    AHT10_START_MEASURMENT_CMD = 0xAC
+    # reset
+    AHT10_RESET_CMD = 0xBA
+
+    def write_data(self, data):
+        self.i2c_dev.write(self.i2c_addre,
+                           bytearray(0x00), 0,
+                           bytearray(data), len(data))
+        pass
+
+    def read_data(self, length):
+        print("read_data start")
+        r_data = [0x00 for i in range(length)]
+        r_data = bytearray(r_data)
+        print("read_data start1")
+        ret = self.i2c_dev.read(self.i2c_addre,
+                          bytearray(0x00), 0,
+                          r_data, length,
+                          0)
+        print("read_data start2")
+        print('ret',ret)
+        print('r_data:',r_data)
+        return list(r_data)
+
+    def aht10_init(self, addre=0x38, Alise="Ath10"):
+        self.i2c_log = log.getLogger(Alise)
+        self.i2c_dev = I2C_simulation(I2C_simulation.GPIO10, I2C_simulation.GPIO11, 300)
+        self.i2c_addre = addre
+        self.sensor_init()
+        pass
+
+    def aht10_transformation_temperature(self, data):
+        r_data = data
+        #Convert the temperature according to the description in the data book
+        humidity = (r_data[0] << 12) | (
+            r_data[1] << 4) | ((r_data[2] & 0xF0) >> 4)
+        humidity = (humidity/(1 << 20)) * 100.0
+        print("current humidity is {0}%".format(humidity))
+        temperature = ((r_data[2] & 0xf) << 16) | (
+            r_data[3] << 8) | r_data[4]
+        temperature = (temperature * 200.0 / (1 << 20)) - 50
+        print("current temperature is {0}°C".format(temperature))
+        
+
+    def sensor_init(self):
+        # calibration
+        self.write_data([self.AHT10_CALIBRATION_CMD, 0x08, 0x00])
+        time.sleep_ms(300)  # at last 300ms
+        pass
+
+
+    def ath10_reset(self):
+        self.write_data([self.AHT10_RESET_CMD])
+        time.sleep_ms(20)  # at last 20ms
+
+    def Trigger_measurement(self):
+        # Trigger data conversion
+        self.write_data([self.AHT10_START_MEASURMENT_CMD, 0x33, 0x00])
+        time.sleep_ms(200)  # at last delay 75ms
+        # check has success
+        r_data = self.read_data(6)
+        # check bit7
+        if (r_data[0] >> 7) != 0x0:
+            print("Conversion has error")
+        else:
+            self.aht10_transformation_temperature(r_data[1:6])
+
+ath_dev = None
+
+def i2c_aht10_test():
+    global ath_dev
+    ath_dev = aht10class()
+    ath_dev.aht10_init()
+
+    #Test ten times
+    for i in range(5):
+        ath_dev.Trigger_measurement()
+        time.sleep(1)
+
+
+if __name__ == "__main__":
+    print('start')
+    i2c_aht10_test()
+
+
+```
+
 
 
 ##### SPI
 
 Class function: Serial peripheral interface bus protocol. 
 
-Adaptation version: EC100Y (V0009) and above; EC600S (V0002) and above. 
 
 ###### Create SPI Object
 
@@ -5974,7 +6725,7 @@ Adaptation version: EC100Y (V0009) and above; EC600S (V0002) and above.
 | --------- | ---- | ------------------------------------------------------------ |
 | port      | int  | Channel selection[0,1]                                       |
 | mode      | int  | SPI working mode (ususally mode 0): <br />Clock polarity CPOL: When SPI is idle, the level of the clock signal SCLK (0: Low level when idle; 1: High level when idle)<br /> 0 : CPOL=0, CPHA=0<br /> 1 : CPOL=0, CPHA=1<br /> 2:  CPOL=1, CPHA=0<br /> 3:  CPOL=1, CPHA=1 |
-| clk       | int  | volume_up clock frequency<br /> 0 : 812.5kHz<br /> 1 : 1.625MHz<br /> 2 : 3.25MHz<br /> 3 : 6.5MHz<br /> 4 : 13MHz<br /> 5 :  26MH |
+| clk       | int  | volume_up clock frequency<br />EC600NCN/EC600SCN/EC800NCN:<br /> 0 : 812.5kHz<br /> 1 : 1.625MHz<br /> 2 : 3.25MHz<br /> 3 : 6.5MHz<br /> 4 : 13MHz<br /> 5 :  26MHz<br /> 6：52MHz<br />EC600UCN/EC200UCN:<br />0 : 781.25KHz<br />1 : 1.5625MHz<br />2 : 3.125MHz<br />3 : 5MHz<br />4 : 6.25MHz<br />5 : 10MHz<br />6 : 12.5MHz<br />7 : 20MHz<br />8 : 25MHz<br />9 : 33.33MHz<br />BC25PA：<br />0 ： 5MHz<br />X : XMHz  (X in [1,39]) |
 
 - Pin Description
 
@@ -5982,10 +6733,14 @@ Adaptation version: EC100Y (V0009) and above; EC600S (V0002) and above.
 | ------------- | ------------------------------------------------------------ |
 | EC600U        | port0:<br />CS:Pin number 4<br />CLK:Pin number 1<br />MOSI:Pin number 3<br />MISO:Pin number 2<br />port1:<br />CS:Pin number <br />CLK:Pin number <br />MOSI:Pin number <br />MISO:Pin number 60 |
 | EC200U        | port0:<br />CS:Pin number 134<br />CLK:Pin number 133<br />MOSI:Pin number 132<br />MISO:Pin number 131<br />port1:<br />CS:Pin number 26<br />CLK:Pin number 27<br />MOSI:Pin number 24<br />MISO:Pin number 25 |
-| EC600S/EC600N | port0:<br />CS:Pin number 58<br />CLK:Pin number 61<br />MOSI:Pin number 60<br />MISO:Pin number 59<br />port1:<br />CS:Pin number 4<br />CLK:Pin number 1<br />MOSI:Pin number 3<br />MISO:Pin number 2 |
+| EC600S/EC600N | port0:<br />CS:Pin number 58<br />CLK:Pin number 61<br />MOSI:Pin number 59<br />MISO:Pin number 60<br />port1:<br />CS:Pin number 4<br />CLK:Pin number 1<br />MOSI:Pin number 3<br />MISO:Pin number 2 |
 | EC100Y        | port0:<br />CS:Pin number 25<br />CLK:Pin number 26<br />MOSI:Pin number 27<br />MISO:Pin number 28<br />port1:<br />CS:Pin number 105<br />CLK:Pin number 104<br />MOSI:Pin number 107<br />MISO:Pin number 106 |
 | BC25PA        | port0:<br />CS:Pin number 6<br />CLK:Pin number 5<br />MOSI:Pin number 4<br />MISO:Pin number 3|
-* Note:Bc25pa platform does not support 1 and 2 modes.
+
+* Note:
+
+  * Bc25pa platform does not support 1 and 2 modes.
+
 - Example
 
 ```python
@@ -6011,7 +6766,7 @@ It reads data.
 
 * Return Value
 
--1	Failed execution
+  * -1	Failed execution
 
 
 
@@ -6030,7 +6785,7 @@ It writes data.
 
 * Return Value
 
--1	Failed execution
+  * -1	Failed execution
 
 
 
@@ -6050,7 +6805,7 @@ It writes and reads data.
 
 * Return Value
 
--1	Failed execution
+  * -1	Failed execution
 
 
 
@@ -6106,9 +6861,9 @@ Note: The BC25PA platform does not support this module function.
 
 * Parameter
 
-NA
+  * None
 
-Example
+- Example
 
 ```python
 from machine import LCD 
@@ -6141,16 +6896,11 @@ It initializes LCD.
 
 * Return Value
 
-
-  0  	 Successful execution.
-
-  -1  	Initialized.
-
-  -2  	Parameter error (empty or too large (bigger than 1000 pixels)) .
-
-  -3  	Failed cache request.
-
-  -5  	Configuration parameter error.
+  * 0  	 Successful execution.
+  * -1  	Initialized.
+  * -2  	Parameter error (empty or too large (bigger than 1000 pixels)) .
+  * -3  	Failed cache request.
+  * -5  	Configuration parameter error.
 
 
 
@@ -6169,9 +6919,8 @@ It clears LCD.
 
 * Return Value
 
-0	Successful execution.
-
--1	Failed execution.
+  * 0	Successful execution.
+  * -1 Failed execution.
 
 
 
@@ -6193,13 +6942,10 @@ It writes LCD regionally.
 
 * Return Value
 
-  0   	Successful execution.
-
-  -1  	The screen is not initialized.
-
-  -2  	Wrong width and height settings.
-
-  -3  	Data cache is empty.
+  * 0   	Successful execution.
+  * -1  	The screen is not initialized.
+  * -2  	Wrong width and height settings.
+  * -3  	Data cache is empty.
 
 
 
@@ -6217,9 +6963,8 @@ It sets the screen brightness level.
 
 * Return Value
 
-0	Successful execution.
-
--1	Failed execution.
+  * 0	Successful execution.
+  * -1 Failed execution.
 
 
 
@@ -6231,13 +6976,12 @@ It turns on the LCD display, call the lcd_display_on callback in lcd.lcd_init() 
 
 - Parameter
 
-NA
+  * None
 
 * Return Value
 
-0	Successful execution.
-
--1	Failed execution.
+  * 0	Successful execution.
+  * -1	Failed execution.
 
 
 
@@ -6249,13 +6993,12 @@ It turns off the LCD display, call the  lcd_display_off callback in lcd.lcd_init
 
 - Parameter
 
-NA
+  * None
 
 * Return Value
 
-0	Successful execution.
-
--1	Failed execution.
+  * 0	Successful execution.
+  * -1	Failed execution.
 
 
 
@@ -6274,9 +7017,8 @@ It writes command.
 
 * Return Value
 
-0	Successful execution.
-
-Other value	Failed execution.
+  * 0	Successful execution.
+  * Other value	Failed execution.
 
 
 
@@ -6295,9 +7037,8 @@ It writes data.
 
 * Return Value
 
-0	Successful execution.
-
-Other value	Failed execution.
+  * 0	Successful execution.
+  * Other value	Failed execution.
 
 
 
@@ -6321,9 +7062,29 @@ This file is a bin file generated by Image2Lcd tool. If you check the header fil
 
 * Return Value
 
-0	Successful execution.
+  * 0	Successful execution.
+  * Other value	Failed execution.
 
-Other value	Failed execution.
+
+
+###### show jpeg images
+
+> **lcd.lcd_show_jpg( file_name, start_x,start_y)**
+
+Display jpeg pictures by reading files.
+
+- Parameter
+
+| Parameter | Type | Description             |
+| --------- | ---- | ----------------------- |
+| file_name | str  | Image name to display   |
+| start_x   | int  | starting x coordinate   |
+| start_y   | int  | starting y coordinate   |
+
+* Return Value
+
+  * 0   Successful execution.
+  * Other value Failed execution.
 
 
 
@@ -6412,12 +7173,12 @@ It creates a software watchdog object.
 - Parameter
 
 | Parameter | Type | Description                                      |
-| :-------- | :--- | ------------------------------------------------ |
+| --------- | ---- | ------------------------------------------------ |
 | period    | int  | Set software watchdog detection time, unit (s)。 |
 
 * Return Value
 
-It returns software watchdog object.
+  * It returns software watchdog object.
 
 
 
@@ -6429,11 +7190,11 @@ It feeds watchdog.
 
 - Parameter
 
-NA
+  * None
 
 * Return Value
 
-NA
+  * None
 
 
 
@@ -6445,11 +7206,11 @@ It stops watchdog.
 
 - Parameter
 
-NA
+  * None
 
 * Return Value
 
-NA
+  * None
 
 
 
@@ -6490,26 +7251,41 @@ if __name__ == '__main__':
 ```
 ##### KeyPad
 
-Module function: provide matrix keyboard interface and support platform ec600scn_ LB/EC800N_ CN_ LA/EC600NCNLC
+Module function: provide matrix keyboard interface and support platform EC600SCN_LB/EC800N_CN_LA/EC600NCN_LC
+EC200U supports 4x3 at most and EC600U supports 6x6 at most.
 
 ###### Create keypad object
 
 > **keypad=machine.KeyPad()**
-*Parameter
+
+- Parameter
+
 | Parameter | Type | Description                                      |
 | ------ | -------- | ----------------------------------- |
-|Row | int | row (if it is greater than 0 and less than 8, and neither row nor column is set, the default is 4)|
-|Col | int | column (greater than 0 and less than 8. If the column is not set, the default is 4)|
-Note: if row and col are not set, the default is 4X4..
+|Row | int | Greater than 0, not exceeding the maximum supported by the platform|
+|Col | int | Greater than 0, not exceeding the maximum supported by the platform|
 
-*Example:
+- Note: 
+
+  if row and col are not set, the default is 4X4.
+
+|Platform | maximum row | maximum column|
+| ------------- | ------ | ------ |
+| EC800N/EC600N | 4 | 4 |
+| EC600S | 5 | 5 |
+| EC200U | 4 | 3 |
+| EC600U | 6 | 6 |
+
+* Example:
 >
-> ```python
-> >>>import machine
-> >>>keypad=machine.KeyPad()
-> ```
+>```python
+>>>>import machine
+>>>>keypad=machine.KeyPad(2,3)		# The matrix keyboard is set as a matrix keyboard with 2 rows and 3 columns
+>>>>keypad=machine.KeyPad()  	 	# Not set. The default setting is 4 rows and 4 columns matrix keyboard
+>>>>keypad=machine.KeyPad(2)  	 	# The row value is set to 2, and the column value defaults to 4
+>```
 >
-> 
+>
 
 ###### Initialize keypad
 
@@ -6517,21 +7293,19 @@ Note: if row and col are not set, the default is 4X4..
 
 Initialize keypad settings.
 
-* Parameters
+* Parameter
 
-nothing
+  * None
 
-Return value
+- Return Value
 
-0 is returned for success and - 1 is returned for failure.
+  * 0 is returned for success and - 1 is returned for failure.
 
 ###### Set callback function
 
 > **keypad.set_ callback(usrFun)**
 
 After the key is connected to the module, press and release the key to trigger the callback function setting.
-
-* Parameters
 
 - Parameter
 
@@ -6540,20 +7314,18 @@ After the key is connected to the module, press and release the key to trigger t
 | usrFun | function | callback function. This function will be triggered when the external keyboard key is pressed and placed |
 
 
-Note: the usrfun parameter is list.
+* Note: The argument to the usrfun function is the list data type.
 
-List contains five parameters. It has the following meanings:
+* List contains three parameters. It has the following meanings:
 
-list[0] - 1 means press and 0 means lift
-
-list[1] - row
-
-list[2] - col
+  list[0] - 1 means press and 0 means lift<br/>
+  list[1] - row<br/>
+  list[2] - col
 
 
-* Return value
+* Return Value
 
-0
+  * 0
 
 
 ###### Uninitialization
@@ -6562,15 +7334,15 @@ list[2] - col
 
 Release the initialized resource and callback function settings.
 
-* Parameters
+* Parameter
 
-nothing
+  * None
 
-* Return value
+* Return Value
 
-0 is returned for success and - 1 is returned for failure.
+  * 0 is returned for success and - 1 is returned for failure.
 
-###### Use example
+###### example
 ```python
 import machine
 import utime
@@ -6599,6 +7371,7 @@ print('exit!')
 #### qrcode- QR Code Display 
 
 Module function:  Generate the corresponding QR code according to the input content. 
+
 Note: The BC25PA platform does not support this module function.
 
 > ​	qrcode.show(qrcode_str,magnification,start_x,start_y,Background_color,Foreground_color)
@@ -6616,13 +7389,10 @@ Note: The BC25PA platform does not support this module function.
 
 * Return Value
 
-0       Successful execution.
-
--1     Failed to generate QR code.
-
--2     Failed magnification. 
-
--3     Failed display.
+  * 0       Successful execution.
+  * -1     Failed to generate QR code.
+  * -2     Failed magnification. 
+  * -3     Failed display.
 
 
 
@@ -6639,19 +7409,18 @@ It creates wake_lock lock.
 - Parameter
 
 | Parameter | Type   | Description          |
-| :-------- | :----- | -------------------- |
+| --------- | ------ | -------------------- |
 | lock_name | string | Custom lock name.    |
 | name_size | int    | Length of lock name. |
 
 * Return Value
 
-wakelock's Identification number   Successful execution.
+  * wakelock's Identification number   Successful execution.
+  * -1   Failed execution.
 
--1   Failed execution.
+* Note
 
-* note
-
-  The BC25PA platform does not support this method.
+  * The BC25PA platform does not support this method.
 
 
 ##### Delete wake_lock Lock 
@@ -6663,16 +7432,16 @@ It deletes wake_lock lock.
 - Parameter
 
 | Parameter | Type | Description                                                  |
-| :-------- | :--- | ------------------------------------------------------------ |
+| --------- | ---- | ------------------------------------------------------------ |
 | lpm_fd    | int  | The corresponding identification ID of the lock to be deleted. |
 
 * Return Value
 
-0      Successful execution.
+  * 0      Successful execution.
 
-* note
+* Note
 
-  The BC25PA platform does not support this method.
+  * The BC25PA platform does not support this method.
 
 
 ##### Lock 
@@ -6682,18 +7451,17 @@ It deletes wake_lock lock.
 - Parameter
 
 | Parameter | Type | Description                                                  |
-| :-------- | :--- | ------------------------------------------------------------ |
+| --------- | ---- | ------------------------------------------------------------ |
 | lpm_fd    | int  | The wakelock identification ID that needs to perform the lock operation. |
 
 * Return Value
 
-0	Successful execution.
+  * 0	Successful execution.
+  * -1	Failed execution.
 
--1	Failed execution.
+* Note
 
-* note
-
-  The BC25PA platform does not support this method.
+  * The BC25PA platform does not support this method.
 
 
 ##### Release Lock 
@@ -6705,16 +7473,15 @@ It releases lock.
 - Parameter
 
 | Parameter | Type | Description                                                  |
-| :-------- | :--- | ------------------------------------------------------------ |
+| --------- | ---- | ------------------------------------------------------------ |
 | lpm_fd    | int  | The wakelock identification ID that needs to perform the lock release operation. |
 
 * Return Value
 
-0	Successful execution.
+  * 0	Successful execution.
+  * -1	Failed execution.
 
--1	Failed execution.
-
-* note
+* Note
 
   The BC25PA platform does not support this method.
 
@@ -6727,12 +7494,12 @@ It controls automatic sleep mode.
 - Parameter
 
 | Parameter  | Type | Description                                                  |
-| :--------- | :--- | ------------------------------------------------------------ |
+| ---------- | ---- | ------------------------------------------------------------ |
 | sleep_flag | int  | 0, turn off automatic sleep mode; 1 turn on automatic sleep mode. |
 
 * Return Value
 
-0	Successful execution.
+  * 0	Successful execution.
 
 
 
@@ -6744,15 +7511,15 @@ It gets the number of locks created.
 
 - Parameter
 
-NA
+  * None
 
 * Return Value
 
-It returns the number of wakelock locks that have been created. 
+  * It returns the number of wakelock locks that have been created. 
 
-* note
+* Note
 
-  The BC25PA platform does not support this method.
+  * The BC25PA platform does not support this method.
 
 
 ##### Example
@@ -6829,12 +7596,12 @@ The compile function compiles regular expressions and generate a regular express
 - Parameter
 
 | ParamEter | Type   | Description         |
-| :-------- | :----- | ------------------- |
+| --------- | ------ | ------------------- |
 | regex     | string | Regular expression. |
 
 * Return Value
 
-It returns regex object.
+  * It returns regex object.
 
 
 
@@ -6847,15 +7614,14 @@ It matches the regular expression object with string, usually from the beginning
 - Parameter
 
 | Parameter | Type   | Description                |
-| :-------- | :----- | -------------------------- |
+| --------- | ------ | -------------------------- |
 | regex     | string | Regular expression.        |
 | string    | string | String data to be matched. |
 
 * Return Value
 
-A matched object   Successful execution.
-
-None   Failed execution.
+  * A matched object   Successful execution.
+  * None   Failed execution.
 
 
 
@@ -6868,15 +7634,14 @@ ure.search scans the entire string and returns the first successful match.
 - Parameter
 
 | Parameter | Type   | Description                |
-| :-------- | :----- | -------------------------- |
+| --------- | ------ | -------------------------- |
 | regex     | string | Regular expression.        |
 | string    | string | String data to be matched. |
 
 * Return Value
 
-A matched object   Successful execution.
-
-None   Failed execution.
+  * A matched object   Successful execution.
+  * None   Failed execution.
 
 
 
@@ -6893,12 +7658,12 @@ It  matches the string of the entire expression.
 - Parameter
 
 | Parameter | Type | Description                                                  |
-| :-------- | :--- | ------------------------------------------------------------ |
+| --------- | ---- | ------------------------------------------------------------ |
 | index     | int  | In the regular expression, group() proposes the string intercepted by the group, index=0 returns the whole, and it is obtained according to the written regular expression. When the group does not exist, an exception is thrown. |
 
 * Return Value
 
-It returns the string of the matched entire expression. 
+  * It returns the string of the matched entire expression. 
 
 
 
@@ -6910,11 +7675,11 @@ It  matches the string of the entire expression.
 
 - Parameter
 
-NA
+  * None
 
 * Return Value
 
-It returns a tuple containing all substrings of the matching group. 
+  * It returns a tuple containing all substrings of the matching group. 
 
 
 
@@ -6927,12 +7692,12 @@ It returns the index of the starting original string of the matched substring gr
 - Parameter
 
 | Parameter | Type | Description                                                  |
-| :-------- | :--- | ------------------------------------------------------------ |
+| --------- | ---- | ------------------------------------------------------------ |
 | index     | int  | Index defaults to the entire group, otherwise a group is selected. |
 
 * Return Value
 
-It returns the index of the starting original string of the matched substring group. 
+  * It returns the index of the starting original string of the matched substring group. 
 
 ##### Get End Index 
 
@@ -6943,12 +7708,12 @@ It returns the index of the ending original string of the matched substring grou
 - Parameter
 
 | Parameter | Type | Description                                                  |
-| :-------- | :--- | ------------------------------------------------------------ |
+| --------- | ---- | ------------------------------------------------------------ |
 | index     | int  | Index defaults to the entire group, otherwise a group is selected. |
 
 * Return Value
 
-It returns the index of the ending original string of the matched substring group. 
+  * It returns the index of the ending original string of the matched substring group. 
 
 ##### Example
 
@@ -6980,13 +7745,12 @@ Note: The BC25PA platform does not support this module function.
 
 * Parameter：
 
-  None
+  * None
 
 * Return Value：
 
-  True	 wifiScan is supported
-
-  False	wifiScan is not supported
+  * True	 wifiScan is supported
+  * False	wifiScan is not supported
 
 * Example：
 
@@ -7014,9 +7778,8 @@ True
 
 * Return Value:
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 * Example:
 
@@ -7039,13 +7802,12 @@ True
 
 * Parameter：
 
-  None
+  * None
 
 * Return Value：
 
-  True	 wifiScan function is enabled
-
-  False	wifiScan function is disabled.
+  * True	 wifiScan function is enabled
+  * False	wifiScan function is disabled.
 
 * Example：
 
@@ -7066,13 +7828,12 @@ True
 
 * Parameter：
 
-  None
+  * None
 
 * Return Value：
 
-  A tuple	Successful execution
-
-  -1		     Failed execution 
+  * A tuple	Successful execution
+  * -1 Failed execution 
 
   The format of the returned tuple is as follows:
 
@@ -7110,14 +7871,13 @@ True
   | timeout       | Integer type | This parameter is the timeout of upper layer application. When the application triggers timeout, it actively reports the scanned hot spot information. The application automatically reports the hot spot information if it scans all the hop spots which have been set previously or the underlying layer scan reaches the frequency sweeping timeout before the timeout of the application. <br>Range:<br/>600S: 4–255; unit: s.<br/>200U/600U: 120–5000; unit: ms. |
   | round         | Integer type | This parameter is the scanning rounds of wifi. When reaching the scanning rounds, the scan stops and the scanning results are obtained. <br/>Range:<br/>600S: 1–3; unit: round<br/>200U/600U: 1–10; unit: round |
   | max_bssid_num | Integer type | This parameter determines the maximum number of hot spots to be scanned. If the number of hot spots scanned by the underlying layer reaches the maximum, the scan stops and the scanning results are obtained. <br/>Range:<br/>600S: 4–30<br/>200U/600U: 1–300 |
-  | scan_timeout  | Integer type | This parameter is the wifi hot spot scanning timeout of underlying layer. If the underlying layer scan reaches the hot spot scanning timeout set previously,  the scan stops and the scanning results are obtained. Range: 1–255. Unit: second. |
-  | priority      | Integer type | This parameter is the priority setting of wifi scanning service. 0 indicates that ps is preferred; 1 indicates that wifi is preferred. When ps is preferred, the wifi scan is terminated when a data service is initiated. When wifi is preferred, RRC connection is not connected when a data service is initiated. wifi scan runs normally. The RRC connection is only established after the scan completes. |
+  | scan_timeout  | Integer type | This parameter is the wifi hot spot scanning timeout of underlying layer. If the underlying layer scan reaches the hot spot scanning timeout set previously,  the scan stops and the scanning results are obtained. Range: 1–255. Unit: second. 200U or 600U platforms do not support this parameter. You can set this parameter to 0. |
+  | priority      | Integer type | This parameter is the priority setting of wifi scanning service. 0 indicates that ps is preferred; 1 indicates that wifi is preferred. When ps is preferred, the wifi scan is terminated when a data service is initiated. When wifi is preferred, RRC connection is not connected when a data service is initiated. wifi scan runs normally. The RRC connection is only established after the scan completes. 200U or 600U platforms do not support this parameter. You can set this parameter to 0. |
 
 * Return Value：
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 * Example：
 
@@ -7144,9 +7904,8 @@ True
 
 * Return Value：
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 * Example：
 
@@ -7168,13 +7927,12 @@ wifiScan.setCallback(usr_cb)
 
 * Parameter：
 
-  None
+  * None
 
 * Return Value：
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 * Example：
 
@@ -7203,17 +7961,15 @@ wifi list:(2, [('F0:B4:29:86:95:C7': -79),('44:00:4D:D5:26:E0', -92)])
 
 * Parameter：
 
-  None
+  * None
 
 * Return Value：
 
-  Scanning result	Successful execution
+  * Scanning result	Successful execution
+  * -1 Failed execution or error
+  * The return value of successful execution is as follows:
 
-  -1							Failed execution or error
-
-  The return value of successful execution is as follows:
-
-  `（wifi_nums, [(mac, rssi), ... , (mac, rssi)]）`
+    `（wifi_nums, [(mac, rssi), ... , (mac, rssi)]）`
 
   | Parameter | Type         | Description                                  |
   | --------- | ------------ | -------------------------------------------- |
@@ -7244,13 +8000,12 @@ Module function: provide function of BLE GATT Server（slave） and BLE GATT Cli
 
 * Parameter:
 
-  None
+  * None
 
 * Return Value:
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 * Example:
 
@@ -7270,13 +8025,12 @@ See comprehensive example
 
 * Parameter:
 
-  None
+  * None
 
 * Return Value:
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 * Example:
 
@@ -7296,19 +8050,17 @@ See comprehensive example
 
 * Parameter:
 
-  None
+  * None
 
 * Return Value:
 
-  0	BLE has been stopped
-
-  1	BLE has been started
-
-  -1	Get BLE status failed
+  * 0	BLE has been stopped
+  * 1	BLE has been started
+  * -1	Get BLE status failed
 
 * Example:
 
-  None
+  * None
 
 
 
@@ -7320,17 +8072,17 @@ See comprehensive example
 
   Gets the BLE public address.This interface can be called only after BLE has been initialized and started successfully, for example, after receiving an event with event_id 0 in the callback.
 
-* note:
+* Note:
 
   If there is a default Bluetooth MAC address, the MAC address obtained by the interface is the same as the default Bluetooth MAC address. If it is not set, the address obtained by the interface will be a static address generated randomly after Bluetooth is started, so it will be different each time Bluetooth is powered on again.
 
 * Parameter:
 
-  None
+  * None
 
 * Return Value:
 
-  The BLE address of type bytearray (6 bytes) is returned on success, and integer -1 is returned on failure.
+  * The BLE address of type bytearray (6 bytes) is returned on success, and integer -1 is returned on failure.
 
 * Example:
 
@@ -7361,11 +8113,10 @@ See comprehensive example
 
 * Return Value：
 
-  0	 Successful execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
-  -1	Failed execution
-
-Description：
+- Description：
 
 （1）Format of callback function
 
@@ -7506,13 +8257,12 @@ ble.serverInit(ble_callback)
 
 * Parameter:
 
-  None
+  * None
 
 * Return Value:
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 * Example：
 
@@ -7530,7 +8280,7 @@ See comprehensive example
 
   Set BLE local name.
 
-* note:
+* Note:
 
   For BLE, if you want  to see the name of the broadcast device when scanning, you need to include the Bluetooth name in the broadcast data, or include the device name in the scan reply data.
 
@@ -7543,9 +8293,8 @@ See comprehensive example
 
 * Return Value:
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 * Example:
 
@@ -7580,9 +8329,8 @@ See comprehensive example
 
 * Return Value:
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 * Example：
 
@@ -7623,9 +8371,8 @@ def ble_gatt_set_param():
 
 * Return Value:
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 * Example：
 
@@ -7667,9 +8414,8 @@ def ble_gatt_set_data():
 
 * Return Value:
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 * Example:
 
@@ -7715,9 +8461,8 @@ def ble_gatt_set_rsp_data():
 
 * Return Value：
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 * Example：
 
@@ -7759,9 +8504,8 @@ def ble_gatt_add_service():
 
 * Return Value：
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 * Example：
 
@@ -7805,9 +8549,8 @@ def ble_gatt_add_characteristic():
 
 * Return Value:
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 * Example:
 
@@ -7855,9 +8598,8 @@ def ble_gatt_add_characteristic_value():
 
 * Return Value:
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 * Example:
 
@@ -7898,9 +8640,8 @@ def ble_gatt_add_characteristic_desc():
 
 * Return Value:
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 * Example:
 
@@ -7928,9 +8669,8 @@ See comprehensive example
 
 * Return Value:
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 * Example:
 
@@ -7958,9 +8698,8 @@ See comprehensive example
 
 * Return Value:
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 * Example:
 
@@ -7980,17 +8719,16 @@ See comprehensive example
 
 * Parameter:
 
-  None
+  * None
 
 * Return Value:
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 * Example:
 
-  None
+  * None
 
   
 
@@ -8005,17 +8743,16 @@ See comprehensive example
 
 * Parameter:
 
-  None
+  * None
 
 * Return Value:
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 * Example:
 
-  None
+  * None
 
 
 
@@ -8484,11 +9221,10 @@ if __name__ == '__main__':
 
 * Return Value：
 
-  0	 Successful execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
-  -1	Failed execution
-
-Description：
+- Description：
 
 （1）Format of callback function
 
@@ -8527,7 +9263,7 @@ def ble_callback(args):
 |    36    |          4          | args[0] ：event_id, which indicates read characteristic descriptor<br/>args[1] ：status, which indicates the operation state. 0 - Successful execution; non-0 - Failed execution<br/>args[2] ：data_len, the length of data<br/>args[3] ：data, Raw data |
 |    37    |          3          | args[0] ：event_id, which indicates attribute error<br/>args[1] ：status, which indicates the operation state. 0 - Successful execution; non-0 - Failed execution<br/>args[2] ：error code |
 
-Example：
+* Example：
 
 ```
 See comprehensive example
@@ -8545,13 +9281,12 @@ See comprehensive example
 
 * Parameter:
 
-  None
+  * None
 
 * Return Value:
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 * Example：
 
@@ -8585,9 +9320,8 @@ See comprehensive example
 
 * Return Value:
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 * Example：
 
@@ -8607,13 +9341,12 @@ See comprehensive example
 
 * Parameter:
 
-  None
+  * None
 
 * Return Value:
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 * Example：
 
@@ -8633,13 +9366,12 @@ See comprehensive example
 
 * Parameter:
 
-  None
+  * None
 
 * Return Value:
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 * Example：
 
@@ -8665,9 +9397,8 @@ See comprehensive example
 
 * Return Value:
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 * Example:
 
@@ -8694,9 +9425,8 @@ See comprehensive example
 
 * Return Value:
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 * Example:
 
@@ -8722,9 +9452,8 @@ See comprehensive example
 
 * Return Value:
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 * Example:
 
@@ -8750,9 +9479,8 @@ None
 
 * Return Value:
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 * Example:
 
@@ -8778,9 +9506,8 @@ See comprehensive example
 
 * Return Value:
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 * Example:
 
@@ -8809,9 +9536,8 @@ See comprehensive example
 
 * Return Value:
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 * Example:
 
@@ -8839,9 +9565,8 @@ See comprehensive example
 
 * Return Value:
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 * Example:
 
@@ -8869,9 +9594,8 @@ None
 
 * Return Value:
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 * Example:
 
@@ -8899,9 +9623,8 @@ See comprehensive example
 
 * Return Value:
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 * Example:
 
@@ -8932,9 +9655,8 @@ See comprehensive example
 
 * Return Value:
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 * Example:
 
@@ -8963,9 +9685,8 @@ See comprehensive example
 
 * Return Value:
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 * Example:
 
@@ -8993,9 +9714,8 @@ See comprehensive example
 
 * Return Value:
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 * Example:
 
@@ -9025,9 +9745,8 @@ See comprehensive example
 
 * Return Value:
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 * Example:
 
@@ -9055,9 +9774,8 @@ None
 
 * Return Value:
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 * Example:
 
@@ -9085,9 +9803,8 @@ None
 
 * Return Value:
 
-  0	 Successful execution
-
-  -1	Failed execution
+  * 0	 Successful execution
+  * -1	Failed execution
 
 * Example:
 
@@ -9942,6 +10659,7 @@ if __name__ == '__main__':
 #### camera - Camera and Code Scan 
 
 Module function: Preview, camera, video recorder, code scan (currently only preview and code scan are supported.)
+
 Note: The BC25PA platform does not support this module function.
 
 
@@ -9952,6 +10670,7 @@ Before using the preview, you need to initialize LCD.
 ###### Create Preview Object
 
 > **import camera**
+>
 > **preview = camera.camPreview(model,cam_w,cam_h,lcd_w,lcd_h,perview_level)**
 
 * Parameter
@@ -9967,9 +10686,8 @@ Before using the preview, you need to initialize LCD.
 
 * Return Value
 
-*-1*: Initialization failure.
-
-If the object is returned, it means the creation is successful.
+  * *-1*: Initialization failure.
+  * If the object is returned, it means the creation is successful.
 
 * Example
 
@@ -9982,35 +10700,33 @@ If the object is returned, it means the creation is successful.
 
 ###### Turn on Preview
 
-**camPreview.open()**
+> **camPreview.open()**
 
 * Parameter
 
-None.
+  * None.
 
 * Return Value
 
-0: Successful execution.
-
-Other values: Failed execution.
-
+  * 0: Successful execution.
+  * Other values: Failed execution.
 
 
-Turn off Preview
 
-**camPreview.close()**
+###### Turn off Preview
+
+> **camPreview.close()**
 
 Turns off the preview.
 
 * Parameter
 
-None.
+  * None.
 
 * Return Value
 
-0: Successful execution.
-
-Other values: Failed execution.
+  * 0: Successful execution.
+  * Other values: Failed execution.
 
 
 
@@ -10020,8 +10736,9 @@ Before using  code scan , you need to initialize LCD.
 
 ###### Create an Object
 
-**import camera**
-**scan= camera.camScandecode(model,decode_level,cam_w,cam_h,perview_level,lcd_w,lcd_h)**
+> **import camera**
+>
+>**scan= camera.camScandecode(model,decode_level,cam_w,cam_h,perview_level,lcd_w,lcd_h)**
 
 * Parameter
 
@@ -10037,89 +10754,83 @@ Before using  code scan , you need to initialize LCD.
 
 * Return Value
 
-*-1*: Failed execution.
-
-If the object is returned, it means the creation is successful.
+  * *-1*: Failed execution.
+  * If the object is returned, it means the creation is successful.
 
 
 
 ###### Turn on Camera
 
-**camScandecode.open()**
+> **camScandecode.open()**
 
 * Parameter
 
-None.
+  * None.
 
 * Return Value
 
-0: Successful execution.
-
-Other values: Failed execution.
+  * 0: Successful execution.
+  * Other values: Failed execution.
 
 
 
 ###### Turn off Camera
 
-**camScandecode.close()**
+> **camScandecode.close()**
 
 * Parameter
 
-None.
+  * None.
 
 * Return Value
 
-0: Successful execution.
-
-Other values: Failed execution.
+  * 0: Successful execution.
+  * Other values: Failed execution.
 
 
 
 ###### Turn on Code Scan
 
-**camScandecode.start()**
+> **camScandecode.start()**
 
 * Parameter
 
-None.
+  * None.
 
 * Return Value
 
-0: Successful execution.
-
-Other values: Failed execution.
+  * 0: Successful execution.
+  * Other values: Failed execution.
 
 
 
 ###### Turn off Code Scan
 
-**camScandecode.stop()**
+> **camScandecode.stop()**
 
 * Parameter
 
-None.
+  * None.
 
 * Return Value
 
-0: Successful execution.
-
-Other values: Failed execution.
+  * 0: Successful execution.
+  * Other values: Failed execution.
 
 
 
 ###### Pause Code Scan
 
-**camScandecode.pause()**
+> **camScandecode.pause()**
 
 * Parameter
 
-None.
+  * None.
 
 * Return Value
 
-0: Successful execution.
-
-Other values: Failed execution.
+  * 0: Successful execution.
+  * Other values: Failed execution.
 
 
 
@@ -10127,15 +10838,14 @@ Other values: Failed execution.
 
 * Return Value
 
-0: Successful execution.
-
-Other values: Failed execution.
+  * 0: Successful execution.
+  * Other values: Failed execution.
 
 
 
 ###### Set Code Scan Callback
 
-**camScandecode.callback(callback)**
+> **camScandecode.callback(callback)**
 
 * Parameter
 
@@ -10145,9 +10855,8 @@ Other values: Failed execution.
 
 * Return Value
 
-0: Successful execution.
-
-Other values: Failed execution.
+  * 0: Successful execution.
+  * Other values: Failed execution.
 
 * Example
 
@@ -10160,17 +10869,122 @@ Scandecode.callback(callback)
 
 
 
-#### GNSS - Navigation Positioning and Timing
+##### Camera
+
+Camera function.
+
+###### Create object
+
+> **import camera**
+>
+> **cap= camera.camCaputre(model,cam_w,cam_h,perview_level,lcd_w,lcd_h)**
+
+* Parameter
+
+|Parameter | parameter type | parameter description|
+| ------------- | -------- | ------------------------------------------------------------ |
+|Model | int | camera model: <br/> * 0: gc032a spi * <br/> * 1: bf3901 spi *|
+| cam_ W | int | camera horizontal resolution|
+| *cam_ H * | int | * camera vertical resolution *|
+| perview_ Level | int | preview level [0,2]. The higher the level, the smoother the image and the greater the resource consumption<br/> when it is equal to 0, there is no LCD preview function <br/> when it is equal to 1 or 2, the LCD must be initialized first|
+| *lcd_ W * | int | LCD horizontal resolution|
+| *lcd_ H * | int | * LCD vertical resolution *|
+
+* Return Value
+
+  * If an object is returned, the creation is successful
+
+
+
+###### Turn on the camera
+
+> **camCaputre.open()**
+
+* Parameter
+
+  * None
+
+* Return Value
+
+  * 0: successful
+  * Others: failed
+
+
+
+###### Turn off the camera
+
+> **camCaputre.close()**
+
+* Parameter
+
+  * None
+
+* Return Value
+
+  * 0: successful
+  * Others: closing failed
+
+
+
+###### Take pictures
+
+The photo format is JPEG
+
+> **camCaputre.start(width, height, pic_name)**
+
+* Parameter
+
+|Parameter | parameter type | parameter description|
+| -------- | -------- | ----------------------------------------- |
+|Width | int | saves the horizontal resolution of the picture|
+|Height | int | saves the vertical resolution of the picture|
+| pic_ Name | str | picture name. Pictures need no suffix JPEG, it will be added automatically|
+
+* Return Value
+
+  * 0: successful (actually, it depends on the camera callback)
+
+
+
+###### Set camera callback
+
+> **camCaputre.callback(callback)**
+
+* Parameter
+
+|Parameter | parameter type | parameter description|
+| -------- | -------- | -------- |
+|Callback | API | callback API|
+
+* Return Value
+
+  * 0: successful
+  * Others: failed
+
+* Examples
+
+```python
+def callback(para):
+    print(para)     #Para [0] photographing results      0: success others: failure
+                    #Para [1] name of the saved picture
+camCaputre.callback(callback) 
+```
+
+
+
+#### GNSS - External GNSS
 
 Module function: Get positioning data from GPS model of L76 module, including whether the module locates successfully, latitude, longitude, UTC time, positioning mode,  number of satellites, number of visible satellites, azimuth angle, speed over the ground, geodetic height and so on. 
 
 Note: Currently, only the ASR and Unisoc EC200U/EC600U series support this function.
 
-###### Turn on GNSS Port to Read and Parse GNSS Data
 
+
+##### Create gnss object
+
+> **from gnss import GnssGetData**
+>
 > **gnss = GnssGetData(uartn,baudrate,databits,parity,stopbits,flowctl)**
-
-> **gnss.read_gnss_data()**
 
 - Parameter
 
@@ -10183,47 +10997,189 @@ Note: Currently, only the ASR and Unisoc EC200U/EC600U series support this funct
 | stopbits  | int  | Stop bit (1 ~ 2)                                               |
 | flowctl   | int  | Hardware flow control (0 – FC_NONE， 1 – FC_HW)              |
 
+* Return Value
+
+  * None
+
+* Example
+
+```python
+from gnss import GnssGetData
+gnss = GnssGetData(1, 9600, 8, 0, 1, 0)
+```
 
 
-###### Get Whether the Positioning is Successful
+
+##### Read and Parse GNSS Data
+
+> **gnss.read_gnss_data(max_retry=1, debug=0)**
+
+* Parameter
+
+| Parameter | Type | Description                                                  |
+| --------- | ---- | ------------------------------------------------------------ |
+| max_retry | int  | This parameter is optional. Indicates the maximum number of automatic re-reading attempts when the read GNSS is invalid. If the length of read data is 0 (that is, no data is read), exit directly. If any GNGGA, GNRMC, or GPGSV statement is not found or found but the data is invalid, then the next packet of data will be read again. Exit until the GNGGA, GNRMC, and GPGSV statements are found and the data is valid or the maximum number of attempts is reached. The default value is 1, indicating that data is read only once. |
+| debug     | int  | This parameter is optional. The default value is 0. Indicates whether debugging information is output in the process of reading and parsing GNSS data. 0 indicates that no detailed information is output, and 1 indicates that detailed information is output, so that users can intuitively see the analysis results and compare them. Note that if the debug value is 0, it does not output all debugging information, but only some simple and basic information. For example, if the corresponding data is not found in the original GNSS data or the data is invalid, the message is displayed indicating that the data is invalid or the relevant data is not found. For details, see the example. |
+
+* Return Value
+
+  * Returns the length of GNSS data read from the serial port, in bytes.
+
+* Example
+
+```python
+#=========================================================================
+gnss.read_gnss_data()	# read only once and no detailed debugging information is displayed
+4224	# Read data successfully, and parse GNGGA, GNRMC, and GPGSV statements successfully, return the original length of the read data directly
+#=========================================================================
+gnss.read_gnss_data()  # read only once and no detailed debugging information is displayed
+GNGGA data is invalid. # Data reading succeeds, but the GNGGA location data is invalid
+GNRMC data is invalid. # Data reading succeeds, but the GNRMC location data is invalid
+648		# Returns the length of the original data read
+#=========================================================================
+gnss.read_gnss_data(max_retry=3)  # Set the maximum number of automatic reads to 3
+Not find GPGSV data or GPGSV data is invalid.  # GPGSV data not found or invalid for the first read
+continue read.        # Continue reading the next packet of data
+Not find GNGGA data.  # The second read failed to find GNGGA data
+Not find GNRMC data.  # The second read failed to find GNRMC data
+continue read.        # Continue reading the next packet of data
+Not find GNGGA data.  # The third read failed to find GNGGA data
+Not find GNRMC data.  # The third read failed to find GNRMC data
+continue read.        # If the third attempt fails again, the system determines that the maximum number of attempts has reached and exits
+128
+#=========================================================================
+gnss.read_gnss_data(debug=1)  # Set to read parsing process output details
+GGA data : ['GNGGA', '021224.000', '3149.27680', 'N', '11706.93369', 'E', '1', '19', '0.9', '168.2', 'M', '-5.0', 'M', '', '*52']  # Output GNGGA data matched from the original GNSS data and simply processed
+RMC data : ['GNRMC', '021224.000', 'A', '3149.27680', 'N', '11706.93369', 'E', '0.00', '153.28', '110122', '', '', 'A', 'V*02']  # Output GNRMC data matched from the original GNSS data and simply processed
+total_sen_num = 3, total_sat_num = 12  # Output the total number of complete GPGSV statements and the number of visible satellites
+# The following is the specific GPGSV statement information
+[0] : ['$GPGSV', '3', '1', '12', '10', '79', '210', '35', '12', '40', '070', '43', '21', '08', '305', '31', '23', '46', '158', '43', '0*6E']
+[1] : ['$GPGSV', '3', '2', '12', '24', '', '', '26', '25', '54', '125', '42', '31', '', '', '21', '32', '50', '324', '34', '0*64']
+[2] : ['$GPGSV', '3', '3', '12', '193', '61', '104', '44', '194', '58', '117', '42', '195', '05', '162', '35', '199', '', '', '32', '0*54']
+4224
+```
+
+
+
+##### Get the original GNSS data
+
+> **gnss.getOriginalData()**
+
+This interface is used to return the original GNSS data read from the serial port. If users want to get the original GNSS data for their own processing or some data confirmation, they can get it through this interface. 
+
+* Parameter
+
+  * None
+
+* Return Value
+
+  * Returns original GNSS data read from the serial port as a string.
+
+* Example
+
+```python
+data = gnss.getOriginalData()
+print(data)
+# Due to the large amount of data, only partial results are listed
+00,A,3149.28094,N,11706.93869,E,0.00,153.28,110122,,,A,V*04
+$GNVTG,153.28,T,,M,0.00,N,0.00,K,A*2E
+$GNZDA,021555.000,11,01,2022,00,00*4D
+$GPTXT,01,01,01,ANTENNA OK*35
+$GNGGA,021556.000,3149.28095,N,11706.93869,E,1,24,0.6,166.5,M,-5.0,M,,*5E
+$GNGLL,3149.28095,N,11706.93869,E,021556.000,A,A*47
+$GNGSA,A,3,10,12,21,23,24,25,32,193,194,195,199,,1.0,0.6,0.8,1*35
+$GNGSA,A,3,01,04,07,09,14,21,22,24,38,39,42,45,1.0,0.6,0.8,4*36
+... 
+$GNGGA,021600.000,3149.28096,N,11706.93877,E,1,25,0.6,166.4,M,-5.0,M,,*52
+$GNGLL,3149.28096,N,11706.93877,E,021600.000,A,A*4B
+$GNGSA,A,3,10,12,21,23,24,25,31,32,193,194,195,199,1.0,0.6,0.8,1*37
+$GNGSA,A,3,01,04,07,09,$GNGGA,021601.000,3149.28096,N,11706.93878,E,1,25,0.6,166.4,M,-5.0,M,,*5C
+$GNGLL,3149.2809
+```
+
+
+
+##### Check the validity of the parsing result
+
+> **gnss.checkDataValidity()**
+
+The functional interface provided by the GNSS module obtains data from GNGGA, GNRMC and GPGSV statements in the original GNSS packets read from the serial port. This interface is used to check the validity of GNGGA, GNRMC and GPGSV statements in a packet of GNSS data read from the serial port.
+
+* Parameter
+
+  * None
+
+* Return Value
+
+  * Returns a tuple of the form` (gga_valid, rmc_valid, gsv_valid)`
+
+    `gga_valid` - Indicates whether GNGGA data is matched and parsed successfully. 0 indicates that GNGGA data is not matched or invalid. 1 indicates that GNGGA data is valid;<br/>
+    `rmc_valid` - Indicates whether GNRMC data is matched and parsed successfully. 0 indicates that GNRMC data is not matched or invalid. 1 indicates that GNRMC data is valid;<br/>
+    `gsv_valid` - Indicates whether GPGSV data is matched and parsed successfully. 0 indicates that GPGSV data is not matched or invalid. 1 indicates that GPGSV data is valid.
+
+  * If the user only cares about the location result, that is, whether the GNGGA data is valid, the `gga_valid` parameter is 1 (or whether the location is successful through the gnss.isFix () interface), and all three parameters are not required to be 1. GNRMC data is parsed to obtain the earth speed, and GPGSV data is parsed to obtain the number of visible satellites and their corresponding azimuth angles. Therefore, if you do not care about these parameters, you can ignore `rmc_valid` and `gsv_valid`.
+
+* Example
+
+```python
+gnss.checkDataValidity()
+(1, 1, 1)  #  GNGGA, GNRMC, and GPGSV data are matched and parsed successfully
+```
+
+
+
+##### Get Whether the Positioning is Successful
 
 > **gnss.isFix()**
 
 - Parameter
 
-  None.
+  * None.
 
 - Return Value
 
-  1: Successful positioning 
+  * 1: Successful positioning 
+  * 0:  Positioning failure
 
-  0:  Positioning failure
+* Example
+
+```python
+gnss.isFix()
+1
+```
 
 
 
-###### Get UTC Time
+##### Get UTC Time
 
 > **gnss.getUtcTime()**
 
-- **Parameter**
+- Parameter
 
-  None.
+  * None.
 
-- **Return Value**
+- Return Value
 
-  Return UTC Time on success, otherwise return -1.
+  * Return UTC Time as a string on success, otherwise return -1.
+
+* Example
+
+```python
+gnss.getUtcTime()
+'06:22:05.000'  # hh:mm:ss.sss
+```
 
 
 
-###### Get Positioning Mode
+##### Get Positioning Mode
 
 > **gnss.getLocationMode()**
 
-- **Parameter**
+- Parameter
 
-  None.
+  * None.
 
-- **Return Value**
+- Return Value
 
 | value | description                                         |
 | ----- | --------------------------------------------------- |
@@ -10231,127 +11187,382 @@ Note: Currently, only the ASR and Unisoc EC200U/EC600U series support this funct
 | 0     | Unavailable or invalid positioning                  |
 | 1     | A valid positioning, positioning mode: GPS or SPS   |
 | 2     | A valid positioning, positioning mode: DGPS or DSPS |
+| 6     | Estimation (dead reckoning) model                   |
+
+* Example
+
+```python
+gnss.getLocationMode()
+1
+```
 
 
 
-###### Get Number of Satellites
+##### Get number of satellites used for positioning
 
 > **gnss.getUsedSateCnt()**
 
-- **Parameter**
+- Parameter
 
-  None.
+  * None.
 
-- **Return Value**
+- Return Value
 
-  Return the number of satellites of GPS module on success,  otherwise return -1.
+  * The number of satellites used for GPS module positioning is returned as an integer on success, and integer -1 is returned on failure.
+
+* Example
+
+```python
+gnss.getUsedSateCnt()
+24
+```
 
 
 
-###### Get Latitude and Longitude Information
+##### Get Latitude and Longitude Information
 
 > **gnss.getLocation()**
 
-- **Parameter**
+* Parameter
 
-  None.
+  * None.
 
-- **Return Value**
+* Return Value
 
-  Return the latitude and longitude information of GPS module on success, otherwise return -1.
+  * The latitude and longitude information of the GPS module is returned on success, and integer -1 is returned on failure. The return value is in the following format on success:
+
+    `(longitude, lon_direction, latitude, lat_direction)` <br/>
+    `longitude` - float type <br/>
+    `lon_direction` - Longitude direction. The value is a string of characters. E indicates east longitude and W indicates west longitude <br/>
+    `latitude` - float type <br/>
+    `lat_direction` -  Latitude direction. The value is a string of characters. N indicates north latitude and S indicates south latitude
+
+* Example
+
+```python
+gnss.getLocation()
+(117.1156448333333, 'E', 31.82134916666667, 'N')
+```
 
 
 
-###### Get Number of Visible Satellites
+##### Get Number of Visible Satellites
 
 > **gnss.getViewedSateCnt()**
 
-- **Parameter**
+- Parameter
 
-  None.
+  * None.
 
-- **Return Value**
+- Return Value
 
-  Return the number of visible satellites of GPS module on success, otherwise return -1.
+  * Return the number of visible satellites of GPS module on success, otherwise return -1.
+
+* Example
+
+```python
+gnss.getViewedSateCnt()
+12
+```
 
 
 
-###### Get Azimuth Angle 
+##### Get the azimuth of the visible GNSS satellite
 
 > **gnss.getCourse()**
 
-- **Parameter**
+- Parameter
 
-  None.
+  * None.
 
-- **Return Value**
+- Return Value
 
-  Return azimuth angle on success, Range: 0–359, based on true north, otherwise return -1.
+  * Returns all visible GNSS satellite azimuth angles on success, Range: 0–359, based on true north, otherwise return -1.The return format is dictionary, where key indicates the satellite number and value indicates the azimuth. Note that the value of value can be either an integer value or ", depending on whether the azimuth in the GPGSV statement in the original GNSS data has a value. The return value is of the following form:
+  
+    `{key:value, ...,  key:value}`
+
+* Example
+
+```python
+gnss.getCourse()
+{'10': 204, '195': 162, '12': 68, '193': 105, '32': 326, '199': 162, '25': 122, '31': 247, '24': 52, '194': 116, '21': 304, '23': 159}
+```
 
 
 
-###### Get Geodetic Height
+##### Get the altitude of the GPS module
 
 > **gnss.getGeodeticHeight()**
 
-- **Parameter**
+- Parameter
 
-  None.
+  * None.
 
-- **Return Value**
+- Return Value
 
-  Return geodetic height(Unit: m) , otherwise return -1.
+  * The float altitude is returned in meters on success, and integer -1 on failure.
+
+* Example
+
+```python
+gnss.getGeodeticHeight()
+166.5
+```
 
 
 
-###### Get  Speed Over the Ground
+##### Get  Speed Over the Ground
 
 > **gnss.getSpeed()**
 
-- **Parameter**
+- Parameter
 
-  None.
+  * None.
 
-- **Return Value**
+- Return Value
 
-  Return the speed over the ground of GPS module(Unit: KM/h), otherwise return -1 .
-
-
+  * Return the speed over the ground of GPS module(Unit: KM/h), float type, otherwise return -1 .
 
 - Example
 
 ```python
-from machine import UART
-from gnss import GnssGetData
-import utime
+gnss.getSpeed()
+0.0
+```
+
+
+
+
+
+#### quecgnss - built-in GNSS
+
+Note: The current only  EC200UCNAA/EC200UCNLA/EC200UEUAA models support this feature.
+
+##### Initialize the GNSS
+
+> **import quecgnss**
+>
+> **quecgnss.init()**
+
+* Function
+
+  Initialization of GNSS module functions.
+
+* Parameter
+
+  None
+
+* Return Value
+
+  Returns integer 0 on success, integer -1 on failure.
+
+
+
+##### Get the GNSS working status
+
+> **quecgnss.get_state()**
+
+* Function
+
+  Get the GNSS module status.
+
+* Parameter
+
+  None
+
+* Return Value
+
+| Value | Type | Description                                                  |
+| ----- | ---- | ------------------------------------------------------------ |
+| 0     | int  | The GNSS module is closed                                    |
+| 1     | int  | The GNSS module is being firmware upgrade                    |
+| 2     | int  | The GNSS module is  positioning. In this mode, the GNSS module starts to read GNSS positioning data. The validity of the positioning data needs to be determined by parsing corresponding statements after obtaining the positioning data, for example, whether the STATUS of the GNRMC statement is A or V. A indicates that the positioning is valid, and V indicates that the positioning is invalid. |
+
+
+
+##### Enable or disable GNSS
+
+> **quecgnss.gnssEnable(opt)**
+
+* Function
+
+  Enable or disable the GNSS module. If you use the GNSS function for the first time after power-on, you do not need to invoke this interface to enable the GNSS function. Instead, you can invoke the init() interface. The init() interface automatically enables the GNSS function during initialization.
+
+* Parameter
+
+  | Parameter | Type | Description                          |
+  | --------- | ---- | ------------------------------------ |
+  | opt       | int  | 0 - disable GNSS<br/>1 - enable GNSS |
+
+* Return Value
+
+  Returns integer 0 on success, integer -1 on failure.
+
+
+
+##### Get the GNSS data
+
+> **quecgnss.read(size)**
+
+* Function
+
+  Get the GNSS data。
+
+* Parameter
+
+  | Parameter | Type | Description                                                |
+  | --------- | ---- | ---------------------------------------------------------- |
+  | size      | int  | Specifies the size of the data to read, the unit is bytes. |
+
+* Return Value
+
+  Returns a tuple on success, integer -1 on failure. The tuple form is as follows:
+
+  `(size, data)`
+
+  `size` - The actual size of the data read
+
+  `data` - positioning data
+
+##### Example
+
+```python
+import quecgnss
+
+
+def main():
+    ret = quecgnss.init()
+    if ret == 0:
+    	print('GNSS init ok.')
+    else:
+        print('GNSS init failed.')
+        return -1
+    data = quecgnss.read(4096)
+    print(data[1].decode())
+    
+    quecgnss.gnssEnable(0)
+
 
 if __name__ == '__main__':
-    print("#### enter system main####")
-    gnss=GnssGetData(1, 9600, 8, 0, 1, 0)
-    while True:
-        gnss.read_gnss_data()
-        print(gnss.isFix())
-        print(gnss.getUtcTime())
-        print(gnss.getLocationMode())
-        print(gnss.getUsedSateCnt())
-        print(gnss.getLocation())
-        print(gnss.getViewedSateCnt())
-        print(gnss.getCourse())
-        print(gnss.getGeodeticHeight())
-        print(gnss.getSpeed())
-        utime.sleep(3)
+    main()
     
-    
-Results:
-1
-020031.000
-1
-16
-(22.32905, 'N', 113.5597, 'E')
-13
-034
-67.5
-0.0
+
+#===================================================================================================
+# The result
+167,169,170,,,,,,,,1.773,1.013,1.455*15
+$GPGSV,2,1,8,3,23,303,34,16,32,219,28,22,74,98,26,25,16,43,25*77
+$GPGSV,2,2,8,26,70,236,28,31,59,12,38,32,55,127,34,4,5,,21*49
+$BDGSV,2,1,8,163,51,192,32,166,70,11,31,167,52,197,32,169,59,334,31*61
+$BDGSV,2,2,8,170,40,205,31,161,5,,31,164,5,,27,165,5,,29*59
+$GNRMC,022326.000,A,3149.324624,N,11706.921702,E,0.000,261.541,180222,,E,A*38
+$GNGGA,022326.000,3149.324624,N,11706.921702,E,1,12,1.013,-8.580,M,0,M,,*47
+$GNGLL,3149.324624,N,11706.921702,E,022326.000,A,A*44
+$GNGSA,A,3,31,32,3,16,22,25,26,,,,,,1.773,1.013,1.455*1C
+$GNGSA,A,3,163,166,167,169,170,,,,,,,,1.773,1.013,1.455*15
+$GPGSV,2,1,8,3,23,303,34,16,32,219,27,22,74,98,26,25,16,43,25*78
+$GPGSV,2,2,8,26,70,236,28,31,59,12,37,32,55,127,34,4,5,,20*47
+$BDGSV,2,1,8,163,51,192,32,166,70,11,31,167,52,197,32,169,59,334,31*61
+$BDGSV,2,2,8,170,40,205,31,161,5,,31,164,5,,27,165,5,,29*59
+$GNRMC,022327.000,A,3149.324611,N,11706.921713,E,0.000,261.541,180222,,E,A*3F
+$GNGGA,022327.000,3149.324611,N,11706.921713,E,1,12,1.013,-8.577,M,0,M,,*48
+$GNGLL,3149.324611,N,11706.921713,E,022327.000,A,A*43
+...... # There is too much data, so it is omitted
+$GNGSA,A,3,31,32,3,16,22,25,26,,,,,,1.837,1.120,1.456*11
+$GNGSA,A,3,163,166,167,169,170,,,,,,,,1.837,1.120,1.456*18
+$GPGSV,2,1,8,3,23,302,27,16,32,220,26,22,73,101,27,25,16,43,27*45
+$GPGSV,2,2,8,26,70,237,28,31,59,13,33,32,54,128,28,4,5,,24*44
+$BDGSV,2,1,8,163,51,192,33,166,71,11,35,167,52,198,33,169,59,334,34*6E
+$BDGSV,2,2,8,170,40,205,32,161,5,,33,164,5,,28,165,5,,30*5F
+$GNRMC,022507.000,A,3149.324768,N,11706.922344,E,0.000,261.541,180222,,E,A*31
+$GNGGA,022507.000,3149.324768,N,11706.922344,E,1,12,1.120,-8.794,M,0,M,,*48
+$GNGLL,3149.324768,N,11706.922344,E,022507.000,A,A*4D
+$GNGSA,A,3,31,32,3,16,22,25,26,,,,,,1.837,1.120,1.455*12
+$GNGSA,A,3,163,166,167,169,170,,,,,,,,1.837,1.120,1.455*1B
+$GPGSV,2,1,8,3,23,302,26,16,32,220,26,22,73,101,27,25,16,43,26*45
+$GPGSV,2,2,8,26,70,237,28,31,59,13,32,32,54,128,28,4,5,,24*45
+$BDGSV,2,1,8,163,51,192,24,166,71,11,35,167,52,198,33,169,59,334,34*68
+$BDGSV,2,2,8,170,40,205,31,161,5,,33,164,5,,28,165,5,,30*5C
+$GNRMC,022508.000,A,3149.324754,N,11706.922338,E,0.002,261.541,180222,,E,A*38
+$GNGGA,022508.000,3149.324754,N,11706.922338,E,1,12,1.120,-8.750,M,0,M,,*4B
+$GNGLL,3149.324754,N,11706.922338,E,022508.000,A,A*46
+$GNGSA,A,3,31,3
+
+```
+
+
+
+#### Securedata - secure data area
+
+Module function: the module provides a bare flash area and a special read-write interface for customers to store important information, and the information will not be lost after burning the firmware (burning the firmware without this function cannot be guaranteed not to be lost). Provide a storage and read interface, not a delete interface.
+
+>At present, only ec600n and ec600s series projects are supported
+
+##### Data storage
+
+SecureData.Store(index, databuf, len)
+
+**Parameter**
+
+| Parameter | type | description |
+| ------ | -------- | ------------------------------------------------------------ |
+| Index | int | index range is 1-16: <br/> 1 - 8 maximum storage of 52 bytes of data <br/> 9 - 12 maximum storage of 100 bytes of data <br/> 13 - 14 maximum storage of 500 bytes of data <br/> 15 - 16 maximum storage of 1000 bytes of data |
+| Databuf | bytearray | data array to be stored|
+| Len | int | length of data to be written|
+
+
+When storing, it is stored according to the shorter of databuf and Len
+
+**Return Value**
+
+  * -1: Parameter error
+  * 0: normal execution
+
+##### Data reading
+
+SecureData.Read(index,databuf,len)
+
+**Parameter**
+
+| Parameter | type | description |
+| ------ | -------- | ----------------------------------------------- |
+| Index | int | index range is 1-16: <br/> read the index number corresponding to the stored data|
+| Databuf | bytearray | stores the read data|
+| Len | int | length of data to be read|
+
+If the stored data is not as large as the incoming len, the actual stored data length is returned
+
+**Return Value**
+
+  * -2: The stored data does not exist and the backup data does not exist
+  * -1: Parameter error
+  * Other: length of data actually read
+
+**Example**
+
+```python
+import SecureData
+#Data to be stored buf
+databuf = '\x31\x32\x33\x34\x35\x36\x37\x38'
+#Store data with length of 8 in the storage area with index of 1
+SecureData.Store(1, databuf, 8)
+#Define an array with a length of 20 to read the stored data
+buf = bytearray(20)
+#Read the data in the storage area with index 1 into buf, and store the length of the read data in the variable len
+len = SecureData.Read(1, buf, 20)
+#Output read data
+print(buf[:len])
+```
+**implementation results**
+```python
+>>> import SecureData
+>>> databuf = '\x31\x32\x33\x34\x35\x36\x37\x38'
+>>> SecureData.Store(1, databuf, 8)
+0
+>>> buf = bytearray(20)
+>>> len = SecureData.Read(1, buf, 20)
+>>> print(buf[:len])
+bytearray(b'12345678')
+>>> 
 ```
 
 
@@ -10364,7 +11575,7 @@ Module name: nb(lowercase)
 
 Support platform: BC25PA
 
-Introduction: it includes three sub modules OC, AEP. The two sub modules all use lwm2m for data interaction.
+Introduction: it includes two sub modules OC, AEP. The two sub modules all use lwm2m for data interaction.
 
 ##### OC
 
@@ -10391,15 +11602,14 @@ Introduction: it includes three sub modules OC, AEP. The two sub modules all use
 
 > **oc.connect()**
 
-- **Parameter**
+- Parameter
 
-None.
+  * None.
 
-- **Return Value**
+- Return Value
 
-  Success - 0
-
-  Failed - not 0
+  * Success - 0
+  * Failed - not 0
 
 - Example
 
@@ -10421,13 +11631,12 @@ None.
 
 - Note
 
-The received data is a hexadecimal string, so the data length must be even.
+  * The received data is a hexadecimal string, so the data length must be even.
 
-- **Return Value**
+- Return Value
 
-Success - 0
-
-Failed - not 0
+  * Success - 0
+  * Failed - not 0
 
 - Example
 
@@ -10450,13 +11659,12 @@ Failed - not 0
 
 - Note
 
-The sent data is a hexadecimal string, and the data length is even.
+  * The sent data is a hexadecimal string, and the data length is even.
 
-- **Return Value**
+- Return Value
 
-Success - 0
-
-Failed - not 0
+  * Success - 0
+  * Failed - not 0
 
 - Example
 
@@ -10469,15 +11677,14 @@ bytearray(b'313233')
 
 ###### Close connection
 
-- **Parameter**
+- Parameter
 
-None
+  * None
 
-- **Return Value**
+- Return Value
 
-Success -True
-
-Failed -False
+  * Success -True
+  * Failed -False
 
 - Example
 
@@ -10510,15 +11717,14 @@ True
 
 > **aep.connect()**
 
-- **Parameter**
+- Parameter
 
-None.
+  * None.
 
-- **Return Value**
+- Return Value
 
-  Success - 0
-
-  Failed - not 0
+  * Success - 0
+  * Failed - not 0
 
 - Example
 
@@ -10526,14 +11732,18 @@ None.
 >>> aep.connect()
 0
 ```
+
 ###### Query data to be read
 
 > **aep.check()**
 
-- **Parameter**
-None
-- **Return Value**
-Returns the number of pieces of data to be read distributed by the cloud platform
+- Parameter
+
+  * None
+
+- Return Value
+
+  * Returns the number of pieces of data to be read distributed by the cloud platform
 
 - Example
 
@@ -10543,6 +11753,7 @@ Returns the number of pieces of data to be read distributed by the cloud platfor
 >>> aep.check()
 0
 ```
+
 ###### Receive data
 
 > **aep.recv(data_len,data)**
@@ -10556,13 +11767,12 @@ Returns the number of pieces of data to be read distributed by the cloud platfor
 
 - Note
 
-The received data is a hexadecimal string, so the data length must be even.
+  The received data is a hexadecimal string, so the data length must be even.
 
-- **Return Value**
+- Return Value
 
-Success - 0
-
-Failed - not 0
+  * Success - 0
+  * Failed - not 0
 
 - Example
 
@@ -10585,12 +11795,12 @@ Failed - not 0
 
 - Note
 
-The sending data is a hexadecimal string, the data length is an even number, blocking (timeout 3 minutes), and returning success indicates that the sending instruction is executed successfully.
-- **Return Value**
+  The sending data is a hexadecimal string, the data length is an even number, blocking (timeout 3 minutes), and returning success indicates that the sending instruction is executed successfully.
 
-Success - 0
+- Return Value
 
-Failed - not 0
+  * Success - 0
+  * Failed - not 0
 
 - Example
 
@@ -10601,26 +11811,409 @@ bytearray(b'313233')
 0
 ```
 
+
 ###### Close connection
 
-- **Parameter**
+- Parameter
 
-None
+  * None
 
-- **Return Value**
+- Return Value
 
-Success -True
-
-Failed -False
+  * Success - true
+  * Failed - false
 
 - Example
-Sample model[Download address](https://python.quectel.com/wiki/#/static-file/Ctwing_Object_model/aep_example.json)
+
+```python
+>>> aep.close()
+True
+```
+
+
+
+###### Use example
+
+Sample model
+
+```json
+{
+  "productInfo": {
+    "productId": 15082482
+  },
+  "properties": [
+    {
+      "propertyId": 1,
+      "identifier": "ecl",
+      "Propertyname": "wireless signal coverage level",
+      "description": null,
+      "dataType": "integer",
+      "dataSchema": "\"unit\":\"null\",\"min\":\"-32768\",\"len\":4,\"unitName\":\"\",\"max\":\"32767\""
+    },
+    {
+      "propertyId": 2,
+      "identifier": "pci",
+      "Propertyname": "physical cell ID",
+      "description": null,
+      "dataType": "integer",
+      "dataSchema": "\"unit\":\"null\",\"min\":\"-32768\",\"len\":4,\"unitName\":\"\",\"max\":\"32767\""
+    },
+    {
+      "propertyId": 3,
+      "identifier": "IMEI",
+      "propertyName": "IMEI",
+      "description": null,
+      "dataType": "vary-string",
+      "dataSchema": "\"len\":0,\"unit\":\"null\",\"unitName\":\"\""
+    },
+    {
+      "propertyId": 4,
+      "identifier": "rsrp",
+      "Propertyname": "reference signal reception power",
+      "description": null,
+      "dataType": "integer",
+      "dataSchema": "\"unit\":\"null\",\"min\":\"-32768\",\"len\":4,\"unitName\":\"\",\"max\":\"32767\""
+    },
+    {
+      "propertyId": 5,
+      "identifier": "sinr",
+      "Propertyname": "signal to interference plus noise ratio",
+      "description": null,
+      "dataType": "integer",
+      "dataSchema": "\"unit\":\"null\",\"min\":\"-32768\",\"len\":4,\"unitName\":\"\",\"max\":\"32767\""
+    },
+    {
+      "propertyId": 6,
+      "identifier": "time",
+      "Propertyname": "current time",
+      "description": null,
+      "dataType": "timestamp",
+      "dataSchema": "\"len\":8"
+    },
+    {
+      "propertyId": 7,
+      "identifier": "ICCID",
+      "propertyName": "ICCID",
+      "description": null,
+      "dataType": "vary-string",
+      "dataSchema": "\"len\":0,\"unit\":\"null\",\"unitName\":\"\""
+    },
+    {
+      "propertyId": 8,
+      "identifier": "cell_id",
+      "Propertyname": "cell location information",
+      "description": null,
+      "dataType": "integer",
+      "dataSchema": "\"unit\":\"null\",\"min\":\"-2147483648\",\"len\":4,\"unitName\":\"\",\"max\":\"2147483647\""
+    },
+    {
+      "propertyId": 9,
+      "identifier": "velocity",
+      "Propertyname": "water velocity",
+      "description": null,
+      "dataType": "float",
+      "dataSchema": "\"unit\":\"m/s\",\"min\":\"0\",\"len\":4,\"unitName\":\"meters per second\",\"max\":\"100\""
+    },
+    {
+      "propertyId": 10,
+      "identifier": "act_result",
+      "Propertyname": "instruction execution result",
+      "description": null,
+      "dataType": "enum",
+      "dataSchema": "\"len\":1,\"enumDetail\":{\"0\":\"execution succeeded\",\"1\":\"execution failed\"}"
+    },
+    {
+      "propertyId": 11,
+      "identifier": "error_code",
+      "Propertyname": "failure",
+      "description": null,
+      "dataType": "enum",
+      "dataSchema": "\"len\":1,\"enumDetail\":{\"0\":\"normal\",\"1\":\"sensor failure\"}"
+    },
+    {
+      "propertyId": 12,
+      "identifier": "water_flow",
+      "Propertyname": "water flow",
+      "description": null,
+      "dataType": "float",
+      "dataSchema": "\"unit\":\"m³/h\",\"min\":\"0\",\"len\":4,\"unitName\":\"cubic meters per hour\",\"max\":\"9999999\""
+    },
+    {
+      "propertyId": 13,
+      "identifier": "module_type",
+      "Propertyname": "module model",
+      "description": null,
+      "dataType": "vary-string",
+      "dataSchema": "\"len\":0,\"unit\":\"null\",\"unitName\":\"\""
+    },
+    {
+      "propertyId": 14,
+      "identifier": "temperature",
+      "Propertyname": "water temperature",
+      "description": null,
+      "dataType": "float",
+      "dataSchema": "\"unit\":\"°C\",\"min\":\"0\",\"len\":4,\"unitName\":\"Celsius\",\"max\":\"100\""
+    },
+    {
+      "propertyId": 15,
+      "identifier": "valve_onoff",
+      "Propertyname": "valve switch",
+      "description": null,
+      "dataType": "enum",
+      "dataSchema": "\"len\":1,\"enumDetail\":{\"0\":\"close\",\"1\":\"turn on\"}"
+    },
+    {
+      "propertyId": 16,
+      "identifier": "battery_state",
+      "Propertyname": "battery status",
+      "description": null,
+      "dataType": "enum",
+      "dataSchema": "\"len\":1,\"enumDetail\":{\"0\":\"normal\",\"1\":\"low batter\"}"
+    },
+    {
+      "propertyId": 17,
+      "identifier": "battery_value",
+      "Propertyname": "battery power",
+      "description": null,
+      "dataType": "integer",
+      "dataSchema": "\"unit\":\"%\",\"min\":\"0\",\"len\":4,\"unitName\":\"percentage\",\"max\":\"100\""
+    },
+    {
+      "propertyId": 18,
+      "identifier": "terminal_type",
+      "Propertyname": "terminal model",
+      "description": null,
+      "dataType": "vary-string",
+      "dataSchema": "\"len\":0,\"unit\":\"null\",\"unitName\":\"\""
+    },
+    {
+      "propertyId": 19,
+      "identifier": "back_total_flow",
+      "Propertyname": "reverse cumulative traffic",
+      "description": null,
+      "dataType": "float",
+      "dataSchema": "\"unit\":\"m³\",\"min\":\"0\",\"len\":4,\"unitName\":\"cubic meter\",\"max\":\"99999999\""
+    },
+    {
+      "propertyId": 20,
+      "identifier": "battery_voltage",
+      "Propertyname": "battery voltage",
+      "description": null,
+      "dataType": "float",
+      "dataSchema": "\"unit\":\"V\",\"min\":\"0\",\"len\":4,\"unitName\":\"volt\",\"max\":\"24\""
+    },
+    {
+      "propertyId": 21,
+      "identifier": "hydraulic_value",
+      "Propertyname": "water pressure value",
+      "description": null,
+      "dataType": "float",
+      "dataSchema": "\"unit\":\"MPa\",\"min\":\"0\",\"len\":4,\"unitName\":\"MPa\",\"max\":\"10\""
+    },
+    {
+      "propertyId": 22,
+      "identifier": "hardware_version",
+      "Propertyname": "hardware version",
+      "description": null,
+      "dataType": "vary-string",
+      "dataSchema": "\"len\":0,\"unit\":\"null\",\"unitName\":\"\""
+    },
+    {
+      "propertyId": 23,
+      "identifier": "software_version",
+      "Propertyname": "software version",
+      "description": null,
+      "dataType": "vary-string",
+      "dataSchema": "\"len\":0,\"unit\":\"null\",\"unitName\":\"\""
+    },
+    {
+      "propertyId": 24,
+      "identifier": "manufacturer_name",
+      "Propertyname": "manufacturer name",
+      "description": null,
+      "dataType": "vary-string",
+      "dataSchema": "\"len\":0,\"unit\":\"null\",\"unitName\":\"\""
+    },
+    {
+      "propertyId": 25,
+      "identifier": "water_consumption",
+      "Propertyname": "water consumption",
+      "description": null,
+      "dataType": "float",
+      "dataSchema": "\"unit\":\"m³\",\"min\":\"0\",\"len\":4,\"unitName\":\"cubic meter\",\"max\":\"99999999\""
+    },
+    {
+      "propertyId": 26,
+      "identifier": "forward_total_flow",
+      "Propertyname": "forward cumulative traffic",
+      "description": null,
+      "dataType": "float",
+      "dataSchema": "\"unit\":\"m³\",\"min\":\"0\",\"len\":4,\"unitName\":\"cubic meter\",\"max\":\"99999999\""
+    }
+  ],
+  "services": [
+    {
+      "serviceId": 1,
+      "identifier": "data_report",
+      "Servicename": "business data reporting",
+      "serviceType": "DataReport",
+      "description": null,
+      "properties": [
+        {
+          "propertyId": 12,
+          "serial": 1
+        }
+      ],
+      "parameters": []
+    },
+    {
+      "serviceId": 1002,
+      "identifier": "battery_voltage_low_alarm",
+      "Servicename": "battery low voltage alarm",
+      "serviceType": "EventReport",
+      "description": null,
+      "properties": [
+        {
+          "propertyId": 16,
+          "serial": 1
+        },
+        {
+          "propertyId": 20,
+          "serial": 2
+        }
+      ],
+      "parameters": []
+    },
+    {
+      "serviceId": 2,
+      "identifier": "signal_report",
+      "Servicename": "signal data reporting",
+      "serviceType": "DataReport",
+      "description": null,
+      "properties": [
+        {
+          "propertyId": 4,
+          "serial": 1
+        },
+        {
+          "propertyId": 5,
+          "serial": 2
+        },
+        {
+          "propertyId": 2,
+          "serial": 3
+        },
+        {
+          "propertyId": 1,
+          "serial": 4
+        },
+        {
+          "propertyId": 8,
+          "serial": 5
+        }
+      ],
+      "parameters": []
+    },
+    {
+      "serviceId": 9001,
+      "identifier": "valve_onoff_resp",
+      "Servicename": "valve switch control response",
+      "serviceType": "CommandResponse",
+      "description": null,
+      "properties": [
+        {
+          "propertyId": 15,
+          "serial": 1
+        },
+        {
+          "propertyId": 10,
+          "serial": 2
+        }
+      ],
+      "parameters": []
+    },
+    {
+      "serviceId": 8001,
+      "identifier": "valve_onoff_cmd",
+      "Servicename": "valve switch control",
+      "serviceType": "Command",
+      "description": null,
+      "properties": [
+        {
+          "propertyId": 15,
+          "serial": 1
+        }
+      ],
+      "parameters": []
+    },
+    {
+      "serviceId": 1001,
+      "identifier": "error_code_report",
+      "Servicename": "fault reporting",
+      "serviceType": "EventReport",
+      "description": null,
+      "properties": [
+        {
+          "propertyId": 11,
+          "serial": 1
+        },
+        {
+          "propertyId": 6,
+          "serial": 2
+        }
+      ],
+      "parameters": []
+    },
+    {
+      "serviceId": 3,
+      "identifier": "info_report",
+      "Servicename": "equipment information reporting",
+      "serviceType": "DataReport",
+      "description": null,
+      "properties": [
+        {
+          "propertyId": 24,
+          "serial": 1
+        },
+        {
+          "propertyId": 18,
+          "serial": 2
+        },
+        {
+          "propertyId": 13,
+          "serial": 3
+        },
+        {
+          "propertyId": 22,
+          "serial": 4
+        },
+        {
+          "propertyId": 23,
+          "serial": 5
+        },
+        {
+          "propertyId": 3,
+          "serial": 6
+        },
+        {
+          "propertyId": 7,
+          "serial": 7
+        }
+      ],
+      "parameters": []
+    }
+  ]
+}
+```
+
+Sample code
+
 ```python
 from nb import AEP
 import utime
 import ustruct
 
-#以下5个函数需要判断如果机器是大端格式数据就不转
+#The following five functions need to be judged. If the machine is in large format, the data will not be transferred
 def aep_htons(source):
     return source & 0xffff
 def aep_htoni(source):
@@ -10656,25 +12249,25 @@ def HexToStr(source, t=None):
 def StrToHex(source):
     return int(source)
 
-#对照物模型定义,打包解包根据相应的服务id中的属性进行解析
-serid_dict={'阀门开关控制':8001,
-            '故障上报':1001,
-            '设备信息上报':3,
-            '阀门开关控制响应':9001,
-            '信号数据上报':2,
-            '电池低电压告警':1002,
-            '业务数据上报':1
+#According to the definition of the reference model, packaging and unpacking are resolved according to the attributes in the corresponding service ID
+serid_ Dict = {'valve switch control': 8001,
+               'fault reporting': 1001,
+               'equipment information reporting': 3,
+               'valve switch control response': 9001,
+               'Signal data reporting ': 2,
+               'battery low voltage alarm': 1002,
+               'business data reporting': 1
            }
-dict_cmd={'数据上报':0x02,
-          '事件上报':0x07,
-          '无线参数上报':0x03,
-          '下行指令固定':0x06,
-          '指令响应':0x86
+dict_ CMD = {'data reporting': 0x02,
+             'event reporting': 0x07,
+             'wireless parameter reporting': 0x03,
+             'fixed downlink command': 0x06,
+             'command response': 0x86
          }
 send_type={
-	'RAI_NONE':0,
-	'RAI_1':1,
-	'RAI_2':2
+    'RAI_NONE':0,
+    'RAI_1':1,
+    'RAI_2':2
 }
 servcei_info={
     'ip':"221.229.214.202",
@@ -10682,17 +12275,17 @@ servcei_info={
 }
 
 def aep_pack_cmdtype02(service_id,data_in):
-    data=HexToStr(dict_cmd['数据上报'],1)
-    data+=HexToStr(service_id,2)    			#serviceid转成字符串
+    Data = hextostr (dict_cmd ['data reporting'], 1)
+    data+=HexToStr(service_id,2)                #Convert serviceid to string
     if service_id == 1:
-        data+=HexToStr(4,2)	                    #发送数据8.14,float类型四个字节长度,此处只举例一个情况
-        data+=HexToStr(aep_htonf(data_in),4)    #float数据转成字符串
+        data+=HexToStr(4,2)                     #The sending data is 8.14, and the float type is four bytes long. Here is only one example
+        data+=HexToStr(aep_htonf(data_in),4)    #Convert float data to string
     else:
         print('not support')                    #
     return data
  
 def aep_pack(cmdtype,service_id,data):
-    if cmdtype == dict_cmd['数据上报']:                            #数据上报-0x02,此处只举例一个情况
+    if cmdtype == dict_cmd['data reporting']:                            #Data reporting - 0x02, here is only one example
         return aep_pack_cmdtype02(service_id,data)
     else:
         print('not support')
@@ -10711,16 +12304,16 @@ def aep_unpack_cmdtype06(data_in):
     payload_len = int(str(data_in.decode()[8:12]),16)
     payload_len = aep_htons(payload_len)
     value = 0
-    if service_id == serid_dict['阀门开关控制']:                 #物模型下发属性id=15,两个16进制字节,枚举型,0或者1
+    if service_id == serid_dict['Valve switch control']:                 #The object model issues attribute id = 15, two hexadecimal bytes, enumeration type, 0 or 1
        value = int(str(data_in.decode()[12:14]),16)
        value = aep_htons(value)
-    if service_id == serid_dict['故障上报']:
+    if service_ id == serid_ Dict ['fault reporting']:
         pass
-    if service_id == serid_dict['设备信息上报']:
+    if service_ id == serid_ Dict ['equipment information reporting']:
         pass
-    if service_id == serid_dict['阀门开关控制响应']:
+    if service_ id == serid_ Dict ['valve switch control response']:
         pass
-    if service_id == serid_dict['信号数据上报']:
+    if service_ id == serid_ Dict ['signal data reporting']:
         pass
     print('-------------------unpack recv data after------------------')
     print("service_id ",service_id)
@@ -10732,7 +12325,7 @@ def aep_unpack_cmdtype06(data_in):
 def aep_unpack(data_in):
     cmdtype=StrToHex(str(data_in.decode()[:2]))
     data=data_in[2:]
-    if cmdtype == dict_cmd['下行指令固定']:
+    if cmdtype == dict_ CMD ['fixed downlink instruction']:
         aep_unpack_cmdtype06(data)
     else:
         print('not support')
@@ -10740,7 +12333,7 @@ def aep_unpack(data_in):
 aep=AEP(servcei_info['ip'],servcei_info['port'])
 
 def recv():
-    data=bytearray(20)	
+    data=bytearray(20)  
     ret=aep.recv(18,data)
     if ret == -1:
         return
@@ -10753,7 +12346,7 @@ def connect():
 
 def send():
     water_flow_value=8.14
-    data=aep_pack(dict_cmd['数据上报'],serid_dict['业务数据上报'],water_flow_value)
+    data=aep_ Pack (dict_cmd ['data reporting'], serid_dict ['business data reporting'], water_flow_value)
     print('send: ',data)
     print('len: ',len(data))
     data_len=len(data)
@@ -10782,34 +12375,5 @@ if __name__ == '__main__':
     do_task()
 
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 

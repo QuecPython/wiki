@@ -66,11 +66,11 @@ myprint()
 
 | 参数       | 参数类型 | 参数说明                                                     |
 | ---------- | -------- | ------------------------------------------------------------ |
-| profileIdx | int      | PDP索引，ASR平台范围1-8[volte版本默认PID最大的一路用来注册IMS，请勿重复操作]，展锐平台范围1-7，一般设置为1，设置其他值可能需要专用apn与密码才能设置成功 |
+| profileIdx | int      | PDP索引，ASR平台范围1 - 8[volte版本默认PID最大的一路用来注册IMS，请勿重复操作]，展锐平台范围1 - 7，一般设置为1，设置其他值可能需要专用apn与密码才能设置成功 |
 | ipType     | int      | IP类型，0-IPV4，1-IPV6，2-IPV4和IPV6                         |
-| apn        | string   | apn名称，可为空，最大长度不超过63字节                        |
-| username   | string   | apn用户名，可为空，最大长度不超过15字节                      |
-| password   | string   | apn密码，可为空，最大长度不超过15字节                        |
+| apn        | string   | apn名称，可为空，最大长度不超过63字节(EC200U/EC200A最大长度不超过64字节) |
+| username   | string   | apn用户名，可为空，最大长度不超过15字节(EC200U/EC200A最大长度不超过64字节) |
+| password   | string   | apn密码，可为空，最大长度不超过15字节(EC200U/EC200A最大长度不超过64字节) |
 | authType   | int      | 加密方式，0-不加密，1-PAP，2-CHAP                            |
 
 * 返回值
@@ -121,7 +121,7 @@ myprint()
 
 * 注意
 
-  用户apn即可以保存在字典中内置到代码里面，也可以保存到 json文件中，下面说明apn信息的保存格式：
+  用户apn既可以保存在字典中内置到代码里面，也可以保存到 json文件中，下面说明apn信息的保存格式：
 
   1、字典中apn信息保存格式说明
 
@@ -335,7 +335,7 @@ if __name__ == '__main__':
 
 
 
-##### 配置用户apn
+##### 配置用户APN
 
 > **dataCall.setApn(profileIdx, ipType, apn, username, password, authType，flag=0)**
 
@@ -347,15 +347,15 @@ if __name__ == '__main__':
 | ---------- | -------- | ------------------------------------------------------------ |
 | profileIdx | int      | PDP索引，ASR平台范围1-8，展锐平台范围1-7，一般设置为1，设置其他值可能需要专用apn与密码才能设置成功 |
 | ipType     | int      | IP类型，0-IPV4，1-IPV6，2-IPV4和IPV6                         |
-| apn        | string   | apn名称，可为空，最大长度不超过63字节                        |
-| username   | string   | apn用户名，可为空，最大长度不超过15字节                      |
-| password   | string   | apn密码，可为空，最大长度不超过15字节                        |
+| apn        | string   | apn名称，可为空，最大长度不超过63字节(EC200U/EC200A最大长度不超过64字节)|
+| username   | string   | apn用户名，可为空，最大长度不超过15字节(EC200U/EC200A最大长度不超过64字节)|
+| password   | string   | apn密码，可为空，最大长度不超过15字节(EC200U/EC200A最大长度不超过64字节)|
 | authType   | int      | 加密方式，0-不加密，1-PAP，2-CHAP                            |
 | flag       | int      | 可选参数，默认为0，表示仅创建user_apn.json文件，用于保存用户apn信息；为1时，表示创建user_apn.json文件保存用户apn信息之后，还会使用该apn信息立即进行一次拨号；不管该参数是0还是1，都不会影响重启时使用用户设置的apn进行开机拨号。 |
 
 * 返回值
 
-成功返回整型值0，失败返回整型值-1。
+  成功返回整型值0，失败返回整型值-1。
 
 * 注意
 
@@ -388,7 +388,7 @@ if __name__ == '__main__':
 
 * 返回值
 
-成功返回整型值0，失败返回整型值-1。
+  成功返回整型值0，失败返回整型值-1。
 
 * 注意
 
@@ -406,28 +406,26 @@ if __name__ == '__main__':
 
 
 
-##### 获取用户apn
+##### 获取用户APN
 
 > **dataCall.getApn(simid, profileIdx)**
 
-获取用户APN（可变参函数）
-默认最少有一个参数-simid，最多两个参数-simid,pid
-当只有一个参数simid时，获取的是默认承载的APN，当有两个参数时，获取的是对应pid的APN
+获取用户APN，当只有一个参数simid时，获取的是默认承载的APN，如果用户指定了profileIdx参数，获取的是对应 profileIdx 的APN。
 
 * 参数
 
-| 参数       | 参数类型 | 参数说明                                                     |
-| ---------- | -------- | ------------------------------------------------------------ |
-| simid      | int      | simid,范围：0/1|
-| profileIdx | int      | PDP索引，ASR平台范围1-8，展锐平台范围1-7|
+| 参数       | 参数类型 | 参数说明                                           |
+| ---------- | -------- | -------------------------------------------------- |
+| simid      | int      | simid，范围：0/1                                   |
+| profileIdx | int      | 可选参数，PDP索引，ASR平台范围1-8，展锐平台范围1-7 |
 
 * 返回值
 
-成功返回相应APN，失败返回整型值-1。
+  成功返回相应APN，失败返回整型值-1。
 
 * 注意
 
-仅展锐和ASR平台支持该接口。
+  仅展锐和ASR平台支持该接口。
 
 * 示例
 
@@ -456,7 +454,7 @@ if __name__ == '__main__':
 
 * 返回值
 
-注册失败返回整型-1，成功返回整型0。
+  注册失败返回整型-1，成功返回整型0。
 
 * 注意
 
@@ -503,46 +501,46 @@ if __name__ == '__main__':
 
 * 返回值
 
-错误返回整型-1，成功返回拨号信息，返回格式根据ipType的不同而有所区别：
-ipType =0，返回值格式如下：
+  错误返回整型-1，成功返回拨号信息，返回格式根据ipType的不同而有所区别：
+  ipType =0，返回值格式如下：
 
-`(profileIdx, ipType, [nwState, reconnect, ipv4Addr, priDns, secDns])`
+  `(profileIdx, ipType, [nwState, reconnect, ipv4Addr, priDns, secDns])`
 
-`profileIdx`：PDP索引，ASR平台范围1-8，展锐平台范围1-7
+  `profileIdx`：PDP索引，ASR平台范围1-8，展锐平台范围1-7
 
-`ipType`：IP类型，0-IPV4，1-IPV6，2-IPV4和IPV6
+  `ipType`：IP类型，0-IPV4，1-IPV6，2-IPV4和IPV6
 
-`nwState`：拨号结果，0-失败，1-成功
+  `nwState`：拨号结果，0-失败，1-成功
 
-`reconnect`：重拨标志
+  `reconnect`：重拨标志
 
-`ipv4Addr`：ipv4地址，string类型
+  `ipv4Addr`：ipv4地址，string类型
 
-`priDns`：dns信息，string类型
+  `priDns`：dns信息，string类型
 
-`secDns`：dns信息，string类型
+  `secDns`：dns信息，string类型
 
-ipType =1，返回值格式如下：
+  ipType =1，返回值格式如下：
 
-`(profileIdx, ipType, [nwState, reconnect, ipv6Addr, priDns, secDns])`
+  `(profileIdx, ipType, [nwState, reconnect, ipv6Addr, priDns, secDns])`
 
-`profileIdx`：PDP索引，ASR平台范围1-8，展锐平台范围1-7
+  `profileIdx`：PDP索引，ASR平台范围1-8，展锐平台范围1-7
 
-`ipType`：IP类型，0-IPV4，1-IPV6，2-IPV4和IPV6
+  `ipType`：IP类型，0-IPV4，1-IPV6，2-IPV4和IPV6
 
-`nwState`：拨号结果，0-失败，1-成功
+  `nwState`：拨号结果，0-失败，1-成功
 
-`reconnect`：重拨标志
+  `reconnect`：重拨标志
 
-`ipv6Addr`：ipv6地址，string类型
+  `ipv6Addr`：ipv6地址，string类型
 
-`priDns`：dns信息，string类型
+  `priDns`：dns信息，string类型
 
-`secDns`：dns信息，string类型
+  `secDns`：dns信息，string类型
 
-ipType =2，返回值格式如下：
+  ipType =2，返回值格式如下：
 
-`(profileIdx, ipType, [nwState, reconnect, ipv4Addr, priDns, secDns], [nwState, reconnect, ipv6Addr, priDns, secDns])`
+  `(profileIdx, ipType, [nwState, reconnect, ipv4Addr, priDns, secDns], [nwState, reconnect, ipv6Addr, priDns, secDns])`
 
 * 示例
 
@@ -562,9 +560,6 @@ import net
 import utime
 import checkNet
 
-'''
-下面两个全局变量是必须有的，用户可以根据自己的实际项目修改下面两个全局变量的值
-'''
 PROJECT_NAME = "QuecPython_DataCall_example"
 PROJECT_VERSION = "1.0.0"
 checknet = checkNet.CheckNetwork(PROJECT_NAME, PROJECT_VERSION)
@@ -620,7 +615,7 @@ if __name__ == '__main__':
 
 ##### 获取坐标
 
-> **cellLocator.getLocation(serverAddr, port, token, timeout, profileID)**
+> **cellLocator.getLocation(serverAddr, port, token, timeout, profileIdx)**
 
 获取基站坐标信息。
 
@@ -632,7 +627,7 @@ if __name__ == '__main__':
 | port       | int      | 服务器端口，目前仅支持 80 端口                               |
 | token      | string   | 密钥，16位字符组成，需要申请                                 |
 | timeout    | int      | 设置超时时间，范围1-300s，默认300s                           |
-| profileID  | int      | PDP索引，ASR平台范围1-8，展锐平台范围1-7                     |
+| profileIdx | int      | PDP索引，ASR平台范围1-8，展锐平台范围1-7                     |
 
 * 返回值
 
@@ -675,6 +670,8 @@ if __name__ == '__main__':
 
 注意：当前仅EC600S/EC600N/EC800N/EC200U/EC600U平台支持该功能。
 
+##### 设置密钥
+
 > **wifilocator(token)**
 
 配置wifi定位套件token信息
@@ -691,35 +688,96 @@ if __name__ == '__main__':
 
 
 
+##### 获取坐标
+
 > **wifilocator.getwifilocator()**
 
 获取坐标信息。
 
-成功返回度格式经纬度坐标信息，返回格式：`(longtitude, latitude, accuracy)`；
+* 参数
 
-`longtitude` ： 经度
+  无
 
-`latitude` ：纬度
+* 返回值
 
-`accuracy` ：精确度，单位米
+  成功返回度格式经纬度坐标信息，返回格式：`(longtitude, latitude, accuracy)`；
 
-失败返回错误码说明如下：
+  `longtitude` ： 经度
 
--1 – 当前网络异常，请确认拨号是否正常
+  `latitude` ：纬度
 
--2 – 密钥长度错误，必须为16字节
+  `accuracy` ：精确度，单位米
 
--3 – 获取坐标出错
+  失败返回错误码说明如下：
+
+  -1 – 当前网络异常，请确认拨号是否正常
+
+  -2 – 密钥长度错误，必须为16字节
+
+  -3 – 获取坐标出错
 
 * 示例
 
-  ```python
-  >>> from wifilocator import wifilocator
-  >>> wifilocator = wifilocator("xxxxxxxxxxxxxxxx")
-  >>> wifilocator.getwifilocator()
-  (117.1152877807617, 31.82142066955567, 100)
-  # 上面使用的密钥"xxxxxxxxxxxxxxxx"指代token，具体需要向移远申请
-  ```
+```python
+>>> from wifilocator import wifilocator
+>>> wifilocator = wifilocator("xxxxxxxxxxxxxxxx")
+>>> wifilocator.getwifilocator()
+(117.1152877807617, 31.82142066955567, 100)
+# 上面使用的密钥"xxxxxxxxxxxxxxxx"指代token，具体需要向移远申请
+```
+
+
+
+#### atcmd - 发送AT指令
+
+模块功能：提供发送AT指令接口。
+
+注意：目前该模块只支持1803S/EC200U/CATM平台。
+
+#### 发送AT指令接口
+
+> **atcmd.sendSync(atcmd,resp,include_str,timeout)**
+
+*参数
+
+|  参数   | 参数类型 | 参数说明                                      |
+|  ----   | -------- | --------------------------------------------- |
+| atcmd   |  string  | 需要发送的AT指令，必须包含‘\r\n’              |
+| resp    |  string  | output param,获取AT指令返回的字符串内容       |
+| include_str | string | 关键字                                      |
+| timeout | int      | 超时时间，单位/秒                             |
+
+* 返回值
+
+成功返回0，失败返回error list，如下：
+
+typedef enum HELIOS_AT_RESP_STATUS_ENUM{
+	HELIOS_AT_RESP_OK = 0,
+	HELIOS_AT_RESP_ERROR,
+	HELIOS_AT_RESP_CME_ERROR,
+	HELIOS_AT_RESP_CMS_ERROR,
+	HELIOS_AT_RESP_INVALID_PARAM,
+	HELIOS_AT_RESP_TIME_OUT,
+	HELIOS_AT_RESP_SYS_ERROR,
+}HELIOS_AT_RESP_STATUS_E;
+
+* 示例
+
+```python
+>>> import atcmd
+>>> resp=bytearray(50)
+>>> atcmd.sendSync('at+cpin?\r\n',resp,'',20)
+0
+>>> print(resp)
+bytearray(b'\r\n+CPIN: READY\r\n\n\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00
+\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00')
+
+atcmd.sendSync('at+cpin\r\n',resp,'',20)
+1
+>>> print(resp)
+bytearray(b'\r\nERROR\r\n\n
+\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00')
+```
 
 
 
@@ -731,21 +789,22 @@ if __name__ == '__main__':
 
 ##### 通用SIM访问接口
 
-> **sim.genericAccess(sim_id, cmd_APDU)**
+> **sim.genericAccess(simId, cmd)**
 
-【该接口仅ASR平台支持】
 将命令APDU通过modem传递给SIM卡，然会返回响应APDU。
+
+注意：当前仅ASR平台支持。
 
 * 参数
 
-|  参数   | 参数类型 | 参数说明                                      |
-|  ----   | -------- | --------------------------------------------- |
-| sim_id  |   int    | simid, 范围：0 or 1                           |
-|  APDU   |  string  | command passed on by the MT to the SIM in the format as described in GSM 51.011 |
+| 参数  | 参数类型 | 参数说明                                                     |
+| ----- | -------- | ------------------------------------------------------------ |
+| simId | int      | sim id, 范围：0 or 1                                         |
+| cmd   | string   | command passed on by the MT to the SIM in the format as described in GSM 51.011 |
 
 * 返回值
 
-成功返回(length,响应APDU)，失败返回整型-1。
+  成功返回（length，响应APDU），失败返回整型-1。
 
 * 示例
 
@@ -765,11 +824,11 @@ if __name__ == '__main__':
 
 * 参数
 
-无
+  无
 
 * 返回值
 
-成功返回string类型的imsi，失败返回整型-1。
+  成功返回string类型的imsi，失败返回整型-1。
 
 * 示例
 
@@ -789,11 +848,11 @@ if __name__ == '__main__':
 
 * 参数
 
-无
+  无
 
 * 返回值
 
-成功返回string类型的iccid，失败返回整型-1。
+  成功返回string类型的iccid，失败返回整型-1。
 
 * 示例
 
@@ -812,11 +871,11 @@ if __name__ == '__main__':
 
 * 参数
 
-无
+  无
 
 * 返回值
 
-成功返回string类型的phone number，失败返回整型-1。
+  成功返回string类型的phone number，失败返回整型-1。
 
 * 注意
 
@@ -839,7 +898,7 @@ if __name__ == '__main__':
 
 * 参数
 
-无
+  无
 
 * 返回值
 
@@ -884,7 +943,7 @@ if __name__ == '__main__':
 
 * 返回值
 
-成功返回整型0，失败返回整型-1。
+  成功返回整型0，失败返回整型-1。
 
 * 注意
 
@@ -913,7 +972,7 @@ if __name__ == '__main__':
 
 * 返回值
 
-成功返回整型0，失败返回整型-1。
+  成功返回整型0，失败返回整型-1。
 
 * 注意
 
@@ -942,7 +1001,7 @@ sim卡PIN码验证。需要在调用sim.enablePin(pin)成功之后，才能进�
 
 * 返回值
 
-验证成功返回整型0，验证失败返回整型-1。
+  验证成功返回整型0，验证失败返回整型-1。
 
 * 注意
 
@@ -972,7 +1031,7 @@ sim卡解锁。当多次错误输入 PIN/PIN2 码后，SIM 卡状态为请求 PU
 
 * 返回值
 
-解锁成功返回整型0，解锁失败返回整型-1。
+  解锁成功返回整型0，解锁失败返回整型-1。
 
 * 注意
 
@@ -1002,7 +1061,7 @@ sim卡解锁。当多次错误输入 PIN/PIN2 码后，SIM 卡状态为请求 PU
 
 * 返回值
 
-更改成功返回整型0，更改失败返回整型-1。
+  更改成功返回整型0，更改失败返回整型-1。
 
 * 注意
 
@@ -1034,24 +1093,24 @@ sim卡解锁。当多次错误输入 PIN/PIN2 码后，SIM 卡状态为请求 PU
 
 * 返回值
 
-读取失败返回整型-1，成功返回一个元组，包含读取记录，格式如下：
+  读取失败返回整型-1，成功返回一个元组，包含读取记录，格式如下：
 
-`(record_number, [(index, username, phone_number), ... , (index, username, phone_number)])`
+  `(record_number, [(index, username, phone_number), ... , (index, username, phone_number)])`
 
-返回值参数说明：
+  返回值参数说明：
 
-`record_number` – 读取的记录数量，整型
+  `record_number` – 读取的记录数量，整型
 
-`index` – 在电话簿中的索引位置，整型
+  `index` – 在电话簿中的索引位置，整型
 
-`username` – 姓名，string类型
+  `username` – 姓名，string类型
 
-`phone_number` – 电话号码，string类型
+  `phone_number` – 电话号码，string类型
 
 * 注意
 
   BC25PA平台不支持此方法。
-  
+
 * 示例
 
 ```python
@@ -1084,7 +1143,7 @@ sim卡解锁。当多次错误输入 PIN/PIN2 码后，SIM 卡状态为请求 PU
 
 * 返回值
 
-写入成功返回整型0，写入失败返回整型-1。
+  写入成功返回整型0，写入失败返回整型-1。
 
 * 注意
 
@@ -1115,7 +1174,7 @@ sim卡解锁。当多次错误输入 PIN/PIN2 码后，SIM 卡状态为请求 PU
 
 * 返回值
 
-注册成功返回整型0，失败返回整型-1。
+  注册成功返回整型0，失败返回整型-1。
 
 * 注意
 
@@ -1135,28 +1194,28 @@ sim.setCallback(cb)
 
 
 
-##### 设置SIMdet
+##### SIM卡热插拔开关
 
-> **sim.setSimDet(detenable, insertlevel)**
+> **sim.setSimDet(switch, triggerLevel)**
 
 设置SIM卡热插拔相关配置。
 
 * 参数
 
-|    参数    | 参数类型 | 参数说明                                                     |
-| --------   | -------- | ------------------------------------------------------------ |
-| detenable  | int      | 开启或者关闭SIM卡热插拔功能，0:关闭 1:打开                   |
-| insertlevel| int      | 高低电平配置(0/1)                                            |
+| 参数         | 参数类型 | 参数说明                                   |
+| ------------ | -------- | ------------------------------------------ |
+| switch       | int      | 开启或者关闭SIM卡热插拔功能，0:关闭 1:打开 |
+| triggerLevel | int      | 高低电平配置(0/1)                          |
 
 * 返回值
 
-设置成功返回整型0，设置失败返回整型-1。
+  设置成功返回整型0，设置失败返回整型-1。
 
 * 注意
 
   BC25PA平台不支持此方法。
 
-示例
+* 示例 
 
 ```python
 >>> sim.setSimDet(1, 0)
@@ -1165,7 +1224,7 @@ sim.setCallback(cb)
 
 
 
-##### 获取SIMdet
+##### 获取SIM卡热插拔配置
 
 > **sim.getSimDet()**
 
@@ -1173,25 +1232,25 @@ sim.setCallback(cb)
 
 * 参数
 
-无
+  无
 
 * 返回值
 
-获取失败返回整型-1，成功返回一个元组，格式如下：
+  获取失败返回整型-1，成功返回一个元组，格式如下：
 
-`(detenable, insertlevel)`
+  `(detenable, insertlevel)`
 
-返回值参数说明：
+  返回值参数说明：
 
-`detenable` - 开启或者关闭SIM卡热插拔功能，0:关闭 1:打开
+  `detenable` - 开启或者关闭SIM卡热插拔功能，0:关闭 1:打开
 
-`insertlevel` – 高低电平配置(0/1)
+  `insertlevel` – 高低电平配置(0/1)
 
 * 注意
 
   BC25PA平台不支持此方法。
 
-示例
+* 示例
 
 ```python
 >>> sim.getSimDet()
@@ -1206,7 +1265,7 @@ sim.setCallback(cb)
 
 说明：4G only的版本必须打开volte才能正常使用电话功能。
 
-注意：BC25PA平台不支持此模块。
+注意：BC25PA平台不支持此功能。
 
 ##### 设置自动应答时间
 
@@ -1216,13 +1275,13 @@ sim.setCallback(cb)
 
 * 参数 
 
-| 参数        | 参数类型 | 参数说明                                                     |
-| ----------- | -------- | ------------------------------------------------------------ |
-| seconds     | int      | 自动应答时间，单位/s 范围：0-255)                            |
+| 参数    | 参数类型 | 参数说明                         |
+| ------- | -------- | -------------------------------- |
+| seconds | int      | 自动应答时间，单位/s 范围：0-255 |
 
 * 返回值
 
-成功返回整型0，失败返回整型-1。
+  成功返回整型0，失败返回整型-1。
 
 * 示例
 
@@ -1248,7 +1307,7 @@ sim.setCallback(cb)
 
 * 返回值
 
-成功返回整型0，失败返回整型-1。
+  成功返回整型0，失败返回整型-1。
 
 * 示例
 
@@ -1267,11 +1326,11 @@ sim.setCallback(cb)
 
 * 参数 
 
-无
+  无
 
 * 返回值
 
-成功返回整型0，失败返回整型-1。
+  成功返回整型0，失败返回整型-1。
 
 * 示例
 
@@ -1290,11 +1349,11 @@ sim.setCallback(cb)
 
 * 参数 
 
-无
+  无
 
 * 返回值
 
-成功返回整型0，失败返回整型-1。
+  成功返回整型0，失败返回整型-1。
 
 * 示例
 
@@ -1309,7 +1368,7 @@ sim.setCallback(cb)
 
 > **voiceCall.startDtmf(dtmf, duration)**
 
-设置DTMF音。
+​	设置DTMF音。
 
 * 参数
 
@@ -1320,9 +1379,9 @@ sim.setCallback(cb)
 
 * 返回值
 
-设置成功返回整型0，设置失败返回整型-1。
+  设置成功返回整型0，设置失败返回整型-1。
 
-示例
+* 示例
 
 ```python
 >>> voiceCall.startDtmf('A',100)
@@ -1347,11 +1406,11 @@ sim.setCallback(cb)
 
 * 返回值
 
-设置成功返回整型0，设置失败返回整型-1。
+  设置成功返回整型0，设置失败返回整型-1。
 
-示例
+* 示例
 
-无
+  无
 
 
 
@@ -1419,24 +1478,24 @@ sim.setCallback(cb)
 
 > **voiceCall.setAutoRecord(enable, record_type, record_mode, filename)**
 
-自动录音使能接口。(默认关闭自动录音)，自动录音使能需要在通话前设置完毕
+自动录音使能接口。默认关闭自动录音，自动录音使能需要在通话前设置完毕。
 
 注：非volte版本无该接口
 
 * 参数
 
-| 参数         | 参数类型 | 参数说明                                              |
-| --------     | -------- | ----------------------------------------------------- |
-| enable       | int      | 使能开关。    范围：【0/1】；  0：关闭自动录音接口 1：开启自动录音功能     |
-| record_type  | int      | 录音文件类型。范围：【0/1】；  0：AMR  1:WAV                |
-| record_mode  | int      | mode。        范围：【0/1/2】；0：RX   1:TX    2:MIX                |
-| filename     | string   | 文件名。                |
+| 参数        | 参数类型 | 参数说明                                                     |
+| ----------- | -------- | ------------------------------------------------------------ |
+| enable      | int      | 使能开关，范围：<br/>0 - 关闭自动录音接口<br/>1 - 开启自动录音功能 |
+| record_type | int      | 录音文件类型，范围：<br/>0 - AMR<br/>1 - WAV                 |
+| record_mode | int      | mode，范围：<br/>0 - RX<br/>1 - TX<br/>2 - MIX               |
+| filename    | string   | 文件名                                                       |
 
 * 返回值
 
-设置成功返回整型0，设置失败返回整型-1, 不支持该接口返回字符串"NOT SUPPORT"。
+  设置成功返回整型0，设置失败返回整型-1， 不支持该接口返回字符串"NOT SUPPORT"。
 
-示例
+* 示例
 
 ```python
 >>> voiceCall.setAutoRecord(1,0,2,'U:/test.amr')
@@ -1455,17 +1514,17 @@ sim.setCallback(cb)
 
 * 参数
 
-| 参数         | 参数类型 | 参数说明                                              |
-| --------     | -------- | ----------------------------------------------------- |
-| record_type  | int      | 录音文件类型。范围：【0/1】；  0：AMR  1:WAV                |
-| record_mode  | int      | mode。        范围：【0/1/2】；0：RX   1:TX    2:MIX                |
-| filename     | string   | 文件名。                |
+| 参数        | 参数类型 | 参数说明                                       |
+| ----------- | -------- | ---------------------------------------------- |
+| record_type | int      | 录音文件类型，范围：<br/>0 - AMR<br/>1 - WAV   |
+| record_mode | int      | mode，范围：<br/>0 - RX<br/>1 - TX<br/>2 - MIX |
+| filename    | string   | 文件名                                         |
 
 * 返回值
 
-设置成功返回整型0，设置失败返回整型-1, 不支持该接口返回字符串"NOT SUPPORT"。
+  设置成功返回整型0，设置失败返回整型-1，不支持该接口返回字符串"NOT SUPPORT"。
 
-示例
+* 示例
 
 ```python
 >>> voiceCall.startRecord(0,2,'U:/test.amr')
@@ -1484,13 +1543,13 @@ sim.setCallback(cb)
 
 * 参数
 
-无
+  无
 
 * 返回值
 
-设置成功返回整型0，设置失败返回整型-1, 不支持该接口返回字符串"NOT SUPPORT"。
+  设置成功返回整型0，设置失败返回整型-1， 不支持该接口返回字符串"NOT SUPPORT"。
 
-示例
+* 示例
 
 ```python
 >>> voiceCall.stopRecord()
@@ -1505,25 +1564,29 @@ sim.setCallback(cb)
 
 开始录音接口（流形式）。
 
-注：1、非volte版本无该接口
-    2、录音流第一包数据均是对应格式文件的文件头
-	3、wav格式录音流第一包数据不包含文件大小，需结束录音后自行计算
+* 说明
+
+  1、非volte版本无该接口
+
+  2、录音流第一包数据均是对应格式文件的文件头
+
+  3、wav格式录音流第一包数据不包含文件大小，需结束录音后自行计算
 
 * 参数
 
-| 参数         | 参数类型 | 参数说明                                              |
-| --------     | -------- | ----------------------------------------------------- |
-| record_type  | int      | 录音流类型。范围：【0/1】；  0：AMR  1:WAV                |
-| record_mode  | int      | mode。        范围：【0/1/2】；0：RX   1:TX    2:MIX                |
-| record_cb    | function | 回调函数。                |
+| 参数        | 参数类型 | 参数说明                                     |
+| ----------- | -------- | -------------------------------------------- |
+| record_type | int      | 录音流类型，范围：<br>0 - AMR<br/>1 - WAV    |
+| record_mode | int      | mode，范围<br/>0 - RX<br/>1 - TX<br/>2 - MIX |
+| record_cb   | function | 回调函数                                     |
 
 * 返回值
 
-设置成功返回整型0，设置失败返回整型-1, 不支持该接口返回字符串"NOT SUPPORT"。
+  设置成功返回整型0，设置失败返回整型-1，不支持该接口返回字符串"NOT SUPPORT"。
 
-示例
+* 示例
 
-*callback函数中args定义如下
+callback函数中args定义如下
 ```
 args[0]:stream data
 args[1]:stream data len
@@ -1582,16 +1645,16 @@ typedef enum
 
 * 参数 
 
-| 参数        | 参数类型 | 参数说明                                                     |
-| ----------- | -------- | ------------------------------------------------------------ |
-| usrFun      | function | 监听回调函数，                      |
+| 参数   | 参数类型 | 参数说明     |
+| ------ | -------- | ------------ |
+| usrFun | function | 监听回调函数 |
 
 * 返回值
 
-成功返回整型0，失败返回整型-1。
+  成功返回整型0，失败返回整型-1。
 
+* callback函数中的event_id枚举值
 
-*callback函数中的event_ID枚举值
 ```c
 typedef enum
 {
@@ -1615,58 +1678,16 @@ typedef enum
 }HELIOS_VC_EVENT_ID_E;
 ```
 
-*callback函数中args定义如下
+* 回调函数参数说明
 
-1、当event=10,11,12,13,14,15,16时，args释义如下：
-```
-args[0]:event id(具体释义见上述枚举)
-args[1]:call id(call identification number as described in 3GPP TS 22.030 subclause 4.5.5.1; this number can be used in +CHLD command operations)
-args[2]:dir(MO/MT)
-args[3]:state of the call
-args[4]:type(这里一般都是0，表示voice call，语音通话业务)
-args[5]:mpty(判断是否是多方通话，0：call is not one of multiparty (conference) call parties，1：call is one of multiparty (conference) call parties)
-args[6]:phone num
-args[7]:num type([129/145],129:Dialing string without international access code “+”,145:Dialing string includes international access code character “+”)
-```
-
-2、当event=2,3,4,5,6,7,8,9时，args释义如下：
-2.1、event=2,3
-```
-args[0]:event id(具体释义见上述枚举)
-args[1]:call id(call identification number as described in 3GPP TS 22.030 subclause 4.5.5.1; this number can be used in +CHLD command operations)
-args[2]:phone num
-```
-2.2、event=4
-```
-args[0]:event id(具体释义见上述枚举)
-args[1]:call id(call identification number as described in 3GPP TS 22.030 subclause 4.5.5.1; this number can be used in +CHLD command operations)
-args[2]:cause
-```
-2.3、event=6
-```
-args[0]:event id(具体释义见上述枚举)
-args[1]:call id(call identification number as described in 3GPP TS 22.030 subclause 4.5.5.1; this number can be used in +CHLD command operations)
-args[2]:phone num
-args[3]:num type([129/145],129:Dialing string without international access code “+”,145:Dialing string includes international access code character “+”)
-args[4]:CLI状态
-```
-2.3、event=7
-```
-args[0]:event id(具体释义见上述枚举)
-```
-2.3、event=8
-```
-args[0]:event id(具体释义见上述枚举)
-args[1]:call id(call identification number as described in 3GPP TS 22.030 subclause 4.5.5.1; this number can be used in +CHLD command operations)
-args[2]:cause
-args[3]:Indicates if in-band tones are available from network
-```
-2.3、event=9
-```
-args[0]:event id(具体释义见上述枚举)
-args[1]:call id(call identification number as described in 3GPP TS 22.030 subclause 4.5.5.1; this number can be used in +CHLD command operations)
-args[2]:phone num
-```
+| event                      | 参数个数 | 参数说明                                                     |
+| -------------------------- | -------- | ------------------------------------------------------------ |
+| 2, 3, 9                    | 3        | args[0] ：event id<br>args[1] ：call id ( call identification number as described in 3GPP TS 22.030 subclause 4.5.5.1; this number can be used in +CHLD command operations )<br/>args[2] ：phone number |
+| 4                          | 3        | args[0] ：event id<br/>args[1] ：call id ( call identification number as described in 3GPP TS 22.030 subclause 4.5.5.1; this number can be used in +CHLD command operations )<br/>args[2] ：cause |
+| 6                          | 5        | args[0] ：event id<br/>args[1] ：call id ( call identification number as described in 3GPP TS 22.030 subclause 4.5.5.1; this number can be used in +CHLD command operations )<br/>args[2] ：phone number<br/>args[3] ：num type ( [129/145],129:Dialing string without international access code “+”,145:Dialing string includes international access code character “+” )<br/>args[4] ：CLI状态 |
+| 7                          | 1        | args[0] ：event id                                           |
+| 8                          | 4        | args[0] ：event id<br/>args[1] ：call id ( call identification number as described in 3GPP TS 22.030 subclause 4.5.5.1; this number can be used in +CHLD command operations )<br/>args[2] ：cause<br/>args[3] ：Indicates if in-band tones are available from network |
+| 10, 11, 12, 13, 14, 15, 16 | 8        | args[0] ：event id<br/>args[1] ：call id ( call identification number as described in 3GPP TS 22.030 subclause 4.5.5.1; this number can be used in +CHLD command operations )<br/>args[2] ：dir(MO/MT)<br/>args[3] ：state of the call<br>args[4] ：type ( 这里一般都是0，表示voice call，语音通话业务 )<br/>args[5] ：mpty ( 判断是否是多方通话，0：call is not one of multiparty (conference) call parties，1：call is one of multiparty (conference) call parties )<br/>args[6] ：phone number<br/>args[7] ：num type ( [129/145],129:Dialing string without international access code “+”,145:Dialing string includes international access code character “+” ) |
 
 * 示例
 ```python
@@ -1692,11 +1713,12 @@ def voice_callback(args):
 0
 ```
 
-*注意
+* 注意
 1、pyhton目前的语音通话支持的是volte call，所以示例中只给出了volte通话的内容
 2、QPY_V0004_EC600N_CNLC_FW_VOLTE(2021-09-09发布)之前发布的版本都按照以下规则使用voiceCall
 
-*callback函数中的event_ID数值
+callback函数中的event_ID数值
+
 ```
 #define QUEC_VOICE_CALL_INDICATION_BASE                          ((uint_32)(0x1000))
 #define QUEC_VOLTE_INCOMING_CALL_IND                             ((uint_32)(0x0007 + QUEC_VOICE_CALL_INDICATION_BASE))
@@ -1705,10 +1727,11 @@ def voice_callback(args):
 #define QUEC_VOLTE_WAITING_CALL_IND                              ((uint_32)(0x000A + QUEC_VOICE_CALL_INDICATION_BASE))
 ```
 
-*callback函数中args定义如下
+callback函数中args定义如下
 args定义未改变
 
-*示例
+* 示例
+
 ```python
 def voice_callback(args):
 	if args[0] == 4106:
@@ -1747,7 +1770,7 @@ def voice_callback(args):
 
 * 返回值
 
-发送成功返回整型0，失败返回整型-1。
+  发送成功返回整型0，失败返回整型-1。
 
 * 示例
 
@@ -1778,7 +1801,7 @@ sms.sendTextMsg('18158626517', '这是一条夹杂中文与英文的测试短信
 
 * 返回值
 
-发送成功返回整型0，失败返回整型-1。
+  发送成功返回整型0，失败返回整型-1。
 
 * 示例
 
@@ -1800,17 +1823,17 @@ if __name__ == '__main__':
 
 删除指定索引的消息。
 
-参数
+* 参数
 
 | 参数  | 参数类型 | 参数说明                                                     |
 | ----- | -------- | ------------------------------------------------------------ |
 | index | int      | 需删除短信的索引号<br/>如果设置短信存储在SIM卡，则范围0 ~ 49<br/>如果设置短信存储在ME，则范围0 ~ 179，注意，当短信存储在ME时，只有对应的index索引处有短信存在，才能删除成功，否则删除会失败 |
 
-返回值
+* 返回值
 
-删除成功返回整型0，失败返回整型-1。
+  删除成功返回整型0，失败返回整型-1。
 
-示例
+* 示例
 
 ```python
 >>> import sms
@@ -1825,7 +1848,7 @@ if __name__ == '__main__':
 > **sms.setSaveLoc(mem1, mem2, mem3)**
 
 设置短信存储位置。开机默认存储位置为SIM卡。一般SIM卡最大可存储50条短信，用户在使用时，如果短信存储在SIM卡中，要注意及时清理历史短信，防止SIM卡存储短信满了导致收不到新的短信。
-注意：ASR平台如果要改变接收消息的存储位置，需要重置MEM2 & MEM3,展锐平台只需设定MEM3即可（具体原因和平台底部的实现有关，此处不再赘述）
+注意：ASR平台如果要改变接收消息的存储位置，需要重置MEM2 & MEM3，展锐平台只需设定MEM3即可（具体原因和平台底部的实现有关，此处不再赘述）
 
 * 参数
 
@@ -1837,7 +1860,7 @@ if __name__ == '__main__':
 
 * 返回值
 
-成功返回整型0，失败返回整型-1。
+  成功返回整型0，失败返回整型-1。
 
 * 示例
 
@@ -1857,25 +1880,25 @@ if __name__ == '__main__':
 
 * 参数
 
-无
+  无
 
 * 返回值
 
-成功返回一个元组，包含3个部分，返回值形式如下：
+  成功返回一个元组，包含3个部分，返回值形式如下：
 
-`([loc1, current_nums, max_nums],[loc2, current_nums, max_nums],[loc3, current_nums, max_nums])`
+  `([loc1, current_nums, max_nums],[loc2, current_nums, max_nums],[loc3, current_nums, max_nums])`
 
-返回值参数说明：
+  返回值参数说明：
 
-`loc1` - 读取和删除消息所在的位置;
+  `loc1` - 读取和删除消息所在的位置
 
-`loc2` - 写入和发送消息所在的位置；
+  `loc2` - 写入和发送消息所在的位置
 
-`loc3` - 接收消息的存储位置；
+  `loc3` - 接收消息的存储位置
 
-`current_nums` - 当前空间已有短信数量；
+  `current_nums` - 当前空间已有短信数量
 
-`max_nums` - 当前空间最大短信存储数量；
+  `max_nums` - 当前空间最大短信存储数量
 
 * 示例
 
@@ -1902,7 +1925,7 @@ if __name__ == '__main__':
 
 * 返回值
 
-成功返回整型的短信数量值，失败返回整型-1。
+  成功返回整型的短信数量值，失败返回整型-1。
 
 * 示例
 
@@ -1928,7 +1951,7 @@ if __name__ == '__main__':
 
 * 返回值
 
-成功返回PDU类型的短信内容，string类型，失败返回整型-1。
+  成功返回PDU类型的短信内容，string类型，失败返回整型-1。
 
 
 
@@ -1946,15 +1969,15 @@ if __name__ == '__main__':
 
 * 返回值
 
-成功返回TEXT类型的消息内容，返回格式如下，失败返回-1。
+  成功返回TEXT类型的消息内容，返回格式如下，失败返回-1。
 
-返回格式：(phoneNumber, msg, msgLen)
+  返回格式：(phoneNumber, msg, msgLen)
 
-`phoneNumber` ：短信来源手机号
+  `phoneNumber` ：短信来源手机号
 
-`msg` ：短信内容
+  `msg` ：短信内容
 
-`msgLen` ：短信消息长度
+  `msgLen` ：短信消息长度
 
 * 示例
 
@@ -1977,11 +2000,11 @@ if __name__ == '__main__':
 
 * 参数
 
-无
+  无
 
 * 返回值
 
-成功返回string类型的短信中心号码，失败返回-1。
+  成功返回string类型的短信中心号码，失败返回-1。
 
 * 示例
 
@@ -2007,11 +2030,11 @@ if __name__ == '__main__':
 
 * 返回值
 
-设置成功返回整型0，失败返回整型-1。
+  设置成功返回整型0，失败返回整型-1。
 
 * 示例
 
-无
+  无
 
 
 
@@ -2021,17 +2044,17 @@ if __name__ == '__main__':
 
 获取指定PDU短信的长度。
 
-参数
+* 参数
 
 | 参数   | 参数类型 | 参数说明 |
 | ------ | -------- | -------- |
 | pduMsg | string   | PDU短信  |
 
-返回值
+* 返回值
 
-成功返回整型PDU短信长度，失败返回整型-1。
+  成功返回整型PDU短信长度，失败返回整型-1。
 
-示例
+* 示例
 
 ```python
 >>> import sms
@@ -2049,28 +2072,28 @@ if __name__ == '__main__':
 
 PDU解码
 
-参数
+* 参数
 
 | 参数   | 参数类型 | 参数说明   |
 | ------ | -------- | --------   |
 | pduMsg | string   | PDU短信    |
 | pduLen | int      | PDU码长度  |
 
-返回值
+* 返回值
 
-成功返回PDU解码后的内容，返回格式如下，失败返回-1。
+  成功返回PDU解码后的内容，返回格式如下，失败返回-1。
 
-返回格式：(phoneNumber, msg, time, msgLen)
+  返回格式：(phoneNumber, msg, time, msgLen)
 
-`phoneNumber` ：短信来源手机号
+  `phoneNumber` ：短信来源手机号
 
-`msg` ：短信内容
+  `msg` ：短信内容
 
-`time` ：收到短信的时间
+  `time` ：收到短信的时间
 
-`msgLen` ：短信消息长度
+  `msgLen` ：短信消息长度
 
-示例
+* 示例
 
 ```python
 >>> import sms
@@ -2095,11 +2118,11 @@ PDU解码
 
 * 返回值
 
-注册成功返回整型0，失败返回整型-1。
+  注册成功返回整型0，失败返回整型-1。
 
 * 示例
 
-短信回调函数新老架构的使用方法不同，如下所示，新架构参照示例一，QPY_V0004_EC600N_CNLC_FW_VOLTE(2021-09-09发布)之前发布的版本参照示例二
+  短信回调函数新老架构的使用方法不同，如下所示，新架构参照示例一，QPY_V0004_EC600N_CNLC_FW_VOLTE(2021-09-09发布)之前发布的版本参照示例二。
 
 示例一：
 
@@ -2161,11 +2184,11 @@ sms.setCallback(cb)
 
 设置APN，设置后需要重启或者通过 net.setModemFun(mode) 接口先切换到模式0，再切换到模式1才能生效。 
 
-*注意
+* 注意
 
-该接口和datacall模块的设置APN接口是不相关的：
-datacall模块设置APN是用入参的APN和PID去拨号，并记录到json文件中，下次再开机会用首先用这一路去拨号；
-net模块的设置APN主要使用场景是专网卡设定特定APN才能注网，但是这个得重启生效
+  该接口和datacall模块的设置APN接口是不相关的：
+  datacall模块设置APN是用入参的APN和PID去拨号，并记录到json文件中，下次再开机会用首先用这一路去拨号；
+  net模块的设置APN主要使用场景是专网卡设定特定APN才能注网，但是这个得重启生效
 
 * 参数
 
@@ -2176,15 +2199,13 @@ net模块的设置APN主要使用场景是专网卡设定特定APN才能注网�
 
 * 返回值
 
-设置成功返回整型值0，设置失败返回整型值-1。
+  设置成功返回整型值0，设置失败返回整型值-1。
 
 * 注意
 
   BC25PA平台不支持此方法。
-  
-  
 
-
+  
 
 ##### 获取当前APN
 
@@ -2200,15 +2221,13 @@ net模块的设置APN主要使用场景是专网卡设定特定APN才能注网�
 
 * 返回值
 
-成功返回获取到的APN，失败返回整型值-1。
+  成功返回获取到的APN，失败返回整型值-1。
 
 * 注意
 
   BC25PA平台不支持此方法。
-  
-  
 
-
+  
 
 ##### 获取csq信号强度
 
@@ -2218,13 +2237,13 @@ net模块的设置APN主要使用场景是专网卡设定特定APN才能注网�
 
 * 参数
 
-无
+  无
 
 * 返回值
 
-成功返回整型的csq信号强度值，失败返回整型值-1，返回值为99表示异常；
+  成功返回整型的csq信号强度值，失败返回整型值-1，返回值为99表示异常；
 
-信号强度值范围0 ~ 31，值越大表示信号强度越好。
+  信号强度值范围0 ~ 31，值越大表示信号强度越好。
 
 * 示例
 
@@ -2242,17 +2261,23 @@ net模块的设置APN主要使用场景是专网卡设定特定APN才能注网�
 
 获取邻近 CELL 的信息。
 
+注：BC25平台该接口为可变参函数，参数个数0-1。
+无入参情况：接口保持原有功能不变
+有入参情况，参数为sinr_enable，int型，范围0/1：
+	0，表示不获取sinr，和无入参情况返回结果一致
+	1，表示需要获取sinr，返回结果见example
+
 * 参数
 
-无
+  无
 
 * 返回值
 
-失败返回整型值-1，成功返回包含三种网络系统（GSM、UMTS、LTE）的信息的list，如果对应网络系统信息为空，则返回空的List。返回值格式如下：
+  失败返回整型值-1，成功返回包含三种网络系统（GSM、UMTS、LTE）的信息的list，如果对应网络系统信息为空，则返回空的List。返回值格式如下：
 
-`([(flag, cid, mcc, mnc, lac, arfcn, bsic, rssi)], [(flag, cid, licd, mcc, mnc, lac, arfcn, bsic, rssi)], [(flag, cid, mcc, mnc, pci, tac, earfcn, rssi, rsrq),...])`
+  `([(flag, cid, mcc, mnc, lac, arfcn, bsic, rssi)], [(flag, cid, licd, mcc, mnc, lac, arfcn, bsic, rssi)], [(flag, cid, mcc, mnc, pci, tac, earfcn, rssi, rsrq, sinr),...])`
 
-GSM网络系统返回值说明
+* GSM网络系统返回值说明
 
 | 参数  | 参数意义                                                     |
 | ----- | ------------------------------------------------------------ |
@@ -2265,7 +2290,7 @@ GSM网络系统返回值说明
 | bsic  | 基站识别码，范围 0 ~ 255                                     |
 | rssi  | GSM网络下，该值表示接收电平，描述接收到信号强度，99表示未知或者无法检测到，该值的计算方式如下<br/>rssi = RXLEV - 111，单位dBm，RXLEV 的范围是 0 ~ 63，所以rssi范围是 -111 ~ -48 dBm； |
 
-UMTS网络系统返回值说明
+* UMTS网络系统返回值说明
 
 | 参数   | 参数意义                                                     |
 | ------ | ------------------------------------------------------------ |
@@ -2279,7 +2304,7 @@ UMTS网络系统返回值说明
 | psc    | 基站识别码，范围 0 ~ 255                                     |
 | rssi   | UMTS网络下，该值表示 CPICH/PCCPCH 接收信号码功率，范围 -5 ~ 99，单位dBm |
 
-LTE网络系统返回值说明
+* LTE网络系统返回值说明
 
 | 参数   | 参数意义                                                     |
 | ------ | ------------------------------------------------------------ |
@@ -2292,6 +2317,7 @@ LTE网络系统返回值说明
 | earfcn | 无线频道编号，范围 0 ~ 65535                                 |
 | rssi   | 接收的信号强度，在LTE网络下，表示RSRP质量（负值），是根据RSRP测量报告值换算而来，换算关系如下：<br>RSRP质量（负数）= RSRP测量报告值 - 140，单位dBm，范围 -140 ~ -44 dBm |
 | rsrq  |(Reference Signal Receiving Quality):LTE参考信号接收质量(仅ASR平台数据有意义，其余平台默认0)，范围 -20 ~ -3  注：理论上rsrq的范围应该是-19.5 ~ -3，但由于计算方法问题，目前能给出的是-20 ~ -3|
+| sinr   |信噪比(目前仅BC25平台支持获取该参数，非服务小区默认写0, 范围-30 ~ 30)       |
 
 * 示例
 
@@ -2299,6 +2325,14 @@ LTE网络系统返回值说明
 >>> net.getCellInfo()
 ([], [], [(0, 232301375, 1120, 17, 378, 26909, 1850, -66, -8), (3, 110110494, 1120, 17, 10, 26909, 2452, -87, -17), (3, 94542859, 1120, 1, 465, 56848, 1650, -75, -10), 
 (3, 94472037, 1120, 1, 369, 56848, 3745, -84, -20)])
+
+//bc25
+>>> net.getCellInfo(1)
+([], [], [(0, 17104243, 460, 4, 169, 19472, 3688, -56, -108, -3)])
+>>> net.getCellInfo(0)
+([], [], [(0, 17104243, 460, 4, 169, 19472, 3688, -75, -102)])
+>>> net.getCellInfo()
+([], [], [(0, 17104243, 460, 4, 121, 19472, 3688, -76, -105)])
 ```
 
 
@@ -2313,13 +2347,13 @@ LTE网络系统返回值说明
 
 * 参数
 
-无
+  无
 
 * 返回值
 
-失败返回整型值-1，成功返回一个元组，包含当前首选的网络制式与漫游打开状态。
+  失败返回整型值-1，成功返回一个元组，包含当前首选的网络制式与漫游打开状态。
 
-网络制式
+* 网络制式
 
 | 值   | 网络制式                                                     |
 | ---- | ------------------------------------------------------------ |
@@ -2369,7 +2403,7 @@ LTE网络系统返回值说明
 
 * 返回值
 
-设置成功返回整型值0，设置失败返回整型值-1。
+  设置成功返回整型值0，设置失败返回整型值-1。
 
 
 
@@ -2382,19 +2416,19 @@ LTE网络系统返回值说明
 
 * 参数
 
-无
+  无
 
 * 返回值
 
-失败返回整型值-1，成功返回一个元组，格式为：`(selection_mode, mcc, mnc, act)`
+  失败返回整型值-1，成功返回一个元组，格式为：`(selection_mode, mcc, mnc, act)`
 
-返回值参数说明：
-`selection_mode` ：方式，0 - 自动，1 - 手动
-`mcc` ：移动设备国家代码，string类型
-`mnc` ：移动设备网络代码，string类型
-`act` ：首选网络的ACT模式
+  返回值参数说明：
+  `selection_mode` ：方式，0 - 自动，1 - 手动
+  `mcc` ：移动设备国家代码，string类型
+  `mnc` ：移动设备网络代码，string类型
+  `act` ：首选网络的ACT模式
 
-ACT模式
+* ACT模式
 
 | 值   | ACT模式            |
 | ---- | ------------------ |
@@ -2425,43 +2459,55 @@ ACT模式
 
 获取详细信号强度。
 
+注：1803s/qualcomm/unisoc平台该接口为可变参函数，参数个数0-1。
+无入参情况：接口保持原有功能不变
+有入参情况，参数为sinr_enable，int型，范围0/1：
+	0，表示不获取sinr，和无入参情况返回结果一致
+	1，表示需要获取sinr，返回结果见example
+
 * 参数
 
 无
 
 * 返回值
 
-失败返回整型值-1，成功返回一个元组，包含两个List(GW 、LTE)，返回值格式如下：
+  失败返回整型值-1，成功返回一个元组，包含两个List(GW 、LTE)，返回值格式如下：
 
-`([rssi, bitErrorRate, rscp, ecno], [rssi, rsrp, rsrq, cqi])`
+  `([rssi, bitErrorRate, rscp, ecno], [rssi, rsrp, rsrq, cqi])`
 
-返回值参数说明：
+  返回值参数说明：
 
-GW list：
+  GW list：
 
-`rssi` ：<br>GSM和WCDMA网络下，该值表示接收电平，描述接收到信号强度，99表示未知或者无法检测到，该值的计算方式如下<br>rssi = RXLEV - 111，单位dBm，RXLEV 的范围是 0 ~ 63；
+  `rssi` ：<br>GSM和WCDMA网络下，该值表示接收电平，描述接收到信号强度，99表示未知或者无法检测到，该值的计算方式如下<br>rssi = RXLEV - 111，单位dBm，RXLEV 的范围是 0 ~ 63；
 
-`bitErrorRate` ：误码率，范围 0 ~ 7，99表示未知或者无法检测到
+  `bitErrorRate` ：误码率，范围 0 ~ 7，99表示未知或者无法检测到
 
-`rscp` ：接收信号码功率，范围 -121 ~ -25 dBm，255表示未知或者无法检测到
+  `rscp` ：接收信号码功率，范围 -121 ~ -25 dBm，255表示未知或者无法检测到
 
-`ecno` ：导频信道，范围 -24 ~ 0，255表示未知或者无法检测到
+  `ecno` ：导频信道，范围 -24 ~ 0，255表示未知或者无法检测到
 
-LTE list：
+  LTE list：
 
-`rssi` ：接收的信号强度，范围 -140 ~ -44 dBm，99表示未知或者无法检测到
+  `rssi` ：接收的信号强度，范围 -140 ~ -44 dBm，99表示未知或者无法检测到
 
-`rsrp` ：下行参考信号的接收功率，范围 -141 ~ -44 dBm，99表示未知或者无法检测到
+  `rsrp` ：下行参考信号的接收功率，范围 -141 ~ -44 dBm，99表示未知或者无法检测到
 
-`rsrq` ：下行特定小区参考信号的接收质量，范围 -20 ~ -3 dBm，值越大越好
+  `rsrq` ：下行特定小区参考信号的接收质量，范围 -20 ~ -3 dBm，值越大越好
 
-`cqi` ：信道质量
+  `cqi` ：信道质量
+  
+  `sinr`: 信噪比(目前仅1803s/qualcomm/unisoc平台支持获取该参数)
 
 * 示例
 
 ```python
 >>>net.getSignal()
 ([99, 99, 255, 255], [-51, -76, -5, 255])
+>>>net.getSignal(0)
+([99, 99, 255, 255], [-51, -76, -5, 255])
+>>>net.getSignal(1)
+([99, 99, 255, 255], [-51, -76, -5, 255, 18])
 ```
 
 
@@ -2474,19 +2520,19 @@ LTE list：
 
 * 参数
 
-无
+  无
 
 * 返回值
 
-失败返回整型值-1，成功返回一个元组，包含基站时间与对应时间戳与闰秒数（0表示不可用），格式为：
+  失败返回整型值-1，成功返回一个元组，包含基站时间与对应时间戳与闰秒数（0表示不可用），格式为：
 
-`(date, abs_time, leap_sec)`
+  `(date, abs_time, leap_sec)`
 
-`date` ：基站时间，string类型，其中关于时区的部分，EC600N/EC800N系列与EC200U/EC600U系列有所区别，具体见示例。如果需要设置和获取时区，请使用utime模块的`setTimeZone(offset)`和`getTimeZone()`接口，不同平台，这两个接口的单位都是小时，具体参考utime模块的说明。
+  `date` ：基站时间，string类型，其中关于时区的部分，EC600N/EC800N系列与EC200U/EC600U系列有所区别，具体见示例。如果需要设置和获取时区，请使用utime模块的`setTimeZone(offset)`和`getTimeZone()`接口，不同平台，这两个接口的单位都是小时，具体参考utime模块的说明。
 
-`abs_time` ：基站时间的绝对秒数表示，整型
+  `abs_time` ：基站时间的绝对秒数表示，整型
 
-`leap_sec` ：闰秒数，整型
+  `leap_sec` ：闰秒数，整型
 
 * 示例
 
@@ -2506,21 +2552,21 @@ LTE list：
 
 * 参数
 
-无
+  无
 
 * 返回值
 
-失败返回整型值-1，成功返回一个元组，包含注网的运营商信息，格式为：
+  失败返回整型值-1，成功返回一个元组，包含注网的运营商信息，格式为：
 
-`(long_eons, short_eons, mcc, mnc)`
+  `(long_eons, short_eons, mcc, mnc)`
 
-`long_eons` ：运营商信息全称，string类型
+  `long_eons` ：运营商信息全称，string类型
 
-`short_eons` ：运营商信息简称，string类型
+  `short_eons` ：运营商信息简称，string类型
 
-`mcc` ：移动设备国家代码，string类型
+  `mcc` ：移动设备国家代码，string类型
 
-`mnc` ：移动设备网络代码，string类型
+  `mnc` ：移动设备网络代码，string类型
 
 * 示例
 
@@ -2539,29 +2585,29 @@ LTE list：
 
 * 参数
 
-无
+  无
 
 * 返回值
 
-失败返回整型值-1，成功返回一个元组，包含电话和网络注册信息，元组中voice开头的表示电话注册信息，data开头的表示网络注册信息，格式为：
+  失败返回整型值-1，成功返回一个元组，包含电话和网络注册信息，元组中voice开头的表示电话注册信息，data开头的表示网络注册信息，格式为：
 
-`([voice_state, voice_lac, voice_cid, voice_rat, voice_reject_cause, voice_psc], [data_state, data _lac, data _cid, data _rat, data _reject_cause, data _psc])`
+  `([voice_state, voice_lac, voice_cid, voice_rat, voice_reject_cause, voice_psc], [data_state, data _lac, data _cid, data _rat, data _reject_cause, data _psc])`
 
-返回值参数说明：
+  返回值参数说明：
 
-`state` ：网络注册状态
+  `state` ：网络注册状态
 
-`lac` ：位置区码，范围 1 ~ 65534
+  `lac` ：位置区码，范围 1 ~ 65534
 
-`cid` ：cell id，范围 0x00000000 ~ 0x0FFFFFFF
+  `cid` ：cell id，范围 0x00000000 ~ 0x0FFFFFFF
 
-`rat` ：access technology，即接入技术
+  `rat` ：access technology，即接入技术
 
-`reject_cause` ：注册被拒绝的原因，EC200U/EC600U/BC25PA平台该参数保留，不作为有效参数
+  `reject_cause` ：注册被拒绝的原因，EC200U/EC600U/BC25PA平台该参数保留，不作为有效参数
 
-`psc` ：主扰码，Primary Scrambling Code，EC200U/EC600U/BC25PA平台该参数保留，不作为有效参数
+  `psc` ：主扰码，Primary Scrambling Code，EC200U/EC600U/BC25PA平台该参数保留，不作为有效参数
 
-网络注册状态` state`
+* 网络注册状态` state`
 
 | 值   | 状态说明                                                     |
 | ---- | ------------------------------------------------------------ |
@@ -2578,7 +2624,7 @@ LTE list：
 | 10   | registered for “CSFB not preferred”, roaming (not applicable) |
 | 11   | emergency bearer services only                               |
 
-接入技术 access technology 值说明
+* 接入技术 access technology
 
 | 值   | 说明               |
 | ---- | ------------------ |
@@ -2611,13 +2657,13 @@ LTE list：
 
 * 参数
 
-无
+  无
 
 * 返回值
 
-成功返回一个list类型的数组，包含小区id，格式为：`[id, ……, id]`。数组成员数量并非固定不变，位置不同、信号强弱不同等都可能导致获取的结果不一样。
+  成功返回一个list类型的数组，包含小区id，格式为：`[id, ……, id]`。数组成员数量并非固定不变，位置不同、信号强弱不同等都可能导致获取的结果不一样。
 
-失败返回整型值-1。
+  失败返回整型值-1。
 
 * 示例
 
@@ -2636,13 +2682,13 @@ LTE list：
 
 * 参数
 
-无
+  无
 
 * 返回值
 
-成功返回服务小区ID。
+  成功返回服务小区ID。
 
-失败返回整型值-1。
+  失败返回整型值-1。
 
 * 示例
 
@@ -2661,13 +2707,13 @@ LTE list：
 
 * 参数
 
-无
+  无
 
 * 返回值
 
-成功返回一个list类型的数组，包含小区mnc，格式为：`[mnc, ……, mnc]`。数组成员数量并非固定不变，位置不同、信号强弱不同等都可能导致获取的结果不一样。
+  成功返回一个list类型的数组，包含小区mnc，格式为：`[mnc, ……, mnc]`。数组成员数量并非固定不变，位置不同、信号强弱不同等都可能导致获取的结果不一样。
 
-失败返回整型值-1。
+  失败返回整型值-1。
 
 * 示例
 
@@ -2686,13 +2732,13 @@ LTE list：
 
 * 参数
 
-无
+  无
 
 * 返回值
 
-成功返回服务小区mnc。
+  成功返回服务小区mnc。
 
-失败返回整型值-1。
+  失败返回整型值-1。
 
 * 示例
 
@@ -2711,15 +2757,15 @@ LTE list：
 
 * 参数
 
-无
+  无
 
 * 返回值
 
-成功返回一个list类型的数组，包含小区mcc，格式为：`[mcc, ……, mcc]`。数组成员数量并非固定不变，位置不同、信号强弱不同等都可能导致获取的结果不一样。
+  成功返回一个list类型的数组，包含小区mcc，格式为：`[mcc, ……, mcc]`。数组成员数量并非固定不变，位置不同、信号强弱不同等都可能导致获取的结果不一样。
 
-失败返回整型值-1。
+  失败返回整型值-1。
 
-注意：EC100Y/EC600S/EC600N系列的模组，该值是用十六进制来表示，比如下面示例中的十进制数1120，十六进制即0x460，表示移动设备国家代码460，其他型号模组，该值直接用十进制表示，比如移动设备国家代码460，就是用十进制的460来表示。
+  注意：EC100Y/EC600S/EC600N系列的模组，该值是用十六进制来表示，比如下面示例中的十进制数1120，十六进制即0x460，表示移动设备国家代码460，其他型号模组，该值直接用十进制表示，比如移动设备国家代码460，就是用十进制的460来表示。
 
 * 示例
 
@@ -2738,15 +2784,15 @@ LTE list：
 
 * 参数
 
-无
+  无
 
 * 返回值
 
-成功返回服务小区的mcc。
+  成功返回服务小区的mcc。
 
-失败返回整型值-1。
+  失败返回整型值-1。
 
-注意：EC100Y/EC600S/EC600N系列的模组，该值是用十六进制来表示，比如下面示例中的十进制数1120，十六进制即0x460，表示移动设备国家代码460，其他型号模组，该值直接用十进制表示，比如移动设备国家代码460，就是用十进制的460来表示。
+  注意：EC100Y/EC600S/EC600N系列的模组，该值是用十六进制来表示，比如下面示例中的十进制数1120，十六进制即0x460，表示移动设备国家代码460，其他型号模组，该值直接用十进制表示，比如移动设备国家代码460，就是用十进制的460来表示。
 
 * 示例
 
@@ -2765,13 +2811,13 @@ LTE list：
 
 * 参数
 
-无
+  无
 
 * 返回值
 
-成功返回一个list类型的数组，包含小区lac，格式为：`[lac, ……, lac]`。数组成员数量并非固定不变，位置不同、信号强弱不同等都可能导致获取的结果不一样。
+  成功返回一个list类型的数组，包含小区lac，格式为：`[lac, ……, lac]`。数组成员数量并非固定不变，位置不同、信号强弱不同等都可能导致获取的结果不一样。
 
-失败返回整型值-1。
+  失败返回整型值-1。
 
 * 示例
 
@@ -2790,13 +2836,13 @@ LTE list：
 
 * 参数
 
-无
+  无
 
 * 返回值
 
-成功返回服务小区lac
+  成功返回服务小区lac
 
-失败返回整型值-1。
+  失败返回整型值-1。
 
 * 示例
 
@@ -2815,19 +2861,19 @@ LTE list：
 
 * 参数
 
-无
+  无
 
 * 返回值
 
-成功返回当前SIM模式：
+  成功返回当前SIM模式：
 
-0 ：全功能关闭
+  0 ：全功能关闭
 
-1 ：全功能开启（默认）
+  1 ：全功能开启（默认）
 
-4 ：飞行模式
+  4 ：飞行模式
 
-失败返回整型值-1。
+  失败返回整型值-1。
 
 * 示例
 
@@ -2848,12 +2894,12 @@ LTE list：
 
 | 参数     | 参数类型 | 参数说明                                                     |
 | -------- | -------- | ------------------------------------------------------------ |
-| function | int      | 设置SIM卡模式，0 - 全功能关闭， 1 - 全功能开启， 4 - 飞行模式 (RDA平台不支持cfun4)|
-| rst      | int      | 可选参数 ，0 - 设置立即生效（默认为0），1 - 设置完重启       |
+| function | int      | 设置SIM卡模式<br/>0 - 全功能关闭<br/>1 - 全功能开启<br/>4 - 飞行模式 (RDA平台不支持cfun4) |
+| rst      | int      | 可选参数 <br>0 - 设置立即生效（默认为0）<br/>1 - 设置完重启  |
 
 * 返回值
 
-设置成功返回整型值0，设置失败返回整型值-1。
+  设置成功返回整型值0，设置失败返回整型值-1。
 
 * 示例
 
@@ -2893,7 +2939,7 @@ LTE list：
 
   无。
 
-示例
+* 示例
 
 ```python
 import checkNet
@@ -4754,26 +4800,22 @@ while 1:
 
 * 返回值
 
-返回int数值，解释如下：
+返回整形数值，表示开机原因，解释如下：
 
-1：正常电源开机 
+| 值   | 说明                             |
+| ---- | -------------------------------- |
+| 0    | 获取开机原因失败或者开机原因未知 |
+| 1    | 按 PWRKEY 开机                   |
+| 2    | 按 RESET 重启                    |
+| 3    | VBAT 触发的开机                  |
+| 4    | RTC 定时开机                     |
+| 5    | watchdog 触发重启或异常开机      |
+| 6    | VBUS 触发的开机                  |
+| 7    | 充电开机                         |
+| 8    | PSM 唤醒开机                     |
+| 9    | 发生 Dump 后重启                 |
 
-2：重启 
 
-3：VBAT 
-
-4：RTC定时开机
-
-5：Fault 
-
-6：VBUS
-
-0：未知
-
-
-* 注意
-
-  BC25PA平台不支持重启原因5、6。
 
 ###### 获取模块上次关机原因
 
@@ -4787,23 +4829,22 @@ while 1:
 
 * 返回值
 
-1：正常电源关机
+返回整形数值，表示上次关机原因，解释如下：
 
-2：电压过高
-
-3：电压偏低
-
-4：超温
-
-5：WDT
-
-6：VRTC 偏低
-
-0：未知
+| 值   | 说明                  |
+| ---- | --------------------- |
+| 0    | 原因未知              |
+| 1    | 正常关机              |
+| 2    | 供电电压过高导致关机  |
+| 3    | 供电电压过低导致关机  |
+| 4    | 温度过高导致关机      |
+| 5    | 看门狗触发的关机      |
+| 6    | VRTC 电压过低触发关机 |
 
 * 注意
 
-  BC25PA平台不支持此方法。
+BC25PA平台和EC200U/EC600U平台不支持此方法。
+
 
 
 ###### 获取电池电压
@@ -5434,8 +5475,8 @@ USBNET.open()
 | Pin.GPIO14       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA/EC800N | GPIO14   |
 | Pin.GPIO15       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA/EC800N | GPIO15   |
 | Pin.GPIO16       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA/EC800N | GPIO16   |
-| Pin.GPIO17       | EC600S / EC600N / EC100Y/EC800N | GPIO17   |
-| Pin.GPIO18       | EC600S / EC600N / EC100Y/EC800N | GPIO18   |
+| Pin.GPIO17       | EC600S / EC600N / EC100Y/EC800N/BC25PA | GPIO17   |
+| Pin.GPIO18       | EC600S / EC600N / EC100Y/EC800N/BC25PA | GPIO18   |
 | Pin.GPIO19       | EC600S / EC600N / EC100Y/EC800N | GPIO19   |
 | Pin.GPIO20       | EC600S / EC600N/EC800N   | GPIO20   |
 | Pin.GPIO21       | EC600S / EC600N/EC800N   | GPIO21   |
@@ -5479,7 +5520,7 @@ USBNET.open()
 
 | 参数      | 类型 | 说明                                                         |
 | :-------- | :--- | ------------------------------------------------------------ |
-| GPIOn     | int  | 引脚号<br />EC100YCN平台引脚对应关系如下（引脚号为外部引脚编号）：<br />GPIO1 – 引脚号22<br />GPIO2 – 引脚号23<br />GPIO3 – 引脚号38<br />GPIO4 – 引脚号53<br />GPIO5 – 引脚号54<br />GPIO6 – 引脚号104<br />GPIO7 – 引脚号105<br />GPIO8 – 引脚号106<br />GPIO9 – 引脚号107<br />GPIO10 – 引脚号178<br />GPIO11 – 引脚号195<br />GPIO12 – 引脚号196<br />GPIO13 – 引脚号197<br />GPIO14 – 引脚号198<br />GPIO15 – 引脚号199<br />GPIO16 – 引脚号203<br />GPIO17 – 引脚号204<br />GPIO18 – 引脚号214<br />GPIO19 – 引脚号215<br />EC600SCN/EC600NCN平台引脚对应关系如下（引脚号为模块外部引脚编号）：<br />GPIO1 – 引脚号10<br />GPIO2 – 引脚号11<br />GPIO3 – 引脚号12<br />GPIO4 – 引脚号13<br />GPIO5 – 引脚号14<br />GPIO6 – 引脚号15<br />GPIO7 – 引脚号16<br />GPIO8 – 引脚号39<br />GPIO9 – 引脚号40<br />GPIO10 – 引脚号48<br />GPIO11 – 引脚号58<br />GPIO12 – 引脚号59<br />GPIO13 – 引脚号60<br />GPIO14 – 引脚号61<br />GPIO15 – 引脚号62<br/>GPIO16 – 引脚号63<br/>GPIO17 – 引脚号69<br/>GPIO18 – 引脚号70<br/>GPIO19 – 引脚号1<br/>GPIO20 – 引脚号3<br/>GPIO21 – 引脚号49<br/>GPIO22 – 引脚号50<br/>GPIO23 – 引脚号51<br/>GPIO24 – 引脚号52<br/>GPIO25 – 引脚号53<br/>GPIO26 – 引脚号54<br/>GPIO27 – 引脚号55<br/>GPIO28 – 引脚号56<br/>GPIO29 – 引脚号57<br />GPIO30 – 引脚号2<br />GPIO31 – 引脚号66<br />GPIO32 – 引脚号65<br />GPIO33 – 引脚号67<br />GPIO34 – 引脚号64<br />GPIO35 – 引脚号4<br />GPIO36 – 引脚号31<br />GPIO37 – 引脚号32<br />GPIO38 – 引脚号33<br />GPIO39 – 引脚号34<br />GPIO40 – 引脚号71<br />GPIO41 – 引脚号72<br />EC600UCN平台引脚对应关系如下（引脚号为模块外部引脚编号）<br />GPIO1 – 引脚号61<br />GPIO2 – 引脚号58<br />GPIO3 – 引脚号34<br />GPIO4 – 引脚号60<br />GPIO5 – 引脚号69<br />GPIO6 – 引脚号70<br />GPIO7 – 引脚号123<br />GPIO8 – 引脚号118<br />GPIO9 – 引脚号9<br />GPIO10 – 引脚号1<br />GPIO11 – 引脚号4<br />GPIO12 – 引脚号3<br />GPIO13 – 引脚号2<br />GPIO14 – 引脚号54<br />GPIO15 – 引脚号57<br/>GPIO16 – 引脚号56<br/>EC200UCN平台引脚对应关系如下（引脚号为模块外部引脚编号）<br />GPIO1 – 引脚号27<br />GPIO2 – 引脚号26<br />GPIO3 – 引脚号24<br />GPIO4 – 引脚号25<br />GPIO5 – 引脚号13<br />GPIO6 – 引脚号135<br />GPIO7 – 引脚号136<br />GPIO8 – 引脚号133<br />GPIO9 – 引脚号3<br />GPIO10 – 引脚号40<br />GPIO11 – 引脚号37<br />GPIO12 – 引脚号38<br />GPIO13 – 引脚号39<br />GPIO14 – 引脚号5<br />GPIO15 – 引脚号141<br/>GPIO16 – 引脚号142<br/>EC800NCN平台引脚对应关系如下（引脚号为模块外部引脚编号）<br />GPIO1 – 引脚号30<br />GPIO2 – 引脚号31<br />GPIO3 – 引脚号32<br />GPIO4 – 引脚号33<br />GPIO5 – 引脚号49<br />GPIO6 – 引脚号50<br />GPIO7 – 引脚号51<br />GPIO8 – 引脚号52<br />GPIO9 – 引脚号53<br />GPIO10 – 引脚号54<br />GPIO11 – 引脚号55<br />GPIO12 – 引脚号56<br />GPIO13 – 引脚号57<br />GPIO14 – 引脚号58<br />GPIO15 – 引脚号80<br/>GPIO16 – 引脚号81<br/>GPIO17 – 引脚号76<br/>GPIO18 – 引脚号77<br/>GPIO19 – 引脚号82<br/>GPIO20 – 引脚号83<br/>GPIO21 – 引脚号86<br/>GPIO22 – 引脚号87<br/>GPIO23 – 引脚号66<br/>GPIO24 – 引脚号67<br/>GPIO25 – 引脚号17<br/>GPIO26 – 引脚号18<br/>GPIO27 – 引脚号19<br/>GPIO28 – 引脚号20<br/>GPIO29 – 引脚号21<br />GPIO30 – 引脚号22<br />GPIO31 – 引脚号23<br />GPIO32 – 引脚号28<br />GPIO33 – 引脚号29<br />GPIO34 – 引脚号38<br />GPIO35 – 引脚号39<br />GPIO36 – 引脚号16<br />GPIO37 – 引脚号78<br />BC25PA平台引脚对应关系如下（引脚号为模块外部引脚编号）<br />GPIO1 – 引脚号3<br />GPIO2 – 引脚号4<br />GPIO3 – 引脚号5<br />GPIO4 – 引脚号6<br />GPIO5 – 引脚号16<br />GPIO6 – 引脚号20<br />GPIO7 – 引脚号21<br />GPIO8 – 引脚号22<br />GPIO9 – 引脚号23<br />GPIO10 – 引脚号25<br />GPIO11 – 引脚号28<br />GPIO12 – 引脚号29<br />GPIO13 – 引脚号30<br />GPIO14 – 引脚号31<br />GPIO15 – 引脚号32<br/>GPIO16 – 引脚号33<br/> |
+| GPIOn     | int  | 引脚号<br />EC100YCN平台引脚对应关系如下（引脚号为外部引脚编号）：<br />GPIO1 – 引脚号22<br />GPIO2 – 引脚号23<br />GPIO3 – 引脚号38<br />GPIO4 – 引脚号53<br />GPIO5 – 引脚号54<br />GPIO6 – 引脚号104<br />GPIO7 – 引脚号105<br />GPIO8 – 引脚号106<br />GPIO9 – 引脚号107<br />GPIO10 – 引脚号178<br />GPIO11 – 引脚号195<br />GPIO12 – 引脚号196<br />GPIO13 – 引脚号197<br />GPIO14 – 引脚号198<br />GPIO15 – 引脚号199<br />GPIO16 – 引脚号203<br />GPIO17 – 引脚号204<br />GPIO18 – 引脚号214<br />GPIO19 – 引脚号215<br />EC600SCN/EC600NCN平台引脚对应关系如下（引脚号为模块外部引脚编号）：<br />GPIO1 – 引脚号10<br />GPIO2 – 引脚号11<br />GPIO3 – 引脚号12<br />GPIO4 – 引脚号13<br />GPIO5 – 引脚号14<br />GPIO6 – 引脚号15<br />GPIO7 – 引脚号16<br />GPIO8 – 引脚号39<br />GPIO9 – 引脚号40<br />GPIO10 – 引脚号48<br />GPIO11 – 引脚号58<br />GPIO12 – 引脚号59<br />GPIO13 – 引脚号60<br />GPIO14 – 引脚号61<br />GPIO15 – 引脚号62<br/>GPIO16 – 引脚号63<br/>GPIO17 – 引脚号69<br/>GPIO18 – 引脚号70<br/>GPIO19 – 引脚号1<br/>GPIO20 – 引脚号3<br/>GPIO21 – 引脚号49<br/>GPIO22 – 引脚号50<br/>GPIO23 – 引脚号51<br/>GPIO24 – 引脚号52<br/>GPIO25 – 引脚号53<br/>GPIO26 – 引脚号54<br/>GPIO27 – 引脚号55<br/>GPIO28 – 引脚号56<br/>GPIO29 – 引脚号57<br />GPIO30 – 引脚号2<br />GPIO31 – 引脚号66<br />GPIO32 – 引脚号65<br />GPIO33 – 引脚号67<br />GPIO34 – 引脚号64<br />GPIO35 – 引脚号4<br />GPIO36 – 引脚号31<br />GPIO37 – 引脚号32<br />GPIO38 – 引脚号33<br />GPIO39 – 引脚号34<br />GPIO40 – 引脚号71<br />GPIO41 – 引脚号72<br />EC600UCN平台引脚对应关系如下（引脚号为模块外部引脚编号）<br />GPIO1 – 引脚号61<br />GPIO2 – 引脚号58<br />GPIO3 – 引脚号34<br />GPIO4 – 引脚号60<br />GPIO5 – 引脚号69<br />GPIO6 – 引脚号70<br />GPIO7 – 引脚号123<br />GPIO8 – 引脚号118<br />GPIO9 – 引脚号9<br />GPIO10 – 引脚号1<br />GPIO11 – 引脚号4<br />GPIO12 – 引脚号3<br />GPIO13 – 引脚号2<br />GPIO14 – 引脚号54<br />GPIO15 – 引脚号57<br/>GPIO16 – 引脚号56<br/>EC200UCN平台引脚对应关系如下（引脚号为模块外部引脚编号）<br />GPIO1 – 引脚号27<br />GPIO2 – 引脚号26<br />GPIO3 – 引脚号24<br />GPIO4 – 引脚号25<br />GPIO5 – 引脚号13<br />GPIO6 – 引脚号135<br />GPIO7 – 引脚号136<br />GPIO8 – 引脚号133<br />GPIO9 – 引脚号3<br />GPIO10 – 引脚号40<br />GPIO11 – 引脚号37<br />GPIO12 – 引脚号38<br />GPIO13 – 引脚号39<br />GPIO14 – 引脚号5<br />GPIO15 – 引脚号141<br/>GPIO16 – 引脚号142<br/>EC800NCN平台引脚对应关系如下（引脚号为模块外部引脚编号）<br />GPIO1 – 引脚号30<br />GPIO2 – 引脚号31<br />GPIO3 – 引脚号32<br />GPIO4 – 引脚号33<br />GPIO5 – 引脚号49<br />GPIO6 – 引脚号50<br />GPIO7 – 引脚号51<br />GPIO8 – 引脚号52<br />GPIO9 – 引脚号53<br />GPIO10 – 引脚号54<br />GPIO11 – 引脚号55<br />GPIO12 – 引脚号56<br />GPIO13 – 引脚号57<br />GPIO14 – 引脚号58<br />GPIO15 – 引脚号80<br/>GPIO16 – 引脚号81<br/>GPIO17 – 引脚号76<br/>GPIO18 – 引脚号77<br/>GPIO19 – 引脚号82<br/>GPIO20 – 引脚号83<br/>GPIO21 – 引脚号86<br/>GPIO22 – 引脚号87<br/>GPIO23 – 引脚号66<br/>GPIO24 – 引脚号67<br/>GPIO25 – 引脚号17<br/>GPIO26 – 引脚号18<br/>GPIO27 – 引脚号19<br/>GPIO28 – 引脚号20<br/>GPIO29 – 引脚号21<br />GPIO30 – 引脚号22<br />GPIO31 – 引脚号23<br />GPIO32 – 引脚号28<br />GPIO33 – 引脚号29<br />GPIO34 – 引脚号38<br />GPIO35 – 引脚号39<br />GPIO36 – 引脚号16<br />GPIO37 – 引脚号78<br />BC25PA平台引脚对应关系如下（引脚号为模块外部引脚编号）<br />GPIO1 – 引脚号3<br />GPIO2 – 引脚号4<br />GPIO3 – 引脚号5<br />GPIO4 – 引脚号6<br />GPIO5 – 引脚号16<br />GPIO6 – 引脚号20<br />GPIO7 – 引脚号21<br />GPIO8 – 引脚号22<br />GPIO9 – 引脚号23<br />GPIO10 – 引脚号25<br />GPIO11 – 引脚号28<br />GPIO12 – 引脚号29<br />GPIO13 – 引脚号30<br />GPIO14 – 引脚号31<br />GPIO15 – 引脚号32<br/>GPIO16 – 引脚号33<br/>GPIO17 – 引脚号2<br/>GPIO18 – 引脚号8<br/> |
 | direction | int  | IN – 输入模式，OUT – 输出模式                                |
 | pullMode  | int  | PULL_DISABLE – 浮空模式<br />PULL_PU – 上拉模式<br />PULL_PD – 下拉模式 |
 | level     | int  | 0 - 设置引脚为低电平, 1- 设置引脚为高电平                    |
@@ -6517,7 +6558,6 @@ if __name__ == '__main__':
 
 除了创建对象外，其它的操作（读写）均与I2C一致
 
-###### 
 
 ###### 创建I2C_simulation对象
 
@@ -7251,7 +7291,9 @@ if __name__ == '__main__':
 
 ##### KeyPad
 
-模块功能:提供矩阵键盘接口，支持平台EC600SCN_LB/EC800N_CN_LA/EC600NCNLC
+模块功能:提供矩阵键盘接口，支持平台EC600SCN_LB/EC800N_CN_LA/EC600NCNLC/EC200U_CN_LB/EC600U_CN_LB
+
+EC200U最大支持4X3,EC600U最大支持6X6。
 
 ###### 创建keypad对象
 
@@ -7260,10 +7302,19 @@ if __name__ == '__main__':
 * 参数
 | 参数   | 参数类型 | 参数说明                            |
 | ------ | -------- | ----------------------------------- |
-| row | int      | 行(大于0,小于8,行和列均不设置的情况下,默认为4) |
-| col | int      | 列(大于0,小于8,列不设置的情况下,默认4) |
+| row | int      | 大于0，不超过平台支持最大值 |
+| col | int      | 大于0，不超过平台支持最大值|
 
 注意:如果row和col均不设置,默认为4X4.
+
+| 平台          | 最大行 | 最大列 |
+| ------------- | ------ | ------ |
+| EC800N/EC600N | 4      | 4      |
+| EC600S        | 5      | 5      |
+| EC200U        | 4      | 3      |
+| EC600U        | 6      | 6      |
+
+
 * 示例：
 > ```python
 > >>>import machine
@@ -7297,7 +7348,7 @@ if __name__ == '__main__':
 | ------ | -------- | ------------------------------------------ |
 | usrFun | function | 回调函数，当外接键盘按键按放会触发此函数。 |
 
-注意:usrFun参数为list。
+注意:usrFun参数为list数据类型。
 
 list包含三个参数。其含义如下：
 
@@ -7713,7 +7764,7 @@ print(r.group(0))
 
 
 
-####  wifiScan
+####  wifiScan - WiFi扫描
 
 注意：BC25PA平台不支持此方法。
 
@@ -7847,8 +7898,8 @@ True
   | timeout       | 整型 | 该超时时间参数是上层应用的超时，当触发超时会主动上报已扫描到的热点信息，若在超时前扫描到设置的热点个数或达到底层扫频超时时间会自动上报热点信息。<br>参数范围：<br/>600S ：4-255秒<br/>200U/600U ：120-5000毫秒 |
   | round         | 整型 | 该参数是wifi扫描轮，达到扫描轮数后，会结束扫描并获取扫描结果。<br/>参数范围：<br/>600S ：1-3轮次<br/>200U/600U ：1-10轮次 |
   | max_bssid_num | 整型 | 该参数是wifi扫描热点最大个，若底层扫描热点个数达到设置的最大个数，会结束扫描并获取扫描结果。<br/>参数范围：<br/>600S ：4-30个<br/>200U/600U ：1-300个 |
-  | scan_timeout  | 整型 | 该参数是底层wifi扫描热点超时时间，若底层扫描热点时间达到设置的超时时间，会结束扫描并获取扫描结果。该参数设置范围为1-255秒。 |
-  | priority      | 整型 | 该参数是wifi扫描业务优先级设置，0为ps优先，1为wifi优先。ps优先时，当有数据业务发起时会中断wifi扫描。Wifi优先时，当有数据业务发起时，不会建立RRC连接，保障wifi扫描正常执行，扫描结束后才会建立RRC连接。 |
+  | scan_timeout  | 整型 | 该参数是底层wifi扫描热点超时时间，若底层扫描热点时间达到设置的超时时间，会结束扫描并获取扫描结果。该参数设置范围为1-255秒。200U/600U 平台不支持该参数，设置时写0即可。 |
+  | priority      | 整型 | 该参数是wifi扫描业务优先级设置，0为ps优先，1为wifi优先。ps优先时，当有数据业务发起时会中断wifi扫描。Wifi优先时，当有数据业务发起时，不会建立RRC连接，保障wifi扫描正常执行，扫描结束后才会建立RRC连接。200U/600U 平台不支持该参数，设置时写0即可。 |
 
 * 返回值：
 
@@ -10928,21 +10979,21 @@ camCaputre.callback(callback)
 
 
 
-#### GNSS - 定位授时
+#### GNSS - 外置GNSS
 
-模块功能：对L76K GPS型号进行数据获取，可以得到模块定位是否成功，定位的经纬度数据，UTC授时时间，获取GPS模块的定位模式，获取GPS模块定位使用卫星数量，获取GPS模块定位可见卫星数量，获取定位方位角，GPS模块对地速度，模块定位大地高等数据信息。
+模块功能：对L76K GPS型号进行数据获取，可以得到模块定位是否成功，定位的经纬度数据，UTC授时时间，获取GPS模块的定位模式，获取GPS模块定位使用卫星数量，获取GPS模块定位可见卫星数量，获取定位方位角，GPS模块对地速度，模块定位大地高等数据信息。目前，该模块提供的功能接口，所获取的数据都来源于从串口读出的原始GNSS数据包中的GNGGA、GNRMC和GPGSV语句。
 
 * 注意
   BC25PA平台不支持模块功能。
 > 暂时只支持EC600U CNLB
 
-##### 打开GNSS串口，读取并解析GNSS数据
+##### 创建gnss对象
 
+> **from gnss import GnssGetData**
+>
 > **gnss = GnssGetData(uartn,baudrate,databits,parity,stopbits,flowctl)**
 
-> **gnss.read_gnss_data()**
-
-- **参数**
+* 参数
 
 | 参数     | 类型 | 说明                                                         |
 | :------- | :--- | ------------------------------------------------------------ |
@@ -10957,35 +11008,176 @@ camCaputre.callback(callback)
 
   无
 
+* 示例
+
+```python
+from gnss import GnssGetData
+gnss = GnssGetData(1, 9600, 8, 0, 1, 0)
+```
 
 
-##### 获取是否定位成功
 
-> **gnss.isFix()**
+##### 读取GNSS数据并解析
 
-- **参数**
+> **gnss.read_gnss_data(max_retry=1, debug=0)**
+
+* 参数
+
+| 参数      | 类型 | 说明                                                         |
+| --------- | ---- | ------------------------------------------------------------ |
+| max_retry | int  | 可选参数，可不填该参数；表示当读取的GNSS无效时，自动重新读取的最大尝试次数，如果读取数据长度为0（即没有读取到数据）则直接退出；这里会进行自动重新读取的前提是，当前读取的这一包原始GNSS数据中，如果GNGGA、GNRMC和GPGSV语句有任何一种没有找到或者是找到但是数据是无效的，那么就会重新去读取下一包数据，直到GNGGA、GNRMC和GPGSV语句都找到并且数据有效或者达到最大尝试次数退出。默认为1，表示只读取一次数据。 |
+| debug     | int  | 可选参数，可不填该参数，默认为0；表示在读取解析GNSS数据过程中，是否输出一些调试信息，为0表示不输出详细信息，为1表示输出详细信息，方便用户直观的看到解析结果以及进行比对；这里要注意的是，debug为0，并不是一点调试信息都不输出，而是仅仅输出一些简单的基本的信息，比如没有从原始的GNSS数据中找到对应数据或数据无效，则提示数据无效或者没有找到相关数据之类的基本信息，具体可参考示例。 |
+
+* 返回值
+
+  返回从串口读取的GNSS数据长度，单位字节。
+
+* 示例
+
+```python
+#=========================================================================
+gnss.read_gnss_data()	# 使用默认设置，仅读取一次，不输出详细调试信息
+4224	# 读取数据成功，并解析GNGGA、GNRMC和GPGSV语句都成功，直接返回读取的原始数据长度
+#=========================================================================
+gnss.read_gnss_data()  # 使用默认设置，仅读取一次，不输出详细调试信息
+GNGGA data is invalid. # 读取数据成功，获取的GNGGA定位数据无效
+GNRMC data is invalid. # 读取数据成功，获取的GNRMC定位数据无效
+648		# 返回读取的原始数据长度
+#=========================================================================
+gnss.read_gnss_data(max_retry=3)  # 设置最大自动读取次数为3次
+Not find GPGSV data or GPGSV data is invalid.  # 第1次读取，GPGSV数据未找到或无效
+continue read.        # 继续读取下一包数据
+Not find GNGGA data.  # 第2次读取，没有找到GNGGA数据
+Not find GNRMC data.  # 第2次读取，没有找到GNRMC数据
+continue read.        # 继续尝试读取下一包
+Not find GNGGA data.  # 第3次读取，没有找到GNGGA数据
+Not find GNRMC data.  # 第3次读取，没有找到GNRMC数据
+continue read.        # 第3次依然失败，准备继续读取，判断出已经达到最大尝试次数，退出
+128
+#=========================================================================
+gnss.read_gnss_data(debug=1)  # 设置读取解析过程输出详细信息
+GGA data : ['GNGGA', '021224.000', '3149.27680', 'N', '11706.93369', 'E', '1', '19', '0.9', '168.2', 'M', '-5.0', 'M', '', '*52']  # 输出从原始GNSS数据中匹配到并简单处理后的GNGGA数据
+RMC data : ['GNRMC', '021224.000', 'A', '3149.27680', 'N', '11706.93369', 'E', '0.00', '153.28', '110122', '', '', 'A', 'V*02']  # 输出从原始GNSS数据中匹配到并简单处理后的GNRMC数据
+total_sen_num = 3, total_sat_num = 12  # 输出一组完整GPGSV语句总条数和可视卫星数量
+# 下面是具体的匹配到的GPGSV语句信息
+[0] : ['$GPGSV', '3', '1', '12', '10', '79', '210', '35', '12', '40', '070', '43', '21', '08', '305', '31', '23', '46', '158', '43', '0*6E']
+[1] : ['$GPGSV', '3', '2', '12', '24', '', '', '26', '25', '54', '125', '42', '31', '', '', '21', '32', '50', '324', '34', '0*64']
+[2] : ['$GPGSV', '3', '3', '12', '193', '61', '104', '44', '194', '58', '117', '42', '195', '05', '162', '35', '199', '', '', '32', '0*54']
+4224
+```
+
+
+
+##### 获取读取的原始GNSS数据
+
+> **gnss.getOriginalData()**
+
+该接口用于返回从串口读取的原始GNSS数据，如果用户希望拿到原始GNSS数据，自己进行处理或者进行一些数据确认，可以通过该接口来获取。该接口在每次调用`gnss.read_gnss_data(max_retry=1, debug=0)`接口后，返回的即本次读取的原始数据。
+
+* 参数
 
   无
 
-- **返回值**
+* 返回值
+
+  返回从串口读取的原始GNSS数据，字符串类型。
+
+* 示例
+
+```python
+data = gnss.getOriginalData()
+print(data)
+# 数据量较大，仅列出部分结果
+00,A,3149.28094,N,11706.93869,E,0.00,153.28,110122,,,A,V*04
+$GNVTG,153.28,T,,M,0.00,N,0.00,K,A*2E
+$GNZDA,021555.000,11,01,2022,00,00*4D
+$GPTXT,01,01,01,ANTENNA OK*35
+$GNGGA,021556.000,3149.28095,N,11706.93869,E,1,24,0.6,166.5,M,-5.0,M,,*5E
+$GNGLL,3149.28095,N,11706.93869,E,021556.000,A,A*47
+$GNGSA,A,3,10,12,21,23,24,25,32,193,194,195,199,,1.0,0.6,0.8,1*35
+$GNGSA,A,3,01,04,07,09,14,21,22,24,38,39,42,45,1.0,0.6,0.8,4*36
+... 
+$GNGGA,021600.000,3149.28096,N,11706.93877,E,1,25,0.6,166.4,M,-5.0,M,,*52
+$GNGLL,3149.28096,N,11706.93877,E,021600.000,A,A*4B
+$GNGSA,A,3,10,12,21,23,24,25,31,32,193,194,195,199,1.0,0.6,0.8,1*37
+$GNGSA,A,3,01,04,07,09,$GNGGA,021601.000,3149.28096,N,11706.93878,E,1,25,0.6,166.4,M,-5.0,M,,*5C
+$GNGLL,3149.2809
+```
+
+
+
+##### 检查本次读取解析结果有效性
+
+> **gnss.checkDataValidity()**
+
+GNSS模块提供的功能接口，所获取的数据都来源于从串口读出的原始GNSS数据包中的GNGGA、GNRMC和GPGSV语句，该接口用于检查读取的一包GNSS数据中，GNGGA、GNRMC和GPGSV语句的有效性。
+
+* 参数
+
+  无
+
+* 返回值
+
+  返回一个元组，形式为` (gga_valid, rmc_valid, gsv_valid)`
+
+  `gga_valid` - 表示本次读取解析，是否匹配到GNGGA数据并解析成功，0表示没有匹配到GNGGA数据或数据无效，1表示有效；
+
+  `rmc_valid` - 表示本次读取解析，是否匹配到GNRMC数据并解析成功，0表述没有匹配到GNRMC数据或数据无效，1表示有效；
+
+  `gsv_valid` - 表示本地读取解析，是否匹配到GPGSV数据并解析成功，0表示没有匹配到GPGSV数据或数据无效，1表示有效。
+
+  如果用户只关心定位结果，即GNGGA数据是否有效，只要gga_valid参数为1即可（或者通过gnss.isFix()接口来判断定位是否成功），不一定要三个参数都为1；解析GNRMC数据是为了获取对地速度，解析GPGSV数据是为了获取可视卫星数量以及这些卫星对应的方位角，所以用户如果不关心这些参数，可忽略rmc_valid和gsv_valid。
+
+* 示例
+
+```python
+gnss.checkDataValidity()
+(1, 1, 1)  # 说明本次读取解析，GNGGA、GNRMC和GPGSV这三种数据都匹配成功并解析成功
+```
+
+
+
+##### 检查是否定位成功
+
+> **gnss.isFix()**
+
+- 参数
+
+  无
+
+- 返回值
 
   1：定位成功
 
   0：定位失败
 
+示例
+
+```
+gnss.isFix()
+1
+```
 
 
-##### 获取UTC时间
+
+##### 获取定位的UTC时间
 
 > **gnss.getUtcTime()**
 
-- **参数**
+- 参数
 
   无
 
-- **返回值**
+- 返回值
 
-  成功返回UTC时间，失败返回整型-1
+  成功返回UTC时间，字符串类型，失败返回整型-1。
+
+* 示例
+
+```python
+gnss.getUtcTime()
+'06:22:05.000'  # hh:mm:ss.sss
+```
 
 
 
@@ -10993,18 +11185,26 @@ camCaputre.callback(callback)
 
 > **gnss.getLocationMode()**
 
-- **参数**
+- 参数
 
   无
 
-- **返回值**
+- 返回值
 
-| 返回值 | 描述                                |
-| ------ | ----------------------------------- |
-| -1     | 获取失败（串口未读到数据）          |
-| 0      | 定位不可用或者无效                  |
-| 1      | 定位有效,定位模式：GPS、SPS 模式    |
-| 2      | 定位有效,定位模式： DGPS、DSPS 模式 |
+| 返回值 | 描述                                     |
+| ------ | ---------------------------------------- |
+| -1     | 获取失败，串口未读到数据或未读到有效数据 |
+| 0      | 定位不可用或者无效                       |
+| 1      | 定位有效,定位模式：GPS、SPS 模式         |
+| 2      | 定位有效,定位模式： DGPS、DSPS 模式      |
+| 6      | 估算（航位推算）模式                     |
+
+* 示例
+
+```python
+gnss.getLocationMode()
+1
+```
 
 
 
@@ -11012,13 +11212,20 @@ camCaputre.callback(callback)
 
 > **gnss.getUsedSateCnt()**
 
-- **参数**
+- 参数
 
   无
 
-- **返回值**
+- 返回值
 
-  成功返回GPS模块定位使用卫星数量，失败返回整型-1
+  成功返回GPS模块定位使用卫星数量，返回值类型为整型，失败返回整型-1。
+
+* 示例
+
+```
+gnss.getUsedSateCnt()
+24
+```
 
 
 
@@ -11026,13 +11233,30 @@ camCaputre.callback(callback)
 
 > **gnss.getLocation()**
 
-- **参数**
+- 参数
 
   无
 
-- **返回值**
+- 返回值
 
-  成功返回GPS模块定位的经纬度信息，失败返回整型-1
+  成功返回GPS模块定位的经纬度信息，失败返回整型-1；成功时返回值格式如下：
+  
+  `(longitude, lon_direction, latitude, lat_direction)`
+  
+  `longitude` - 经度，float型
+  
+  `lon_direction` - 经度方向，字符串类型，E表示东经，W表示西经
+  
+  `latitude` - 纬度，float型
+  
+  `lat_direction` - 纬度方向，字符串类型，N表示北纬，S表示南纬
+
+* 示例
+
+```python
+gnss.getLocation()
+(117.1156448333333, 'E', 31.82134916666667, 'N')
+```
 
 
 
@@ -11040,41 +11264,64 @@ camCaputre.callback(callback)
 
 > **gnss.getViewedSateCnt()**
 
-- **参数**
+- 参数
 
   无
 
-- **返回值**
+- 返回值
 
-  成功返回GPS模块定位可见卫星数量，失败返回整型-1
+  成功返回GPS模块定位可见卫星数量，整型值，失败返回整型-1。
+
+* 示例
+
+```python
+gnss.getViewedSateCnt()
+12
+```
 
 
 
-##### 获取GPS模块定位方位角 
+##### 获取可视的GNSS卫星方位角 
 
 > **gnss.getCourse()**
 
-- **参数**
+- 参数
 
   无
 
-- **返回值**
-定位方位角，范围：0 ~ 359，以正北为参考平面。
+- 返回值
+  返回所有可视的GNSS卫星方位角，范围：0 ~ 359，以正北为参考平面。返回形式为字典，其中key表示卫星编号，value表示方位角。要注意，value的值可能是一个整型值，也可能是''，这取决于原始的GNSS数据中GPGSV语句中方位角是否有值。返回值形式如下：
+
+  `{key:value, ...,  key:value}`
+
+- 示例
+
+```python
+ gnss.getCourse()
+{'10': 204, '195': 162, '12': 68, '193': 105, '32': 326, '199': 162, '25': 122, '31': 247, '24': 52, '194': 116, '21': 304, '23': 159}
+```
 
 
 
 
-##### 获取GPS模块定位大地高
+##### 获取GPS模块定位海拔高度
 
 > **gnss.getGeodeticHeight()**
 
-- **参数**
+- 参数
 
   无
 
-- **返回值**
+- 返回值
 
-  成功返回定位大地高(单位:米)，失败返回整型-1
+  成功返回浮点类型海拔高度(单位:米)，失败返回整型-1。
+
+* 示例
+
+```python
+gnss.getGeodeticHeight()
+166.5
+```
 
 
 
@@ -11082,50 +11329,176 @@ camCaputre.callback(callback)
 
 > **gnss.getSpeed()**
 
-- **参数**
+- 参数
 
   无
 
-- **返回值**
+- 返回值
 
-  成功返回GPS模块对地速度(单位:KM/h)，失败返回整型-1
+  成功返回GPS模块对地速度(单位:KM/h)，浮点类型，失败返回整型-1
 
-
-
-- **示例**
+示例
 
 ```python
-from machine import UART
-from gnss import GnssGetData
-import utime
+gnss.getSpeed()
+0.0
+```
+
+
+
+#### quecgnss - 内置GNSS
+
+说明：当前仅 EC200UCNAA/EC200UCNLA/EC200UEUAA 型号支持该功能。
+
+##### GNSS 功能初始化
+
+> **import quecgnss**
+>
+> **quecgnss.init()**
+
+* 功能
+
+  模组内置GNSS模块功能的初始化。
+
+* 参数
+
+  无
+
+* 返回值
+
+  成功返回整形0，失败返回整形-1。
+
+
+
+##### GNSS 工作状态获取
+
+> **quecgnss.get_state()**
+
+* 功能
+
+  获取GNSS模块当前工作状态
+
+* 参数
+
+  无
+
+* 返回值
+
+| 返回值 | 类型 | 说明                                                         |
+| ------ | ---- | ------------------------------------------------------------ |
+| 0      | int  | GNSS模块处于关闭状态                                         |
+| 1      | int  | GNSS模块固件升级中                                           |
+| 2      | int  | GNSS模块定位中，这种模式下即可开始读取GNSS定位数据，定位数据是否有效需要用户获取到定位数据后，解析对应语句来判断，比如判断GNRMC语句的status是 A 还是 V，A 表示定位有效，V 表示定位无效。 |
+
+
+
+##### GNSS开关
+
+> **quecgnss.gnssEnable(opt)**
+
+* 功能
+
+  开启或者关闭GNSS模块。如果是上电后第一次使用内置GNSS功能，一般不需要调用该接口来开启GNSS功能，直接调用init()接口即可，init() 接口在初始化时会自动开启GNSS功能。
+
+* 参数
+
+  | 参数 | 类型 | 说明                                  |
+  | ---- | ---- | ------------------------------------- |
+  | opt  | int  | 0 - 关闭GNSS功能<br/>1 - 开启GNSS功能 |
+
+* 返回值
+
+  成功返回整形0，失败返回整形-1。
+
+
+
+##### GNSS定位数据获取
+
+> **quecgnss.read(size)**
+
+* 功能
+
+  读取GNSS定位数据。
+
+* 参数
+
+  | 参数 | 类型 | 说明                           |
+  | ---- | ---- | ------------------------------ |
+  | size | int  | 指定读取数据的大小，单位字节。 |
+
+* 返回值
+
+  成功返回一个元组，失败返回整形-1。元组形式如下：
+
+  `(size, data)`
+
+  `size` - 实际读取数据的大小
+
+  `data` - GNSS定位数据
+
+##### GNSS使用示例
+
+```python
+import quecgnss
+
+
+def main():
+    ret = quecgnss.init()
+    if ret == 0:
+    	print('GNSS init ok.')
+    else:
+        print('GNSS init failed.')
+        return -1
+    data = quecgnss.read(4096)
+    print(data[1].decode())
+    
+    quecgnss.gnssEnable(0)
+
 
 if __name__ == '__main__':
-    print("#### enter system main####")
-    gnss=GnssGetData(1, 9600, 8, 0, 1, 0)
-    while True:
-        gnss.read_gnss_data()
-        print(gnss.isFix())
-        print(gnss.getUtcTime())
-        print(gnss.getLocationMode())
-        print(gnss.getUsedSateCnt())
-        print(gnss.getLocation())
-        print(gnss.getViewedSateCnt())
-        print(gnss.getCourse())
-        print(gnss.getGeodeticHeight())
-        print(gnss.getSpeed())
-        utime.sleep(3)
+    main()
     
-    
-运行结果示例：
-1
-020031.000
-1
-16
-(22.32905, 'N', 113.5597, 'E')
-13
-034
-67.5
-0.0
+
+#===================================================================================================
+#运行结果
+167,169,170,,,,,,,,1.773,1.013,1.455*15
+$GPGSV,2,1,8,3,23,303,34,16,32,219,28,22,74,98,26,25,16,43,25*77
+$GPGSV,2,2,8,26,70,236,28,31,59,12,38,32,55,127,34,4,5,,21*49
+$BDGSV,2,1,8,163,51,192,32,166,70,11,31,167,52,197,32,169,59,334,31*61
+$BDGSV,2,2,8,170,40,205,31,161,5,,31,164,5,,27,165,5,,29*59
+$GNRMC,022326.000,A,3149.324624,N,11706.921702,E,0.000,261.541,180222,,E,A*38
+$GNGGA,022326.000,3149.324624,N,11706.921702,E,1,12,1.013,-8.580,M,0,M,,*47
+$GNGLL,3149.324624,N,11706.921702,E,022326.000,A,A*44
+$GNGSA,A,3,31,32,3,16,22,25,26,,,,,,1.773,1.013,1.455*1C
+$GNGSA,A,3,163,166,167,169,170,,,,,,,,1.773,1.013,1.455*15
+$GPGSV,2,1,8,3,23,303,34,16,32,219,27,22,74,98,26,25,16,43,25*78
+$GPGSV,2,2,8,26,70,236,28,31,59,12,37,32,55,127,34,4,5,,20*47
+$BDGSV,2,1,8,163,51,192,32,166,70,11,31,167,52,197,32,169,59,334,31*61
+$BDGSV,2,2,8,170,40,205,31,161,5,,31,164,5,,27,165,5,,29*59
+$GNRMC,022327.000,A,3149.324611,N,11706.921713,E,0.000,261.541,180222,,E,A*3F
+$GNGGA,022327.000,3149.324611,N,11706.921713,E,1,12,1.013,-8.577,M,0,M,,*48
+$GNGLL,3149.324611,N,11706.921713,E,022327.000,A,A*43
+...... # 数据较多，省略
+$GNGSA,A,3,31,32,3,16,22,25,26,,,,,,1.837,1.120,1.456*11
+$GNGSA,A,3,163,166,167,169,170,,,,,,,,1.837,1.120,1.456*18
+$GPGSV,2,1,8,3,23,302,27,16,32,220,26,22,73,101,27,25,16,43,27*45
+$GPGSV,2,2,8,26,70,237,28,31,59,13,33,32,54,128,28,4,5,,24*44
+$BDGSV,2,1,8,163,51,192,33,166,71,11,35,167,52,198,33,169,59,334,34*6E
+$BDGSV,2,2,8,170,40,205,32,161,5,,33,164,5,,28,165,5,,30*5F
+$GNRMC,022507.000,A,3149.324768,N,11706.922344,E,0.000,261.541,180222,,E,A*31
+$GNGGA,022507.000,3149.324768,N,11706.922344,E,1,12,1.120,-8.794,M,0,M,,*48
+$GNGLL,3149.324768,N,11706.922344,E,022507.000,A,A*4D
+$GNGSA,A,3,31,32,3,16,22,25,26,,,,,,1.837,1.120,1.455*12
+$GNGSA,A,3,163,166,167,169,170,,,,,,,,1.837,1.120,1.455*1B
+$GPGSV,2,1,8,3,23,302,26,16,32,220,26,22,73,101,27,25,16,43,26*45
+$GPGSV,2,2,8,26,70,237,28,31,59,13,32,32,54,128,28,4,5,,24*45
+$BDGSV,2,1,8,163,51,192,24,166,71,11,35,167,52,198,33,169,59,334,34*68
+$BDGSV,2,2,8,170,40,205,31,161,5,,33,164,5,,28,165,5,,30*5C
+$GNRMC,022508.000,A,3149.324754,N,11706.922338,E,0.002,261.541,180222,,E,A*38
+$GNGGA,022508.000,3149.324754,N,11706.922338,E,1,12,1.120,-8.750,M,0,M,,*4B
+$GNGLL,3149.324754,N,11706.922338,E,022508.000,A,A*46
+$GNGSA,A,3,31,3
+
 ```
 
 
@@ -11201,7 +11574,7 @@ bytearray(b'12345678')
 
 支持平台：BC25PA
 
-介绍:其包含了三个子模块OC、AEP。此两个子模块均用lwm2m进行数据的交互。
+介绍:其包含了两个子模块OC、AEP。此两个子模块均用lwm2m进行数据的交互。
 
 ##### OC
 

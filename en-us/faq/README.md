@@ -190,37 +190,37 @@ Only the power_down_reason register is focused on currently , which does not nee
 
 #### Up/Down Process
 
-**1.  Long press powerkey to power down ** 
-A long press action is detected and finally PMIC_SW_PDOWN is called.
+**1. Long press powerkey to power down**
+  * A long press action is detected and finally PMIC_SW_PDOWN is called.
 
-**2. Hardware RESET** 
-The CPU RESET pin is called, the PMIC is not powered down, and the PWRUP_LOG_REG and POWERDOWN_LOG_REG registers are not updated.
+**2. Hardware RESET**
+  * The CPU RESET pin is called, the PMIC is not powered down, and the PWRUP_LOG_REG and POWERDOWN_LOG_REG registers are not updated.
 
-**3. Software RESET** 
-A. If PMIC_SW_RESET is called, FAULT_WAKEUP is enabled first, then SW_PDOWN is called, and then FAULT wakes up and reboots. 
-B. If abnormal reboot similar hardware RESET, only CPU RESET, PMIC does not power down. 
+**3. Software RESET**
+  * A. If PMIC_SW_RESET is called, FAULT_WAKEUP is enabled first, then SW_PDOWN is called, and then FAULT wakes up and reboots.
+  * B. If abnormal reboot similar hardware RESET, only CPU RESET, PMIC does not power down. 
 
 **4. Press powerkey to power up**
-exton1 hardware to power up.
+  * exton1 hardware to power up.
 
 **5. Plug in USB to power up**
-vbus_detect to power up.
+  * vbus_detect to power up.
 
 #### Acquisition of Reasons for Power-up
 
 After reading power_down_reason every time you boot, its flag will be cleared, and power_up_reason will not be cleared. 
 
 **1. powerkey**
-Power_up_reason==0x02，power_down_reason!=0.
+  * Power_up_reason==0x02，power_down_reason!=0.
 
 **2. Hardware, abnormal RESET**
-Since the PMIC does not power down, the PWRUP_LOG_REG register will not be updated, and the POWERDOWN_LOG_REG register will be cleared, so power_up_reason==0x02 and power_down_reason==0 are required. Or power_up_reason==0x40, and power_down_reason==0.
+  * Since the PMIC does not power down, the PWRUP_LOG_REG register will not be updated, and the POWERDOWN_LOG_REG register will be cleared, so power_up_reason==0x02 and power_down_reason==0 are required. Or power_up_reason==0x40, and power_down_reason==0.
 
 **3. Software RESET**
-If USB is plugged in, power_up_reason==0x60 and power_down_reason==0x04 are required.
+  * If USB is plugged in, power_up_reason==0x60 and power_down_reason==0x04 are required.
 
 **4. Vbus**
-Power_up_reason==0x40，且power_down_reason!=0x00.
+  * Power_up_reason==0x40，且power_down_reason!=0x00.
 
 **5. Other reasons for power-up are obtained by bit meaning after the foregoing reasons.**
 
