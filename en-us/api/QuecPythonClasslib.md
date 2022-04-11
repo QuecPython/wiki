@@ -6405,7 +6405,7 @@ Class function: A two-wire protocol used for communication between devices.
 
 | Parameter | Type | Description                                                  |
 | --------- | ---- | ------------------------------------------------------------ |
-| I2Cn      | int  | I2C channel index number:<br />I2C.I2C0 : 0  <br />I2C.I2C0 : 1 |
+| I2Cn      | int  | I2C channel index number:<br />I2C.I2C0 : 0  <br />I2C.I2C1 : 1 |
 | MODE      | int  | I2C working mode:<br />I2C.STANDARD_MODE : 0 Standard mode<br />I2C.FAST_MODE ： 1 Fast mode |
 
 - Pin Correspondence
@@ -12375,5 +12375,4 @@ if __name__ == '__main__':
     do_task()
 
 ```
-
 

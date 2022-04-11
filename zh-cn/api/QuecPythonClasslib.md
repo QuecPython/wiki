@@ -6442,7 +6442,7 @@ rtc.enable_alarm(1)
 
 | 参数 | 类型 | 说明                                                         |
 | ---- | ---- | ------------------------------------------------------------ |
-| I2Cn | int  | i2c 通路索引号:<br />I2C.I2C0 : 0  <br />I2C.I2C0 : 1        |
+| I2Cn | int  | i2c 通路索引号:<br />I2C.I2C0 : 0  <br />I2C.I2C1 : 1        |
 | MODE | int  | i2c 的工作模式:<br />I2C.STANDARD_MODE : 0 标准模式<br />I2C.FAST_MODE ： 1 快速模式 |
 
 - 引脚对应关系
