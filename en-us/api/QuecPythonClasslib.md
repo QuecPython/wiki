@@ -611,7 +611,7 @@ This function obtains coordinate information of the base station.
 | port       | int    | Server port, currently only supports port 80                 |
 | token      | string | Token, composed of 16 characters                             |
 | timeout    | int    | Timeout. Range: 1-300. Default value: 300. Unit: s.          |
-| profileIdx | int    | PDP context index. Range for ASR : 1-8,range for unisoc : 1-7 |
+| profileIdx | int    | PDP context index. Range for ASR : 1-8, range for unisoc : 1-7 |
 
 * Return Value
 
@@ -634,9 +634,9 @@ This function obtains coordinate information of the base station.
 
 ```python
 >>> import cellLocator
->>> cellLocator.getLocation("www.queclocator.com", 80, "1111111122222222", 8, 1)
+>>> cellLocator.getLocation("www.queclocator.com", 80, "xxxxxxxxxxxxxxxx", 8, 1)
 (117.1138, 31.82279, 550)
-# The key provided is only for test.
+# "xxxxxxxxxxxxxxxx"indicates the token. You need to apply for the token from the Quectel.
 ```
 
 
