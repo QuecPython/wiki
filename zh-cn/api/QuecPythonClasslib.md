@@ -2180,22 +2180,27 @@ sms.setCallback(cb)
 
 ##### 设置APN
 
-> **net.setApn(apn, simid)**
+> **net.setApn(\*args)**
 
 设置APN，设置后需要重启或者通过 net.setModemFun(mode) 接口先切换到模式0，再切换到模式1才能生效。 
-
-* 注意
-
-  该接口和datacall模块的设置APN接口是不相关的：
-  datacall模块设置APN是用入参的APN和PID去拨号，并记录到json文件中，下次再开机会用首先用这一路去拨号；
-  net模块的设置APN主要使用场景是专网卡设定特定APN才能注网，但是这个得重启生效
-
+  
 * 参数
 
-| 参数  | 参数类型 | 参数说明                      |
-| ----- | -------- | ----------------------------- |
-| apn   | string   | apn name                      |
-| simid | int      | simid<br> 0 - 卡1<br> 1 - 卡2 |
+  该接口在Qualcomm/ASR_1803s/Unisoc(不包括EG915)平台为可变参函数,参数个数为2或7, 其他平台参数个数固定为2：
+    参数个数为2：net.setApn(apn, simid)
+    参数个数为7：net.setApn(pid, iptype, apn, usrname, password, authtype, simid)
+  
+  具体释义形式如下：
+  
+| 参数    | 参数类型 | 参数说明                      |
+| -----   | -------- | ----------------------------- |
+| pid     | int      | PDP索引                       |
+| iptype  | int      | IP类型，0-IPV4，1-IPV6，2-IPV4和IPV6   |
+| apn     | string   | apn名称，可为空，最大长度不超过64字节  |
+| usrname | string   | 用户名，可为空，最大长度不超过64字节   |
+| password| string   | 用户名，可为空，最大长度不超过64字节   |
+| authtype| int      | 加密方式，0-不加密，1-PAP，2-CHAP，3-PAP AND CHAP(CATM平台支持)|
+| simid   | int      | simid<br> 0 - 卡1<br> 1 - 卡2          |
 
 * 返回值
 
@@ -2205,29 +2210,57 @@ sms.setCallback(cb)
 
   BC25PA平台不支持此方法。
 
-  
+* 示例
+
+```python
+>>> net.setApn('3gnet',0)
+0
+>>> net.setApn(1,1,'3gnet','mia','123',2,0)
+0  
+```
+
+
 
 ##### 获取当前APN
 
-> **net.getApn(simid)**
+> **net.getApn(\*args)**
 
 获取当前APN。
 
 * 参数
 
+  该接口在Qualcomm/ASR_1803s/Unisoc(不包括EG915)平台为可变参函数,参数个数为1或2, 其他平台参数个数固定为1：
+    参数个数为2：net.getApn(pid, simid)
+    参数个数为1：net.getApn(simid)
+	
+  具体释义如下：
+
 | 参数  | 参数类型 | 参数说明                        |
 | ----- | -------- | ------------------------------- |
+| pid   | int      | PDP索引                         |
 | simid | int      | simid<br/> 0 - 卡1<br/> 1 - 卡2 |
 
 * 返回值
 
-  成功返回获取到的APN，失败返回整型值-1。
+  1、当参数只有simid时：
+    成功返回获取到的APN，失败返回整型值-1。
+  2、当参数为pid, simid时：
+    成功返回获取到的pdp context：(iptype, apn, usrname, password, authtype)，失败返回整型值-1。
 
 * 注意
 
   BC25PA平台不支持此方法。
 
-  
+* 示例
+
+```python
+>>> net.getApn(0)
+'3gnet'
+>>> net.getApn(1,0)
+(1, '3gnet', 'mia', '123', 2)
+``` 
+
+
 
 ##### 获取csq信号强度
 
@@ -2257,19 +2290,19 @@ sms.setCallback(cb)
 
 ##### 获取小区信息
 
-> **net.getCellInfo()**
+> **net.getCellInfo(\*args)**
 
 获取邻近 CELL 的信息。
 
-注：BC25平台该接口为可变参函数，参数个数0-1。
-无入参情况：接口保持原有功能不变
-有入参情况，参数为sinr_enable，int型，范围0/1：
-	0，表示不获取sinr，和无入参情况返回结果一致
-	1，表示需要获取sinr，返回结果见example
-
 * 参数
 
-  无
+  该接口在BC25平台为可变参函数,参数个数为0或1, 其他平台参数个数固定为0：
+    参数个数为0：net.getCellInfo()
+    参数个数为1：net.getCellInfo(sinr_enable)
+	
+  | 参数    | 参数类型 | 参数说明                      |
+  | -----   | -------- | ----------------------------- |
+  | enable  | int      | 范围0/1, 0:表示不获取sinr 1:表示需要获取sinr|
 
 * 返回值
 
@@ -2376,6 +2409,12 @@ sms.setCallback(cb)
 | 16   | GSM_LTE, dual link                                           |
 | 17   | UMTS_LTE, dual link. not supported in EC100Y and EC200S      |
 | 18   | GSM_UMTS_LTE, dual link. not supported in EC100Y and EC200S  |
+| 19   | CATM,             BG95 supported                             |
+| 20   | GSM_CATM,         BG95 supported                             |
+| 21   | CATNB,            BG95 supported                             |
+| 22   | GSM_CATNB,        BG95 supported                             |
+| 23   | CATM_CATNB,       BG95 supported                             |
+| 24   | GSM_CATM_CATNB,   BG95 supported                             |
 
 * 示例
 
@@ -2444,6 +2483,24 @@ sms.setCallback(cb)
 | 9    | E TRAN A           |
 | 10   | NONE               |
 
+* 注：CATM平台参照下表
+
+| 值   | 说明               |
+| ---- | ------------------ |
+| 0    | GSM                |
+| 1    | GSM COMPACT        |
+| 2    | UTRAN              |
+| 3    | GSM wEGPRS         |
+| 4    | UTRAN wHSDPA       |
+| 5    | UTRAN wHSUPA       |
+| 6    | UTRAN wHSDPA HSUPA |
+| 7    | E_UTRAN            |
+| 8    | UTRAN HSPAP        |
+| 9    | E_UTRAN_CA         |
+| 10   | E_UTRAN_NBIOT      |
+| 11   | E_UTRAN_EMTC       |
+| 12   | NONE               |
+
 * 示例
 
 ```python
@@ -2455,25 +2512,25 @@ sms.setCallback(cb)
 
 ##### 获取详细信号强度信息
 
-> **net.getSignal()**
+> **net.getSignal(\*args)**
 
 获取详细信号强度。
 
-注：1803s/qualcomm/unisoc平台该接口为可变参函数，参数个数0-1。
-无入参情况：接口保持原有功能不变
-有入参情况，参数为sinr_enable，int型，范围0/1：
-	0，表示不获取sinr，和无入参情况返回结果一致
-	1，表示需要获取sinr，返回结果见example
-
 * 参数
 
-无
+  该接口在1803s/qualcomm/unisoc(不包括EG915)平台为可变参函数,参数个数为0或1, 其他平台参数个数固定为0：
+    参数个数为0：net.getSignal()
+    参数个数为1：net.getSignal(sinr_enable)
+	
+  | 参数    | 参数类型 | 参数说明                      |
+  | -----   | -------- | ----------------------------- |
+  | enable  | int      | 范围0/1, 0:表示不获取sinr 1:表示需要获取sinr|
 
 * 返回值
 
   失败返回整型值-1，成功返回一个元组，包含两个List(GW 、LTE)，返回值格式如下：
 
-  `([rssi, bitErrorRate, rscp, ecno], [rssi, rsrp, rsrq, cqi])`
+  `([rssi, bitErrorRate, rscp, ecno], [rssi, rsrp, rsrq, cqi, sinr])`
 
   返回值参数说明：
 
@@ -2591,7 +2648,7 @@ sms.setCallback(cb)
 
   失败返回整型值-1，成功返回一个元组，包含电话和网络注册信息，元组中voice开头的表示电话注册信息，data开头的表示网络注册信息，格式为：
 
-  `([voice_state, voice_lac, voice_cid, voice_rat, voice_reject_cause, voice_psc], [data_state, data _lac, data _cid, data _rat, data _reject_cause, data _psc])`
+  `([voice_state, voice_lac, voice_cid, voice_rat, voice_reject_cause, voice_psc], [data_state, data_lac, data_cid, data_rat, data_reject_cause, data_psc])`
 
   返回值参数说明：
 
@@ -2639,6 +2696,24 @@ sms.setCallback(cb)
 | 8    | UTRAN HSPAP        |
 | 9    | E_UTRAN_CA         |
 | 10   | NONE               |
+
+* 注：CATM平台参照下表
+
+| 值   | 说明               |
+| ---- | ------------------ |
+| 0    | GSM                |
+| 1    | GSM COMPACT        |
+| 2    | UTRAN              |
+| 3    | GSM wEGPRS         |
+| 4    | UTRAN wHSDPA       |
+| 5    | UTRAN wHSUPA       |
+| 6    | UTRAN wHSDPA HSUPA |
+| 7    | E_UTRAN            |
+| 8    | UTRAN HSPAP        |
+| 9    | E_UTRAN_CA         |
+| 10   | E_UTRAN_NBIOT      |
+| 11   | E_UTRAN_EMTC       |
+| 12   | NONE               |
 
 * 示例
 

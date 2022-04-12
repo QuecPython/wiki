@@ -2135,16 +2135,25 @@ Function: Provides APIs to query/set network related performance.
 
 ##### Set APN
 
-> **net.setApn(apn, simid)**
+> **net.setApn(\*args)**
 
 This function sets APN. After setting, you need to restart or switch to mode 0 and then mode 1 through the `net.setmodemFun (mode)` interface for the setting to take effect.
 
 * Parameter
 
-| Parameter | Type   | Description                                 |
-| --------- | ------ | ------------------------------------------- |
-| apn       | string | apn name                                    |
-| simid     | int    | simid<br>0 : SIM card 1<br/>1 :  SIM card 2 |
+  This API is a variable parameter function in Qualcomm/ASR_1803s/Unisoc(excluding EG915) platform, and the number of parameters is 2 or 7. The number of parameters in other platforms is fixed at 2  ：
+    The number of parameters is 2：net.setApn(apn, simid)
+    The number of parameters is 7：net.setApn(pid, iptype, apn, usrname, password, authtype, simid)
+  
+| Parameter | Type     | Description                                  |
+| -----     | -------- | -------------------------------------------- |
+| pid       | int      | PDP context index.                           |
+| iptype    | int      | IP type. 0-IPV4, 1-IPV6, 2-IPV4 and IPV6.    |
+| apn       | string   | apn name, The maximum length is 63 bytes.    |
+| usrname   | string   | user name, The maximum length is 63 bytes.   |
+| password  | string   | password, The maximum length is 63 bytes.    |
+| authtype  | int      | Authentication type,0-No authentication, 1-PAP, 2-CHAP, 3-PAP AND CHAP(just for CATM Platform)|
+| simid     | int      | simid<br>0 : SIM card 1<br/>1 :  SIM card 2  |
 
 * Return Value
 
@@ -2155,28 +2164,55 @@ This function sets APN. After setting, you need to restart or switch to mode 0 a
 
   The BC25PA platform does not support this module function.
 
+* Example
+
+```python
+>>> net.setApn('3gnet',0)
+0
+>>> net.setApn(1,1,'3gnet','mia','123',2,0)
+0  
+```
   
+
 
 ##### Obtain the Current  APN
 
-> **net.getApn(simid)**
+> **net.getApn(\*args)**
 
 This function obtains the current APN.
 
 * Parameter
 
-| Parameter | Type | Description                                  |
-| --------- | ---- | -------------------------------------------- |
-| simid     | int  | simid<br/>0 : SIM card 1<br/>1 :  SIM card 2 |
+  This API is a variable parameter function in Qualcomm/ASR_1803s/Unisoc(excluding EG915) platform, and the number of parameters is 1 or 2. The number of parameters in other platforms is fixed at 1  ：
+    The number of parameters is 2：net.setApn(pid, simid)
+    The number of parameters is 1：net.setApn(simid)
+  
+| Parameter | Type     | Description                                  |
+| -----     | -------- | -------------------------------------------- |
+| pid       | int      | PDP context index.                           |
+| simid     | int      | simid<br>0 : SIM card 1<br/>1 :  SIM card 2  |
 
 * Return Value
 
-  * 0  Successful execution
-  * -1  Failed execution
+  The number of parameters is 2:
+    * pdp context: Successful execution
+	* -1  Failed execution
+  The number of parameters is 1:
+    * apn info: Successful execution
+    * -1  Failed execution
 
 * Note
 
   * The BC25PA platform does not support this module function.
+
+* Example
+
+```python
+>>> net.getApn(0)
+'3gnet'
+>>> net.getApn(1,0)
+(1, '3gnet', 'mia', '123', 2)
+``` 
 
   
 
@@ -2208,7 +2244,7 @@ This function obtains CSQ.
 
 ##### Obtain Neighbor Cell Information
 
-> **net.getCellInfo()**
+> **net.getCellInfo(\*args)**
 
 This function obtains the information of Cell information.
 
@@ -2222,13 +2258,19 @@ case with one Parameter:
 
 * Parameter
 
-  * None
+  This API is a variable parameter function in BC25 platform, and the number of parameters is 0 or 1. The number of parameters in other platforms is fixed at 0  ：
+    The number of parameters is 0：net.getCellInfo()
+    The number of parameters is 1：net.getCellInfo(sinr_enable)
+  
+| Parameter | Type     | Description                                  |
+| -----     | -------- | -------------------------------------------- |
+| enable    | int      | range:0/1, 0:disable to get sinr 1:enable to get sinr|
 
 * Return Value
 
   * If the execution is failed, -1 is returned.  If the execution is successful, the list of neighbor cell information including RATs GSM/UMTS/LTE are returned in the following format. And when the neighbor cell information for one RAT is null, the corresponding list returned is null.  
 
-  * `([(flag, cid, mcc, mnc, lac, arfcn, bsic, rssi)], [(flag, cid, licd, mcc, mnc, lac, arfcn, bsic, rssi)], [(flag, cid, mcc, mnc, pci, tac, earfcn, rssi),...])`
+  * `([(flag, cid, mcc, mnc, lac, arfcn, bsic, rssi)], [(flag, cid, licd, mcc, mnc, lac, arfcn, bsic, rssi)], [(flag, cid, mcc, mnc, pci, tac, earfcn, rssi, sinr),...])`
 
 * The description of the return value for GSM:
 
@@ -2329,6 +2371,12 @@ The function obtains the current RAT and the roaming configuration.
 | 16    | GSM_LTE, dual link                                           |
 | 17    | UMTS_LTE, dual link. Not supported in EC100Y and EC200S      |
 | 18    | GSM_UMTS_LTE, dual link. Not supported in EC100Y and EC200S  |
+| 19    | CATM,             BG95 supported                             |
+| 20    | GSM_CATM,         BG95 supported                             |
+| 21    | CATNB,            BG95 supported                             |
+| 22    | GSM_CATNB,        BG95 supported                             |
+| 23    | CATM_CATNB,       BG95 supported                             |
+| 24    | GSM_CATM_CATNB,   BG95 supported                             |
 
 * Example
 
@@ -2397,6 +2445,24 @@ This function obtains the network mode.
 | 9     | E TRAN A           |
 | 10    | NONE               |
 
+* Note：For CATM platforms, see the following table
+
+| Value| ACT Mode           |
+| ---- | ------------------ |
+| 0    | GSM                |
+| 1    | GSM COMPACT        |
+| 2    | UTRAN              |
+| 3    | GSM wEGPRS         |
+| 4    | UTRAN wHSDPA       |
+| 5    | UTRAN wHSUPA       |
+| 6    | UTRAN wHSDPA HSUPA |
+| 7    | E_UTRAN            |
+| 8    | UTRAN HSPAP        |
+| 9    | E_UTRAN_CA         |
+| 10   | E_UTRAN_NBIOT      |
+| 11   | E_UTRAN_EMTC       |
+| 12   | NONE               |
+
 * Example
 
 ```python
@@ -2408,7 +2474,7 @@ This function obtains the network mode.
 
 ##### Obtain the Signal Strength
 
-> **net.getSignal()**
+> **net.getSignal(\*args)**
 
 This function obtains the signal strength.
 
@@ -2422,13 +2488,19 @@ case with one Parameter:
 
 * Parameter
 
-  * None
+  This API is a variable parameter function in BC25 platform, and the number of parameters is 0 or 1. The number of parameters in other platforms is fixed at 0  ：
+    The number of parameters is 0：net.getCellInfo()
+    The number of parameters is 1：net.getCellInfo(sinr_enable)
+  
+| Parameter | Type     | Description                                  |
+| -----     | -------- | -------------------------------------------- |
+| enable    | int      | range:0/1, 0:disable to get sinr 1:enable to get sinr|
 
 * Return Value
 
   * If the execution is failed, -1 is returned. If the execution is successful, a tuple including 2 list (GW/LTE) is returned in the following format:
 
-    `([rssi, bitErrorRate, rscp, ecno], [rssi, rsrp, rsrq, cqi])`
+    `([rssi, bitErrorRate, rscp, ecno], [rssi, rsrp, rsrq, cqi, sinr])`
 
   * The description of the return value:
 
@@ -2535,7 +2607,7 @@ This function obtains the registration state.
 
   * If the execution is failed, -1 is returned. If the execution is successful, a tuple is returned in the following format. The tuple contains voice and network registration information. The tuple starting with 'voice\_' indicates voice registration information, and the tuple starting with 'data\_' indicates network registration information:
 
-    `([voice_state, voice_lac, voice_cid, voice_rat, voice_reject_cause, voice_psc], [data_state, data _lac, data _cid, data _rat, data _reject_cause, data _psc])`
+    `([voice_state, voice_lac, voice_cid, voice_rat, voice_reject_cause, voice_psc], [data_state, data_lac, data_cid, data_rat, data_reject_cause, data_psc])`
 
     The description of the return value:
 
@@ -2581,7 +2653,23 @@ This function obtains the registration state.
 | 9     | E_UTRAN_CA         |
 | 10    | NONE               |
 
+* Note：For CATM platforms, see the following table
 
+| Value| ACT Mode           |
+| ---- | ------------------ |
+| 0    | GSM                |
+| 1    | GSM COMPACT        |
+| 2    | UTRAN              |
+| 3    | GSM wEGPRS         |
+| 4    | UTRAN wHSDPA       |
+| 5    | UTRAN wHSUPA       |
+| 6    | UTRAN wHSDPA HSUPA |
+| 7    | E_UTRAN            |
+| 8    | UTRAN HSPAP        |
+| 9    | E_UTRAN_CA         |
+| 10   | E_UTRAN_NBIOT      |
+| 11   | E_UTRAN_EMTC       |
+| 12   | NONE               |
 
 * Example
 
