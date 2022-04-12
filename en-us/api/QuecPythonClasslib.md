@@ -4882,7 +4882,7 @@ It gets the firmware version number.
 
 
 
-##### ID Get Device Manufacturer ID
+##### Get Device Manufacturer ID
 
 > **modem.getDevProductId()**
 
@@ -7559,20 +7559,20 @@ Module function: provide function of BLE GATT Server（slave） and BLE GATT Cli
 
 > **ble.gattStart()**
 
-* Function:
+* Function
 
   Start BLE GATT fucntion.
 
-* Parameter:
+* Parameter
 
   * None
 
-* Return Value:
+* Return Value
 
   * 0	 Successful execution
   * -1	Failed execution
 
-* Example:
+* Example
 
 ```python
 See comprehensive example
@@ -7584,20 +7584,20 @@ See comprehensive example
 
 > **ble.gattStop()**
 
-* Function:
+* Function
 
   Stop BLE GATT function.
 
-* Parameter:
+* Parameter
 
   * None
 
-* Return Value:
+* Return Value
 
   * 0	 Successful execution
   * -1	Failed execution
 
-* Example:
+* Example
 
 ```python
 See comprehensive example
@@ -7609,21 +7609,21 @@ See comprehensive example
 
 > **ble.getStatus()**
 
-* Function:
+* Function
 
   Get  the status of BLE.
 
-* Parameter:
+* Parameter
 
   * None
 
-* Return Value:
+* Return Value
 
   * 0	BLE has been stopped
   * 1	BLE has been started
   * -1	Get BLE status failed
 
-* Example:
+* Example
 
   * None
 
@@ -7633,23 +7633,23 @@ See comprehensive example
 
 > **ble.getPublicAddr()**
 
-* Function:
+* Function
 
   Gets the BLE public address.This interface can be called only after BLE has been initialized and started successfully, for example, after receiving an event with event_id 0 in the callback.
 
-* Note:
+* Note
 
   If there is a default Bluetooth MAC address, the MAC address obtained by the interface is the same as the default Bluetooth MAC address. If it is not set, the address obtained by the interface will be a static address generated randomly after Bluetooth is started, so it will be different each time Bluetooth is powered on again.
 
-* Parameter:
+* Parameter
 
   * None
 
-* Return Value:
+* Return Value
 
   * The BLE address of type bytearray (6 bytes) is returned on success, and integer -1 is returned on failure.
 
-* Example:
+* Example
 
   ```python
   >>> addr = ble.getPublicAddr()
@@ -7666,22 +7666,22 @@ See comprehensive example
 
 > **ble.serverInit(user_cb)**
 
-* Function：
+* Function
 
   Initialize BLE Server and register callback function.
 
-* Parameter：
+* Parameter
 
 | Parameter | Type     | Description       |
 | --------- | -------- | ----------------- |
 | user_cb   | function | Callback function |
 
-* Return Value：
+* Return Value
 
   * 0	 Successful execution
   * -1	Failed execution
 
-- Description：
+- Description
 
 （1）Format of callback function
 
@@ -7708,7 +7708,7 @@ args[0] is fixed to represent event_id; args[1] is fixed to represent status. 0 
 |    22    |          7          | args[0]: event_id, which indicates server: when ble client read characteristic value or descriptor,server get the notice<br/>args[1]: status, which indicates the operation state. 0 - Successful execution; non-0 - Failed execution<br/>args[2]: data_len, the length of the acquired data<br/>args[3]: data, an array for storing the acquired data<br/>args[4]: attr_handle, attribute handle, integer type<br/>args[5]: short_uuid, integer type<br/>args[6]: long_uuid, a 16-byte array for storing long UUID |
 |    25    |          2          | args[0]: event_id, which indicates server send notification,and recieve send end notice<br/>args[1]: status, which indicates the operation state. 0 - Successful execution; non-0 - Failed execution |
 
-* Example：
+* Example
 
 ```python 
 def ble_callback(args):
@@ -7816,20 +7816,20 @@ ble.serverInit(ble_callback)
 
 > **ble.serverRelease()**
 
-* Function:
+* Function
 
   Release BLE Server resources.
 
-* Parameter:
+* Parameter
 
   * None
 
-* Return Value:
+* Return Value
 
   * 0	 Successful execution
   * -1	Failed execution
 
-* Example：
+* Example
 
 ```python
 See comprehensive example
@@ -7841,27 +7841,27 @@ See comprehensive example
 
 > **ble.setLocalName(code, name)**
 
-* Function:
+* Function
 
   Set BLE local name.
 
-* Note:
+* Note
 
   For BLE, if you want  to see the name of the broadcast device when scanning, you need to include the Bluetooth name in the broadcast data, or include the device name in the scan reply data.
 
-* Parameter:
+* Parameter
 
   | Parameter | Type         | Description                           |
   | --------- | ------------ | ------------------------------------- |
   | code      | Integer Type | Encoding mode<br>0 - UTF8<br/>1 - GBK |
   | name      | String Type  | BLE name, no more than 29 bytes       |
 
-* Return Value:
+* Return Value
 
   * 0	 Successful execution
   * -1	Failed execution
 
-* Example:
+* Example
 
 ```python
 >>> ble.setLocalName(0, 'QuecPython-BLE')
@@ -7874,7 +7874,7 @@ See comprehensive example
 
 > **ble.setAdvParam(min_adv,max_adv,adv_type,addr_type,channel,filter_policy,discov_mode,no_br_edr,enable_adv)**
 
-* Function:
+* Function
 
   Set advertising parameter.
 
@@ -7892,12 +7892,12 @@ See comprehensive example
   | no_br_edr     | Unsigned integer type | No use of BR/EDR. The default is 1. The value is 0 if BR/EDR is used. |
   | enable_adv    | Unsigned integer type | Enable advertising. The default is 1. The value is 0 if advertising is disabled. |
 
-* Return Value:
+* Return Value
 
   * 0	 Successful execution
   * -1	Failed execution
 
-* Example：
+* Example
 
 ```python
 def ble_gatt_set_param():
@@ -7924,22 +7924,22 @@ def ble_gatt_set_param():
 
 > **ble.setAdvData(data)**
 
-* Function:
+* Function
 
   Set advertising data.
 
-* Parameter:
+* Parameter
 
   | Parameter | Type  | Description                                                  |
   | --------- | ----- | ------------------------------------------------------------ |
   | data      | Array | Advertising data which is no more than 31 octets. Pay attention to the type of this parameter. The advertising data is organized in the program and it needs to be converted through bytearray() before it can be passed in to the API. As shown in below example.<br>Format of advertising data:<br>The content of advertising data. The format is the combination of length+type+data. An advertising data can contain multiple combinations in this format. For example, there are 2 combinations in the example below. The first one is "0x02, 0x01, 0x05". 0x02 means that there are 2 data - 0x01 and 0x05. 0x01 is the type; 0x05 is the specific data. The second one consists of  the length obtained by the length of BLE name plus 1 (1 octet needs to be added as it contains the data that represents type), type 0x09 and the data represented by the corresponding specific encoded value of name.<br>For detailed information of type value, please refer to the following link:<br/>[Generic Access Pfofile](https://btprodspecificationrefs.blob.core.windows.net/assigned-numbers/Assigned Number Types/Generic Access Profile.pdf) |
 
-* Return Value:
+* Return Value
 
   * 0	 Successful execution
   * -1	Failed execution
 
-* Example：
+* Example
 
 ```python
 def ble_gatt_set_data():
@@ -7967,22 +7967,22 @@ def ble_gatt_set_data():
 
 > **ble.setAdvRspData(data)**
 
-* Function:
+* Function
 
   Set scan response data.
 
-* Parameter:
+* Parameter
 
   | Parameter | Type  | Description                                                  |
   | --------- | ----- | ------------------------------------------------------------ |
   | data      | Array | Scan response data which is no more than 31 octets. The considerations are consistent with the description of  *ble.setAdvData(data)* above. The setting of scan response data makes sense only when the scanning mode of the client device is active scan. |
 
-* Return Value:
+* Return Value
 
   * 0	 Successful execution
   * -1	Failed execution
 
-* Example:
+* Example
 
 ```python
 def ble_gatt_set_rsp_data():
@@ -8010,11 +8010,11 @@ def ble_gatt_set_rsp_data():
 
 > **ble.addService(primary, server_id, uuid_type, uuid_s, uuid_l)**
 
-* Function：
+* Function
 
   Add a service.
 
-* Parameter：
+* Parameter
 
   | Parameter | Type                  | Description                                                  |
   | --------- | --------------------- | ------------------------------------------------------------ |
@@ -8024,12 +8024,12 @@ def ble_gatt_set_rsp_data():
   | uuid_s    | Unsigned integer type | Short UUID, 2 bytes (16bit). When uuid_type is 0, the value of this parameter is 0. |
   | uuid_l    | Array                 | Long UUID, 16 bytes (128bit). When uuid_type is 1, the value of this parameter is bytearray([0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]) |
 
-* Return Value：
+* Return Value
 
   * 0	 Successful execution
   * -1	Failed execution
 
-* Example：
+* Example
 
 ```python
 def ble_gatt_add_service():
@@ -8052,11 +8052,11 @@ def ble_gatt_add_service():
 
 > **ble.addChara(server_id, chara_id, chara_prop, uuid_type, uuid_s, uuid_l)**
 
-* Function:
+* Function
 
   Add a characteristic in a service.
 
-* Parameter:
+* Parameter
 
   | Parameter  | Type                  | Description                                                  |
   | ---------- | --------------------- | ------------------------------------------------------------ |
@@ -8067,12 +8067,12 @@ def ble_gatt_add_service():
   | uuid_s     | Unsigned integer type | Short UUID, 2 bytes (16bit)                                  |
   | uuid_l     | Array                 | Long UUID, 16 bytes (128bit)                                 |
 
-* Return Value：
+* Return Value
 
   * 0	 Successful execution
   * -1	Failed execution
 
-* Example：
+* Example
 
 ```python
 def ble_gatt_add_characteristic():
@@ -8096,11 +8096,11 @@ def ble_gatt_add_characteristic():
 
 > **ble.addCharaValue(server_id, chara_id, permission, uuid_type, uuid_s, uuid_l, value)**
 
-* Function:
+* Function
 
   Add a characteristic value for a characteristic.
 
-* Parameter:
+* Parameter
 
   | Parameter  | Type                  | Description                                                  |
   | ---------- | --------------------- | ------------------------------------------------------------ |
@@ -8112,12 +8112,12 @@ def ble_gatt_add_characteristic():
   | uuid_l     | Array                 | Long UUID, 16 bytes (128bit)                                 |
   | value      | Array                 | Characteristic value                                         |
 
-* Return Value:
+* Return Value
 
   * 0	 Successful execution
   * -1	Failed execution
 
-* Example:
+* Example
 
 ```python
 def ble_gatt_add_characteristic_value():
@@ -8145,11 +8145,11 @@ def ble_gatt_add_characteristic_value():
 
 > **ble.addCharaDesc(server_id, chara_id, permission, uuid_type, uuid_s, uuid_l, value)**
 
-* Function:
+* Function
 
   Add a characteristic descriptor for a characteristic. The characteristic descriptor and characteristic value belong to the same characteristic.
 
-* Parameter:
+* Parameter
 
   | Parameter  | Type                  | Description                                                  |
   | ---------- | --------------------- | ------------------------------------------------------------ |
@@ -8161,12 +8161,12 @@ def ble_gatt_add_characteristic_value():
   | uuid_l     | Array                 | Long UUID, 16 bytes (128bit)                                 |
   | value      | Array                 | Characteristic descriptor value                              |
 
-* Return Value:
+* Return Value
 
   * 0	 Successful execution
   * -1	Failed execution
 
-* Example:
+* Example
 
 ```python
 def ble_gatt_add_characteristic_desc():
@@ -8192,23 +8192,23 @@ def ble_gatt_add_characteristic_desc():
 
 > **ble.addOrClearService(option, mode)**
 
-* Function:
+* Function
 
   Complete the addition of services or clear the added services.
 
-* Parameter:
+* Parameter
 
   | Parameter | Type                  | Description                                                  |
   | --------- | --------------------- | ------------------------------------------------------------ |
   | option    | Unsigned integer type | Operation type.<br>0 - Clear the services<br/>1 - Complete the addition of services |
   | mode      | Unsigned integer type | Retention mode of system service.<br/>0 - Delete the default system GAP and GATT services<br/>1 - Retain the default system GAP and GATT services |
 
-* Return Value:
+* Return Value
 
   * 0	 Successful execution
   * -1	Failed execution
 
-* Example:
+* Example
 
 ```python
 See comprehensive example
@@ -8220,11 +8220,11 @@ See comprehensive example
 
 > **ble.sendNotification(connect_id, attr_handle, value)**
 
-* Function:
+* Function
 
   Send notification.
 
-* Parameter:
+* Parameter
 
   | Parameter   | Type                  | Description                                       |
   | ----------- | --------------------- | ------------------------------------------------- |
@@ -8232,12 +8232,12 @@ See comprehensive example
   | attr_handle | Unsigned integer type | Attribute handle                                  |
   | value       | Array                 | Data to be sent. Do not send data longer than MTU |
 
-* Return Value:
+* Return Value
 
   * 0	 Successful execution
   * -1	Failed execution
 
-* Example:
+* Example
 
 ```python
 See comprehensive example
@@ -8249,11 +8249,11 @@ See comprehensive example
 
 > **ble.sendIndication(connect_id, attr_handle, value)**
 
-* Function:
+* Function
 
   Send indication.
 
-* Parameter:
+* Parameter
 
   | Parameter   | Type                  | Description                                       |
   | ----------- | --------------------- | ------------------------------------------------- |
@@ -8261,12 +8261,12 @@ See comprehensive example
   | attr_handle | Unsigned integer type | Attribute handle                                  |
   | value       | Array                 | Data to be sent. Do not send data longer than MTU |
 
-* Return Value:
+* Return Value
 
   * 0	 Successful execution
   * -1	Failed execution
 
-* Example:
+* Example
 
 ```python
 See comprehensive example
@@ -8278,20 +8278,20 @@ See comprehensive example
 
 > **ble.advStart()**
 
-* Function:
+* Function
 
   Start advertising.
 
-* Parameter:
+* Parameter
 
   * None
 
-* Return Value:
+* Return Value
 
   * 0	 Successful execution
   * -1	Failed execution
 
-* Example:
+* Example
 
   * None
 
@@ -8302,26 +8302,26 @@ See comprehensive example
 
 > **ble.advStop()**
 
-* Function:
+* Function
 
   Stop advertising.
 
-* Parameter:
+* Parameter
 
   * None
 
-* Return Value:
+* Return Value
 
   * 0	 Successful execution
   * -1	Failed execution
 
-* Example:
+* Example
 
   * None
 
 
 
-##### BLE Server - Comprehensive Example:
+##### BLE Server - Comprehensive Example
 
 ```python
 # -*- coding: UTF-8 -*-
@@ -8774,22 +8774,22 @@ if __name__ == '__main__':
 
 > **ble.clientInit(user_cb)**
 
-* Function：
+* Function
 
   Initialize BLE Client and register callback function.
 
-* Parameter：
+* Parameter
 
 | Parameter | Tpye     | Description       |
 | --------- | -------- | ----------------- |
 | user_cb   | function | Callback function |
 
-* Return Value：
+* Return Value
 
   * 0	 Successful execution
   * -1	Failed execution
 
-- Description：
+- Description
 
 （1）Format of callback function
 
@@ -8828,7 +8828,7 @@ def ble_callback(args):
 |    36    |          4          | args[0] ：event_id, which indicates read characteristic descriptor<br/>args[1] ：status, which indicates the operation state. 0 - Successful execution; non-0 - Failed execution<br/>args[2] ：data_len, the length of data<br/>args[3] ：data, Raw data |
 |    37    |          3          | args[0] ：event_id, which indicates attribute error<br/>args[1] ：status, which indicates the operation state. 0 - Successful execution; non-0 - Failed execution<br/>args[2] ：error code |
 
-* Example：
+* Example
 
 ```
 See comprehensive example
@@ -8840,20 +8840,20 @@ See comprehensive example
 
 > **ble.clientRelease()**
 
-* Function:
+* Function
 
   Release BLE Client resources.
 
-* Parameter:
+* Parameter
 
   * None
 
-* Return Value:
+* Return Value
 
   * 0	 Successful execution
   * -1	Failed execution
 
-* Example：
+* Example
 
 ```python
 See comprehensive example
@@ -8865,11 +8865,11 @@ See comprehensive example
 
 > **ble.setScanParam(scan_mode, interval, scan_window, filter_policy, addr_type)**
 
-* Function:
+* Function
 
   Set scan parameters.
 
-* Parameter:
+* Parameter
 
 | Parameter     | Type                  | Description                                                  |
 | ------------- | --------------------- | ------------------------------------------------------------ |
@@ -8879,16 +8879,16 @@ See comprehensive example
 | filter_policy | Unsigned integer type | Scan filtering policy, default 0：<br/>0 - All broadcast packets except for directional broadcasts that are not from the device<br/>1 - Whitelisted broadcast packets of devices except for directed broadcasts that are not of the device<br/>2 - Undirectional broadcast, directional broadcast directed to the device or directional broadcast using Resolvable private address<br/>3 - Whitelist device non-directional broadcast, directional broadcast to the device or directional broadcast using Resolvable private address |
 | addr_type     | Unsigned integer type | Local address type, range:<br/>0 - Public address<br/>1 - Random address |
 
-* Notice:
+* Notice
 
   Something to note about the interval and scan_window parameters : Scan time scan_window cannot be longer than the scan interval. If they are equal, it indicates continuous scanning. In this case, the BLE Controller runs continuous scanning, occupying system resources and therefore cannot perform other tasks. It is not recommended to set the time too short, the more frequent the scan, the higher the power consumption.
 
-* Return Value:
+* Return Value
 
   * 0	 Successful execution
   * -1	Failed execution
 
-* Example：
+* Example
 
 ```python
 See comprehensive example
@@ -8900,20 +8900,20 @@ See comprehensive example
 
 > **ble.scanStart()**
 
-* Function:
+* Function
 
   Start scanning.
 
-* Parameter:
+* Parameter
 
   * None
 
-* Return Value:
+* Return Value
 
   * 0	 Successful execution
   * -1	Failed execution
 
-* Example：
+* Example
 
 ```python
 See comprehensive example
@@ -8925,20 +8925,20 @@ See comprehensive example
 
 > **ble.scanStop()**
 
-* Function:
+* Function
 
   Stop scanning.
 
-* Parameter:
+* Parameter
 
   * None
 
-* Return Value:
+* Return Value
 
   * 0	 Successful execution
   * -1	Failed execution
 
-* Example：
+* Example
 
 ```python
 See comprehensive example
@@ -8950,22 +8950,22 @@ See comprehensive example
 
 > **ble.setScanFilter(act)**
 
-* Function:
+* Function
 
   Turn on or off the scan filter switch. If this parameter is enabled, the broadcast data of the same device is reported only once when scanning the broadcast data of the device. If disabled, all broadcast data on the same device will be reported.The filtering function is enabled by default.
 
-* Parameter:
+* Parameter
 
   | Parameter | Type                  | Description                                                  |
   | --------- | --------------------- | ------------------------------------------------------------ |
   | act       | Unsigned integer type | 0 - Turn off the scan filter switch<br/>1 - Turn on the scan filter switch |
 
-* Return Value:
+* Return Value
 
   * 0	 Successful execution
   * -1	Failed execution
 
-* Example:
+* Example
 
 ```python
 See comprehensive example
@@ -8977,23 +8977,23 @@ See comprehensive example
 
 > **ble.connect(addr_type, addr)**
 
-* Function:
+* Function
 
   Connect to the device based on the specified device address.
 
-* Parameter:
+* Parameter
 
   | Parameter | Type                  | Description                                                  |
   | --------- | --------------------- | ------------------------------------------------------------ |
   | addr_type | Unsigned integer type | Address type, range:<br/>0 - Public address<br/>1 - Random address |
   | addr      | bytearray type        | device address, 6 bytes                                      |
 
-* Return Value:
+* Return Value
 
   * 0	 Successful execution
   * -1	Failed execution
 
-* Example:
+* Example
 
 ```python
 See comprehensive example
@@ -9005,22 +9005,22 @@ See comprehensive example
 
 > **ble.cancelConnect(addr)**
 
-* Function:
+* Function
 
   Cancels the connection being established.
 
-* Parameter:
+* Parameter
 
   | Parameter | Type           | Description             |
   | --------- | -------------- | ----------------------- |
   | addr      | bytearray type | device address, 6 bytes |
 
-* Return Value:
+* Return Value
 
   * 0	 Successful execution
   * -1	Failed execution
 
-* Example:
+* Example
 
 ```python
 None
@@ -9032,22 +9032,22 @@ None
 
 > **ble.disconnect(connect_id)**
 
-* Function:
+* Function
 
   Disconnect an established connection.
 
-* Parameter:
+* Parameter
 
   | Parameter  | Type                  | Description                                                  |
   | ---------- | --------------------- | ------------------------------------------------------------ |
   | connect_id | Unsigned integer type | Connection ID, the connection ID obtained when establishing the connection |
 
-* Return Value:
+* Return Value
 
   * 0	 Successful execution
   * -1	Failed execution
 
-* Example:
+* Example
 
 ```python
 See comprehensive example
@@ -9059,22 +9059,22 @@ See comprehensive example
 
 > **ble.discoverAllService(connect_id)**
 
-* Function:
+* Function
 
   Scan all services of the device.
 
-* Parameter:
+* Parameter
 
   | Parameter  | Type                  | Description                                                  |
   | ---------- | --------------------- | ------------------------------------------------------------ |
   | connect_id | Unsigned integer type | Connection ID, the connection ID obtained when establishing the connection |
 
-* Return Value:
+* Return Value
 
   * 0	 Successful execution
   * -1	Failed execution
 
-* Example:
+* Example
 
 ```python
 See comprehensive example
@@ -9086,11 +9086,11 @@ See comprehensive example
 
 > **ble.discoverByUUID(connect_id, uuid_type, uuid_s, uuid_l)**
 
-* Function:
+* Function
 
   Scans services by  UUID.
 
-* Parameter:
+* Parameter
 
   | Parameter  | Type                  | Description                                                  |
   | ---------- | --------------------- | ------------------------------------------------------------ |
@@ -9099,12 +9099,12 @@ See comprehensive example
   | uuid_s     | Unsigned integer type | short UUID, 2 bytes(16bit), When uuid_type is 0, this value is 0 |
   | uuid_l     | bytearray type        | long UUID，16 bytes(128bit),When uuid_type is 1, this value is  bytearray([0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]) |
 
-* Return Value:
+* Return Value
 
   * 0	 Successful execution
   * -1	Failed execution
 
-* Example:
+* Example
 
 ```python
 See comprehensive example
@@ -9116,11 +9116,11 @@ See comprehensive example
 
 > **ble.discoverAllIncludes(connect_id, start_handle, end_handle)**
 
-* Function:
+* Function
 
   Scan all includes. Start_handle and end_handle belong to the same service.
 
-* Parameter:
+* Parameter
 
   | Parameter    | Type                  | Description                                                  |
   | ------------ | --------------------- | ------------------------------------------------------------ |
@@ -9128,12 +9128,12 @@ See comprehensive example
   | start_handle | Unsigned integer type | Start handle from which to start looking for includes        |
   | end_handle   | Unsigned integer type | end handle from which to start looking for includes          |
 
-* Return Value:
+* Return Value
 
   * 0	 Successful execution
   * -1	Failed execution
 
-* Example:
+* Example
 
 ```python
 None
@@ -9145,11 +9145,11 @@ None
 
 > **ble.discoverAllChara(connect_id, start_handle, end_handle)**
 
-* Function:
+* Function
 
   Scans all characteristics. Start_handle and end_handle belong to the same service.
 
-* Parameter:
+* Parameter
 
   | Parameter    | Type                  | Description                                                  |
   | ------------ | --------------------- | ------------------------------------------------------------ |
@@ -9157,12 +9157,12 @@ None
   | start_handle | Unsigned integer type | Start handle from which to start looking for characteristics |
   | end_handle   | Unsigned integer type | end handle from which to start looking for characteristics   |
 
-* Return Value:
+* Return Value
 
   * 0	 Successful execution
   * -1	Failed execution
 
-* Example:
+* Example
 
 ```python
 See comprehensive example
@@ -9174,11 +9174,11 @@ See comprehensive example
 
 > **ble.discoverAllCharaDesc(connect_id, start_handle, end_handle)**
 
-* Function:
+* Function
 
   Scan the description of all characteristics. Start_handle and end_handle belong to the same service.
 
-* Parameter:
+* Parameter
 
   | Parameter    | Type                  | Description                                                  |
   | ------------ | --------------------- | ------------------------------------------------------------ |
@@ -9186,12 +9186,12 @@ See comprehensive example
   | start_handle | Unsigned integer type | Start handle from which to start looking for characteristic description |
   | end_handle   | Unsigned integer type | end handle from which to start looking for characteristic description |
 
-* Return Value:
+* Return Value
 
   * 0	 Successful execution
   * -1	Failed execution
 
-* Example:
+* Example
 
 ```python
 See comprehensive example
@@ -9203,11 +9203,11 @@ See comprehensive example
 
 > **ble.readCharaByUUID(connect_id, start_handle, end_handle, uuid_type, uuid_s, uuid_l)**
 
-* Function:
+* Function
 
   Scan the description of all characteristics. Start_handle and end_handle must contain a characteristic value  handle.
 
-* Parameter:
+* Parameter
 
   | Parameter    | Type                  | Description                                                  |
   | ------------ | --------------------- | ------------------------------------------------------------ |
@@ -9218,12 +9218,12 @@ See comprehensive example
   | uuid_s       | Unsigned integer type | short UUID, 2 bytes(16bit), When uuid_type is 0, this value is 0 |
   | uuid_l       | bytearray type        | long UUID，16 bytes(128bit),When uuid_type is 1, this value is  bytearray([0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]) |
 
-* Return Value:
+* Return Value
 
   * 0	 Successful execution
   * -1	Failed execution
 
-* Example:
+* Example
 
 ```python
 See comprehensive example
@@ -9235,11 +9235,11 @@ See comprehensive example
 
 > **ble.readCharaByHandle(connect_id, handle, offset, is_long)**
 
-* Function:
+* Function
 
   Reads the characteristic value by the specified handle.
 
-* Parameter:
+* Parameter
 
   | Parameter  | Type                  | Description                                                  |
   | ---------- | --------------------- | ------------------------------------------------------------ |
@@ -9248,12 +9248,12 @@ See comprehensive example
   | offset     | Unsigned integer type | offset                                                       |
   | is_long    | Unsigned integer type | Long characteristic value flag<br/>0 - Short characteristic value, It can be read all at once<br/>1 - Long characteristic value, It needs to be read multiple times |
 
-* Return Value:
+* Return Value
 
   * 0	 Successful execution
   * -1	Failed execution
 
-* Example:
+* Example
 
 ```python
 See comprehensive example
@@ -9265,11 +9265,11 @@ See comprehensive example
 
 > **ble.readCharaDesc(connect_id, handle, is_long)**
 
-* Function:
+* Function
 
   Reads the characteristic description.
 
-* Parameter:
+* Parameter
 
   | Parameter  | Type                  | Description                                                  |
   | ---------- | --------------------- | ------------------------------------------------------------ |
@@ -9277,12 +9277,12 @@ See comprehensive example
   | handle     | Unsigned integer type | the handle of characteristic description                     |
   | is_long    | Unsigned integer type | Long characteristic descriptionflag<br/>0 - Short characteristic description<br/>1 - Long characteristic description |
 
-* Return Value:
+* Return Value
 
   * 0	 Successful execution
   * -1	Failed execution
 
-* Example:
+* Example
 
 ```python
 See comprehensive example
@@ -9294,11 +9294,11 @@ See comprehensive example
 
 > **ble.writeChara(connect_id, handle, offset, is_long, data)**
 
-* Function:
+* Function
 
   Writes the characteristic value  and require link layer response.
 
-* Parameter:
+* Parameter
 
   | Parameter  | Type                  | Description                                                  |
   | ---------- | --------------------- | ------------------------------------------------------------ |
@@ -9308,12 +9308,12 @@ See comprehensive example
   | is_long    | Unsigned integer type | Long characteristic value flag<br/>0 - Short characteristic value, It can be read all at once<br/>1 - Long characteristic value, It needs to be read multiple times |
   | data       | bytearray type        | the data of characteristic value                             |
 
-* Return Value:
+* Return Value
 
   * 0	 Successful execution
   * -1	Failed execution
 
-* Example:
+* Example
 
 ```python
 None
@@ -9325,11 +9325,11 @@ None
 
 > **ble.writeCharaNoRsp(connect_id, handle, data)**
 
-* Function:
+* Function
 
   Writes the characteristic value  without link layer response.
 
-* Parameter:
+* Parameter
 
   | Parameter  | Type                  | Description                                                  |
   | ---------- | --------------------- | ------------------------------------------------------------ |
@@ -9337,12 +9337,12 @@ None
   | handle     | Unsigned integer type | the handle of characteristic value                           |
   | data       | bytearray type        | the data of characteristic value                             |
 
-* Return Value:
+* Return Value
 
   * 0	 Successful execution
   * -1	Failed execution
 
-* Example:
+* Example
 
 ```python
 None
@@ -9354,11 +9354,11 @@ None
 
 > **ble.writeCharaDesc(connect_id, handle, data)**
 
-* Function:
+* Function
 
   Writes the characteristic description.
 
-* Parameter:
+* Parameter
 
   | Parameter  | Type                  | Description                                                  |
   | ---------- | --------------------- | ------------------------------------------------------------ |
@@ -9366,12 +9366,12 @@ None
   | handle     | Unsigned integer type | the handle of characteristic description                     |
   | data       | bytearray type        | the data of characteristic description                       |
 
-* Return Value:
+* Return Value
 
   * 0	 Successful execution
   * -1	Failed execution
 
-* Example:
+* Example
 
 ```python
 See comprehensive example
@@ -9379,7 +9379,7 @@ See comprehensive example
 
 
 
-##### BLE Client- Comprehensive Example:
+##### BLE Client- Comprehensive Example
 
 ```python
 # -*- coding: UTF-8 -*-
