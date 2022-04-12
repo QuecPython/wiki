@@ -2979,6 +2979,20 @@ stagecode = 1, subcode = 0
 stagecode = 1, subcode = 2
 ```
 
+* Note
+
+If the user is using firmware released after November 2021, the user can use the wait_network_connected(timeout) method as follows:
+
+```python
+import checkNet
+
+if __name__ == '__main__':
+    # Add the following sentence before running the program.
+    stagecode, subcode = checkNet.wait_network_connected(30)
+    print('stagecode = {}, subcode = {}'.format(stagecode, subcode))
+	......
+```
+
 
 
 ##### checkNet Exception Handling

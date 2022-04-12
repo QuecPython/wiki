@@ -2914,7 +2914,7 @@ sms.setCallback(cb)
 
 模块功能：checkNet模块主要用于【开机自动运行】的用户脚本程序，该模块提供API用来阻塞等待网络就绪，如果超时或者其他异常退出会返回错误码，所以如果用户的程序中有涉及网络相关的操作，那么在用户程序的开始应该调用 checkNet 模块中的方法以等待网络就绪。当然，用户也可以自己实现这个模块的功能。
 
-注意：当前仅EC600S/EC600N/EC800N/EC200U/EC600U/BC25PA平台支持该功能。
+注意：当前仅EC600S/EC600N/EC800N/EC200U/EC600U/BC25PA/平台支持该功能。
 
 ##### 创建checkNet对象
 
@@ -3047,6 +3047,20 @@ stagecode = 3, subcode = 1
 stagecode = 1, subcode = 0
 # 如果sim卡处于被锁的状态，则返回值如下：
 stagecode = 1, subcode = 2
+```
+
+* 说明
+
+如果是2021年11月以后发布的版本，用户可不用实例化对象，即可直接使用wait_network_connected(timeout)方法，用法如下：
+
+```python
+import checkNet
+
+if __name__ == '__main__':
+    # 在用户程序运行前增加下面这一句
+    stagecode, subcode = checkNet.wait_network_connected(30)
+    print('stagecode = {}, subcode = {}'.format(stagecode, subcode))
+	......
 ```
 
 
