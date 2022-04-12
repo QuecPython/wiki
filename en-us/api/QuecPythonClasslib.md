@@ -69,7 +69,7 @@ Call this API to activating the PDP Context.
 | apn        | string | Optional. APN name. The maximum length is 63 bytes. (The maximum length is 64 bytes in EC200U/EC200A) |
 | username   | string | Optional. APN user name.  The maximum length is 15 bytes.(The maximum length is 64 bytes in EC200U/EC200A) |
 | password   | string | Optional. APN password. The maximum length is 15 bytes.(The maximum length is 64 bytes in EC200U/EC200A) |
-| authType   | int    | Authentication type. 0-No authentication, 1-PAP, 2-CHAP.     |
+| authType   | int    | Authentication type. 0-No authentication, 1-PAP, 2-CHAP, 3-PAP AND CHAP(just for CAT-M platform).|
 
 * Return Value
 
@@ -347,7 +347,7 @@ After calling this interface, the user_apn.json will be created in the user part
 | apn        | string | Optional. APN name. The maximum length is 63 bytes.(The maximum length is 64 bytes in EC200U/EC200A) |
 | username   | string | Optional. APN user name.  The maximum length is 15 bytes.(The maximum length is 64 bytes in EC200U/EC200A) |
 | password   | string | Optional. APN password. The maximum length is 15 bytes.(The maximum length is 64 bytes in EC200U/EC200A) |
-| authType   | int    | Authentication type. 0-No authentication, 1-PAP, 2-CHAP.     |
+| authType   | int    | Authentication type. 0-No authentication, 1-PAP, 2-CHAP, 3-PAP AND CHAP(just for CAT-M platform).     |
 | flag       | int    | This parameter is optional. The default value is 0, indicating that only a user_apn.json file is created to save user APN information. If the value is 1, the user_apn.json file is created to save user APN information, and the APN information is used for PDP context activation immediately. |
 
 * Return Value
@@ -704,8 +704,6 @@ Obtain Coordinate Information.
 #### atcmd - AT
 
 Function：send AT cmd.
-
-Note：This module only supports 1803S/EC200U/CATM platform.
 
 #### send AT cmd
 
@@ -11583,13 +11581,13 @@ $GNGSA,A,3,31,3
 
 Module function: the module provides a bare flash area and a special read-write interface for customers to store important information, and the information will not be lost after burning the firmware (burning the firmware without this function cannot be guaranteed not to be lost). Provide a storage and read interface, not a delete interface.
 
->At present, only ec600n and ec600s series projects are supported
+At present, only ec600n and ec600s series projects are supported
 
 ##### Data storage
 
-SecureData.Store(index, databuf, len)
+>**SecureData.Store(index, databuf, len)**
 
-**Parameter**
+* Parameter
 
 | Parameter | type | description |
 | ------ | -------- | ------------------------------------------------------------ |
@@ -11600,16 +11598,16 @@ SecureData.Store(index, databuf, len)
 
 When storing, it is stored according to the shorter of databuf and Len
 
-**Return Value**
+* Return Value
 
-  * -1: Parameter error
-  * 0: normal execution
+  -1: Parameter error
+  0: normal execution
 
 ##### Data reading
 
-SecureData.Read(index,databuf,len)
+>**SecureData.Read(index,databuf,len)**
 
-**Parameter**
+* Parameter
 
 | Parameter | type | description |
 | ------ | -------- | ----------------------------------------------- |
@@ -11619,13 +11617,13 @@ SecureData.Read(index,databuf,len)
 
 If the stored data is not as large as the incoming len, the actual stored data length is returned
 
-**Return Value**
+* Return Value
 
-  * -2: The stored data does not exist and the backup data does not exist
-  * -1: Parameter error
-  * Other: length of data actually read
+  -2: The stored data does not exist and the backup data does not exist
+  -1: Parameter error
+  Other: length of data actually read
 
-**Example**
+* Example
 
 ```python
 import SecureData
@@ -11640,7 +11638,9 @@ len = SecureData.Read(1, buf, 20)
 #Output read data
 print(buf[:len])
 ```
-**implementation results**
+
+* implementation results
+
 ```python
 >>> import SecureData
 >>> databuf = '\x31\x32\x33\x34\x35\x36\x37\x38'

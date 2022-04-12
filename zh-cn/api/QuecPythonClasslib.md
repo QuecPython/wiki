@@ -54,8 +54,6 @@ myprint()
 
 模块功能：提供数据拨号相关接口。
 
-注意：当前仅EC600S/EC600N/EC800N/EC200U/EC600U平台支持该功能。
-
 ##### 拨号
 
 > **dataCall.start(profileIdx, ipType, apn, username, password, authType)**
@@ -66,12 +64,12 @@ myprint()
 
 | 参数       | 参数类型 | 参数说明                                                     |
 | ---------- | -------- | ------------------------------------------------------------ |
-| profileIdx | int      | PDP索引，ASR平台范围1 - 8[volte版本默认PID最大的一路用来注册IMS，请勿重复操作]，展锐平台范围1 - 7，一般设置为1，设置其他值可能需要专用apn与密码才能设置成功 |
+| profileIdx | int      | PDP索引，ASR平台范围1 - 8[volte版本默认PID最大的一路用来注册IMS，请勿重复操作]，展锐平台范围1 - 7，高通平台1-4[第二路用来注册ims,不建议修改], 一般设置为1，设置其他值可能需要专用apn与密码才能设置成功 |
 | ipType     | int      | IP类型，0-IPV4，1-IPV6，2-IPV4和IPV6                         |
 | apn        | string   | apn名称，可为空，最大长度不超过63字节(EC200U/EC200A最大长度不超过64字节) |
 | username   | string   | apn用户名，可为空，最大长度不超过15字节(EC200U/EC200A最大长度不超过64字节) |
 | password   | string   | apn密码，可为空，最大长度不超过15字节(EC200U/EC200A最大长度不超过64字节) |
-| authType   | int      | 加密方式，0-不加密，1-PAP，2-CHAP                            |
+| authType   | int      | 加密方式，0-不加密，1-PAP，2-CHAP，3-PAP AND CHAP[仅高通平台支持]      |
 
 * 返回值
 
@@ -350,7 +348,7 @@ if __name__ == '__main__':
 | apn        | string   | apn名称，可为空，最大长度不超过63字节(EC200U/EC200A最大长度不超过64字节)|
 | username   | string   | apn用户名，可为空，最大长度不超过15字节(EC200U/EC200A最大长度不超过64字节)|
 | password   | string   | apn密码，可为空，最大长度不超过15字节(EC200U/EC200A最大长度不超过64字节)|
-| authType   | int      | 加密方式，0-不加密，1-PAP，2-CHAP                            |
+| authType   | int      | 加密方式，0-不加密，1-PAP，2-CHAP，3-PAP AND CHAP(仅高通平台支持加密方式3) |
 | flag       | int      | 可选参数，默认为0，表示仅创建user_apn.json文件，用于保存用户apn信息；为1时，表示创建user_apn.json文件保存用户apn信息之后，还会使用该apn信息立即进行一次拨号；不管该参数是0还是1，都不会影响重启时使用用户设置的apn进行开机拨号。 |
 
 * 返回值
@@ -392,7 +390,7 @@ if __name__ == '__main__':
 
 * 注意
 
-  当前仅EC600S/EC600N/EC800N/EC200U/EC600U平台支持该功能。
+  当前仅ASR/Unisoc/ASR_1803s平台支持该功能。
 
   更改DNS服务器后，域名解析时，将同步使用设置的DNS服务器。
 
@@ -731,8 +729,6 @@ if __name__ == '__main__':
 #### atcmd - 发送AT指令
 
 模块功能：提供发送AT指令接口。
-
-注意：目前该模块只支持1803S/EC200U/CATM平台。
 
 #### 发送AT指令接口
 
@@ -1750,8 +1746,6 @@ def voice_callback(args):
 
 模块功能：该模块提供短信功能相关接口。
 
-说明：当前QuecPython底层为非volte版本，暂不支持电信发送短信。
-
 注意：BC25PA平台不支持此模块。
 
 ##### 发送TEXT类型消息
@@ -2437,7 +2431,7 @@ sms.setCallback(cb)
 
 | 参数    | 参数类型 | 参数说明                             |
 | ------- | -------- | ------------------------------------ |
-| mode    | int      | 网络制式，0 ~ 18，详见上述网络制式表格 |
+| mode    | int      | 网络制式，0 ~ 24，详见上述网络制式表格 |
 | roaming | int      | 漫游开关(0：关闭， 1：开启)，可选参数，不支持的平台不填写该参数即可。 |
 
 * 返回值
@@ -11581,10 +11575,14 @@ $GNGSA,A,3,31,3
 #### SecureData - 安全数据区
 
 模块功能：模组提供一块裸flash区域及专门的读写接口供客户存贮重要信息，且信息在烧录固件后不丢失(烧录不包含此功能的固件无法保证不丢失)。提供一个存储和读取接口，不提供删除接口。
-> 目前只支持EC600N、EC600S系列项目
+目前只支持EC600N、EC600S系列项目
+
 ##### 数据存储
-SecureData.Store(index,databuf,len)
-- **参数**
+
+> **SecureData.Store(index,databuf,len)**
+
+ * 参数
+
 | 参数    | 类型      | 说明                                                         |
 | :------ | :-------- | ------------------------------------------------------------ |
 | index   | int       | index范围为1-16：<br />1 - 8 最大存储52字节数据<br />9 - 12 最大存储100字节数据<br />13 - 14 最大存储500字节数据<br />15 - 16 最大存储1000字节数据 |
@@ -11594,27 +11592,33 @@ SecureData.Store(index,databuf,len)
 
 存储时按照databuf和len两者中长度较小的进行存储
 
-**返回值**
+ * 返回值
 
 -1: 参数有误
-
 0: 执行正常
 
 ##### 数据读取
 
-SecureData.Read(index,databuf,len)
-- **参数**
+> **SecureData.Read(index,databuf,len)**
+
+ * 参数
+
 | 参数    | 类型      | 说明                                            |
 | :------ | :-------- | ----------------------------------------------- |
 | index   | int       | index范围为1-16：<br />读取存储数据对应的索引号 |
 | databuf | bytearray | 存储读取到的数据                                |
 | len     | int       | 要读取数据的长度                                |
+
 若存储的数据没有传入的len大，则返回实际存储的数据长度
-**返回值**
+
+ * 返回值
+
 -2: 存储数据不存在且备份数据也不存在
 -1: 参数有误
 其他 :  实际读取到的数据长度
-- **示例**
+
+ * 示例
+
 ```python
 import SecureData
 # 即将存储的数据buf
@@ -11628,7 +11632,9 @@ len = SecureData.Read(1, buf, 20)
 # 输出读到的数据
 print(buf[:len])
 ```
-- **执行结果**
+
+ * 执行结果
+
 ```python
 >>> import SecureData
 >>> databuf = '\x31\x32\x33\x34\x35\x36\x37\x38'
@@ -11640,6 +11646,8 @@ print(buf[:len])
 bytearray(b'12345678')
 >>> 
 ```
+
+
 
 #### nb-物联网云平台
 
