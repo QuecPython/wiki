@@ -4606,10 +4606,13 @@ It closes ADC.
 
   * Return 0 if the execution is successful, otherwise return -1.
 
+
+
 ##### USB
 
 It provides USB plug detection interface.
-Note: The BC25PA platform does not support this module function.
+Note : Currently only EC600S EC600N/EC800N/EC200U/EC600U platform support this function.
+
 ###### Create an USB Object
 
 > from misc import USB
@@ -4656,7 +4659,7 @@ Note: The BC25PA platform does not support this module function.
 
   * Return 0 if the execution is successful, otherwise return -1.
 
-Example
+* Example
 
 ```python
 from misc import USB
@@ -4672,11 +4675,13 @@ def usb_callback(conn_status):
 usb.setCallback(usb_callback)
 ```
 
+
+
 ##### USBNET
 
 It provides the USB network adapter function.
 
-NOTE：Currently, only the ASR platform supports it.
+NOTE : Currently only EC600S EC600N/EC800N/EC200U/EC600U platform support this function.
 
 ###### Setting the USBNET working type (Take effect after restart)
 
@@ -4686,7 +4691,7 @@ USBNET.set_worktype(type)
 
   | Parameter | Type | Description                                                  |
   | --------- | ---- | ------------------------------------------------------------ |
-  | type      | int  | USBNET working type Type_ECM – ECM mode Type_RNDIS – RNDIS mode |
+  | type      | int  | USBNET working type<br>Type_ECM – ECM mode <br>Type_RNDIS – RNDIS mode |
 
 - Return Value
 
@@ -4780,6 +4785,8 @@ from misc import USBNET
 USBNET.open()
 ```
 
+
+
 #### modem - Related Device
 
 Function: This module gets device information.
@@ -4794,10 +4801,8 @@ It gets IMEI of the device.
 
   * None
 
-Return Value
-
+* Return Value
   * Return the IMEI of string type of the device if the execution is successful, otherwise return -1.
-
 * Example
 
 ```python
