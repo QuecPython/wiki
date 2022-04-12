@@ -54,8 +54,6 @@ myprint()
 
 模块功能：提供数据拨号相关接口。
 
-注意：当前仅EC600S/EC600N/EC800N/EC200U/EC600U平台支持该功能。
-
 ##### 拨号
 
 > **dataCall.start(profileIdx, ipType, apn, username, password, authType)**
@@ -66,12 +64,12 @@ myprint()
 
 | 参数       | 参数类型 | 参数说明                                                     |
 | ---------- | -------- | ------------------------------------------------------------ |
-| profileIdx | int      | PDP索引，ASR平台范围1 - 8[volte版本默认PID最大的一路用来注册IMS，请勿重复操作]，展锐平台范围1 - 7，一般设置为1，设置其他值可能需要专用apn与密码才能设置成功 |
+| profileIdx | int      | PDP索引，ASR平台范围1 - 8[volte版本默认PID最大的一路用来注册IMS，请勿重复操作]，展锐平台范围1 - 7，高通平台1-4[第二路用来注册ims,不建议修改], 一般设置为1，设置其他值可能需要专用apn与密码才能设置成功 |
 | ipType     | int      | IP类型，0-IPV4，1-IPV6，2-IPV4和IPV6                         |
 | apn        | string   | apn名称，可为空，最大长度不超过63字节(EC200U/EC200A最大长度不超过64字节) |
 | username   | string   | apn用户名，可为空，最大长度不超过15字节(EC200U/EC200A最大长度不超过64字节) |
 | password   | string   | apn密码，可为空，最大长度不超过15字节(EC200U/EC200A最大长度不超过64字节) |
-| authType   | int      | 加密方式，0-不加密，1-PAP，2-CHAP                            |
+| authType   | int      | 加密方式，0-不加密，1-PAP，2-CHAP，3-PAP AND CHAP[仅高通平台支持]      |
 
 * 返回值
 
@@ -350,7 +348,7 @@ if __name__ == '__main__':
 | apn        | string   | apn名称，可为空，最大长度不超过63字节(EC200U/EC200A最大长度不超过64字节)|
 | username   | string   | apn用户名，可为空，最大长度不超过15字节(EC200U/EC200A最大长度不超过64字节)|
 | password   | string   | apn密码，可为空，最大长度不超过15字节(EC200U/EC200A最大长度不超过64字节)|
-| authType   | int      | 加密方式，0-不加密，1-PAP，2-CHAP                            |
+| authType   | int      | 加密方式，0-不加密，1-PAP，2-CHAP，3-PAP AND CHAP(仅高通平台支持加密方式3) |
 | flag       | int      | 可选参数，默认为0，表示仅创建user_apn.json文件，用于保存用户apn信息；为1时，表示创建user_apn.json文件保存用户apn信息之后，还会使用该apn信息立即进行一次拨号；不管该参数是0还是1，都不会影响重启时使用用户设置的apn进行开机拨号。 |
 
 * 返回值
@@ -392,7 +390,7 @@ if __name__ == '__main__':
 
 * 注意
 
-  当前仅EC600S/EC600N/EC800N/EC200U/EC600U平台支持该功能。
+  当前仅ASR/Unisoc/ASR_1803s平台支持该功能。
 
   更改DNS服务器后，域名解析时，将同步使用设置的DNS服务器。
 
@@ -731,8 +729,6 @@ if __name__ == '__main__':
 #### atcmd - 发送AT指令
 
 模块功能：提供发送AT指令接口。
-
-注意：目前该模块只支持1803S/EC200U/CATM平台。
 
 #### 发送AT指令接口
 
@@ -1750,8 +1746,6 @@ def voice_callback(args):
 
 模块功能：该模块提供短信功能相关接口。
 
-说明：当前QuecPython底层为非volte版本，暂不支持电信发送短信。
-
 注意：BC25PA平台不支持此模块。
 
 ##### 发送TEXT类型消息
@@ -2180,22 +2174,27 @@ sms.setCallback(cb)
 
 ##### 设置APN
 
-> **net.setApn(apn, simid)**
+> **net.setApn(\*args)**
 
 设置APN，设置后需要重启或者通过 net.setModemFun(mode) 接口先切换到模式0，再切换到模式1才能生效。 
-
-* 注意
-
-  该接口和datacall模块的设置APN接口是不相关的：
-  datacall模块设置APN是用入参的APN和PID去拨号，并记录到json文件中，下次再开机会用首先用这一路去拨号；
-  net模块的设置APN主要使用场景是专网卡设定特定APN才能注网，但是这个得重启生效
-
+  
 * 参数
 
-| 参数  | 参数类型 | 参数说明                      |
-| ----- | -------- | ----------------------------- |
-| apn   | string   | apn name                      |
-| simid | int      | simid<br> 0 - 卡1<br> 1 - 卡2 |
+  该接口在Qualcomm/ASR_1803s/Unisoc(不包括EG915)平台为可变参函数,参数个数为2或7, 其他平台参数个数固定为2：
+    参数个数为2：net.setApn(apn, simid)
+    参数个数为7：net.setApn(pid, iptype, apn, usrname, password, authtype, simid)
+  
+  具体释义形式如下：
+  
+| 参数    | 参数类型 | 参数说明                      |
+| -----   | -------- | ----------------------------- |
+| pid     | int      | PDP索引                       |
+| iptype  | int      | IP类型，0-IPV4，1-IPV6，2-IPV4和IPV6   |
+| apn     | string   | apn名称，可为空，最大长度不超过64字节  |
+| usrname | string   | 用户名，可为空，最大长度不超过64字节   |
+| password| string   | 用户名，可为空，最大长度不超过64字节   |
+| authtype| int      | 加密方式，0-不加密，1-PAP，2-CHAP，3-PAP AND CHAP(CATM平台支持)|
+| simid   | int      | simid<br> 0 - 卡1<br> 1 - 卡2          |
 
 * 返回值
 
@@ -2205,29 +2204,57 @@ sms.setCallback(cb)
 
   BC25PA平台不支持此方法。
 
-  
+* 示例
+
+```python
+>>> net.setApn('3gnet',0)
+0
+>>> net.setApn(1,1,'3gnet','mia','123',2,0)
+0  
+```
+
+
 
 ##### 获取当前APN
 
-> **net.getApn(simid)**
+> **net.getApn(\*args)**
 
 获取当前APN。
 
 * 参数
 
+  该接口在Qualcomm/ASR_1803s/Unisoc(不包括EG915)平台为可变参函数,参数个数为1或2, 其他平台参数个数固定为1：
+    参数个数为2：net.getApn(pid, simid)
+    参数个数为1：net.getApn(simid)
+	
+  具体释义如下：
+
 | 参数  | 参数类型 | 参数说明                        |
 | ----- | -------- | ------------------------------- |
+| pid   | int      | PDP索引                         |
 | simid | int      | simid<br/> 0 - 卡1<br/> 1 - 卡2 |
 
 * 返回值
 
-  成功返回获取到的APN，失败返回整型值-1。
+  1、当参数只有simid时：
+    成功返回获取到的APN，失败返回整型值-1。
+  2、当参数为pid, simid时：
+    成功返回获取到的pdp context：(iptype, apn, usrname, password, authtype)，失败返回整型值-1。
 
 * 注意
 
   BC25PA平台不支持此方法。
 
-  
+* 示例
+
+```python
+>>> net.getApn(0)
+'3gnet'
+>>> net.getApn(1,0)
+(1, '3gnet', 'mia', '123', 2)
+``` 
+
+
 
 ##### 获取csq信号强度
 
@@ -2257,19 +2284,19 @@ sms.setCallback(cb)
 
 ##### 获取小区信息
 
-> **net.getCellInfo()**
+> **net.getCellInfo(\*args)**
 
 获取邻近 CELL 的信息。
 
-注：BC25平台该接口为可变参函数，参数个数0-1。
-无入参情况：接口保持原有功能不变
-有入参情况，参数为sinr_enable，int型，范围0/1：
-	0，表示不获取sinr，和无入参情况返回结果一致
-	1，表示需要获取sinr，返回结果见example
-
 * 参数
 
-  无
+  该接口在BC25平台为可变参函数,参数个数为0或1, 其他平台参数个数固定为0：
+    参数个数为0：net.getCellInfo()
+    参数个数为1：net.getCellInfo(sinr_enable)
+	
+  | 参数    | 参数类型 | 参数说明                      |
+  | -----   | -------- | ----------------------------- |
+  | enable  | int      | 范围0/1, 0:表示不获取sinr 1:表示需要获取sinr|
 
 * 返回值
 
@@ -2376,6 +2403,12 @@ sms.setCallback(cb)
 | 16   | GSM_LTE, dual link                                           |
 | 17   | UMTS_LTE, dual link. not supported in EC100Y and EC200S      |
 | 18   | GSM_UMTS_LTE, dual link. not supported in EC100Y and EC200S  |
+| 19   | CATM,             BG95 supported                             |
+| 20   | GSM_CATM,         BG95 supported                             |
+| 21   | CATNB,            BG95 supported                             |
+| 22   | GSM_CATNB,        BG95 supported                             |
+| 23   | CATM_CATNB,       BG95 supported                             |
+| 24   | GSM_CATM_CATNB,   BG95 supported                             |
 
 * 示例
 
@@ -2398,7 +2431,7 @@ sms.setCallback(cb)
 
 | 参数    | 参数类型 | 参数说明                             |
 | ------- | -------- | ------------------------------------ |
-| mode    | int      | 网络制式，0 ~ 18，详见上述网络制式表格 |
+| mode    | int      | 网络制式，0 ~ 24，详见上述网络制式表格 |
 | roaming | int      | 漫游开关(0：关闭， 1：开启)，可选参数，不支持的平台不填写该参数即可。 |
 
 * 返回值
@@ -2444,6 +2477,24 @@ sms.setCallback(cb)
 | 9    | E TRAN A           |
 | 10   | NONE               |
 
+* 注：CATM平台参照下表
+
+| 值   | 说明               |
+| ---- | ------------------ |
+| 0    | GSM                |
+| 1    | GSM COMPACT        |
+| 2    | UTRAN              |
+| 3    | GSM wEGPRS         |
+| 4    | UTRAN wHSDPA       |
+| 5    | UTRAN wHSUPA       |
+| 6    | UTRAN wHSDPA HSUPA |
+| 7    | E_UTRAN            |
+| 8    | UTRAN HSPAP        |
+| 9    | E_UTRAN_CA         |
+| 10   | E_UTRAN_NBIOT      |
+| 11   | E_UTRAN_EMTC       |
+| 12   | NONE               |
+
 * 示例
 
 ```python
@@ -2455,25 +2506,25 @@ sms.setCallback(cb)
 
 ##### 获取详细信号强度信息
 
-> **net.getSignal()**
+> **net.getSignal(\*args)**
 
 获取详细信号强度。
 
-注：1803s/qualcomm/unisoc平台该接口为可变参函数，参数个数0-1。
-无入参情况：接口保持原有功能不变
-有入参情况，参数为sinr_enable，int型，范围0/1：
-	0，表示不获取sinr，和无入参情况返回结果一致
-	1，表示需要获取sinr，返回结果见example
-
 * 参数
 
-无
+  该接口在1803s/qualcomm/unisoc(不包括EG915)平台为可变参函数,参数个数为0或1, 其他平台参数个数固定为0：
+    参数个数为0：net.getSignal()
+    参数个数为1：net.getSignal(sinr_enable)
+	
+  | 参数    | 参数类型 | 参数说明                      |
+  | -----   | -------- | ----------------------------- |
+  | enable  | int      | 范围0/1, 0:表示不获取sinr 1:表示需要获取sinr|
 
 * 返回值
 
   失败返回整型值-1，成功返回一个元组，包含两个List(GW 、LTE)，返回值格式如下：
 
-  `([rssi, bitErrorRate, rscp, ecno], [rssi, rsrp, rsrq, cqi])`
+  `([rssi, bitErrorRate, rscp, ecno], [rssi, rsrp, rsrq, cqi, sinr])`
 
   返回值参数说明：
 
@@ -2591,7 +2642,7 @@ sms.setCallback(cb)
 
   失败返回整型值-1，成功返回一个元组，包含电话和网络注册信息，元组中voice开头的表示电话注册信息，data开头的表示网络注册信息，格式为：
 
-  `([voice_state, voice_lac, voice_cid, voice_rat, voice_reject_cause, voice_psc], [data_state, data _lac, data _cid, data _rat, data _reject_cause, data _psc])`
+  `([voice_state, voice_lac, voice_cid, voice_rat, voice_reject_cause, voice_psc], [data_state, data_lac, data_cid, data_rat, data_reject_cause, data_psc])`
 
   返回值参数说明：
 
@@ -2639,6 +2690,24 @@ sms.setCallback(cb)
 | 8    | UTRAN HSPAP        |
 | 9    | E_UTRAN_CA         |
 | 10   | NONE               |
+
+* 注：CATM平台参照下表
+
+| 值   | 说明               |
+| ---- | ------------------ |
+| 0    | GSM                |
+| 1    | GSM COMPACT        |
+| 2    | UTRAN              |
+| 3    | GSM wEGPRS         |
+| 4    | UTRAN wHSDPA       |
+| 5    | UTRAN wHSUPA       |
+| 6    | UTRAN wHSDPA HSUPA |
+| 7    | E_UTRAN            |
+| 8    | UTRAN HSPAP        |
+| 9    | E_UTRAN_CA         |
+| 10   | E_UTRAN_NBIOT      |
+| 11   | E_UTRAN_EMTC       |
+| 12   | NONE               |
 
 * 示例
 
@@ -6460,7 +6529,7 @@ rtc.enable_alarm(1)
 
 | 参数 | 类型 | 说明                                                         |
 | ---- | ---- | ------------------------------------------------------------ |
-| I2Cn | int  | i2c 通路索引号:<br />I2C.I2C0 : 0  <br />I2C.I2C0 : 1        |
+| I2Cn | int  | i2c 通路索引号:<br />I2C.I2C0 : 0  <br />I2C.I2C1 : 1        |
 | MODE | int  | i2c 的工作模式:<br />I2C.STANDARD_MODE : 0 标准模式<br />I2C.FAST_MODE ： 1 快速模式 |
 
 - 引脚对应关系
@@ -11515,10 +11584,14 @@ $GNGSA,A,3,31,3
 #### SecureData - 安全数据区
 
 模块功能：模组提供一块裸flash区域及专门的读写接口供客户存贮重要信息，且信息在烧录固件后不丢失(烧录不包含此功能的固件无法保证不丢失)。提供一个存储和读取接口，不提供删除接口。
-> 目前只支持EC600N、EC600S系列项目
+目前只支持EC600N、EC600S系列项目
+
 ##### 数据存储
-SecureData.Store(index,databuf,len)
-- **参数**
+
+> **SecureData.Store(index,databuf,len)**
+
+ * 参数
+
 | 参数    | 类型      | 说明                                                         |
 | :------ | :-------- | ------------------------------------------------------------ |
 | index   | int       | index范围为1-16：<br />1 - 8 最大存储52字节数据<br />9 - 12 最大存储100字节数据<br />13 - 14 最大存储500字节数据<br />15 - 16 最大存储1000字节数据 |
@@ -11528,27 +11601,33 @@ SecureData.Store(index,databuf,len)
 
 存储时按照databuf和len两者中长度较小的进行存储
 
-**返回值**
+ * 返回值
 
 -1: 参数有误
-
 0: 执行正常
 
 ##### 数据读取
 
-SecureData.Read(index,databuf,len)
-- **参数**
+> **SecureData.Read(index,databuf,len)**
+
+ * 参数
+
 | 参数    | 类型      | 说明                                            |
 | :------ | :-------- | ----------------------------------------------- |
 | index   | int       | index范围为1-16：<br />读取存储数据对应的索引号 |
 | databuf | bytearray | 存储读取到的数据                                |
 | len     | int       | 要读取数据的长度                                |
+
 若存储的数据没有传入的len大，则返回实际存储的数据长度
-**返回值**
+
+ * 返回值
+
 -2: 存储数据不存在且备份数据也不存在
 -1: 参数有误
 其他 :  实际读取到的数据长度
-- **示例**
+
+ * 示例
+
 ```python
 import SecureData
 # 即将存储的数据buf
@@ -11562,7 +11641,9 @@ len = SecureData.Read(1, buf, 20)
 # 输出读到的数据
 print(buf[:len])
 ```
-- **执行结果**
+
+ * 执行结果
+
 ```python
 >>> import SecureData
 >>> databuf = '\x31\x32\x33\x34\x35\x36\x37\x38'
@@ -11574,6 +11655,8 @@ print(buf[:len])
 bytearray(b'12345678')
 >>> 
 ```
+
+
 
 #### nb-物联网云平台
 
