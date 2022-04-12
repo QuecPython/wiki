@@ -3460,7 +3460,7 @@ Stop playing the audio file.
 
 ###### stop queue playback
 
-> **aud.stop()**
+> **aud.stopAll()**
 
 Stop the playback of the entire queue, that is, if TTS or audio is currently being played, and there are other content to be played in the queue, after calling this interface, it will not only stop the currently playing content, but also clear the content of the queue, and no longer play any more. content. If it is currently playing and the playback queue is empty, calling this interface has the same effect as the stop() interface.
 
@@ -3582,13 +3582,13 @@ Set audio volume.
 
 > aud.playStream(format, buf)
 
-Audio stream playback, supporting MP3, AMR and wav format audio stream playback.
+Audio stream playback, supporting MP3, AMR and WAV format audio stream playback.
 
 * Parameter
 
 |Parameter | parameter type | parameter description|
 | ------ | -------- | ------------------------------------------------------------ |
-|Format | int | audio stream format <br/> 1 - PCM (not supported temporarily) <br/> 2 - wavpcm <br/> 3 - MP3 <br/> 4 - amrnb|
+|Format | int | audio stream format <br/> 1 - PCM (not supported temporarily) <br/> 2 - WAVPCM <br/> 3 - MP3 <br/> 4 - ARMNB |
 |Buf | buf | audio stream content|
 
 * Return Value
@@ -3639,8 +3639,8 @@ Stop audio streaming
   
   
   play_from_fs()
-  utime. sleep_ MS (5000) # wait for playback to complete
-  audio_ test. Stopplaystream() # stops this playback so as not to affect the next playback
+  utime.sleep_ms(5000) # wait for playback to complete
+  audio_test.stopPlayStream() # stops this playback so as not to affect the next playback
   ```
 
 
