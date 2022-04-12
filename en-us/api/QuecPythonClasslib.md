@@ -611,7 +611,7 @@ This function obtains coordinate information of the base station.
 | port       | int    | Server port, currently only supports port 80                 |
 | token      | string | Token, composed of 16 characters                             |
 | timeout    | int    | Timeout. Range: 1-300. Default value: 300. Unit: s.          |
-| profileIdx | int    | PDP context index. Range for ASR : 1-8,range for unisoc : 1-7 |
+| profileIdx | int    | PDP context index. Range for ASR : 1-8, range for unisoc : 1-7 |
 
 * Return Value
 
@@ -634,9 +634,9 @@ This function obtains coordinate information of the base station.
 
 ```python
 >>> import cellLocator
->>> cellLocator.getLocation("www.queclocator.com", 80, "1111111122222222", 8, 1)
+>>> cellLocator.getLocation("www.queclocator.com", 80, "xxxxxxxxxxxxxxxx", 8, 1)
 (117.1138, 31.82279, 550)
-# The key provided is only for test.
+# "xxxxxxxxxxxxxxxx"indicates the token. You need to apply for the token from the Quectel.
 ```
 
 
@@ -3065,6 +3065,20 @@ stagecode = 1, subcode = 0
 stagecode = 1, subcode = 2
 ```
 
+* Note
+
+If the user is using firmware released after November 2021, the user can use the wait_network_connected(timeout) method as follows:
+
+```python
+import checkNet
+
+if __name__ == '__main__':
+    # Add the following sentence before running the program.
+    stagecode, subcode = checkNet.wait_network_connected(30)
+    print('stagecode = {}, subcode = {}'.format(stagecode, subcode))
+	......
+```
+
 
 
 ##### checkNet Exception Handling
@@ -3409,463 +3423,9 @@ In this example, assuming that `http://www.example.com/test.txt`fails to be down
 
 #### audio - Audio Playback
 
-Module function: audio playback, supports to play files in TTS, mp3 and AMR.
+Module function: audio playback, supports to play files, mp3 and AMR.
 
 Note: The BC25PA platform does not support this module function.
-
-##### TTS 
-
-###### Create the TTS Object
-
-> **import audio**
->
-> **tts = audio.TTS(device)**
-
-* Parameter 
-
-
-| Parameter | Parameter Type | Description                                                  |
-| --------- | -------------- | ------------------------------------------------------------ |
-| device    | int            | Output channel<br/>0 - handset<br/>1 - earphone<br/>2 - speaker |
-
-* Example
-
-```python
->>> import audio
->>> tts = audio.TTS(1)
-```
-
-
-
-###### Disable TTS Function
-
-> **tts.close()**
-
-Disable TTS function.
-
-* Parameter
-
-  * None
-
-* Return Value
-
-  * 0 	Successful execution
-  * -1	Failed execution
-
-
-
-###### Start to Play TTS
-
-> **tts.play(priority, breakin, mode, str)**
-
-Audio playback supports priority 0–4, the higher the number, the higher the priority. Each priority group can join up to 10 playback tasks at the same time; the playback strategy is described as follows:
-
-1. If task A is currently playing and it is allowed to be interrupted and a higher priority task B comes at this time, the current task A will be interrupted, and task B with higher priority will be played directly.
-
-2. If task A is currently playing and it is not allowed to be interrupted and a higher priority task B comes at this time, task B will be added to a appropriate position in the playback queue, waiting for task A to complete, and then the tasks will be played from the queue in turn with priority from high to low;
-
-3. If task A is currently playing and it is not allowed to be interrupted and task B with the same priority comes at this time, task B will be added to the end of the playback queue of the priority group, waiting for task A to complete, and then the tasks will be played from the queue in turn from high to low in priority;
-
-4. If task A is currently playing and it is allowed to be interrupted and a task B with the same priority comes at this time, the current task A will be interrupted and task B will be played directly;
-
-5. If task A is currently playing and there are already several playback tasks in the priority group playback queue of task A, and the last task N in the priority group playback queue is allowed to be interrupted, and at this time, if task B with the same priority, task B will directly overwrite task N; in other words, only the last element of a certain priority group is allowed to be interrupted, that is, breakin is 1, and other tasks are not allowed to be interrupted;
-
-6. If task A is currently playing, regardless of whether task A is allowed to be interrupted, task B with a lower priority comes at this time, add B to the playback queue of the priority group corresponding to B.
-
-* Parameter
-
-| Parameter | Parameter Type | Description                                                  |
-| --------- | -------------- | ------------------------------------------------------------ |
-| priority  | int            | Playback priority. Supports Priority 0–4. The higher the number, the higher the priority. |
-| breakin   | int            | Interruption mode. 0 means not allowed to be interrupted; 1 means allowed to be interrupted |
-| mode      | int            | Low 4bit:Encoding mode. 1 - UNICODE16 (UTF-16 big-endian), 2 - UTF-8, 3 - UNICODE16 (UTF-16 little-endian)<br>High 4bit:WTTS mode(Only 600N series support VOLTE version support)., wtts_enable - wtts master switch，wtts_ul_enable - wtts up link switch， wtts_dl_enable - wtts down link switch |
-| str       | string         | String to be played                                          |
-
-* Return Value
-
-  * 0 	Successful execution
-  * -1	Failed execution
-  * 1	 Cannot be played immediately, but join the playback queue
-  * -2	Cannot be played immediately, and the priority group queue task of the request has reached the upper limit and cannot 		be added to the play queue
-
-* Example
-
-```python
->>> import audio
->>> tts = audio.TTS(1)
-#Task A is currently playing and it is allowed to be interrupted and a higher priority task B comes at this time, task A is interrupted, and task B is played directly.
->>> tts.play(1, 1, 2, '1111111111111111')  #Task A
-0
->>> tts.play(2, 0, 2, '2222222222222222')  #Task B
-0
-
-#Task A is currently playing and it is not allowed to be interrupted and a higher priority task B comes at this time, task B is added to the playback queue, waiting for task A to complete (Assuming the playback queue is empty before)
->>> tts.play(1, 0, 2, '1111111111111111')  #Task A
-0
->>> tts.play(2, 0, 2, '2222222222222222')  #Task B
-1
-
-#Task A is currently playing and it is allowed to be interrupted and task B with the same priority comes at this time, the current task A is interrupted and task B is played directly
->>> tts.play(2, 1, 2, '2222222222222222222')  #Task A
-0
->>> tts.play(2, 0, 2, '3333333333333333333')  #Task B
-0
-
-#Task A is currently playing and it is not allowed to be interrupted and task B with the same priority comes at this time, task B will be added to the playback queue, waiting for task A to complete, and then task B is played (Assuming the playback queue is empty before)
->>> tts.play(2, 0, 2, '2222222222222222222')  #Task A
-0
->>> tts.play(2, 0, 2, '3333333333333333333')  #Task B
-1
-
-#Task A is currently playing and it is not allowed to be interrupted and task B with the same priority comes at this time,and task B is allowed to be interrupted, task B will join the playback queue. Task C with the same priority as task A and B comes at the same time, then task C will join the playback queue and directly overwrite task B. Therefore, task C is played after task A completes (Assuming the playback queue is empty before)
->>> tts.play(2, 0, 2, '2222222222222222222')  #Task A
-0
->>> tts.play(2, 1, 2, '3333333333333333333')  #Task B
-1
->>> tts.play(2, 0, 2, '4444444444444444444')  #Task C
-1
-
-#Play the voice in UTF-16BE mode
->>> tts.play(1,1,1,'6B228FCE4F7F752879FB8FDC901A4FE16A2157573002')
-0
-
-#Play the voice in UTF-16LE mode
->>> tts.play(1,1,3,'226BCE8F7F4F2875FB79DC8F1A90E14F216A57570230')
-0
-
-#Support VOLTE version, can play tts to remote
->>> import voiceCall
->>> voiceCall.callStart('1xxxxxxxxxx')
-0
-
-#After the call is connected
-#Play tts voice to the far end of the call
->>> tts.play(1,1,tts.wtts_enable|tts.wtts_ul_enable|2, '12345')
-
-0
-```
-
-Chinese example of tts playback:
-
-Note that "# -*- coding: UTF-8 -*-" needs to be added at the beginning of the python file. 
-
-```python
-# -*- coding: UTF-8 -*-
-import audio
-
-tts = audio.TTS(1)
-str1 = '移联万物,志高行远'
-tts.play(4, 0, 2, str1)
-```
-
-
-
-###### Stop Playing TTS
-
-> **tts.stop()**
-
-Stop playing TTS.
-
-* Parameter
-
-  * None
-
-* Return Value
-
-  * 0 Successful execution
-  * -1 Failed execution
-
-
-
-###### Register Callback Function
-
-> **tts.setCallback(usrFun)**
-
-Register the callback function of the user. It is used to notify the user of the TTS playback status. Note that time-consuming and blocking operations should not be performed in this callback function. It is recommended to only perform simple and short-time operations.
-
-* Parameter
-
-| Parameter | Parameter Type | Description                                                  |
-| --------- | -------------- | ------------------------------------------------------------ |
-| usrFun    | function       | The callback function of the user. See the format in the following example |
-
-* Return Value
-
-  * 0 	Successful execution
-  * -1	Failed execution
-
-* Example
-
-```python
-import audio
-
-def tts_cb(event):
-	if event == 2:
-		print('TTS-play start.')
-	elif event == 4:
-		print('TTS-play finish.')
-
-tts = audio.TTS(1)
-tts.setCallback(tts_cb)
-tts.play(1, 0, 2, 'QuecPython')
-```
-
-Description of several event values of the TTS playback callback function:
-
-| event | Status             |
-| ----- | ------------------ |
-| 2     | Start to play      |
-| 3     | Stop playing       |
-| 4     | Playback completed |
-
-
-
-###### Get TTS Volume
-
-> **tts.getVolume()**
-
-Ger the volume of the current TTS playback. The volume value is 0–9. 0 means mute. Default value: 4
-
-* Parameter
-
-  * None
-
-* Return Value
-
-  * 0 Successful execution
-  * -1 Failed execution
-
-* Example
-
-```python
->>> tts.getVolume()
-4
-```
-
-
-
-###### Set TTS Volume
-
-> **tts.setVolume(vol)**
-
-Set TTS playback volume.
-
-* Parameter
-
-| Parameter | Parameter Type | Description                                 |
-| --------- | -------------- | ------------------------------------------- |
-| vol       | int            | The volume value. Range: 0–9. 0 means mute. |
-
-* Return Value
-
-  * 0 	Successful execution
-  * -1	Failed execution
-
-* Example
-
-```python
->>> tts.setVolume(6)
-0
-```
-
-
-
-###### Get Audio Playback Speed
-
-> **tts.getSpeed()**
-
-Get the current playback speed. The speed value is 0–9, and the larger the value, the faster the speed. Default value: 4.
-
-* Parameter
-
-  * None
-
-* Return Value
-
-  * 0 Successful execution
-  * -1 Failed execution
-
-* Example
-
-```python
->>> tts.getSpeed()
-4
-```
-
-
-
-###### Set Playback Speed
-
-> **tts.setSpeed(speed)**
-
-Set TTS playback speed.
-
-* Parameter
-
-| Parameter | Parameter Type | Description                                                  |
-| --------- | -------------- | ------------------------------------------------------------ |
-| speed     | int            | Speed value. Range: 0–9, and the larger the value, the faster the speed. |
-
-* Return Value
-
-  * 0 	Successful execution
-  * -1	Failed execution
-
-* Example
-
-```python
->>> tts.setSpeed(6)
-0
-```
-
-
-
-###### Get TTS State
-
-> **tts.getState()**
-
-Get TTS state.
-
-* Parameter
-
-  * None
-
-* Return Value
-
-  * 0	 Integer value. Indicates that there is currently no TTS playback.
-  * 1	Integer value. Indicates that TTS is playing.
-
-* Example
-
-```python
->>> tts1 = audio.TTS(1)
->>> tts1.getState()
-0
->>> tts1.play(1, 0, 2, '8787878787878787') 
-0
->>> tts1.getState() #Execute this interface when the above TTS is playing
-1
-```
-
-
-
-###### tts play text annotation description
-
-If TTS playback fails to meet expectations, you can make TTS playback meet expectations through text annotations.
-
-Set the way of digital playback：
-
-```python
-#Format：[n*] (*=0/1/2)
-#The TTS engine automatically determines whether to play in the form of numbers or in the form of numbers
->>> tts.play(1,1,2, '12345')
-0
-
-#TTS engine plays in the form of numbers
->>> tts.play(1,1,2, '[n1]12345')
-0
-
-#TTS engine plays in numerical form
->>> tts.play(1,1,2, '[n2]12345')
-0
-```
-
-
-
-Speaking rate setting：
-
-```python
-#Format：[s*] (*=0 ~ 10)
-#The TTS engine plays the voice at the default speech rate of 5
->>> tts.play(1,1,2, '12345')
-0
-
-#The TTS engine plays the voice at half the default speech rate
->>> tts.play(1,1,2, '[s0]12345')
-0
-
-#The TTS engine plays the voice at twice the default speech rate
->>> tts.play(1,1,2, '[s10]12345')
-0
-```
-
-
-
-Intonation setting：
-
-```python
-#Format：[t*] (*=0 ~ 10)
-#The TTS engine plays the voice in the default intonation 5
->>> tts.play(1,1,2, '12345')
-0
-
-#The TTS engine plays the voice at the base frequency of the default pitch minus 64Hz
->>> tts.play(1,1,2, '[t0]12345')
-0
-
-#The TTS engine plays the voice with the default pitch base frequency plus 128Hz
->>> tts.play(1,1,2, '[t10]12345')
-0
-```
-
-
-
-Pinyin for Chinese Characters：
-
-```python
-#Format：[=*] (*=Pinyin)
-#Chinese characters: After the voice call, a number 1 ~ 5 are used to represent the 5 tones of even tone, rising tone, entering tong, falling tone and lightly tone respectively.
->>> tts.play(1,1,2, '乐[=le4]')
-0
-
->>> tts.play(1,1,2, '乐[=yue4]')
-0
-```
-
-
-
-###### Example
-
-```python
-'''
-@Author: Pawn
-@Date: 2020-08-19
-@Description: example for module TTS
-@FilePath: example_tts_file.py
-'''
-import log
-from audio import TTS
-import utime
-
-
-'''
-The following two global variables are required. Users can modify the values of the following two global variables according to their actual projects.
-'''
-PROJECT_NAME = "QuecPython_TTS_example"
-PROJECT_VERSION = "1.0.0"
-
-# Set the log output level
-log.basicConfig(level=log.INFO)
-tts_Log = log.getLogger("TTS")
-
-
-if __name__ == '__main__':
-    # Parameter 1: device(0: handset, 1:earphone, 2:speaker)
-    tts = TTS(1)
-    # Get the current playback volume
-    volume_num = tts.getVolume()
-    tts_Log.info("Current TTS volume is %d" %volume_num)
-
-    # Set the volume to 6
-    volume_num = 6
-    tts.setVolume(volume_num)
-    #  (0-4)Parameter 1: Priority (0–4)
-    #  Parameter 2: Interruption mode: 0 means not allowed to be interrupted; 1 means allowed to be interrupted
-    #  Parameter 3: Encoding mode. (1: UNICODE16 (Size end conversion), 2: UTF-8, 3:UNICODE16 (Don't convert))
-    #  Parameter 4: data string (String to be played)
-    tts.play(1, 1, 2, 'QuecPython') # Play
-    tts.close()   # Disable TTS feature
-```
 
 
 
@@ -3986,7 +3546,7 @@ Stop playing the audio file.
 
 ###### stop queue playback
 
-> **aud.stop()**
+> **aud.stopAll()**
 
 Stop the playback of the entire queue, that is, if TTS or audio is currently being played, and there are other content to be played in the queue, after calling this interface, it will not only stop the currently playing content, but also clear the content of the queue, and no longer play any more. content. If it is currently playing and the playback queue is empty, calling this interface has the same effect as the stop() interface.
 
@@ -4108,13 +3668,13 @@ Set audio volume.
 
 > aud.playStream(format, buf)
 
-Audio stream playback, supporting MP3, AMR and wav format audio stream playback.
+Audio stream playback, supporting MP3, AMR and WAV format audio stream playback.
 
 * Parameter
 
 |Parameter | parameter type | parameter description|
 | ------ | -------- | ------------------------------------------------------------ |
-|Format | int | audio stream format <br/> 1 - PCM (not supported temporarily) <br/> 2 - wavpcm <br/> 3 - MP3 <br/> 4 - amrnb|
+|Format | int | audio stream format <br/> 1 - PCM (not supported temporarily) <br/> 2 - WAVPCM <br/> 3 - MP3 <br/> 4 - ARMNB |
 |Buf | buf | audio stream content|
 
 * Return Value
@@ -4165,8 +3725,8 @@ Stop audio streaming
   
   
   play_from_fs()
-  utime. sleep_ MS (5000) # wait for playback to complete
-  audio_ test. Stopplaystream() # stops this playback so as not to affect the next playback
+  utime.sleep_ms(5000) # wait for playback to complete
+  audio_test.stopPlayStream() # stops this playback so as not to affect the next playback
   ```
 
 
@@ -5132,10 +4692,13 @@ It closes ADC.
 
   * Return 0 if the execution is successful, otherwise return -1.
 
+
+
 ##### USB
 
 It provides USB plug detection interface.
-Note: The BC25PA platform does not support this module function.
+Note : Currently only EC600S EC600N/EC800N/EC200U/EC600U platform support this function.
+
 ###### Create an USB Object
 
 > from misc import USB
@@ -5182,7 +4745,7 @@ Note: The BC25PA platform does not support this module function.
 
   * Return 0 if the execution is successful, otherwise return -1.
 
-Example
+* Example
 
 ```python
 from misc import USB
@@ -5198,11 +4761,13 @@ def usb_callback(conn_status):
 usb.setCallback(usb_callback)
 ```
 
+
+
 ##### USBNET
 
 It provides the USB network adapter function.
 
-NOTE：Currently, only the ASR platform supports it.
+NOTE : Currently only EC600S EC600N/EC800N/EC200U/EC600U platform support this function.
 
 ###### Setting the USBNET working type (Take effect after restart)
 
@@ -5212,7 +4777,7 @@ USBNET.set_worktype(type)
 
   | Parameter | Type | Description                                                  |
   | --------- | ---- | ------------------------------------------------------------ |
-  | type      | int  | USBNET working type Type_ECM – ECM mode Type_RNDIS – RNDIS mode |
+  | type      | int  | USBNET working type<br>Type_ECM – ECM mode <br>Type_RNDIS – RNDIS mode |
 
 - Return Value
 
@@ -5306,6 +4871,8 @@ from misc import USBNET
 USBNET.open()
 ```
 
+
+
 #### modem - Related Device
 
 Function: This module gets device information.
@@ -5320,10 +4887,8 @@ It gets IMEI of the device.
 
   * None
 
-Return Value
-
+* Return Value
   * Return the IMEI of string type of the device if the execution is successful, otherwise return -1.
-
 * Example
 
 ```python
@@ -5403,7 +4968,7 @@ It gets the firmware version number.
 
 
 
-##### ID Get Device Manufacturer ID
+##### Get Device Manufacturer ID
 
 > **modem.getDevProductId()**
 
@@ -8080,20 +7645,20 @@ Module function: provide function of BLE GATT Server（slave） and BLE GATT Cli
 
 > **ble.gattStart()**
 
-* Function:
+* Function
 
   Start BLE GATT fucntion.
 
-* Parameter:
+* Parameter
 
   * None
 
-* Return Value:
+* Return Value
 
   * 0	 Successful execution
   * -1	Failed execution
 
-* Example:
+* Example
 
 ```python
 See comprehensive example
@@ -8105,20 +7670,20 @@ See comprehensive example
 
 > **ble.gattStop()**
 
-* Function:
+* Function
 
   Stop BLE GATT function.
 
-* Parameter:
+* Parameter
 
   * None
 
-* Return Value:
+* Return Value
 
   * 0	 Successful execution
   * -1	Failed execution
 
-* Example:
+* Example
 
 ```python
 See comprehensive example
@@ -8130,21 +7695,21 @@ See comprehensive example
 
 > **ble.getStatus()**
 
-* Function:
+* Function
 
   Get  the status of BLE.
 
-* Parameter:
+* Parameter
 
   * None
 
-* Return Value:
+* Return Value
 
   * 0	BLE has been stopped
   * 1	BLE has been started
   * -1	Get BLE status failed
 
-* Example:
+* Example
 
   * None
 
@@ -8154,23 +7719,23 @@ See comprehensive example
 
 > **ble.getPublicAddr()**
 
-* Function:
+* Function
 
   Gets the BLE public address.This interface can be called only after BLE has been initialized and started successfully, for example, after receiving an event with event_id 0 in the callback.
 
-* Note:
+* Note
 
   If there is a default Bluetooth MAC address, the MAC address obtained by the interface is the same as the default Bluetooth MAC address. If it is not set, the address obtained by the interface will be a static address generated randomly after Bluetooth is started, so it will be different each time Bluetooth is powered on again.
 
-* Parameter:
+* Parameter
 
   * None
 
-* Return Value:
+* Return Value
 
   * The BLE address of type bytearray (6 bytes) is returned on success, and integer -1 is returned on failure.
 
-* Example:
+* Example
 
   ```python
   >>> addr = ble.getPublicAddr()
@@ -8187,22 +7752,22 @@ See comprehensive example
 
 > **ble.serverInit(user_cb)**
 
-* Function：
+* Function
 
   Initialize BLE Server and register callback function.
 
-* Parameter：
+* Parameter
 
 | Parameter | Type     | Description       |
 | --------- | -------- | ----------------- |
 | user_cb   | function | Callback function |
 
-* Return Value：
+* Return Value
 
   * 0	 Successful execution
   * -1	Failed execution
 
-- Description：
+- Description
 
 （1）Format of callback function
 
@@ -8229,7 +7794,7 @@ args[0] is fixed to represent event_id; args[1] is fixed to represent status. 0 
 |    22    |          7          | args[0]: event_id, which indicates server: when ble client read characteristic value or descriptor,server get the notice<br/>args[1]: status, which indicates the operation state. 0 - Successful execution; non-0 - Failed execution<br/>args[2]: data_len, the length of the acquired data<br/>args[3]: data, an array for storing the acquired data<br/>args[4]: attr_handle, attribute handle, integer type<br/>args[5]: short_uuid, integer type<br/>args[6]: long_uuid, a 16-byte array for storing long UUID |
 |    25    |          2          | args[0]: event_id, which indicates server send notification,and recieve send end notice<br/>args[1]: status, which indicates the operation state. 0 - Successful execution; non-0 - Failed execution |
 
-* Example：
+* Example
 
 ```python 
 def ble_callback(args):
@@ -8337,20 +7902,20 @@ ble.serverInit(ble_callback)
 
 > **ble.serverRelease()**
 
-* Function:
+* Function
 
   Release BLE Server resources.
 
-* Parameter:
+* Parameter
 
   * None
 
-* Return Value:
+* Return Value
 
   * 0	 Successful execution
   * -1	Failed execution
 
-* Example：
+* Example
 
 ```python
 See comprehensive example
@@ -8362,27 +7927,27 @@ See comprehensive example
 
 > **ble.setLocalName(code, name)**
 
-* Function:
+* Function
 
   Set BLE local name.
 
-* Note:
+* Note
 
   For BLE, if you want  to see the name of the broadcast device when scanning, you need to include the Bluetooth name in the broadcast data, or include the device name in the scan reply data.
 
-* Parameter:
+* Parameter
 
   | Parameter | Type         | Description                           |
   | --------- | ------------ | ------------------------------------- |
   | code      | Integer Type | Encoding mode<br>0 - UTF8<br/>1 - GBK |
   | name      | String Type  | BLE name, no more than 29 bytes       |
 
-* Return Value:
+* Return Value
 
   * 0	 Successful execution
   * -1	Failed execution
 
-* Example:
+* Example
 
 ```python
 >>> ble.setLocalName(0, 'QuecPython-BLE')
@@ -8395,7 +7960,7 @@ See comprehensive example
 
 > **ble.setAdvParam(min_adv,max_adv,adv_type,addr_type,channel,filter_policy,discov_mode,no_br_edr,enable_adv)**
 
-* Function:
+* Function
 
   Set advertising parameter.
 
@@ -8413,12 +7978,12 @@ See comprehensive example
   | no_br_edr     | Unsigned integer type | No use of BR/EDR. The default is 1. The value is 0 if BR/EDR is used. |
   | enable_adv    | Unsigned integer type | Enable advertising. The default is 1. The value is 0 if advertising is disabled. |
 
-* Return Value:
+* Return Value
 
   * 0	 Successful execution
   * -1	Failed execution
 
-* Example：
+* Example
 
 ```python
 def ble_gatt_set_param():
@@ -8445,22 +8010,22 @@ def ble_gatt_set_param():
 
 > **ble.setAdvData(data)**
 
-* Function:
+* Function
 
   Set advertising data.
 
-* Parameter:
+* Parameter
 
   | Parameter | Type  | Description                                                  |
   | --------- | ----- | ------------------------------------------------------------ |
   | data      | Array | Advertising data which is no more than 31 octets. Pay attention to the type of this parameter. The advertising data is organized in the program and it needs to be converted through bytearray() before it can be passed in to the API. As shown in below example.<br>Format of advertising data:<br>The content of advertising data. The format is the combination of length+type+data. An advertising data can contain multiple combinations in this format. For example, there are 2 combinations in the example below. The first one is "0x02, 0x01, 0x05". 0x02 means that there are 2 data - 0x01 and 0x05. 0x01 is the type; 0x05 is the specific data. The second one consists of  the length obtained by the length of BLE name plus 1 (1 octet needs to be added as it contains the data that represents type), type 0x09 and the data represented by the corresponding specific encoded value of name.<br>For detailed information of type value, please refer to the following link:<br/>[Generic Access Pfofile](https://btprodspecificationrefs.blob.core.windows.net/assigned-numbers/Assigned Number Types/Generic Access Profile.pdf) |
 
-* Return Value:
+* Return Value
 
   * 0	 Successful execution
   * -1	Failed execution
 
-* Example：
+* Example
 
 ```python
 def ble_gatt_set_data():
@@ -8488,22 +8053,22 @@ def ble_gatt_set_data():
 
 > **ble.setAdvRspData(data)**
 
-* Function:
+* Function
 
   Set scan response data.
 
-* Parameter:
+* Parameter
 
   | Parameter | Type  | Description                                                  |
   | --------- | ----- | ------------------------------------------------------------ |
   | data      | Array | Scan response data which is no more than 31 octets. The considerations are consistent with the description of  *ble.setAdvData(data)* above. The setting of scan response data makes sense only when the scanning mode of the client device is active scan. |
 
-* Return Value:
+* Return Value
 
   * 0	 Successful execution
   * -1	Failed execution
 
-* Example:
+* Example
 
 ```python
 def ble_gatt_set_rsp_data():
@@ -8531,11 +8096,11 @@ def ble_gatt_set_rsp_data():
 
 > **ble.addService(primary, server_id, uuid_type, uuid_s, uuid_l)**
 
-* Function：
+* Function
 
   Add a service.
 
-* Parameter：
+* Parameter
 
   | Parameter | Type                  | Description                                                  |
   | --------- | --------------------- | ------------------------------------------------------------ |
@@ -8545,12 +8110,12 @@ def ble_gatt_set_rsp_data():
   | uuid_s    | Unsigned integer type | Short UUID, 2 bytes (16bit). When uuid_type is 0, the value of this parameter is 0. |
   | uuid_l    | Array                 | Long UUID, 16 bytes (128bit). When uuid_type is 1, the value of this parameter is bytearray([0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]) |
 
-* Return Value：
+* Return Value
 
   * 0	 Successful execution
   * -1	Failed execution
 
-* Example：
+* Example
 
 ```python
 def ble_gatt_add_service():
@@ -8573,11 +8138,11 @@ def ble_gatt_add_service():
 
 > **ble.addChara(server_id, chara_id, chara_prop, uuid_type, uuid_s, uuid_l)**
 
-* Function:
+* Function
 
   Add a characteristic in a service.
 
-* Parameter:
+* Parameter
 
   | Parameter  | Type                  | Description                                                  |
   | ---------- | --------------------- | ------------------------------------------------------------ |
@@ -8588,12 +8153,12 @@ def ble_gatt_add_service():
   | uuid_s     | Unsigned integer type | Short UUID, 2 bytes (16bit)                                  |
   | uuid_l     | Array                 | Long UUID, 16 bytes (128bit)                                 |
 
-* Return Value：
+* Return Value
 
   * 0	 Successful execution
   * -1	Failed execution
 
-* Example：
+* Example
 
 ```python
 def ble_gatt_add_characteristic():
@@ -8617,11 +8182,11 @@ def ble_gatt_add_characteristic():
 
 > **ble.addCharaValue(server_id, chara_id, permission, uuid_type, uuid_s, uuid_l, value)**
 
-* Function:
+* Function
 
   Add a characteristic value for a characteristic.
 
-* Parameter:
+* Parameter
 
   | Parameter  | Type                  | Description                                                  |
   | ---------- | --------------------- | ------------------------------------------------------------ |
@@ -8633,12 +8198,12 @@ def ble_gatt_add_characteristic():
   | uuid_l     | Array                 | Long UUID, 16 bytes (128bit)                                 |
   | value      | Array                 | Characteristic value                                         |
 
-* Return Value:
+* Return Value
 
   * 0	 Successful execution
   * -1	Failed execution
 
-* Example:
+* Example
 
 ```python
 def ble_gatt_add_characteristic_value():
@@ -8666,11 +8231,11 @@ def ble_gatt_add_characteristic_value():
 
 > **ble.addCharaDesc(server_id, chara_id, permission, uuid_type, uuid_s, uuid_l, value)**
 
-* Function:
+* Function
 
   Add a characteristic descriptor for a characteristic. The characteristic descriptor and characteristic value belong to the same characteristic.
 
-* Parameter:
+* Parameter
 
   | Parameter  | Type                  | Description                                                  |
   | ---------- | --------------------- | ------------------------------------------------------------ |
@@ -8682,12 +8247,12 @@ def ble_gatt_add_characteristic_value():
   | uuid_l     | Array                 | Long UUID, 16 bytes (128bit)                                 |
   | value      | Array                 | Characteristic descriptor value                              |
 
-* Return Value:
+* Return Value
 
   * 0	 Successful execution
   * -1	Failed execution
 
-* Example:
+* Example
 
 ```python
 def ble_gatt_add_characteristic_desc():
@@ -8713,23 +8278,23 @@ def ble_gatt_add_characteristic_desc():
 
 > **ble.addOrClearService(option, mode)**
 
-* Function:
+* Function
 
   Complete the addition of services or clear the added services.
 
-* Parameter:
+* Parameter
 
   | Parameter | Type                  | Description                                                  |
   | --------- | --------------------- | ------------------------------------------------------------ |
   | option    | Unsigned integer type | Operation type.<br>0 - Clear the services<br/>1 - Complete the addition of services |
   | mode      | Unsigned integer type | Retention mode of system service.<br/>0 - Delete the default system GAP and GATT services<br/>1 - Retain the default system GAP and GATT services |
 
-* Return Value:
+* Return Value
 
   * 0	 Successful execution
   * -1	Failed execution
 
-* Example:
+* Example
 
 ```python
 See comprehensive example
@@ -8741,11 +8306,11 @@ See comprehensive example
 
 > **ble.sendNotification(connect_id, attr_handle, value)**
 
-* Function:
+* Function
 
   Send notification.
 
-* Parameter:
+* Parameter
 
   | Parameter   | Type                  | Description                                       |
   | ----------- | --------------------- | ------------------------------------------------- |
@@ -8753,12 +8318,12 @@ See comprehensive example
   | attr_handle | Unsigned integer type | Attribute handle                                  |
   | value       | Array                 | Data to be sent. Do not send data longer than MTU |
 
-* Return Value:
+* Return Value
 
   * 0	 Successful execution
   * -1	Failed execution
 
-* Example:
+* Example
 
 ```python
 See comprehensive example
@@ -8770,11 +8335,11 @@ See comprehensive example
 
 > **ble.sendIndication(connect_id, attr_handle, value)**
 
-* Function:
+* Function
 
   Send indication.
 
-* Parameter:
+* Parameter
 
   | Parameter   | Type                  | Description                                       |
   | ----------- | --------------------- | ------------------------------------------------- |
@@ -8782,12 +8347,12 @@ See comprehensive example
   | attr_handle | Unsigned integer type | Attribute handle                                  |
   | value       | Array                 | Data to be sent. Do not send data longer than MTU |
 
-* Return Value:
+* Return Value
 
   * 0	 Successful execution
   * -1	Failed execution
 
-* Example:
+* Example
 
 ```python
 See comprehensive example
@@ -8799,20 +8364,20 @@ See comprehensive example
 
 > **ble.advStart()**
 
-* Function:
+* Function
 
   Start advertising.
 
-* Parameter:
+* Parameter
 
   * None
 
-* Return Value:
+* Return Value
 
   * 0	 Successful execution
   * -1	Failed execution
 
-* Example:
+* Example
 
   * None
 
@@ -8823,26 +8388,26 @@ See comprehensive example
 
 > **ble.advStop()**
 
-* Function:
+* Function
 
   Stop advertising.
 
-* Parameter:
+* Parameter
 
   * None
 
-* Return Value:
+* Return Value
 
   * 0	 Successful execution
   * -1	Failed execution
 
-* Example:
+* Example
 
   * None
 
 
 
-##### BLE Server - Comprehensive Example:
+##### BLE Server - Comprehensive Example
 
 ```python
 # -*- coding: UTF-8 -*-
@@ -9295,22 +8860,22 @@ if __name__ == '__main__':
 
 > **ble.clientInit(user_cb)**
 
-* Function：
+* Function
 
   Initialize BLE Client and register callback function.
 
-* Parameter：
+* Parameter
 
 | Parameter | Tpye     | Description       |
 | --------- | -------- | ----------------- |
 | user_cb   | function | Callback function |
 
-* Return Value：
+* Return Value
 
   * 0	 Successful execution
   * -1	Failed execution
 
-- Description：
+- Description
 
 （1）Format of callback function
 
@@ -9349,7 +8914,7 @@ def ble_callback(args):
 |    36    |          4          | args[0] ：event_id, which indicates read characteristic descriptor<br/>args[1] ：status, which indicates the operation state. 0 - Successful execution; non-0 - Failed execution<br/>args[2] ：data_len, the length of data<br/>args[3] ：data, Raw data |
 |    37    |          3          | args[0] ：event_id, which indicates attribute error<br/>args[1] ：status, which indicates the operation state. 0 - Successful execution; non-0 - Failed execution<br/>args[2] ：error code |
 
-* Example：
+* Example
 
 ```
 See comprehensive example
@@ -9361,20 +8926,20 @@ See comprehensive example
 
 > **ble.clientRelease()**
 
-* Function:
+* Function
 
   Release BLE Client resources.
 
-* Parameter:
+* Parameter
 
   * None
 
-* Return Value:
+* Return Value
 
   * 0	 Successful execution
   * -1	Failed execution
 
-* Example：
+* Example
 
 ```python
 See comprehensive example
@@ -9386,11 +8951,11 @@ See comprehensive example
 
 > **ble.setScanParam(scan_mode, interval, scan_window, filter_policy, addr_type)**
 
-* Function:
+* Function
 
   Set scan parameters.
 
-* Parameter:
+* Parameter
 
 | Parameter     | Type                  | Description                                                  |
 | ------------- | --------------------- | ------------------------------------------------------------ |
@@ -9400,16 +8965,16 @@ See comprehensive example
 | filter_policy | Unsigned integer type | Scan filtering policy, default 0：<br/>0 - All broadcast packets except for directional broadcasts that are not from the device<br/>1 - Whitelisted broadcast packets of devices except for directed broadcasts that are not of the device<br/>2 - Undirectional broadcast, directional broadcast directed to the device or directional broadcast using Resolvable private address<br/>3 - Whitelist device non-directional broadcast, directional broadcast to the device or directional broadcast using Resolvable private address |
 | addr_type     | Unsigned integer type | Local address type, range:<br/>0 - Public address<br/>1 - Random address |
 
-* Notice:
+* Notice
 
   Something to note about the interval and scan_window parameters : Scan time scan_window cannot be longer than the scan interval. If they are equal, it indicates continuous scanning. In this case, the BLE Controller runs continuous scanning, occupying system resources and therefore cannot perform other tasks. It is not recommended to set the time too short, the more frequent the scan, the higher the power consumption.
 
-* Return Value:
+* Return Value
 
   * 0	 Successful execution
   * -1	Failed execution
 
-* Example：
+* Example
 
 ```python
 See comprehensive example
@@ -9421,20 +8986,20 @@ See comprehensive example
 
 > **ble.scanStart()**
 
-* Function:
+* Function
 
   Start scanning.
 
-* Parameter:
+* Parameter
 
   * None
 
-* Return Value:
+* Return Value
 
   * 0	 Successful execution
   * -1	Failed execution
 
-* Example：
+* Example
 
 ```python
 See comprehensive example
@@ -9446,20 +9011,20 @@ See comprehensive example
 
 > **ble.scanStop()**
 
-* Function:
+* Function
 
   Stop scanning.
 
-* Parameter:
+* Parameter
 
   * None
 
-* Return Value:
+* Return Value
 
   * 0	 Successful execution
   * -1	Failed execution
 
-* Example：
+* Example
 
 ```python
 See comprehensive example
@@ -9471,22 +9036,22 @@ See comprehensive example
 
 > **ble.setScanFilter(act)**
 
-* Function:
+* Function
 
   Turn on or off the scan filter switch. If this parameter is enabled, the broadcast data of the same device is reported only once when scanning the broadcast data of the device. If disabled, all broadcast data on the same device will be reported.The filtering function is enabled by default.
 
-* Parameter:
+* Parameter
 
   | Parameter | Type                  | Description                                                  |
   | --------- | --------------------- | ------------------------------------------------------------ |
   | act       | Unsigned integer type | 0 - Turn off the scan filter switch<br/>1 - Turn on the scan filter switch |
 
-* Return Value:
+* Return Value
 
   * 0	 Successful execution
   * -1	Failed execution
 
-* Example:
+* Example
 
 ```python
 See comprehensive example
@@ -9498,23 +9063,23 @@ See comprehensive example
 
 > **ble.connect(addr_type, addr)**
 
-* Function:
+* Function
 
   Connect to the device based on the specified device address.
 
-* Parameter:
+* Parameter
 
   | Parameter | Type                  | Description                                                  |
   | --------- | --------------------- | ------------------------------------------------------------ |
   | addr_type | Unsigned integer type | Address type, range:<br/>0 - Public address<br/>1 - Random address |
   | addr      | bytearray type        | device address, 6 bytes                                      |
 
-* Return Value:
+* Return Value
 
   * 0	 Successful execution
   * -1	Failed execution
 
-* Example:
+* Example
 
 ```python
 See comprehensive example
@@ -9526,22 +9091,22 @@ See comprehensive example
 
 > **ble.cancelConnect(addr)**
 
-* Function:
+* Function
 
   Cancels the connection being established.
 
-* Parameter:
+* Parameter
 
   | Parameter | Type           | Description             |
   | --------- | -------------- | ----------------------- |
   | addr      | bytearray type | device address, 6 bytes |
 
-* Return Value:
+* Return Value
 
   * 0	 Successful execution
   * -1	Failed execution
 
-* Example:
+* Example
 
 ```python
 None
@@ -9553,22 +9118,22 @@ None
 
 > **ble.disconnect(connect_id)**
 
-* Function:
+* Function
 
   Disconnect an established connection.
 
-* Parameter:
+* Parameter
 
   | Parameter  | Type                  | Description                                                  |
   | ---------- | --------------------- | ------------------------------------------------------------ |
   | connect_id | Unsigned integer type | Connection ID, the connection ID obtained when establishing the connection |
 
-* Return Value:
+* Return Value
 
   * 0	 Successful execution
   * -1	Failed execution
 
-* Example:
+* Example
 
 ```python
 See comprehensive example
@@ -9580,22 +9145,22 @@ See comprehensive example
 
 > **ble.discoverAllService(connect_id)**
 
-* Function:
+* Function
 
   Scan all services of the device.
 
-* Parameter:
+* Parameter
 
   | Parameter  | Type                  | Description                                                  |
   | ---------- | --------------------- | ------------------------------------------------------------ |
   | connect_id | Unsigned integer type | Connection ID, the connection ID obtained when establishing the connection |
 
-* Return Value:
+* Return Value
 
   * 0	 Successful execution
   * -1	Failed execution
 
-* Example:
+* Example
 
 ```python
 See comprehensive example
@@ -9607,11 +9172,11 @@ See comprehensive example
 
 > **ble.discoverByUUID(connect_id, uuid_type, uuid_s, uuid_l)**
 
-* Function:
+* Function
 
   Scans services by  UUID.
 
-* Parameter:
+* Parameter
 
   | Parameter  | Type                  | Description                                                  |
   | ---------- | --------------------- | ------------------------------------------------------------ |
@@ -9620,12 +9185,12 @@ See comprehensive example
   | uuid_s     | Unsigned integer type | short UUID, 2 bytes(16bit), When uuid_type is 0, this value is 0 |
   | uuid_l     | bytearray type        | long UUID，16 bytes(128bit),When uuid_type is 1, this value is  bytearray([0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]) |
 
-* Return Value:
+* Return Value
 
   * 0	 Successful execution
   * -1	Failed execution
 
-* Example:
+* Example
 
 ```python
 See comprehensive example
@@ -9637,11 +9202,11 @@ See comprehensive example
 
 > **ble.discoverAllIncludes(connect_id, start_handle, end_handle)**
 
-* Function:
+* Function
 
   Scan all includes. Start_handle and end_handle belong to the same service.
 
-* Parameter:
+* Parameter
 
   | Parameter    | Type                  | Description                                                  |
   | ------------ | --------------------- | ------------------------------------------------------------ |
@@ -9649,12 +9214,12 @@ See comprehensive example
   | start_handle | Unsigned integer type | Start handle from which to start looking for includes        |
   | end_handle   | Unsigned integer type | end handle from which to start looking for includes          |
 
-* Return Value:
+* Return Value
 
   * 0	 Successful execution
   * -1	Failed execution
 
-* Example:
+* Example
 
 ```python
 None
@@ -9666,11 +9231,11 @@ None
 
 > **ble.discoverAllChara(connect_id, start_handle, end_handle)**
 
-* Function:
+* Function
 
   Scans all characteristics. Start_handle and end_handle belong to the same service.
 
-* Parameter:
+* Parameter
 
   | Parameter    | Type                  | Description                                                  |
   | ------------ | --------------------- | ------------------------------------------------------------ |
@@ -9678,12 +9243,12 @@ None
   | start_handle | Unsigned integer type | Start handle from which to start looking for characteristics |
   | end_handle   | Unsigned integer type | end handle from which to start looking for characteristics   |
 
-* Return Value:
+* Return Value
 
   * 0	 Successful execution
   * -1	Failed execution
 
-* Example:
+* Example
 
 ```python
 See comprehensive example
@@ -9695,11 +9260,11 @@ See comprehensive example
 
 > **ble.discoverAllCharaDesc(connect_id, start_handle, end_handle)**
 
-* Function:
+* Function
 
   Scan the description of all characteristics. Start_handle and end_handle belong to the same service.
 
-* Parameter:
+* Parameter
 
   | Parameter    | Type                  | Description                                                  |
   | ------------ | --------------------- | ------------------------------------------------------------ |
@@ -9707,12 +9272,12 @@ See comprehensive example
   | start_handle | Unsigned integer type | Start handle from which to start looking for characteristic description |
   | end_handle   | Unsigned integer type | end handle from which to start looking for characteristic description |
 
-* Return Value:
+* Return Value
 
   * 0	 Successful execution
   * -1	Failed execution
 
-* Example:
+* Example
 
 ```python
 See comprehensive example
@@ -9724,11 +9289,11 @@ See comprehensive example
 
 > **ble.readCharaByUUID(connect_id, start_handle, end_handle, uuid_type, uuid_s, uuid_l)**
 
-* Function:
+* Function
 
   Scan the description of all characteristics. Start_handle and end_handle must contain a characteristic value  handle.
 
-* Parameter:
+* Parameter
 
   | Parameter    | Type                  | Description                                                  |
   | ------------ | --------------------- | ------------------------------------------------------------ |
@@ -9739,12 +9304,12 @@ See comprehensive example
   | uuid_s       | Unsigned integer type | short UUID, 2 bytes(16bit), When uuid_type is 0, this value is 0 |
   | uuid_l       | bytearray type        | long UUID，16 bytes(128bit),When uuid_type is 1, this value is  bytearray([0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]) |
 
-* Return Value:
+* Return Value
 
   * 0	 Successful execution
   * -1	Failed execution
 
-* Example:
+* Example
 
 ```python
 See comprehensive example
@@ -9756,11 +9321,11 @@ See comprehensive example
 
 > **ble.readCharaByHandle(connect_id, handle, offset, is_long)**
 
-* Function:
+* Function
 
   Reads the characteristic value by the specified handle.
 
-* Parameter:
+* Parameter
 
   | Parameter  | Type                  | Description                                                  |
   | ---------- | --------------------- | ------------------------------------------------------------ |
@@ -9769,12 +9334,12 @@ See comprehensive example
   | offset     | Unsigned integer type | offset                                                       |
   | is_long    | Unsigned integer type | Long characteristic value flag<br/>0 - Short characteristic value, It can be read all at once<br/>1 - Long characteristic value, It needs to be read multiple times |
 
-* Return Value:
+* Return Value
 
   * 0	 Successful execution
   * -1	Failed execution
 
-* Example:
+* Example
 
 ```python
 See comprehensive example
@@ -9786,11 +9351,11 @@ See comprehensive example
 
 > **ble.readCharaDesc(connect_id, handle, is_long)**
 
-* Function:
+* Function
 
   Reads the characteristic description.
 
-* Parameter:
+* Parameter
 
   | Parameter  | Type                  | Description                                                  |
   | ---------- | --------------------- | ------------------------------------------------------------ |
@@ -9798,12 +9363,12 @@ See comprehensive example
   | handle     | Unsigned integer type | the handle of characteristic description                     |
   | is_long    | Unsigned integer type | Long characteristic descriptionflag<br/>0 - Short characteristic description<br/>1 - Long characteristic description |
 
-* Return Value:
+* Return Value
 
   * 0	 Successful execution
   * -1	Failed execution
 
-* Example:
+* Example
 
 ```python
 See comprehensive example
@@ -9815,11 +9380,11 @@ See comprehensive example
 
 > **ble.writeChara(connect_id, handle, offset, is_long, data)**
 
-* Function:
+* Function
 
   Writes the characteristic value  and require link layer response.
 
-* Parameter:
+* Parameter
 
   | Parameter  | Type                  | Description                                                  |
   | ---------- | --------------------- | ------------------------------------------------------------ |
@@ -9829,12 +9394,12 @@ See comprehensive example
   | is_long    | Unsigned integer type | Long characteristic value flag<br/>0 - Short characteristic value, It can be read all at once<br/>1 - Long characteristic value, It needs to be read multiple times |
   | data       | bytearray type        | the data of characteristic value                             |
 
-* Return Value:
+* Return Value
 
   * 0	 Successful execution
   * -1	Failed execution
 
-* Example:
+* Example
 
 ```python
 None
@@ -9846,11 +9411,11 @@ None
 
 > **ble.writeCharaNoRsp(connect_id, handle, data)**
 
-* Function:
+* Function
 
   Writes the characteristic value  without link layer response.
 
-* Parameter:
+* Parameter
 
   | Parameter  | Type                  | Description                                                  |
   | ---------- | --------------------- | ------------------------------------------------------------ |
@@ -9858,12 +9423,12 @@ None
   | handle     | Unsigned integer type | the handle of characteristic value                           |
   | data       | bytearray type        | the data of characteristic value                             |
 
-* Return Value:
+* Return Value
 
   * 0	 Successful execution
   * -1	Failed execution
 
-* Example:
+* Example
 
 ```python
 None
@@ -9875,11 +9440,11 @@ None
 
 > **ble.writeCharaDesc(connect_id, handle, data)**
 
-* Function:
+* Function
 
   Writes the characteristic description.
 
-* Parameter:
+* Parameter
 
   | Parameter  | Type                  | Description                                                  |
   | ---------- | --------------------- | ------------------------------------------------------------ |
@@ -9887,12 +9452,12 @@ None
   | handle     | Unsigned integer type | the handle of characteristic description                     |
   | data       | bytearray type        | the data of characteristic description                       |
 
-* Return Value:
+* Return Value
 
   * 0	 Successful execution
   * -1	Failed execution
 
-* Example:
+* Example
 
 ```python
 See comprehensive example
@@ -9900,7 +9465,7 @@ See comprehensive example
 
 
 
-##### BLE Client- Comprehensive Example:
+##### BLE Client- Comprehensive Example
 
 ```python
 # -*- coding: UTF-8 -*-
@@ -11189,7 +10754,7 @@ $GNGLL,3149.2809
 
 > **gnss.checkDataValidity()**
 
-The functional interface provided by the GNSS module obtains data from GNGGA, GNRMC and GPGSV statements in the original GNSS packets read from the serial port. This interface is used to check the validity of GNGGA, GNRMC and GPGSV statements in a packet of GNSS data read from the serial port.
+The interface provided by the GNSS module obtains data from GNGGA, GNRMC and GPGSV statements in the original GNSS packets read from the serial port. This interface is used to check the validity of GNGGA, GNRMC and GPGSV statements in a packet of GNSS data read from the serial port.
 
 * Parameter
 
