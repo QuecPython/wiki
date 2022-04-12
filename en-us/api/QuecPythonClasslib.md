@@ -10668,7 +10668,7 @@ $GNGLL,3149.2809
 
 > **gnss.checkDataValidity()**
 
-The functional interface provided by the GNSS module obtains data from GNGGA, GNRMC and GPGSV statements in the original GNSS packets read from the serial port. This interface is used to check the validity of GNGGA, GNRMC and GPGSV statements in a packet of GNSS data read from the serial port.
+The interface provided by the GNSS module obtains data from GNGGA, GNRMC and GPGSV statements in the original GNSS packets read from the serial port. This interface is used to check the validity of GNGGA, GNRMC and GPGSV statements in a packet of GNSS data read from the serial port.
 
 * Parameter
 
