@@ -11222,8 +11222,7 @@ bytearray(b'12345678')
 
 #### NB Internet of things cloud platform
 
-Module function: it provides the function of connecting to the Internet of things cloud platform and connecting to the Internet of things cloud platform. Through the communication function of IOT cloud platform and module equipment, it currently supports China Telecom lot IOT platform, China Telecom AEP IOT platform and China Mobile onenet IOT platform.
-
+Module function: Provide docking IoT cloud platform function, provide connection To IoT cloud platform. Through the communication function of the IoT cloud platform and module devices, it currently supports China Telecom lot IoT platform, China Telecom AEP IoT platform and China Mobile onenet IoT platform. The quecthing version does not include this module.
 Module name: nb(lowercase)
 
 Support platform: BC25PA
