@@ -4259,14 +4259,14 @@ aud.play(1, 0, 'U:/test.mp3')
 
 > aud.aud_tone_play(tone, time)
 
-播放tone音，播放一段时间(time)后自动停止播放
+播放tone音，播放一段时间(time)后自动停止播放（注：EC600N/EC800N平台调用该接口为立即返回，EC600U/EC200U平台调用该接口为阻塞等待）
 
 * 参数
 
 | 参数 | 参数类型 | 参数说明                                                     |
 | ---- | -------- | ------------------------------------------------------------ |
-| tone | int      | tone类型<br/>0~15- 按键音(0~9、A、B、C、D、#、*)（仅EC600U/EC200U平台支持）<br/>16 - 拨号音，（注：EC600N/EC800N平台为连续的tone音，而EC600U/EC200U平台是播放、停顿交替的tone音）<br/>17 - busy（仅EC600U/EC200U平台支持）<br/>18- radio ack（仅EC600U/EC200U平台支持）<br/>19- call drop（仅EC600U/EC200U平台支持）<br/>20- special information（仅EC600U/EC200U平台支持）<br/>21- call waiting（仅EC600U/EC200U平台支持）<br/>22- ringing（仅EC600U/EC200U平台支持） |
-| time | int      | 播放时长，单位ms<br/>0 - 不停止一直播放，只能调用aud.aud_tone_play_stop()接口才能停止（仅EC600N/EC800N平台支持，EC600U/EC200U平台填0则无动作）<br/>大于0 - 播放时长time ms |
+| tone | int      | tone类型<br/>0~15- 按键音(0~9、A、B、C、D、#、*)<br/>16 - 拨号音 |
+| time | int      | 播放时长，单位ms<br/>0 - 不停止一直播放，只能调用aud.aud_tone_play_stop()接口才能停止（EC600N/EC800N平台持续时间无限，EC600U/EC200U平台持续大概2分钟后停止）<br/>大于0 - 播放时长time ms |
 
 * 返回值
 
@@ -4277,8 +4277,6 @@ aud.play(1, 0, 'U:/test.mp3')
   
 
 ###### 停止Tone音播放
-
-仅EC600N/EC800N平台支持
 
 > aud.aud_tone_play_stop()
 
@@ -4307,14 +4305,15 @@ aud = audio.Audio(0)
 
 # EC600U/EC200U平台
 def dial_play_ec600u():
-    aud.aud_tone_play(16, 5000)
+    for i in range(0,10):
+        aud.aud_tone_play(16, 1000)
+        utime.sleep(1)
 
 # EC600N/EC800N平台
 def dial_play_ec600n():
-    for i in range(0,20):
+    for i in range(0,10):
         aud.aud_tone_play(16, 1000)
         utime.sleep(2)
-        aud.aud_tone_play_stop()
         
 # dial_play_ec600n()
 dial_play_ec600u()

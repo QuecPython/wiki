@@ -2170,7 +2170,7 @@ This function sets APN. After setting, you need to restart or switch to mode 0 a
 >>> net.setApn(1,1,'3gnet','mia','123',2,0)
 0  
 ```
-  
+
 
 
 ##### Obtain the Current  APN
@@ -2210,7 +2210,7 @@ This function obtains the current APN.
 '3gnet'
 >>> net.getApn(1,0)
 (1, '3gnet', 'mia', '123', 2)
-``` 
+```
 
   
 
@@ -3733,18 +3733,18 @@ Stop audio streaming
 
 ###### Tone playback
 
-Support platform ec600u/ec200u/ec600n/ec800n
+Support platform EC600U/EC200U/EC600N/EC800N
 
 > aud.aud_tone_play(tone, time)
 
-Play tone tone and stop playing automatically after playing for a period of time
+Play tone tone and stop playing automatically after playing for a period of time（Note: When the EC600N/EC800N platform calls this interface, it is an immediate return. When the EC600U/EC200U platform calls this interface, it is a blocking wait ）
 
 * Parameter
 
 |Parameter | parameter type | parameter description|
 | ---- | -------- | ------------------------------------------------------------ |
-|Tone | int | tone type <br/> 0 ~ 15 - key tone (0 ~ 9, a, B, C, D, #, *) (only supported by ec600u/ec200u platform) <br/> 16 - dial tone, (Note: the ec600n/ec800n platform is a continuous tone tone, while the ec600u/ec200u platform is a tone with alternating play and pause) <br/> 17 - busy <br/> 18 - Radio ack <br/> 19 - call drop <br/> 20 - special information <br/> 21 - call waiting (only supported on ec600u/ec200u platforms) <br/> 22 - ringing (only supported on ec600u/ec200u platforms)|
-|Time | int | playback duration, unit MS <br/> 0 - you can only call aud without stopping playback aud_ tone_ play_ Stop() interface can be stopped (only ec600n/ec800n platform supports, ec600u/ec200u platform fills 0, then there is no action) <br/> greater than 0 - playback duration time MS|
+|Tone | int | tone type <br/> 0 ~ 15 - key tone (0 ~ 9, a, B, C, D, #, *) <br/> 16 - dial tone |
+|Time | int | playback duration, unit MS <br/> 0 - Keep playing without stopping, It can only be stopped by calling the aud.aud_tone_play_stop() interface (The EC600N/EC800N duration is unlimited. The EC600U/EC200U duration is about 2 minutes) <br/> greater than 0 - playback duration time MS |
 
 * Return Value
 
@@ -3755,8 +3755,6 @@ Play tone tone and stop playing automatically after playing for a period of time
   
 
 ###### Stop tone playback
-
-Only ec600n/ec800n platform supports
 
 > aud.aud_tone_play_stop()
 
@@ -3782,16 +3780,17 @@ import utime
 
 aud = audio.Audio(0)
 
-#200ecu/600ecu platform
+#EC200U/EC600U platform
 def dial_play_ec600u():
-    aud.aud_tone_play(16, 5000)
+    for i in range(0,10):
+        aud.aud_tone_play(16, 1000)
+        utime.sleep(1)
 
-#Ec600n/ec800n platform
+#EC600N/EC800N platform
 def dial_play_ec600n():
-    for i in range(0,20):
+    for i in range(0,10):
         aud.aud_tone_play(16, 1000)
         utime.sleep(2)
-        aud.aud_tone_play_stop()
         
 # dial_play_ec600n()
 dial_play_ec600u()
