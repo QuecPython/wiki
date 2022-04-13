@@ -11660,7 +11660,7 @@ bytearray(b'12345678')
 
 #### nb-物联网云平台
 
-模块功能：提供对接物联网云平台功能，提供连接物联网云平台。通过物联网云平台和模块设备的通信功能，目前支持中国电信lot物联网平台、中国电信AEP物联网平台和中国移动onenet物联网平台。
+模块功能：提供对接物联网云平台功能，提供连接物联网云平台。通过物联网云平台和模块设备的通信功能，目前支持中国电信lot物联网平台、中国电信AEP物联网平台和中国移动onenet物联网平台。quecthing版本不包含此模块。
 
 模块名:nb(小写)
 
@@ -11908,8 +11908,10 @@ bytearray(b'313233')
 0
 ```
 
-###### 关闭连接
 
+
+###### 关闭连接
+> **aep.close()**
 - 参数
 
 无
@@ -12361,14 +12363,30 @@ dict_cmd={'数据上报':0x02,
           '下行指令固定':0x06,
           '指令响应':0x86
          }
-send_type={
-	'RAI_NONE':0,
-	'RAI_1':1,
-	'RAI_2':2
-}
+send_type={'RAI_NONE':0,
+            'TYpe_001':1,
+            'TYpe_002':2,
+            'TYpe_100':100,
+            'TYpe_101':101,
+            'TYpe_102':102
+    }
 servcei_info={
     'ip':"221.229.214.202",
     'port':"5683"
+}
+modem_type={
+    'cache_no_urc':0,
+    'no_cache':1,
+    'cache_have_urc':2
+}
+aep_event={
+    'psm_event':0,
+    'con_event':21,
+    'send_event':22,
+    'recover_event':23,
+    'rst_event':25,
+    'recv_event_data':27,
+    'recv_event_flag':28,
 }
 
 def aep_pack_cmdtype02(service_id,data_in):
@@ -12427,7 +12445,7 @@ def aep_unpack(data_in):
     else:
         print('not support')
 
-aep=AEP(servcei_info['ip'],servcei_info['port'])
+
 
 def recv():
     data=bytearray(20)	
@@ -12454,20 +12472,66 @@ def close():
     ret = aep.close()
     print('close ',ret)
     
+def deal_conn(data):
+    if data[1] == 0:
+        print('connect CtWing success!')
+    if data[1] == 3:
+        print('subscription /19/0/0 success!')
+        send()
+    if data[1] == -1 or data[1] == 1:
+        print('connect CtWing failed!')
+        aep.connect_check()
+def deal_recv(data):
+    if data[1] == 0:
+        aep_unpack(data[2])
+        print('will close')
+        close()
+    if data[1] == 5:
+        print('recv data from ctwing falied')
+        
+def deal_psm(data):
+    if data[1] == 0:
+        print('enter modem psm')
+    if data[1] == 1:
+        print('exit modem psm')
+def deal_send(data):
+    if data[1] == 4:
+        print('send data to ctwing success')
+    else:
+        print('send data to ctwing falied')
+        
+def deal_rst(data):
+    print('recv rst messge from platform')
+    close()
+def deal_recover(data):
+    print('deal_recover:',data)
+    
+def event_cb(args):
+    print('args:',args)
+    if args[0] == aep_event['con_event']:
+        deal_conn(args)
+    if args[0] == aep_event['send_event']:
+        deal_send(args)
+    if args[0] == aep_event['recv_event_data'] or args[0] == aep_event['recv_event_flag']:
+        deal_recv(args)
+    if args[0] == aep_event['rst_event']:
+        deal_rst(args)
+    if args[0] == aep_event['psm_event']:
+        deal_psm(args)
+    if args[0] == aep_event['recover_event']:
+        deal_recover(args)
+    
+def init():
+    
+    aep.set_event_callcb(event_cb)
+    connect()
+    
 loop_num = 0
 
 def do_task():
-    connect()
-    send()
-    global loop_num
-    while loop_num < 10:
-        loop_num=loop_num+1
-        utime.sleep(3)
-        ret = recv()
-        if ret == 0:
-            break
-    close()
-
+    init()
+    
+aep=AEP(servcei_info['ip'],servcei_info['port'],modem_type['no_cache'])
 if __name__ == '__main__':
     do_task()
 

@@ -11308,7 +11308,7 @@ Introduction: it includes two sub modules OC, AEP. The two sub modules all use l
 | --------- | ------ | ------------------------------------------------------------ |
 | data_len  | int    | Expected Send data length (note that this parameter is adjusted according to the actual length of data, and the minimum value is taken according to the comparison between the capacity of data variable and data_len),Non blocking|
 | data      | string | Data to be sent,The maximum supported data length is 1024 bytes                                   |
-| type      | int    | Indicates that the core network releases the RRC connection with the module: 0 - no indication. 1 - indicates that no further uplink or downlink data is expected after the packet uplink data, and the core network can release it immediately. 2 - indicates that a single downlink packet with a corresponding reply is expected in the uplink data of the packet, and the core network will release it immediately after distribution. |
+| type      | int    | Indicates that the core network releases the RRC connection with the module: <0-no indication. <br/>1-Indicates that no further uplink or downlink data is expected after the packet uplink data, the core network can release it immediately. <br/>2-Indicates that a single downlink data packet corresponding to the reply is expected after the uplink data of the packet, and the core network releases it immediately after it is sent.|
 
 - Note
 
@@ -11464,8 +11464,8 @@ bytearray(b'313233')
 0
 ```
 
-
-###### Close connection
+###### close the connection
+> **aep.close()**
 
 - Parameter
 
