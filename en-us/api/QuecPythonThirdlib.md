@@ -1543,7 +1543,7 @@ if __name__ == '__main__':
 
 Function: This module provides the interface fir time synchronization.
 
-Note: The BC25PA platform does not support this module function.
+Note: When opening the BC25PA platform telecommunications card, you need to state that the SIM card must support such services, which is generally not restricted by China Mobile Unicom (you need to confirm with the operator when opening the card).
 
 ##### Return the Current NTP Server Address
 
