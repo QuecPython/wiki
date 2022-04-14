@@ -827,6 +827,44 @@ import log
 Testlog = log.getLogger("TestLog")
 ```
 
+##### Set log output location
+
+> **log.set_output(out)**
+
+Set the log output location. Currently, only uART and usys. Stdout are supported
+
+- parameter
+
+| parameter | Type     | Description          |
+| --------- | -------- | -------------------- |
+| out       | iterator | uart or usys. stdout |
+
+- Return Value
+  - None
+- Example
+
+```python
+import log
+log.basicConfig(level=log.INFO)
+Testlog = log.getLogger("TestLog")
+
+# Set the output to the debug port
+from machine import UART
+uart = UART(UART.UART0, 115200, 8, 0, 1, 0)
+
+log.set_output(uart)
+
+Testlog.info("this is a Test log") # Output with the corresponding UART port
+
+# Switch from uART port to interactive port output
+import usys
+log.set_output(usys.stdout)
+
+Testlog.info("this is a Test log") # Output to the interface
+```
+
+##### 
+
 ##### Output Log Debug
 
 > **log.debug(tag, msg)**
