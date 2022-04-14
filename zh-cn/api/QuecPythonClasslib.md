@@ -2177,7 +2177,7 @@ sms.setCallback(cb)
 > **net.setApn(\*args)**
 
 设置APN，设置后需要重启或者通过 net.setModemFun(mode) 接口先切换到模式0，再切换到模式1才能生效。 
-  
+
 * 参数
 
   该接口在Qualcomm/ASR_1803s/Unisoc(不包括EG915)平台为可变参函数,参数个数为2或7, 其他平台参数个数固定为2：
@@ -2252,7 +2252,7 @@ sms.setCallback(cb)
 '3gnet'
 >>> net.getApn(1,0)
 (1, '3gnet', 'mia', '123', 2)
-``` 
+```
 
 
 
@@ -4363,13 +4363,13 @@ record_test = audio.Record()
 
 * 返回值
 
-   0： 成功
+    0： 成功
 
   -1:  文件覆盖失败
 
   -2：文件打开失败
 
-  -3: 文件正在使用
+  -3： 文件正在使用
 
   -4：通道设置错误
 
@@ -7494,6 +7494,8 @@ print('exit!')
 
 * 注意
   BC25PA平台不支持此模块功能。
+  
+  使用该功能前，需要初始化LCD
 > ​	qrcode.show(qrcode_str,magnification,start_x,start_y,Background_color,Foreground_color)
 
 - 参数
@@ -10727,7 +10729,7 @@ if __name__ == '__main__':
 
 #### camera - 摄像扫码
 
-模块功能：实现摄像头预览，照相机，录像机，扫码功能（目前仅支持预览和扫码功能）
+模块功能：实现摄像头预览，照相机，扫码功能
 
 注意：BC25PA平台不支持模块功能。
 
@@ -10744,14 +10746,14 @@ if __name__ == '__main__':
 
 * 参数
 
-| 参数          | 参数类型 | 参数说明                                               |
-| ------------- | -------- | ------------------------------------------------------ |
-| model         | int      | camera型号：<br />*0: gc032a spi*<br />*1: bf3901 spi* |
-| cam_w         | int      | *camera水平分辨率*                                     |
-| *cam_h*       | int      | *camera垂直分辨率*                                     |
-| *lcd_w*       | int      | *LCD水平分辨率*                                        |
-| *lcd_h*       | int      | *LCD垂直分辨率*                                        |
-| perview_level | int      | 预览等级[1,2]。等级越高，图像越流畅,消耗资源越大       |
+| 参数          | 参数类型 | 参数说明                                                     |
+| ------------- | -------- | ------------------------------------------------------------ |
+| model         | int      | camera型号：<br />*0: gc032a spi*<br />*1: bf3901 spi*       |
+| cam_w         | int      | *camera水平分辨率*                                           |
+| *cam_h*       | int      | *camera垂直分辨率*                                           |
+| *lcd_w*       | int      | *LCD水平分辨率*                                              |
+| *lcd_h*       | int      | *LCD垂直分辨率*                                              |
+| perview_level | int      | 预览等级[1,2]。<br />等级2只针对ASR平台，等级越高，图像越流畅,消耗资源越大 |
 
 * 返回值
 
@@ -10804,7 +10806,7 @@ if __name__ == '__main__':
 
 ##### 扫码识别
 
-扫码识别功能。使用该功能前，需要初始化LCD。
+扫码识别功能。
 
 ###### 创建对象
 
@@ -10813,15 +10815,15 @@ if __name__ == '__main__':
 
 * 参数
 
-| 参数          | 参数类型 | 参数说明                                               |
-| ------------- | -------- | ------------------------------------------------------ |
-| model         | int      | camera型号：<br />*0: gc032a spi*<br />*1: bf3901 spi* |
-| decode_level  | int      | *解码等级[1,2]，等级越高，识别效果越好但资源消耗越大*  |
-| cam_w         | int      | *camera水平分辨率*                                     |
-| *cam_h*       | int      | *camera垂直分辨率*                                     |
-| perview_level | int      | 预览等级[1,2]。等级越高，图像越流畅,消耗资源越大       |
-| *lcd_w*       | int      | *LCD水平分辨率*                                        |
-| *lcd_h*       | int      | *LCD垂直分辨率*                                        |
+| 参数          | 参数类型 | 参数说明                                                     |
+| ------------- | -------- | ------------------------------------------------------------ |
+| model         | int      | camera型号：<br />*0: gc032a spi*<br />*1: bf3901 spi*       |
+| decode_level  | int      | *解码等级[1,2]，<br />等级2只针对ASR平台, 等级越高，识别效果越好但资源消耗越大*. |
+| cam_w         | int      | *camera水平分辨率*                                           |
+| *cam_h*       | int      | *camera垂直分辨率*                                           |
+| perview_level | int      | 预览等级[0,2]。<br />等级2只针对ASR平台, 等级越高，图像越流畅,消耗资源越大<br />等于0时，无lcd预览功能,无需提前初始化LCD<br />等于1或2时，必须先初始化lcd |
+| *lcd_w*       | int      | *LCD水平分辨率*                                              |
+| *lcd_h*       | int      | *LCD垂直分辨率*                                              |
 
 * 返回值
 
@@ -10966,7 +10968,7 @@ Scandecode.callback(callback)
 | model         | int      | camera型号：<br />*0: gc032a spi*<br />*1: bf3901 spi*       |
 | cam_w         | int      | camera水平分辨率                                             |
 | *cam_h*       | int      | *camera垂直分辨率*                                           |
-| perview_level | int      | 预览等级[0,2]。等级越高，图像越流畅,消耗资源越大。<br />等于0时，无lcd预览功能<br />等于1或2时，必须先初始化lcd |
+| perview_level | int      | 预览等级[0,2]。<br />等级2只针对ASR平台，等级越高，图像越流畅,消耗资源越大。<br />等于0时，无lcd预览功能，提前初始化LCD<br />等于1或2时，必须先初始化lcd |
 | *lcd_w*       | int      | LCD水平分辨率                                                |
 | *lcd_h*       | int      | *LCD垂直分辨率*                                              |
 
