@@ -11382,9 +11382,9 @@ SecureData.Store(1, databuf, 8)
 #Define an array with a length of 20 to read the stored data
 buf = bytearray(20)
 #Read the data in the storage area with index 1 into buf, and store the length of the read data in the variable len
-len = SecureData.Read(1, buf, 20)
+lenth = SecureData.Read(1, buf, 20)
 #Output read data
-print(buf[:len])
+print(buf[:lenth])
 ```
 **implementation results**
 ```python
@@ -11393,8 +11393,8 @@ print(buf[:len])
 >>> SecureData.Store(1, databuf, 8)
 0
 >>> buf = bytearray(20)
->>> len = SecureData.Read(1, buf, 20)
->>> print(buf[:len])
+>>> lenth = SecureData.Read(1, buf, 20)
+>>> print(buf[:lenth])
 bytearray(b'12345678')
 >>> 
 ```
