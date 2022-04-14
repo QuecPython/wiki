@@ -54,8 +54,6 @@ myprint()
 
 模块功能：提供数据拨号相关接口。
 
-注意：当前仅EC600S/EC600N/EC800N/EC200U/EC600U平台支持该功能。
-
 ##### 拨号
 
 > **dataCall.start(profileIdx, ipType, apn, username, password, authType)**
@@ -66,12 +64,12 @@ myprint()
 
 | 参数       | 参数类型 | 参数说明                                                     |
 | ---------- | -------- | ------------------------------------------------------------ |
-| profileIdx | int      | PDP索引，ASR平台范围1 - 8[volte版本默认PID最大的一路用来注册IMS，请勿重复操作]，展锐平台范围1 - 7，一般设置为1，设置其他值可能需要专用apn与密码才能设置成功 |
+| profileIdx | int      | PDP索引，ASR平台范围1 - 8[volte版本默认PID最大的一路用来注册IMS，请勿重复操作]，展锐平台范围1 - 7，高通平台1-4[第二路用来注册ims,不建议修改], 一般设置为1，设置其他值可能需要专用apn与密码才能设置成功 |
 | ipType     | int      | IP类型，0-IPV4，1-IPV6，2-IPV4和IPV6                         |
 | apn        | string   | apn名称，可为空，最大长度不超过63字节(EC200U/EC200A最大长度不超过64字节) |
 | username   | string   | apn用户名，可为空，最大长度不超过15字节(EC200U/EC200A最大长度不超过64字节) |
 | password   | string   | apn密码，可为空，最大长度不超过15字节(EC200U/EC200A最大长度不超过64字节) |
-| authType   | int      | 加密方式，0-不加密，1-PAP，2-CHAP                            |
+| authType   | int      | 加密方式，0-不加密，1-PAP，2-CHAP，3-PAP AND CHAP[仅高通平台支持]      |
 
 * 返回值
 
@@ -350,7 +348,7 @@ if __name__ == '__main__':
 | apn        | string   | apn名称，可为空，最大长度不超过63字节(EC200U/EC200A最大长度不超过64字节)|
 | username   | string   | apn用户名，可为空，最大长度不超过15字节(EC200U/EC200A最大长度不超过64字节)|
 | password   | string   | apn密码，可为空，最大长度不超过15字节(EC200U/EC200A最大长度不超过64字节)|
-| authType   | int      | 加密方式，0-不加密，1-PAP，2-CHAP                            |
+| authType   | int      | 加密方式，0-不加密，1-PAP，2-CHAP，3-PAP AND CHAP(仅高通平台支持加密方式3) |
 | flag       | int      | 可选参数，默认为0，表示仅创建user_apn.json文件，用于保存用户apn信息；为1时，表示创建user_apn.json文件保存用户apn信息之后，还会使用该apn信息立即进行一次拨号；不管该参数是0还是1，都不会影响重启时使用用户设置的apn进行开机拨号。 |
 
 * 返回值
@@ -392,7 +390,7 @@ if __name__ == '__main__':
 
 * 注意
 
-  当前仅EC600S/EC600N/EC800N/EC200U/EC600U平台支持该功能。
+  当前仅ASR/Unisoc/ASR_1803s平台支持该功能。
 
   更改DNS服务器后，域名解析时，将同步使用设置的DNS服务器。
 
@@ -731,8 +729,6 @@ if __name__ == '__main__':
 #### atcmd - 发送AT指令
 
 模块功能：提供发送AT指令接口。
-
-注意：目前该模块只支持1803S/EC200U/CATM平台。
 
 #### 发送AT指令接口
 
@@ -1750,8 +1746,6 @@ def voice_callback(args):
 
 模块功能：该模块提供短信功能相关接口。
 
-说明：当前QuecPython底层为非volte版本，暂不支持电信发送短信。
-
 注意：BC25PA平台不支持此模块。
 
 ##### 发送TEXT类型消息
@@ -2180,22 +2174,27 @@ sms.setCallback(cb)
 
 ##### 设置APN
 
-> **net.setApn(apn, simid)**
+> **net.setApn(\*args)**
 
 设置APN，设置后需要重启或者通过 net.setModemFun(mode) 接口先切换到模式0，再切换到模式1才能生效。 
-
-* 注意
-
-  该接口和datacall模块的设置APN接口是不相关的：
-  datacall模块设置APN是用入参的APN和PID去拨号，并记录到json文件中，下次再开机会用首先用这一路去拨号；
-  net模块的设置APN主要使用场景是专网卡设定特定APN才能注网，但是这个得重启生效
-
+  
 * 参数
 
-| 参数  | 参数类型 | 参数说明                      |
-| ----- | -------- | ----------------------------- |
-| apn   | string   | apn name                      |
-| simid | int      | simid<br> 0 - 卡1<br> 1 - 卡2 |
+  该接口在Qualcomm/ASR_1803s/Unisoc(不包括EG915)平台为可变参函数,参数个数为2或7, 其他平台参数个数固定为2：
+    参数个数为2：net.setApn(apn, simid)
+    参数个数为7：net.setApn(pid, iptype, apn, usrname, password, authtype, simid)
+  
+  具体释义形式如下：
+  
+| 参数    | 参数类型 | 参数说明                      |
+| -----   | -------- | ----------------------------- |
+| pid     | int      | PDP索引                       |
+| iptype  | int      | IP类型，0-IPV4，1-IPV6，2-IPV4和IPV6   |
+| apn     | string   | apn名称，可为空，最大长度不超过64字节  |
+| usrname | string   | 用户名，可为空，最大长度不超过64字节   |
+| password| string   | 用户名，可为空，最大长度不超过64字节   |
+| authtype| int      | 加密方式，0-不加密，1-PAP，2-CHAP，3-PAP AND CHAP(CATM平台支持)|
+| simid   | int      | simid<br> 0 - 卡1<br> 1 - 卡2          |
 
 * 返回值
 
@@ -2205,29 +2204,57 @@ sms.setCallback(cb)
 
   BC25PA平台不支持此方法。
 
-  
+* 示例
+
+```python
+>>> net.setApn('3gnet',0)
+0
+>>> net.setApn(1,1,'3gnet','mia','123',2,0)
+0  
+```
+
+
 
 ##### 获取当前APN
 
-> **net.getApn(simid)**
+> **net.getApn(\*args)**
 
 获取当前APN。
 
 * 参数
 
+  该接口在Qualcomm/ASR_1803s/Unisoc(不包括EG915)平台为可变参函数,参数个数为1或2, 其他平台参数个数固定为1：
+    参数个数为2：net.getApn(pid, simid)
+    参数个数为1：net.getApn(simid)
+	
+  具体释义如下：
+
 | 参数  | 参数类型 | 参数说明                        |
 | ----- | -------- | ------------------------------- |
+| pid   | int      | PDP索引                         |
 | simid | int      | simid<br/> 0 - 卡1<br/> 1 - 卡2 |
 
 * 返回值
 
-  成功返回获取到的APN，失败返回整型值-1。
+  1、当参数只有simid时：
+    成功返回获取到的APN，失败返回整型值-1。
+  2、当参数为pid, simid时：
+    成功返回获取到的pdp context：(iptype, apn, usrname, password, authtype)，失败返回整型值-1。
 
 * 注意
 
   BC25PA平台不支持此方法。
 
-  
+* 示例
+
+```python
+>>> net.getApn(0)
+'3gnet'
+>>> net.getApn(1,0)
+(1, '3gnet', 'mia', '123', 2)
+``` 
+
+
 
 ##### 获取csq信号强度
 
@@ -2257,19 +2284,19 @@ sms.setCallback(cb)
 
 ##### 获取小区信息
 
-> **net.getCellInfo()**
+> **net.getCellInfo(\*args)**
 
 获取邻近 CELL 的信息。
 
-注：BC25平台该接口为可变参函数，参数个数0-1。
-无入参情况：接口保持原有功能不变
-有入参情况，参数为sinr_enable，int型，范围0/1：
-	0，表示不获取sinr，和无入参情况返回结果一致
-	1，表示需要获取sinr，返回结果见example
-
 * 参数
 
-  无
+  该接口在BC25平台为可变参函数,参数个数为0或1, 其他平台参数个数固定为0：
+    参数个数为0：net.getCellInfo()
+    参数个数为1：net.getCellInfo(sinr_enable)
+	
+  | 参数    | 参数类型 | 参数说明                      |
+  | -----   | -------- | ----------------------------- |
+  | enable  | int      | 范围0/1, 0:表示不获取sinr 1:表示需要获取sinr|
 
 * 返回值
 
@@ -2376,6 +2403,12 @@ sms.setCallback(cb)
 | 16   | GSM_LTE, dual link                                           |
 | 17   | UMTS_LTE, dual link. not supported in EC100Y and EC200S      |
 | 18   | GSM_UMTS_LTE, dual link. not supported in EC100Y and EC200S  |
+| 19   | CATM,             BG95 supported                             |
+| 20   | GSM_CATM,         BG95 supported                             |
+| 21   | CATNB,            BG95 supported                             |
+| 22   | GSM_CATNB,        BG95 supported                             |
+| 23   | CATM_CATNB,       BG95 supported                             |
+| 24   | GSM_CATM_CATNB,   BG95 supported                             |
 
 * 示例
 
@@ -2398,7 +2431,7 @@ sms.setCallback(cb)
 
 | 参数    | 参数类型 | 参数说明                             |
 | ------- | -------- | ------------------------------------ |
-| mode    | int      | 网络制式，0 ~ 18，详见上述网络制式表格 |
+| mode    | int      | 网络制式，0 ~ 24，详见上述网络制式表格 |
 | roaming | int      | 漫游开关(0：关闭， 1：开启)，可选参数，不支持的平台不填写该参数即可。 |
 
 * 返回值
@@ -2444,6 +2477,24 @@ sms.setCallback(cb)
 | 9    | E TRAN A           |
 | 10   | NONE               |
 
+* 注：CATM平台参照下表
+
+| 值   | 说明               |
+| ---- | ------------------ |
+| 0    | GSM                |
+| 1    | GSM COMPACT        |
+| 2    | UTRAN              |
+| 3    | GSM wEGPRS         |
+| 4    | UTRAN wHSDPA       |
+| 5    | UTRAN wHSUPA       |
+| 6    | UTRAN wHSDPA HSUPA |
+| 7    | E_UTRAN            |
+| 8    | UTRAN HSPAP        |
+| 9    | E_UTRAN_CA         |
+| 10   | E_UTRAN_NBIOT      |
+| 11   | E_UTRAN_EMTC       |
+| 12   | NONE               |
+
 * 示例
 
 ```python
@@ -2455,25 +2506,25 @@ sms.setCallback(cb)
 
 ##### 获取详细信号强度信息
 
-> **net.getSignal()**
+> **net.getSignal(\*args)**
 
 获取详细信号强度。
 
-注：1803s/qualcomm/unisoc平台该接口为可变参函数，参数个数0-1。
-无入参情况：接口保持原有功能不变
-有入参情况，参数为sinr_enable，int型，范围0/1：
-	0，表示不获取sinr，和无入参情况返回结果一致
-	1，表示需要获取sinr，返回结果见example
-
 * 参数
 
-无
+  该接口在1803s/qualcomm/unisoc(不包括EG915)平台为可变参函数,参数个数为0或1, 其他平台参数个数固定为0：
+    参数个数为0：net.getSignal()
+    参数个数为1：net.getSignal(sinr_enable)
+	
+  | 参数    | 参数类型 | 参数说明                      |
+  | -----   | -------- | ----------------------------- |
+  | enable  | int      | 范围0/1, 0:表示不获取sinr 1:表示需要获取sinr|
 
 * 返回值
 
   失败返回整型值-1，成功返回一个元组，包含两个List(GW 、LTE)，返回值格式如下：
 
-  `([rssi, bitErrorRate, rscp, ecno], [rssi, rsrp, rsrq, cqi])`
+  `([rssi, bitErrorRate, rscp, ecno], [rssi, rsrp, rsrq, cqi, sinr])`
 
   返回值参数说明：
 
@@ -2591,7 +2642,7 @@ sms.setCallback(cb)
 
   失败返回整型值-1，成功返回一个元组，包含电话和网络注册信息，元组中voice开头的表示电话注册信息，data开头的表示网络注册信息，格式为：
 
-  `([voice_state, voice_lac, voice_cid, voice_rat, voice_reject_cause, voice_psc], [data_state, data _lac, data _cid, data _rat, data _reject_cause, data _psc])`
+  `([voice_state, voice_lac, voice_cid, voice_rat, voice_reject_cause, voice_psc], [data_state, data_lac, data_cid, data_rat, data_reject_cause, data_psc])`
 
   返回值参数说明：
 
@@ -2639,6 +2690,24 @@ sms.setCallback(cb)
 | 8    | UTRAN HSPAP        |
 | 9    | E_UTRAN_CA         |
 | 10   | NONE               |
+
+* 注：CATM平台参照下表
+
+| 值   | 说明               |
+| ---- | ------------------ |
+| 0    | GSM                |
+| 1    | GSM COMPACT        |
+| 2    | UTRAN              |
+| 3    | GSM wEGPRS         |
+| 4    | UTRAN wHSDPA       |
+| 5    | UTRAN wHSUPA       |
+| 6    | UTRAN wHSDPA HSUPA |
+| 7    | E_UTRAN            |
+| 8    | UTRAN HSPAP        |
+| 9    | E_UTRAN_CA         |
+| 10   | E_UTRAN_NBIOT      |
+| 11   | E_UTRAN_EMTC       |
+| 12   | NONE               |
 
 * 示例
 
@@ -2914,7 +2983,7 @@ sms.setCallback(cb)
 
 模块功能：checkNet模块主要用于【开机自动运行】的用户脚本程序，该模块提供API用来阻塞等待网络就绪，如果超时或者其他异常退出会返回错误码，所以如果用户的程序中有涉及网络相关的操作，那么在用户程序的开始应该调用 checkNet 模块中的方法以等待网络就绪。当然，用户也可以自己实现这个模块的功能。
 
-注意：当前仅EC600S/EC600N/EC800N/EC200U/EC600U/BC25PA平台支持该功能。
+注意：当前仅EC600S/EC600N/EC800N/EC200U/EC600U/BC25PA/平台支持该功能。
 
 ##### 创建checkNet对象
 
@@ -3047,6 +3116,20 @@ stagecode = 3, subcode = 1
 stagecode = 1, subcode = 0
 # 如果sim卡处于被锁的状态，则返回值如下：
 stagecode = 1, subcode = 2
+```
+
+* 说明
+
+如果是2021年11月以后发布的版本，用户可不用实例化对象，即可直接使用wait_network_connected(timeout)方法，用法如下：
+
+```python
+import checkNet
+
+if __name__ == '__main__':
+    # 在用户程序运行前增加下面这一句
+    stagecode, subcode = checkNet.wait_network_connected(30)
+    print('stagecode = {}, subcode = {}'.format(stagecode, subcode))
+	......
 ```
 
 
@@ -4176,14 +4259,14 @@ aud.play(1, 0, 'U:/test.mp3')
 
 > aud.aud_tone_play(tone, time)
 
-播放tone音，播放一段时间(time)后自动停止播放
+播放tone音，播放一段时间(time)后自动停止播放（注：EC600N/EC800N平台调用该接口为立即返回，EC600U/EC200U平台调用该接口为阻塞等待）
 
 * 参数
 
 | 参数 | 参数类型 | 参数说明                                                     |
 | ---- | -------- | ------------------------------------------------------------ |
-| tone | int      | tone类型<br/>0~15- 按键音(0~9、A、B、C、D、#、*)（仅EC600U/EC200U平台支持）<br/>16 - 拨号音，（注：EC600N/EC800N平台为连续的tone音，而EC600U/EC200U平台是播放、停顿交替的tone音）<br/>17 - busy（仅EC600U/EC200U平台支持）<br/>18- radio ack（仅EC600U/EC200U平台支持）<br/>19- call drop（仅EC600U/EC200U平台支持）<br/>20- special information（仅EC600U/EC200U平台支持）<br/>21- call waiting（仅EC600U/EC200U平台支持）<br/>22- ringing（仅EC600U/EC200U平台支持） |
-| time | int      | 播放时长，单位ms<br/>0 - 不停止一直播放，只能调用aud.aud_tone_play_stop()接口才能停止（仅EC600N/EC800N平台支持，EC600U/EC200U平台填0则无动作）<br/>大于0 - 播放时长time ms |
+| tone | int      | tone类型<br/>0~15- 按键音(0~9、A、B、C、D、#、*)<br/>16 - 拨号音 |
+| time | int      | 播放时长，单位ms<br/>0 - 不停止一直播放，只能调用aud.aud_tone_play_stop()接口才能停止（EC600N/EC800N平台持续时间无限，EC600U/EC200U平台持续大概2分钟后停止）<br/>大于0 - 播放时长time ms |
 
 * 返回值
 
@@ -4194,8 +4277,6 @@ aud.play(1, 0, 'U:/test.mp3')
   
 
 ###### 停止Tone音播放
-
-仅EC600N/EC800N平台支持
 
 > aud.aud_tone_play_stop()
 
@@ -4224,14 +4305,15 @@ aud = audio.Audio(0)
 
 # EC600U/EC200U平台
 def dial_play_ec600u():
-    aud.aud_tone_play(16, 5000)
+    for i in range(0,10):
+        aud.aud_tone_play(16, 1000)
+        utime.sleep(1)
 
 # EC600N/EC800N平台
 def dial_play_ec600n():
-    for i in range(0,20):
+    for i in range(0,10):
         aud.aud_tone_play(16, 1000)
         utime.sleep(2)
-        aud.aud_tone_play_stop()
         
 # dial_play_ec600n()
 dial_play_ec600u()
@@ -4859,7 +4941,7 @@ BC25PA平台和EC200U/EC600U平台不支持此方法。
 
 * 返回值
 
-int类型电压值。
+返回整形电压值。
 
 * 示例
 
@@ -5145,11 +5227,13 @@ ADC功能初始化。
 
 0关闭成功，-1关闭失败。
 
+
+
 ##### USB
 
 提供USB插拔检测接口。
 
-注意：BC25PA平台不支持此模块。
+注意：当前仅EC600S/EC600N/EC800N/EC200U/EC600U平台支持该功能。
 
 ###### 创建USB对象
 
@@ -5199,7 +5283,7 @@ ADC功能初始化。
 
   注册成功返回整型0，失败返回整型-1。
 
-示例
+* 示例
 
 ```python
 from misc import USB
@@ -5215,11 +5299,13 @@ def usb_callback(conn_status):
 usb.setCallback(usb_callback)
 ```
 
+
+
 ##### USBNET
 
 提供USB网卡功能
 
-注意：目前仅ASR和展锐平台支持
+注意：当前仅EC600S/EC600N/EC800N/EC200U/EC600U平台支持该功能。
 
 ###### 设置USB网卡工作类型（重启生效）
 
@@ -5339,11 +5425,11 @@ USBNET.open()
 
 * 参数
 
-无
+  无
 
-返回值
+* 返回值
 
-成功返回string类型设备的IMEI，失败返回整型值-1。
+  成功返回string类型设备的IMEI，失败返回整型值-1。
 
 * 示例
 
@@ -5363,11 +5449,11 @@ USBNET.open()
 
 * 参数
 
-无
+  无
 
 * 返回值
 
-成功返回string类型设备型号，失败返回整型值-1。
+  成功返回string类型设备型号，失败返回整型值-1。
 
 * 示例
 
@@ -5386,11 +5472,11 @@ USBNET.open()
 
 * 参数
 
-无
+  无
 
 * 返回值
 
-成功返回string类型设备序列号，失败返回整型值-1。
+  成功返回string类型设备序列号，失败返回整型值-1。
 
 * 示例
 
@@ -5409,11 +5495,11 @@ USBNET.open()
 
 * 参数
 
-无
+  无
 
 * 返回值
 
-成功返回string类型固件版本号，失败返回整型值-1。
+  成功返回string类型固件版本号，失败返回整型值-1。
 
 * 示例
 
@@ -5432,11 +5518,11 @@ USBNET.open()
 
 * 参数
 
-无
+  无
 
 * 返回值
 
-成功返回设备制造商ID，失败返回整型值-1。
+  成功返回设备制造商ID，失败返回整型值-1。
 
 * 示例
 
@@ -8018,19 +8104,19 @@ wifi list:(2, [('F0:B4:29:86:95:C7': -79),('44:00:4D:D5:26:E0', -92)])
 
 > **ble.gattStart()**
 
-* 功能：
+* 功能
 
   开启 BLE GATT 功能。
 
-* 参数：
+* 参数
 
   无
 
-* 返回值：
+* 返回值
 
   执行成功返回整型0，失败返回整型-1。
 
-* 示例：
+* 示例
 
 ```python
 见 BLE Server 综合示例
@@ -8042,19 +8128,19 @@ wifi list:(2, [('F0:B4:29:86:95:C7': -79),('44:00:4D:D5:26:E0', -92)])
 
 > **ble.gattStop()**
 
-* 功能：
+* 功能
 
   关闭 BLE GATT 功能。
 
-* 参数：
+* 参数
 
   无
 
-* 返回值：
+* 返回值
 
   执行成功返回整型0，失败返回整型-1。
 
-* 示例：
+* 示例
 
 ```python
 见 BLE Server 综合示例
@@ -8066,15 +8152,15 @@ wifi list:(2, [('F0:B4:29:86:95:C7': -79),('44:00:4D:D5:26:E0', -92)])
 
 > **ble.getStatus()**
 
-* 功能：
+* 功能
 
   获取 BLE 的状态。
 
-* 参数：
+* 参数
 
   无
 
-* 返回值：
+* 返回值
 
   0 - BLE处于停止状态
 
@@ -8082,7 +8168,7 @@ wifi list:(2, [('F0:B4:29:86:95:C7': -79),('44:00:4D:D5:26:E0', -92)])
 
   -1 - 获取状态失败
 
-* 示例：
+* 示例
 
   无
 
@@ -8092,23 +8178,23 @@ wifi list:(2, [('F0:B4:29:86:95:C7': -79),('44:00:4D:D5:26:E0', -92)])
 
 > **ble.getPublicAddr()**
 
-* 功能：
+* 功能
 
   获取 BLE 协议栈正在使用的公共地址。该接口需要在BLE已经初始化完成并启动成功后才能调用，比如在回调中收到 event_id 为0的事件之后，即 start 成功后，去调用。
 
-* 注意：
+* 注意
 
   如果有出厂设置默认蓝牙MAC地址，那么该接口获取的MAC地址和默认的蓝牙MAC地址是一致的；如果没有设置，那么该接口获取的地址，将是蓝牙启动后随机生成的静态地址，因此在每次重新上电运行蓝牙时都不相同。
 
-* 参数：
+* 参数
 
   无
 
-* 返回值：
+* 返回值
 
   执行成功返回bytearray类型的BLE地址，6字节，失败返回整型-1。
 
-* 示例：
+* 示例
 
 ```python
 >>> addr = ble.getPublicAddr()
@@ -8125,19 +8211,19 @@ mac = [ac:6b:1e:f5:33:db]
 
 > **ble.serverInit(user_cb)**
 
-* 功能：
+* 功能
 
-初始化 BLE Server 并注册回调函数。
+  初始化 BLE Server 并注册回调函数。
 
-* 参数：
+* 参数
 
 | 参数    | 类型     | 说明     |
 | ------- | -------- | -------- |
 | user_cb | function | 回调函数 |
 
-* 返回值：
+* 返回值
 
-执行成功返回整型0，失败返回整型-1。
+  执行成功返回整型0，失败返回整型-1。
 
 说明：
 
@@ -8160,13 +8246,13 @@ def ble_callback(args):
 |    1     |    2     | args[0] ：event_id，表示 BT/BLE stop<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败 |
 |    16    |    4     | args[0] ：event_id，表示 BLE connect<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败<br/>args[2] ：connect_id<br/>args[3] ：addr，BT/BLE address，bytearray类型数据 |
 |    17    |    4     | args[0] ：event_id，表示 BLE disconnect<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败<br/>args[2] ：connect_id，<br/>args[3] ：addr，BT/BLE address，bytearray类型数据 |
-|    18    |    7     | args[0] ：event_id，表示 BLE update connection parameter<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败<br/>args[2] ：connect_id<br/>args[3] ：max_interval，最大的间隔，间隔：1.25ms，取值范围：6-3200，时间范围：7.5ms\ ~ 4s<br/>args[4] ：min_interval，最小的间隔，间隔：1.25ms，取值范围：6-3200，时间范围：7.5ms\ ~ 4s<br/>args[5] ：latency，从机忽略连接状态事件的时间。需满足：（1+latecy)\*max_interval\*2\*1.25<timeout\*10<br/>args[6] ：timeout，没有交互，超时断开时间，间隔：10ms，取值范围：10-3200，时间范围：100ms ~ 32s |
+|    18    |    7     | args[0] ：event_id，表示 BLE update connection parameter<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败<br/>args[2] ：connect_id<br/>args[3] ：max_interval，最大的间隔，间隔：1.25ms，取值范围：6-3200，时间范围：7.5ms\ ~ 4s<br/>args[4] ：min_interval，最小的间隔，间隔：1.25ms，取值范围：6-3200，时间范围：7.5ms\ ~ 4s<br/>args[5] ：latency，从机忽略连接状态事件的时间。需满足：（1+latecy)\*max_interval\*2\*1.25<timeout\*10<br/>args[6] ：timeout，没有交互，超时断开时间，间隔：10ms，取值范围：10-3200ms，时间范围：100ms ~ 32s |
 |    20    |    4     | args[0] ：event_id，表示 BLE connection mtu<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败<br/>args[2] ：handle<br/>args[3] ：mtu值 |
 |    21    |    7     | args[0] ：event_id，表示 BLE server : when ble client write characteristic value or descriptor,server get the notice<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败<br/>args[2] ：data_len，获取数据的长度<br/>args[3] ：data，一个数组，存放获取的数据<br/>args[4] ：attr_handle，属性句柄，整型值<br/>args[5] ：short_uuid，整型值<br/>args[6] ：long_uuid，一个16字节数组，存放长UUID |
 |    22    |    7     | args[0] ：event_id，表示 server : when ble client read characteristic value or descriptor,server get the notice<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败<br/>args[2] ：data_len，获取数据的长度<br/>args[3] ：data，一个数组，存放获取的数据<br/>args[4] ：attr_handle，属性句柄，整型值<br/>args[5] ：short_uuid，整型值<br/>args[6] ：long_uuid，一个16字节数组，存放长UUID |
 |    25    |    2     | args[0] ：event_id，表示 server send notification,and recieve send end notice<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败 |
 
-* 示例：
+* 示例
 
 ```python 
 def ble_callback(args):
@@ -8276,19 +8362,19 @@ ble.serverInit(ble_callback)
 
 > **ble.serverRelease()**
 
-* 功能：
+* 功能
 
   BLE Server 资源释放。
 
-* 参数：
+* 参数
 
   无
 
-* 返回值：
+* 返回值
 
   执行成功返回整型0，失败返回整型-1。
 
-* 示例：
+* 示例
 
 ```python
 见最后的综合示例
@@ -8300,26 +8386,26 @@ ble.serverInit(ble_callback)
 
 > **ble.setLocalName(code, name)**
 
-* 功能：
+* 功能
 
   设置 BLE 名称。
 
-* 注意：
+* 注意
 
   对于BLE，设备在广播时，如果希望扫描软件扫描时，能看到广播设备的名称，是需要在广播数据中包含蓝牙名称的，或者在扫描回复数据中包含设备名称。
 
-* 参数：
+* 参数
 
   | 参数 | 类型   | 说明                               |
   | ---- | ------ | ---------------------------------- |
   | code | 整型   | 编码模式<br>0 - UTF8<br/>1 - GBK   |
   | name | string | BLE 名称，名称最长不能超过29个字节 |
 
-* 返回值：
+* 返回值
 
   执行成功返回整型0，失败返回整型-1。
 
-* 示例：
+* 示例
 
 ```python
 >>> ble.setLocalName(0, 'QuecPython-BLE')
@@ -8332,11 +8418,11 @@ ble.serverInit(ble_callback)
 
 > **ble.setAdvParam(min_adv,max_adv,adv_type,addr_type,channel,filter_policy,discov_mode,no_br_edr,enable_adv)**
 
-* 功能：
+* 功能
 
   设置广播参数。
 
-* 参数：
+* 参数
 
   | 参数          | 类型       | 说明                                                         |
   | ------------- | ---------- | ------------------------------------------------------------ |
@@ -8350,11 +8436,11 @@ ble.serverInit(ble_callback)
   | no_br_edr     | 无符号整型 | 不用BR/EDR，默认为1，如果用则为0                             |
   | enable_adv    | 无符号整型 | 使能广播，默认为1，不使能则为0                               |
 
-* 返回值：
+* 返回值
 
   执行成功返回整型0，失败返回整型-1。
 
-* 示例：
+* 示例
 
 ```python
 def ble_gatt_set_param():
@@ -8381,21 +8467,21 @@ def ble_gatt_set_param():
 
 > **ble.setAdvData(data)**
 
-* 功能：
+* 功能
 
   设置广播数据内容。
 
-* 参数：
+* 参数
 
   | 参数 | 类型 | 说明                                                         |
   | ---- | ---- | ------------------------------------------------------------ |
   | data | 数组 | 广播数据，广播数据最长不超过31个字节。注意该参数的类型，程序中组织好广播数据后，需要通过bytearray()来转换，然后才能传入接口，具体处理参考下面的示例。<br>关于广播数据的格式说明：<br>广播数据的内容，采用 length+type+data 的格式。一条广播数据中可以包含多个这种格式数据的组合，比如示例中就包含了两个，第一个是 "0x02, 0x01, 0x05"，0x02表示后面有两个数据，分别是0x01和0x05，0x01即type，0x05表示具体数据；第二个是ble名称长度加1（因为还要包含一个表示type的数据，所以长度需要加1）得到的长度、type 0x09以及name对应的具体编码值表示的data组成的。<br>关于type具体值代表的含义，请参考如下连接：<br/>[Generic Access Pfofile](https://btprodspecificationrefs.blob.core.windows.net/assigned-numbers/Assigned Number Types/Generic Access Profile.pdf) |
 
-* 返回值：
+* 返回值
 
   执行成功返回整型0，失败返回整型-1。
 
-* 示例：
+* 示例
 
 ```python
 def ble_gatt_set_data():
@@ -8423,21 +8509,21 @@ def ble_gatt_set_data():
 
 > **ble.setAdvRspData(data)**
 
-* 功能：
+* 功能
 
   设置扫描回复数据。
 
-* 参数：
+* 参数
 
   | 参数 | 类型 | 说明                                                         |
   | ---- | ---- | ------------------------------------------------------------ |
   | data | 数组 | 扫描回复数据，数据最长不超过31个字节，注意事项和上面设置广播数据内容接口描述一致。当client设备扫描方式为积极扫描时，设置扫描回复数据才有意义。 |
 
-* 返回值：
+* 返回值
 
   执行成功返回整型0，失败返回整型-1。
 
-* 示例：
+* 示例
 
 ```python
 def ble_gatt_set_rsp_data():
@@ -8465,11 +8551,11 @@ def ble_gatt_set_rsp_data():
 
 > **ble.addService(primary, server_id, uuid_type, uuid_s, uuid_l)**
 
-* 功能：
+* 功能
 
   增加一个服务。
 
-* 参数：
+* 参数
 
   | 参数      | 类型       | 说明                                                         |
   | --------- | ---------- | ------------------------------------------------------------ |
@@ -8479,11 +8565,11 @@ def ble_gatt_set_rsp_data():
   | uuid_s    | 无符号整型 | 短UUID，2个字节（16bit），当uuid_type为0时，该值给0          |
   | uuid_l    | 数组       | 长UUID，16个字节（128bit），当uuid_type为1时，该值给 bytearray([0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]) |
 
-* 返回值：
+* 返回值
 
   执行成功返回整型0，失败返回整型-1。
 
-* 示例：
+* 示例
 
 ```python
 def ble_gatt_add_service():
@@ -8506,11 +8592,11 @@ def ble_gatt_add_service():
 
 > **ble.addChara(server_id, chara_id, chara_prop, uuid_type, uuid_s, uuid_l)**
 
-* 功能：
+* 功能
 
   在服务里增加一个特征。
 
-* 参数：
+* 参数
 
   | 参数       | 类型       | 说明                                                         |
   | ---------- | ---------- | ------------------------------------------------------------ |
@@ -8521,11 +8607,11 @@ def ble_gatt_add_service():
   | uuid_s     | 无符号整型 | 短UUID，2个字节（16bit）                                     |
   | uuid_l     | 数组       | 长UUID，16个字节（128bit）                                   |
 
-* 返回值：
+* 返回值
 
   执行成功返回整型0，失败返回整型-1。
 
-* 示例：
+* 示例
 
 ```python
 def ble_gatt_add_characteristic():
@@ -8549,11 +8635,11 @@ def ble_gatt_add_characteristic():
 
 > **ble.addCharaValue(server_id, chara_id, permission, uuid_type, uuid_s, uuid_l, value)**
 
-* 功能：
+* 功能
 
   在特征里增加一个特征值。
 
-* 参数：
+* 参数
 
   | 参数       | 类型       | 说明                                                         |
   | ---------- | ---------- | ------------------------------------------------------------ |
@@ -8565,11 +8651,11 @@ def ble_gatt_add_characteristic():
   | uuid_l     | 数组       | 长UUID，16个字节（128bit）                                   |
   | value      | 数组       | 特征值数据                                                   |
 
-* 返回值：
+* 返回值
 
   执行成功返回整型0，失败返回整型-1。
 
-* 示例：
+* 示例
 
 ```python
 def ble_gatt_add_characteristic_value():
@@ -8597,11 +8683,11 @@ def ble_gatt_add_characteristic_value():
 
 > **ble.addCharaDesc(server_id, chara_id, permission, uuid_type, uuid_s, uuid_l, value)**
 
-* 功能：
+* 功能
 
   在特征里增加一个特征描述，注意特征描述和特征值同属与一个特征。
 
-* 参数：
+* 参数
 
   | 参数       | 类型       | 说明                                                         |
   | ---------- | ---------- | ------------------------------------------------------------ |
@@ -8613,11 +8699,11 @@ def ble_gatt_add_characteristic_value():
   | uuid_l     | 数组       | 长UUID，16个字节（128bit）                                   |
   | value      | 数组       | 特征描述数据                                                 |
 
-* 返回值：
+* 返回值
 
   执行成功返回整型0，失败返回整型-1。
 
-* 示例：
+* 示例
 
 ```python
 def ble_gatt_add_characteristic_desc():
@@ -8643,22 +8729,22 @@ def ble_gatt_add_characteristic_desc():
 
 > **ble.addOrClearService(option, mode)**
 
-* 功能：
+* 功能
 
   增加服务完成，或者删除增加的服务。
 
-* 参数：
+* 参数
 
   | 参数   | 类型       | 说明                                                         |
   | ------ | ---------- | ------------------------------------------------------------ |
   | option | 无符号整型 | 操作类型，取值范围如下：<br>0 - 删除服务<br/>1 - 增加服务完成 |
   | mode   | 无符号整型 | 保留系统服务模式，取值范围如下：<br/>0 - 删除系统默认的GAP和GATT服务<br/>1 - 保留系统默认的GAP和GATT服务 |
 
-* 返回值：
+* 返回值
 
   执行成功返回整型0，失败返回整型-1。
 
-* 示例：
+* 示例
 
 ```python
 见 BLE Server 综合示例
@@ -8670,11 +8756,11 @@ def ble_gatt_add_characteristic_desc():
 
 > **ble.sendNotification(connect_id, attr_handle, value)**
 
-* 功能：
+* 功能
 
   发送通知。
 
-* 参数：
+* 参数
 
   | 参数        | 类型       | 说明                                  |
   | ----------- | ---------- | ------------------------------------- |
@@ -8682,11 +8768,11 @@ def ble_gatt_add_characteristic_desc():
   | attr_handle | 无符号整型 | 属性句柄                              |
   | value       | 数组       | 要发送的数据，发送数据长度不要超过MTU |
 
-* 返回值：
+* 返回值
 
   执行成功返回整型0，失败返回整型-1。
 
-* 示例：
+* 示例
 
 ```python
 参考最后的综合示例
@@ -8698,11 +8784,11 @@ def ble_gatt_add_characteristic_desc():
 
 > **ble.sendIndication(connect_id, attr_handle, value)**
 
-* 功能：
+* 功能
 
   发送指示。
 
-* 参数：
+* 参数
 
   | 参数        | 类型       | 说明                                  |
   | ----------- | ---------- | ------------------------------------- |
@@ -8710,11 +8796,11 @@ def ble_gatt_add_characteristic_desc():
   | attr_handle | 无符号整型 | 属性句柄                              |
   | value       | 数组       | 要发送的数据，发送数据长度不要超过MTU |
 
-* 返回值：
+* 返回值
 
   执行成功返回整型0，失败返回整型-1。
 
-* 示例：
+* 示例
 
 ```python
 见 BLE Server 综合示例
@@ -8726,15 +8812,15 @@ def ble_gatt_add_characteristic_desc():
 
 > **ble.advStart()**
 
-* 功能：
+* 功能
 
   开启广播。
 
-* 参数：
+* 参数
 
   无
 
-* 返回值：
+* 返回值
 
   执行成功返回整型0，失败返回整型-1。
 
@@ -8745,25 +8831,21 @@ def ble_gatt_add_characteristic_desc():
 
 > **ble.advStop()**
 
-功能：
+* 功能
 
-停止广播。
+  停止广播。
 
-参数：
+* 参数
 
-无
+  无
 
-返回值：
+* 返回值
 
-执行成功返回整型0，失败返回整型-1。
+  执行成功返回整型0，失败返回整型-1。
 
 
 
 ##### BLE Server 综合示例
-
-以下程序，包含在官方的示例程序包中，可直接下载参考，下载地址：https://python.quectel.com/download
-
-打开上述链接后，在页面上找到标题名为 Demo 的选项下载，下载解压后进入其中的BLE目录即可找到示例程序。
 
 ```python
 # -*- coding: UTF-8 -*-
@@ -9216,19 +9298,19 @@ if __name__ == '__main__':
 
 > **ble.clientInit(user_cb)**
 
-* 功能：
+* 功能
 
-初始化 BLE Client 并注册回调函数。
+  初始化 BLE Client 并注册回调函数。
 
-* 参数：
+* 参数
 
 | 参数    | 类型     | 说明     |
 | ------- | -------- | -------- |
 | user_cb | function | 回调函数 |
 
-* 返回值：
+* 返回值
 
-执行成功返回整型0，失败返回整型-1。
+  执行成功返回整型0，失败返回整型-1。
 
 说明：
 
@@ -9269,7 +9351,7 @@ def ble_callback(args):
 |    36    |    4     | args[0] ：event_id，表示 read characteristic descriptor，即读特征描述<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败<br/>args[2] ：data_len，数据长度<br/>args[3] ：data，原始数据 |
 |    37    |    3     | args[0] ：event_id，表示 attribute error，即属性错误<br/>args[1] ：status，表示操作的状态，0-成功，非0-失败<br/>args[2] ：errcode，错误码 |
 
-示例：
+* 示例
 
 ```
 见 BLE Client 综合示例
@@ -9281,19 +9363,19 @@ def ble_callback(args):
 
 > **ble.clientRelease()**
 
-* 功能：
+* 功能
 
   BLE Client 资源释放。
 
-* 参数：
+* 参数
 
   无
 
-* 返回值：
+* 返回值
 
   执行成功返回整型0，失败返回整型-1。
 
-* 示例：
+* 示例
 
 ```python
 见 BLE Client 综合示例
@@ -9305,11 +9387,11 @@ def ble_callback(args):
 
 > **ble.setScanParam(scan_mode, interval, scan_window, filter_policy, addr_type)**
 
-* 功能：
+* 功能
 
   设置扫描参数。
 
-* 参数：
+* 参数
 
 | 参数          | 类型       | 说明                                                         |
 | ------------- | ---------- | ------------------------------------------------------------ |
@@ -9319,15 +9401,15 @@ def ble_callback(args):
 | filter_policy | 无符号整型 | 扫描过滤策略，默认为0：<br>0 - 除了不是本设备的定向广播，其他所有的广播包<br>1 - 除了不是本设备的定向广播，白名单设备的广播包<br>2 - 非定向广播，指向本设备的定向广播或使用Resolvable private address的定向广播<br/>3 - 白名单设备非定向广播，指向本设备的定向广播或使用Resolvable private address的定向广播 |
 | addr_type     | 无符号整型 | 本地地址类型，取值范围如下：<br>0 - 公共地址<br>1 - 随机地址 |
 
-* 注意：
+* 注意
 
   关于参数 interval 和 scan_window 要注意的是，扫描时间 scan_window 不能大于扫描间隔 interval ，如果两者相等，则表示连续不停的扫描，此时 BLE 的 Controller 会连续运行扫描，占满系统资源而导致无法执行其他任务，所以不允许设置连续扫描。并且不建议将时间设置的太短，扫描越频繁则功耗越高。
 
-* 返回值：
+* 返回值
 
   执行成功返回整型0，失败返回整型-1。
 
-* 示例：
+* 示例
 
 ```python
 见 BLE Client 综合示例
@@ -9339,19 +9421,19 @@ def ble_callback(args):
 
 > **ble.scanStart()**
 
-* 功能：
+* 功能
 
   开始扫描。
 
-* 参数：
+* 参数
 
   无
 
-* 返回值：
+* 返回值
 
   执行成功返回整型0，失败返回整型-1。
 
-* 示例：
+* 示例
 
 ```python
 见 BLE Client 综合示例
@@ -9363,19 +9445,19 @@ def ble_callback(args):
 
 > **ble.scanStop()**
 
-* 功能：
+* 功能
 
   停止扫描。
 
-* 参数：
+* 参数
 
   无
 
-* 返回值：
+* 返回值
 
   执行成功返回整型0，失败返回整型-1。
 
-* 示例：
+* 示例
 
 ```python
 见 BLE Client 综合示例
@@ -9387,21 +9469,21 @@ def ble_callback(args):
 
 > **ble.setScanFilter(act)**
 
-* 功能：
+* 功能
 
   打开或者关闭扫描过滤开关。如果打开，那么扫描设备的广播数据时，同一个设备的广播数据只会上报一次；如果关闭，则同一个设备的所有的广播数据都会上报。默认打开过滤功能。
 
-* 参数：
+* 参数
 
   | 参数 | 类型       | 说明                                          |
   | ---- | ---------- | --------------------------------------------- |
   | act  | 无符号整型 | 0 - 关闭扫描过滤功能<br/>1 - 打开扫描过滤功能 |
 
-* 返回值：
+* 返回值
 
   执行成功返回整型0，失败返回整型-1。
 
-* 示例：
+* 示例
 
 ```python
 见 BLE Client 综合示例
@@ -9413,22 +9495,22 @@ def ble_callback(args):
 
 > **ble.connect(addr_type, addr)**
 
-* 功能：
+* 功能
 
   根据指定的设备地址去连接设备。
 
-* 参数：
+* 参数
 
   | 参数      | 类型       | 说明                                     |
   | --------- | ---------- | ---------------------------------------- |
   | addr_type | 无符号整型 | 地址类型<br>0 - 公共地址<br>1 - 随机地址 |
   | addr      | 数组       | BLE地址，6字节                           |
 
-* 返回值：
+* 返回值
 
   执行成功返回整型0，失败返回整型-1。
 
-* 示例：
+* 示例
 
 ```python
 见 BLE Client 综合示例
@@ -9440,21 +9522,21 @@ def ble_callback(args):
 
 > **ble.cancelConnect(addr)**
 
-* 功能：
+* 功能
 
   取消正在建立的连接。
 
-* 参数：
+* 参数
 
   | 参数 | 类型 | 说明           |
   | ---- | ---- | -------------- |
   | addr | 数组 | BLE地址，6字节 |
 
-* 返回值：
+* 返回值
 
   执行成功返回整型0，失败返回整型-1。
 
-* 示例：
+* 示例
 
 ```python
 无
@@ -9466,21 +9548,21 @@ def ble_callback(args):
 
 > **ble.disconnect(connect_id)**
 
-* 功能：
+* 功能
 
   断开已建立的连接。
 
-* 参数：
+* 参数
 
   | 参数       | 类型       | 说明                           |
   | ---------- | ---------- | ------------------------------ |
   | connect_id | 无符号整型 | 连接ID，建立连接时得到的连接ID |
 
-* 返回值：
+* 返回值
 
   执行成功返回整型0，失败返回整型-1。
 
-* 示例：
+* 示例
 
 ```python
 见综合示例
@@ -9492,21 +9574,21 @@ def ble_callback(args):
 
 > **ble.discoverAllService(connect_id)**
 
-* 功能：
+* 功能
 
   扫描所有的服务。
 
-* 参数：
+* 参数
 
   | 参数       | 类型       | 说明                           |
   | ---------- | ---------- | ------------------------------ |
   | connect_id | 无符号整型 | 连接ID，建立连接时得到的连接ID |
 
-* 返回值：
+* 返回值
 
   执行成功返回整型0，失败返回整型-1。
 
-* 示例：
+* 示例
 
 ```python
 见 BLE Client 综合示例
@@ -9518,11 +9600,11 @@ def ble_callback(args):
 
 > **ble.discoverByUUID(connect_id, uuid_type, uuid_s, uuid_l)**
 
-* 功能：
+* 功能
 
   扫描指定UUID的服务。
 
-* 参数：
+* 参数
 
   | 参数       | 类型       | 说明                                                         |
   | ---------- | ---------- | ------------------------------------------------------------ |
@@ -9531,11 +9613,11 @@ def ble_callback(args):
   | uuid_s     | 无符号整型 | 短UUID，2个字节（16bit），当uuid_type为0时，该值给0          |
   | uuid_l     | 数组       | 长UUID，16个字节（128bit），当uuid_type为1时，该值给 bytearray([0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]) |
 
-* 返回值：
+* 返回值
 
   执行成功返回整型0，失败返回整型-1。
 
-* 示例：
+* 示例
 
 ```python
 见 BLE Client 综合示例
@@ -9547,11 +9629,11 @@ def ble_callback(args):
 
 > **ble.discoverAllIncludes(connect_id, start_handle, end_handle)**
 
-* 功能：
+* 功能
 
   扫描所有的引用，start_handle和end_handle要属于同一个服务。
 
-* 参数：
+* 参数
 
   | 参数         | 类型       | 说明                             |
   | ------------ | ---------- | -------------------------------- |
@@ -9559,11 +9641,11 @@ def ble_callback(args):
   | start_handle | 无符号整型 | 开始句柄，从这个句柄开始寻找引用 |
   | end_handle   | 无符号整型 | 结束句柄，从这个句柄结束寻找引用 |
 
-* 返回值：
+* 返回值
 
   执行成功返回整型0，失败返回整型-1。
 
-* 示例：
+* 示例
 
 ```python
 无
@@ -9575,11 +9657,11 @@ def ble_callback(args):
 
 > **ble.discoverAllChara(connect_id, start_handle, end_handle)**
 
-* 功能：
+* 功能
 
   扫描所有的特征，start_handle和end_handle要属于同一个服务。
 
-* 参数：
+* 参数
 
   | 参数         | 类型       | 说明                             |
   | ------------ | ---------- | -------------------------------- |
@@ -9587,11 +9669,11 @@ def ble_callback(args):
   | start_handle | 无符号整型 | 开始句柄，从这个句柄开始寻找特征 |
   | end_handle   | 无符号整型 | 结束句柄，从这个句柄结束寻找特征 |
 
-* 返回值：
+* 返回值
 
   执行成功返回整型0，失败返回整型-1。
 
-* 示例：
+* 示例
 
 ```python
 见 BLE Client 综合示例
@@ -9603,11 +9685,11 @@ def ble_callback(args):
 
 > **ble.discoverAllCharaDesc(connect_id, start_handle, end_handle)**
 
-* 功能：
+* 功能
 
   扫描所有特征的描述，start_handle和end_handle要属于同一个服务。
 
-* 参数：
+* 参数
 
   | 参数         | 类型       | 说明                                 |
   | ------------ | ---------- | ------------------------------------ |
@@ -9615,11 +9697,11 @@ def ble_callback(args):
   | start_handle | 无符号整型 | 开始句柄，从这个句柄开始寻找特征描述 |
   | end_handle   | 无符号整型 | 结束句柄，从这个句柄结束寻找特征描述 |
 
-* 返回值：
+* 返回值
 
   执行成功返回整型0，失败返回整型-1。
 
-* 示例：
+* 示例
 
 ```python
 见 BLE Client 综合示例
@@ -9631,11 +9713,11 @@ def ble_callback(args):
 
 > **ble.readCharaByUUID(connect_id, start_handle, end_handle, uuid_type, uuid_s, uuid_l)**
 
-* 功能：
+* 功能
 
   读取指定UUID的特征值，start_handle和end_handle必须要包含一个特征值句柄。
 
-* 参数：
+* 参数
 
   | 参数         | 类型       | 说明                                                         |
   | ------------ | ---------- | ------------------------------------------------------------ |
@@ -9646,11 +9728,11 @@ def ble_callback(args):
   | uuid_s       | 无符号整型 | 短UUID，2个字节（16bit），当uuid_type为0时，该值给0          |
   | uuid_l       | 数组       | 长UUID，16个字节（128bit），当uuid_type为1时，该值给 bytearray([0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]) |
 
-* 返回值：
+* 返回值
 
   执行成功返回整型0，失败返回整型-1。
 
-* 示例：
+* 示例
 
 ```python
 见 BLE Client 综合示例
@@ -9662,11 +9744,11 @@ def ble_callback(args):
 
 > **ble.readCharaByHandle(connect_id, handle, offset, is_long)**
 
-* 功能：
+* 功能
 
   读取指定句柄的特征值。
 
-* 参数：
+* 参数
 
   | 参数       | 类型       | 说明                                                         |
   | ---------- | ---------- | ------------------------------------------------------------ |
@@ -9675,11 +9757,11 @@ def ble_callback(args):
   | offset     | 无符号整型 | 偏移位置                                                     |
   | is_long    | 无符号整型 | 长特征值标志<br>0-短特征值，一次可以读取完<br>1-长特征值，分多次读取 |
 
-* 返回值：
+* 返回值
 
   执行成功返回整型0，失败返回整型-1。
 
-* 示例：
+* 示例
 
 ```python
 见 BLE Client 综合示例
@@ -9691,11 +9773,11 @@ def ble_callback(args):
 
 > **ble.readCharaDesc(connect_id, handle, is_long)**
 
-* 功能：
+* 功能
 
   读取特征描述。
 
-* 参数：
+* 参数
 
   | 参数       | 类型       | 说明                                               |
   | ---------- | ---------- | -------------------------------------------------- |
@@ -9703,11 +9785,11 @@ def ble_callback(args):
   | handle     | 无符号整型 | 特征描述句柄                                       |
   | is_long    | 无符号整型 | 长特征描述标志<br>0-短特征描述值<br>1-长特征描述值 |
 
-* 返回值：
+* 返回值
 
   执行成功返回整型0，失败返回整型-1。
 
-* 示例：
+* 示例
 
 ```python
 见 BLE Client 综合示例
@@ -9719,11 +9801,11 @@ def ble_callback(args):
 
 > **ble.writeChara(connect_id, handle, offset, is_long, data)**
 
-* 功能：
+* 功能
 
   写入特征值，链路层需要确认。
 
-* 参数：
+* 参数
 
   | 参数       | 类型       | 说明                                                         |
   | ---------- | ---------- | ------------------------------------------------------------ |
@@ -9733,11 +9815,11 @@ def ble_callback(args):
   | is_long    | 无符号整型 | 长特征值标志<br>0-短特征值，一次可以读取完<br>1-长特征值，分多次读取 |
   | data       | 数组       | 特征值数据                                                   |
 
-* 返回值：
+* 返回值
 
   执行成功返回整型0，失败返回整型-1。
 
-* 示例：
+* 示例
 
 ```python
 无
@@ -9749,11 +9831,11 @@ def ble_callback(args):
 
 > **ble.writeCharaNoRsp(connect_id, handle, data)**
 
-* 功能：
+* 功能
 
   写入特征值，链路层不需要确认。
 
-* 参数：
+* 参数
 
   | 参数       | 类型       | 说明                           |
   | ---------- | ---------- | ------------------------------ |
@@ -9761,11 +9843,11 @@ def ble_callback(args):
   | handle     | 无符号整型 | 特征值句柄                     |
   | data       | 数组       | 特征值数据                     |
 
-* 返回值：
+* 返回值
 
   执行成功返回整型0，失败返回整型-1。
 
-* 示例：
+* 示例
 
 ```python
 见 BLE Client 综合示例
@@ -9777,11 +9859,11 @@ def ble_callback(args):
 
 > **ble.writeCharaDesc(connect_id, handle, data)**
 
-* 功能：
+* 功能
 
   写入特征描述。
 
-* 参数：
+* 参数
 
   | 参数       | 类型       | 说明                           |
   | ---------- | ---------- | ------------------------------ |
@@ -9789,11 +9871,11 @@ def ble_callback(args):
   | handle     | 无符号整型 | 特征描述句柄                   |
   | data       | 数组       | 特征描述数据                   |
 
-* 返回值：
+* 返回值
 
   执行成功返回整型0，失败返回整型-1。
 
-* 示例：
+* 示例
 
 ```python
 见 BLE Client 综合示例
@@ -9802,10 +9884,6 @@ def ble_callback(args):
 
 
 ##### BLE Client 综合示例
-
-以下程序，包含在官方的示例程序包中，可直接下载参考，下载地址：https://python.quectel.com/download
-
-打开上述链接后，在页面上找到标题名为 Demo 的选项下载，下载解压后进入其中的BLE目录即可找到示例程序。
 
 ```python
 # -*- coding: UTF-8 -*-
@@ -10983,9 +11061,8 @@ camCaputre.callback(callback)
 
 模块功能：对L76K GPS型号进行数据获取，可以得到模块定位是否成功，定位的经纬度数据，UTC授时时间，获取GPS模块的定位模式，获取GPS模块定位使用卫星数量，获取GPS模块定位可见卫星数量，获取定位方位角，GPS模块对地速度，模块定位大地高等数据信息。目前，该模块提供的功能接口，所获取的数据都来源于从串口读出的原始GNSS数据包中的GNGGA、GNRMC和GPGSV语句。
 
-* 注意
-  BC25PA平台不支持模块功能。
-> 暂时只支持EC600U CNLB
+注意：当前仅EC600S/EC600N/EC800N/200U/600U模块支持该功能。
+
 
 ##### 创建gnss对象
 
@@ -11151,7 +11228,7 @@ gnss.checkDataValidity()
 
   0：定位失败
 
-示例
+* 示例 
 
 ```
 gnss.isFix()
@@ -11337,7 +11414,7 @@ gnss.getGeodeticHeight()
 
   成功返回GPS模块对地速度(单位:KM/h)，浮点类型，失败返回整型-1
 
-示例
+* 示例
 
 ```python
 gnss.getSpeed()
@@ -11506,10 +11583,14 @@ $GNGSA,A,3,31,3
 #### SecureData - 安全数据区
 
 模块功能：模组提供一块裸flash区域及专门的读写接口供客户存贮重要信息，且信息在烧录固件后不丢失(烧录不包含此功能的固件无法保证不丢失)。提供一个存储和读取接口，不提供删除接口。
-> 目前只支持EC600N、EC600S系列项目
+目前只支持EC600N、EC600S系列项目
+
 ##### 数据存储
-SecureData.Store(index,databuf,len)
-- **参数**
+
+> **SecureData.Store(index,databuf,len)**
+
+ * 参数
+
 | 参数    | 类型      | 说明                                                         |
 | :------ | :-------- | ------------------------------------------------------------ |
 | index   | int       | index范围为1-16：<br />1 - 8 最大存储52字节数据<br />9 - 12 最大存储100字节数据<br />13 - 14 最大存储500字节数据<br />15 - 16 最大存储1000字节数据 |
@@ -11519,27 +11600,33 @@ SecureData.Store(index,databuf,len)
 
 存储时按照databuf和len两者中长度较小的进行存储
 
-**返回值**
+ * 返回值
 
 -1: 参数有误
-
 0: 执行正常
 
 ##### 数据读取
 
-SecureData.Read(index,databuf,len)
-- **参数**
+> **SecureData.Read(index,databuf,len)**
+
+ * 参数
+
 | 参数    | 类型      | 说明                                            |
 | :------ | :-------- | ----------------------------------------------- |
 | index   | int       | index范围为1-16：<br />读取存储数据对应的索引号 |
 | databuf | bytearray | 存储读取到的数据                                |
 | len     | int       | 要读取数据的长度                                |
+
 若存储的数据没有传入的len大，则返回实际存储的数据长度
-**返回值**
+
+ * 返回值
+
 -2: 存储数据不存在且备份数据也不存在
 -1: 参数有误
 其他 :  实际读取到的数据长度
-- **示例**
+
+ * 示例
+
 ```python
 import SecureData
 # 即将存储的数据buf
@@ -11553,7 +11640,9 @@ len = SecureData.Read(1, buf, 20)
 # 输出读到的数据
 print(buf[:len])
 ```
-- **执行结果**
+
+ * 执行结果
+
 ```python
 >>> import SecureData
 >>> databuf = '\x31\x32\x33\x34\x35\x36\x37\x38'
@@ -11566,9 +11655,11 @@ bytearray(b'12345678')
 >>> 
 ```
 
+
+
 #### nb-物联网云平台
 
-模块功能：提供对接物联网云平台功能，提供连接物联网云平台。通过物联网云平台和模块设备的通信功能，目前支持中国电信lot物联网平台、中国电信AEP物联网平台和中国移动onenet物联网平台。
+模块功能：提供对接物联网云平台功能，提供连接物联网云平台。通过物联网云平台和模块设备的通信功能，目前支持中国电信lot物联网平台、中国电信AEP物联网平台和中国移动onenet物联网平台。quecthing版本不包含此模块。
 
 模块名:nb(小写)
 
@@ -11816,8 +11907,10 @@ bytearray(b'313233')
 0
 ```
 
-###### 关闭连接
 
+
+###### 关闭连接
+> **aep.close()**
 - 参数
 
 无
