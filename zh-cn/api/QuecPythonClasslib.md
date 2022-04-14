@@ -11636,9 +11636,9 @@ SecureData.Store(1, databuf, 8)
 # 定义一个长度为20的数组用于读取存储的数据
 buf = bytearray(20)
 # 读取index为1的存储区域中的数据至buf中,将读取到数据的长度存储在变量len中
-len = SecureData.Read(1, buf, 20)
+lenth = SecureData.Read(1, buf, 20)
 # 输出读到的数据
-print(buf[:len])
+print(buf[:lenth])
 ```
 
  * 执行结果
@@ -11649,8 +11649,8 @@ print(buf[:len])
 >>> SecureData.Store(1, databuf, 8)
 0
 >>> buf = bytearray(20)
->>> len = SecureData.Read(1, buf, 20)
->>> print(buf[:len])
+>>> lenth = SecureData.Read(1, buf, 20)
+>>> print(buf[:lenth])
 bytearray(b'12345678')
 >>> 
 ```
