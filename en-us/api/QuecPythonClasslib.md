@@ -2195,7 +2195,7 @@ This function obtains the current APN.
   The number of parameters is 2:
     * pdp context: Successful execution
 	* -1  Failed execution
-  The number of parameters is 1:
+    The number of parameters is 1:
     * apn info: Successful execution
     * -1  Failed execution
 
@@ -6381,11 +6381,11 @@ Class function: Serial peripheral interface bus protocol.
 
 | Platform      | Pin                                                          |
 | ------------- | ------------------------------------------------------------ |
-| EC600U        | port0:<br />CS:Pin number 4<br />CLK:Pin number 1<br />MOSI:Pin number 3<br />MISO:Pin number 2<br />port1:<br />CS:Pin number <br />CLK:Pin number <br />MOSI:Pin number <br />MISO:Pin number 60 |
+| EC600U        | port0:<br />CS:Pin number 4<br />CLK:Pin number 1<br />MOSI:Pin number 3<br />MISO:Pin number 2<br />port1:<br />CS:Pin number 58 <br />CLK:Pin number 61 <br />MOSI:Pin number 59 <br />MISO:Pin number 60 |
 | EC200U        | port0:<br />CS:Pin number 134<br />CLK:Pin number 133<br />MOSI:Pin number 132<br />MISO:Pin number 131<br />port1:<br />CS:Pin number 26<br />CLK:Pin number 27<br />MOSI:Pin number 24<br />MISO:Pin number 25 |
 | EC600S/EC600N | port0:<br />CS:Pin number 58<br />CLK:Pin number 61<br />MOSI:Pin number 59<br />MISO:Pin number 60<br />port1:<br />CS:Pin number 4<br />CLK:Pin number 1<br />MOSI:Pin number 3<br />MISO:Pin number 2 |
 | EC100Y        | port0:<br />CS:Pin number 25<br />CLK:Pin number 26<br />MOSI:Pin number 27<br />MISO:Pin number 28<br />port1:<br />CS:Pin number 105<br />CLK:Pin number 104<br />MOSI:Pin number 107<br />MISO:Pin number 106 |
-| BC25PA        | port0:<br />CS:Pin number 6<br />CLK:Pin number 5<br />MOSI:Pin number 4<br />MISO:Pin number 3|
+| BC25PA        | port0:<br />CS:Pin number 6<br />CLK:Pin number 5<br />MOSI:Pin number 4<br />MISO:Pin number 3 |
 
 * Note:
 
@@ -7023,6 +7023,8 @@ print('exit!')
 Module function:  Generate the corresponding QR code according to the input content. 
 
 Note: The BC25PA platform does not support this module function.
+
+​			Before using the preview, you need to initialize LCD.
 
 > ​	qrcode.show(qrcode_str,magnification,start_x,start_y,Background_color,Foreground_color)
 
@@ -10308,7 +10310,7 @@ if __name__ == '__main__':
 
 #### camera - Camera and Code Scan 
 
-Module function: Preview, camera, video recorder, code scan (currently only preview and code scan are supported.)
+Module function: Preview, camera, code scan
 
 Note: The BC25PA platform does not support this module function.
 
@@ -10332,7 +10334,7 @@ Before using the preview, you need to initialize LCD.
 | *cam_h*       | int  | *camera Vertical resolution*                                 |
 | *lcd_w*       | int  | *LCD horizontal resolution*                                  |
 | *lcd_h*       | int  | *LCD vertical resolution*                                    |
-| perview_level | int  | Preview level[1,2]. The higher the level, the smoother the image and the greater the consumption of resources. |
+| perview_level | int  | Preview level[1,2]. Level 2 only for ASR platform. The higher the level, the smoother the image and the greater the consumption of resources. |
 
 * Return Value
 
@@ -10395,10 +10397,10 @@ Before using  code scan , you need to initialize LCD.
 | Parameter     | Type | Description                                                  |
 | ------------- | ---- | ------------------------------------------------------------ |
 | model         | int  | camera model:<br />*0: gc032a spi*<br />*1: bf3901 spi*      |
-| decode_level  | int  | code scan level，The higher the level, the better the recognition result but the greater the resource consumption* |
+| decode_level  | int  | code scan level[1,2]，Level 2 only for ASR platform. The higher the level, the better the recognition result but the greater the resource consumption* |
 | cam_w         | int  | *camera horizontal resolution*                               |
 | *cam_h*       | int  | *camera vertical resolution*                                 |
-| perview_level | int  | Preview level[1,2]. The higher the level, the smoother the image and the greater the consumption of resources. |
+| perview_level | int  | Preview level[1,2]. Level 2 only for ASR platform. The higher the level, the smoother the image and the greater the consumption of resources.<br />when it is equal to 0, there is no LCD preview function. There is no need to initialize the LCD in advance. <br/> when it is equal to 1 or 2, the LCD must be initialized first |
 | *lcd_w*       | int  | *LCD horizontal resolution*                                  |
 | *lcd_h*       | int  | *LCD vertical resolution*                                    |
 
@@ -10536,7 +10538,7 @@ Camera function.
 |Model | int | camera model: <br/> * 0: gc032a spi * <br/> * 1: bf3901 spi *|
 | cam_ W | int | camera horizontal resolution|
 | *cam_ H * | int | * camera vertical resolution *|
-| perview_ Level | int | preview level [0,2]. The higher the level, the smoother the image and the greater the resource consumption<br/> when it is equal to 0, there is no LCD preview function <br/> when it is equal to 1 or 2, the LCD must be initialized first|
+| perview_ Level | int | preview level [0,2]. Level 2 only for ASR platform. The higher the level, the smoother the image and the greater the resource consumption<br/> when it is equal to 0, there is no LCD preview function. There is no need to initialize the LCD in advance.  <br/> when it is equal to 1 or 2, the LCD must be initialized first |
 | *lcd_ W * | int | LCD horizontal resolution|
 | *lcd_ H * | int | * LCD vertical resolution *|
 
