@@ -6,7 +6,7 @@ Note: The BC25PA platform does not support this module function.
 
 Function : This module provides Alibaba Cloud loT suite client function. The current product node type only supports "device" and device authentication mode supports "unique-certificate-per-device authentication" and "unique-certificate-per-product authentication".
 
-> **aLiYun(productKey, productSecret, DeviceName, DeviceSecret)**
+> **aLiYun(productKey, productSecret, DeviceName, DeviceSecret, MqttServer)**
 
 Configure the product and device information of Alibaba Cloud loT suite.
 
@@ -176,6 +176,8 @@ Send Ping Package
 > **aLiYun.getAliyunSta()**
 
 Get Alibaba Cloud connection status.
+
+Note: The BG95 platform does not support this API.
 
 * Parameter
   * None
@@ -433,7 +435,9 @@ Send Ping package.
 
 > **TXyun.getTXyunsta()**
 
-Get Tencent Cloud connection status
+Get Tencent Cloud connection status.
+
+Note: The BG95 platform does not support this API.
 
 * Parameter
 
