@@ -1214,7 +1214,7 @@ Block waiting for server message response.
 
 Get MQTT connection status.
 
-Note: The CATM platform does not support this API.
+Note: The BG95 platform does not support this API.
 
 PS: After users use the disconnect() method, and then  -1 is returned if MQTTClient.get_mqttsta() is called because the created object resources have been released at this time. 
 

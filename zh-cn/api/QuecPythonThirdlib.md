@@ -1262,7 +1262,7 @@ c.error_register_cb(err_cb)
 
 获取mqtt连接状态
 
-注意：CATM平台不支持该API。
+注意：BG95平台不支持该API。
 
 PS：如果用户调用了 disconnect() 方法之后，再调用 MQTTClient.get_mqttsta() 会返回-1，因为此时创建的对象资源等都已经被释放。
 
