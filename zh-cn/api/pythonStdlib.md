@@ -1583,7 +1583,7 @@ b'\x07\x00\x00\x00\t\x00\x00\x00'
 
 ##### 根据格式字符串fmt将值v1、v2、 …打包到从`offset`开始的缓冲区中
 
-> **ustruct.pack_info(fmt, buffer, offset, v1, v2, ...)**
+> **ustruct.pack_into(fmt, buffer, offset, v1, v2, ...)**
 
 根据格式字符串fmt将值v1、v2、 …打包到从`offset`开始的缓冲区中。从缓冲区的末尾算起，`offset`可能为负。
 
