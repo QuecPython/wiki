@@ -1386,6 +1386,70 @@ sim.setCallback(cb)
 
 
 
+##### DTMF识别使能接口
+
+> **voiceCall.dtmfDetEnable(enable)**
+
+DTMF识别使能接口，默认不开启DTMF识别
+
+* 参数
+
+| 参数     | 参数类型 | 参数说明                                                     |
+| -------- | -------- | ------------------------------------------------------------ |
+| enable   | int      | 使能开关，取值0/1,0：不开启DTMF识别，1：开启DTMF识别         |
+
+* 返回值
+
+  设置成功返回整型0，设置失败返回整型-1。
+
+* 示例
+
+见voiceCall.dtmfSetCb()接口示例
+
+
+
+##### 设置DTMF识别回调接口
+
+> **voiceCall.dtmfSetCb(cb)**
+
+设置DTMF识别回调接口
+
+* 参数
+
+| 参数     | 参数类型 | 参数说明                                                     |
+| -------- | -------- | ------------------------------------------------------------ |
+| cb       | function | 回调函数                                                     |
+
+* 返回值
+
+  设置成功返回整型0，设置失败返回整型-1。
+
+* 示例
+
+```
+>>> def cb(args):
+... print(args)
+...
+...
+...
+>>> voiceCall.dtmfSetCb(cb)
+0
+>>> voiceCall.dtmfDetEnable(1)
+0
+
+>>> voiceCall.callStart('13855169092')
+
+0
+>>>
+1   //手机端按下1，callback中会收到按下的字符“1”
+
+8   //手机端按下8
+
+9   //手机端按下9
+```
+
+
+
 ##### 设置控制呼叫转移
 
 > **voiceCall.setFw(reason, fwmode, phonenum)**

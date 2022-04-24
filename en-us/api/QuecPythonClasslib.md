@@ -1355,6 +1355,70 @@ This function sets DTMF.
 
 
 
+##### Enable DTMF identification
+
+> **voiceCall.dtmfDetEnable(enable)**
+
+Enable DTMF identification. It is disabled by default.
+
+* Parameter
+
+| Parameter | Type   | Description                                                  |
+| --------- | ------ | ------------------------------------------------------------ |
+| enable    | int    | 1:Enable DTMF identification, 0:Disable DTMF identification  |
+
+* Return Value
+
+  * Returns 0 on success, -1 otherwise.
+
+* Example
+
+See the example of 'voiceCall.dtmfSetCb()'
+
+
+
+##### set the callback of DTMF identification
+
+> **voiceCall.dtmfSetCb(cb)**
+
+Set the callback of DTMF identification
+
+* Parameter
+
+| Parameter | Type     | Description                                                  |
+| --------- | ------   | ------------------------------------------------------------ |
+| cb        | function | callback function                                            |
+
+* Return Value
+
+  * Returns 0 on success, -1 otherwise.
+
+* Example
+
+```
+>>> def cb(args):
+... print(args)
+...
+...
+...
+>>> voiceCall.dtmfSetCb(cb)
+0
+>>> voiceCall.dtmfDetEnable(1)
+0
+
+>>> voiceCall.callStart('13855169092')
+
+0
+>>>
+1   //Press "1" on the phone, callback function will receive the pressed character "1".
+
+8   //Press "8" on the phone
+
+9   //Press "9" on the phone
+```
+
+
+
 ##### Set FWmode
 
 > **voiceCall.setFw(reason, fwmode, phonenum)**
