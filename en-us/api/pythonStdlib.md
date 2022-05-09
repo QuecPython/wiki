@@ -1567,7 +1567,7 @@ b'\x07\x00\x00\x00\t\x00\x00\x00'
 
 ##### Pack the values *v1*, *v2*, … according to the format string *fmt* into a *buffer* starting at *offset*
 
-> **ustruct.pack_info(fmt, buffer, offset, v1, v2, ...)**
+> **ustruct.pack_into(fmt, buffer, offset, v1, v2, ...)**
 
 Pack the values *v1*, *v2*, … according to the format string *fmt* into a *buffer* starting at *offset*. *offset* may be negative to count from the end of *buffer*.
 
