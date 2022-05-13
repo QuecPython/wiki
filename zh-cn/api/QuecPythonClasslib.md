@@ -11595,7 +11595,7 @@ $GNGSA,A,3,31,3
 #### SecureData - 安全数据区
 
 模块功能：模组提供一块裸flash区域及专门的读写接口供客户存贮重要信息，且信息在烧录固件后不丢失(烧录不包含此功能的固件无法保证不丢失)。提供一个存储和读取接口，不提供删除接口。
-目前只支持EC600N、EC600S系列项目
+目前只支持EC600N系列项目
 
 ##### 数据存储
 
@@ -11647,10 +11647,10 @@ databuf = '\x31\x32\x33\x34\x35\x36\x37\x38'
 SecureData.Store(1, databuf, 8)
 # 定义一个长度为20的数组用于读取存储的数据
 buf = bytearray(20)
-# 读取index为1的存储区域中的数据至buf中,将读取到数据的长度存储在变量len中
-lenth = SecureData.Read(1, buf, 20)
+# 读取index为1的存储区域中的数据至buf中,将读取到数据的长度存储在变量length中
+length = SecureData.Read(1, buf, 20)
 # 输出读到的数据
-print(buf[:lenth])
+print(buf[:length])
 ```
 
  * 执行结果
@@ -11661,8 +11661,8 @@ print(buf[:lenth])
 >>> SecureData.Store(1, databuf, 8)
 0
 >>> buf = bytearray(20)
->>> lenth = SecureData.Read(1, buf, 20)
->>> print(buf[:lenth])
+>>> length = SecureData.Read(1, buf, 20)
+>>> print(buf[:length])
 bytearray(b'12345678')
 >>> 
 ```

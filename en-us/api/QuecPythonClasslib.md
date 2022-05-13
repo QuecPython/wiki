@@ -11182,7 +11182,7 @@ $GNGSA,A,3,31,3
 
 Module function: the module provides a bare flash area and a special read-write interface for customers to store important information, and the information will not be lost after burning the firmware (burning the firmware without this function cannot be guaranteed not to be lost). Provide a storage and read interface, not a delete interface.
 
-At present, only ec600n and ec600s series projects are supported
+At present, only ec600n series projects are supported
 
 ##### Data storage
 
@@ -11234,10 +11234,10 @@ databuf = '\x31\x32\x33\x34\x35\x36\x37\x38'
 SecureData.Store(1, databuf, 8)
 #Define an array with a length of 20 to read the stored data
 buf = bytearray(20)
-#Read the data in the storage area with index 1 into buf, and store the length of the read data in the variable len
-lenth = SecureData.Read(1, buf, 20)
+#Read the data in the storage area with index 1 into buf, and store the length of the read data in the variable length
+length = SecureData.Read(1, buf, 20)
 #Output read data
-print(buf[:lenth])
+print(buf[:length])
 ```
 
 * implementation results
@@ -11248,8 +11248,8 @@ print(buf[:lenth])
 >>> SecureData.Store(1, databuf, 8)
 0
 >>> buf = bytearray(20)
->>> lenth = SecureData.Read(1, buf, 20)
->>> print(buf[:lenth])
+>>> length = SecureData.Read(1, buf, 20)
+>>> print(buf[:length])
 bytearray(b'12345678')
 >>> 
 ```
