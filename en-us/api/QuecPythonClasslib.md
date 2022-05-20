@@ -3872,22 +3872,27 @@ Note: The BC25PA platform does not support this module function.
 
 > **import audio**
 >
-> **record = audio.Record()**
+> **record = audio.Record(device)**
+
+Without parameter, the handset is used for playback by default; with parameter, the playback device is set as parameter.
+
+Note: with parameter, the parameter should be the same as that set by audio.audio().
 
 * Parameter
 
-  * None	
+| Parameter | Parameter Type | Description                                                  |
+| --------- | -------------- | ------------------------------------------------------------ |
+| device    | int            | Output channel<br/>0 - handset<br/>1 - earphone<br/>2 - speaker |
 
 * Return Value
 
   * 0 Successful execution
   * -1 Failed execution
-
 * Example
 
 ```python
 import audio 
-record_test = audio.Record()
+record_test = audio.Record()#Without parameter, use the handset to play
 ```
 
 
