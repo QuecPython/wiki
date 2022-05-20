@@ -1355,6 +1355,70 @@ This function sets DTMF.
 
 
 
+##### Enable DTMF identification
+
+> **voiceCall.dtmfDetEnable(enable)**
+
+Enable DTMF identification. It is disabled by default.
+
+* Parameter
+
+| Parameter | Type   | Description                                                  |
+| --------- | ------ | ------------------------------------------------------------ |
+| enable    | int    | 1:Enable DTMF identification, 0:Disable DTMF identification  |
+
+* Return Value
+
+  * Returns 0 on success, -1 otherwise.
+
+* Example
+
+See the example of 'voiceCall.dtmfSetCb()'
+
+
+
+##### set the callback of DTMF identification
+
+> **voiceCall.dtmfSetCb(cb)**
+
+Set the callback of DTMF identification
+
+* Parameter
+
+| Parameter | Type     | Description                                                  |
+| --------- | ------   | ------------------------------------------------------------ |
+| cb        | function | callback function                                            |
+
+* Return Value
+
+  * Returns 0 on success, -1 otherwise.
+
+* Example
+
+```
+>>> def cb(args):
+... print(args)
+...
+...
+...
+>>> voiceCall.dtmfSetCb(cb)
+0
+>>> voiceCall.dtmfDetEnable(1)
+0
+
+>>> voiceCall.callStart('13855169092')
+
+0
+>>>
+1   //Press "1" on the phone, callback function will receive the pressed character "1".
+
+8   //Press "8" on the phone
+
+9   //Press "9" on the phone
+```
+
+
+
 ##### Set FWmode
 
 > **voiceCall.setFw(reason, fwmode, phonenum)**
@@ -7558,7 +7622,7 @@ True
   | timeout       | Integer type | This parameter is the timeout of upper layer application. When the application triggers timeout, it actively reports the scanned hot spot information. The application automatically reports the hot spot information if it scans all the hop spots which have been set previously or the underlying layer scan reaches the frequency sweeping timeout before the timeout of the application. <br>Range:<br/>600S: 4–255; unit: s.<br/>200U/600U: 120–5000; unit: ms. |
   | round         | Integer type | This parameter is the scanning rounds of wifi. When reaching the scanning rounds, the scan stops and the scanning results are obtained. <br/>Range:<br/>600S: 1–3; unit: round<br/>200U/600U: 1–10; unit: round |
   | max_bssid_num | Integer type | This parameter determines the maximum number of hot spots to be scanned. If the number of hot spots scanned by the underlying layer reaches the maximum, the scan stops and the scanning results are obtained. <br/>Range:<br/>600S: 4–30<br/>200U/600U: 1–300 |
-  | scan_timeout  | Integer type | This parameter is the wifi hot spot scanning timeout of underlying layer. If the underlying layer scan reaches the hot spot scanning timeout set previously,  the scan stops and the scanning results are obtained. Range: 1–255. Unit: second. 200U or 600U platforms do not support this parameter. You can set this parameter to 0. |
+  | scan_timeout  | Integer type | This parameter is the wifi hot spot scanning timeout of underlying layer. If the underlying layer scan reaches the hot spot scanning timeout set previously,  the scan stops and the scanning results are obtained. Range: 1–255.  |
   | priority      | Integer type | This parameter is the priority setting of wifi scanning service. 0 indicates that ps is preferred; 1 indicates that wifi is preferred. When ps is preferred, the wifi scan is terminated when a data service is initiated. When wifi is preferred, RRC connection is not connected when a data service is initiated. wifi scan runs normally. The RRC connection is only established after the scan completes. 200U or 600U platforms do not support this parameter. You can set this parameter to 0. |
 
 * Return Value：
@@ -11182,7 +11246,7 @@ $GNGSA,A,3,31,3
 
 Module function: the module provides a bare flash area and a special read-write interface for customers to store important information, and the information will not be lost after burning the firmware (burning the firmware without this function cannot be guaranteed not to be lost). Provide a storage and read interface, not a delete interface.
 
-At present, only ec600n and ec600s series projects are supported
+At present, only ec600n series projects are supported
 
 ##### Data storage
 
@@ -11234,10 +11298,10 @@ databuf = '\x31\x32\x33\x34\x35\x36\x37\x38'
 SecureData.Store(1, databuf, 8)
 #Define an array with a length of 20 to read the stored data
 buf = bytearray(20)
-#Read the data in the storage area with index 1 into buf, and store the length of the read data in the variable len
-lenth = SecureData.Read(1, buf, 20)
+#Read the data in the storage area with index 1 into buf, and store the length of the read data in the variable length
+length = SecureData.Read(1, buf, 20)
 #Output read data
-print(buf[:lenth])
+print(buf[:length])
 ```
 
 * implementation results
@@ -11248,8 +11312,8 @@ print(buf[:lenth])
 >>> SecureData.Store(1, databuf, 8)
 0
 >>> buf = bytearray(20)
->>> lenth = SecureData.Read(1, buf, 20)
->>> print(buf[:lenth])
+>>> length = SecureData.Read(1, buf, 20)
+>>> print(buf[:length])
 bytearray(b'12345678')
 >>> 
 ```
