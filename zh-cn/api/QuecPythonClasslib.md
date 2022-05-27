@@ -4393,11 +4393,17 @@ dial_play_ec600u()
 
 > **import audio**
 >
-> **record = audio.Record()**
+> **record = audio.Record(device)**
+
+不带参数时，默认使用听筒播放；带参数时，设置播放的设备。
+
+注意：带参数时，参数应与audio.audio()设置的参数一致。
 
 * 参数
 
-  无
+| 参数   | 参数类型 | 参数说明                                        |
+| ------ | -------- | ----------------------------------------------- |
+| device | int      | 输出通道<br/>0 - 听筒<br/>1 - 耳机<br/>2 - 喇叭 |
 
 * 返回值
 
@@ -4407,7 +4413,7 @@ dial_play_ec600u()
 
 ```python
 import audio 
-record_test = audio.Record()
+record_test = audio.Record()#不传参数，使用听筒播放
 ```
 
 
