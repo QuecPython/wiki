@@ -1201,6 +1201,8 @@ proto - 协议号
 
 * usocket.IPPROTO_UDP
 
+* usocket.IPPROTO_TCP_SER ：对应TCP socket 服务端套接字
+
 其他
 
 * usocket.SOL_SOCKET - 套接字选项级别，
@@ -1215,6 +1217,8 @@ import usocket
 socket = usocket.socket(usocket.AF_INET, usocket.SOCK_STREAM)
 # 创建基于UDP的数据报套接字
 socket = usocket.socket(usocket.AF_INET, usocket.SOCK_DGRAM)
+# 创建基于TCP的服务端套接字
+socket = usocket.socket(usocket.AF_INET, usocket.SOCK_STREAM, usocket.IPPROTO_TCP_SER)
 ```
 
 ##### 将主机域名（host）和端口（port）转换为用于创建套接字的5元组序列
@@ -1229,6 +1233,26 @@ socket = usocket.socket(usocket.AF_INET, usocket.SOCK_DGRAM)
 
 **socket类的方法**
 
+##### 服务端绑定指定地址address
+
+
+> **socket.bind(address)**
+
+服务端绑定指定地址address的服务器。
+
+* `address` ：包含地址和端口号的元组或列表
+
+注意：该方法在服务端套接字使用时，绑定address时会将address设为客户端可连接address。其他客户端是否可连接，需确认运营商网络是否支持。
+
+示例：
+
+```
+#绑定拨号IP为服务器地址，端口自定义
+socket.bind(("",80))
+#绑定自定义address
+socket.bind(("192.168.0.1",80))
+```
+
 ##### 允许服务端接受连接
 
 
@@ -1242,11 +1266,13 @@ socket = usocket.socket(usocket.AF_INET, usocket.SOCK_DGRAM)
 
 > **socket.accept()**
 
-接受连接请求，返回元组，包含新的套接字和客户端地址，形式为：`(conn, address)`
+接受连接请求，返回元组，包含新的套接字和客户端地址以及客户端端口，形式为：`(conn, address, port)`
 
 * `conn` ：新的套接字对象，可以用来发送和接收数据
 
 * `address` ：连接到服务器的客户端地址
+
+* `port` ：连接到服务器的客户端端口
 
 ##### 连接到指定地址address的服务器
 
@@ -1412,6 +1438,7 @@ socket.setsockopt(usocket.SOL_SOCKET, usocket.TCP_KEEPALIVE, 1)
 
 注意：
 
+BG95平台不支持该API。
 如果用户调用了 `socket.close()` 方法之后，再调用 `socket.getsocketsta()` 会返回-1，因为此时创建的对象资源等都已经被释放。
 
 
