@@ -1199,8 +1199,8 @@ type - socket type
 proto - protocol number
 
 * usocket.IPPROTO_TCP
-
 * usocket.IPPROTO_UDP
+* usocket.IPPROTO_TCP_SER : socket for TCP Server
 
 Others
 
@@ -1216,6 +1216,8 @@ import usocket
 socket = usocket.socket(usocket.AF_INET, usocket.SOCK_STREAM)
 # Creating UDP-based Datagram Sockets
 socket = usocket.socket(usocket.AF_INET, usocket.SOCK_DGRAM)
+# Creating TCP-based server sockets
+socket = usocket.socket(usocket.AF_INET, usocket.SOCK_STREAM, usocket.IPPROTO_TCP_SER)
 ```
 
 ##### Translate the host/port argument into a sequence of 5-tuples
@@ -1230,6 +1232,25 @@ Translate the host/port argument into a sequence of 5-tuples. The resulting list
 
 #### Class Socket Methods
 
+##### Bind specified address
+
+> **socket.bind(address)**
+
+Bind the socket to address. The socket must not already be bound. (The format of address depends on the address family)
+
+* `address` : A tuple or list containing addresses and port numbers
+
+Example:
+
+```
+# Bind the datacall IP to the server address
+socket.bind(("",80))
+# Bind a custom IP to the server address
+socket.bind(("192.168.0.1",80))
+```
+
+#####
+
 ##### Enable a server to accept connections
 
 
@@ -1243,7 +1264,7 @@ Enable a server to accept connections. The maximum number of connections can be 
 
 > **socket.accept()**
 
-Accept a connection and return a tuple. The socket must be bound to an address and listening for connections. The return value is a pair `(conn, address)`
+Accept a connection and return a tuple. The socket must be bound to an address&port and listening for connections. The return value is a pair `(conn, address, port)`
 
 * `conn` : new socket object usable to send and receive data on the connection
 
@@ -1398,6 +1419,8 @@ Get socket status. The status values are described as follows:
 | 10           | TIME_WAIT   | The socket has been closed, waiting for the remote socket to close, that is, FIN, ACK, FIN, ACK are all finished, and become CLOSED state after 2MSL time. |
 
 Note:
+
+The BG95 platform does not support this API.
 
 If the user calls the ` socket.getsocketsta () ` after calling the ` socket.close () ` method, it returns-1 because the object resources and so on created at this point have been freed.
 
