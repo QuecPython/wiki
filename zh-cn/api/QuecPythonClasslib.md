@@ -3544,7 +3544,7 @@ download_list = [{'url': 'http://www.example.com/app.py', 'file_name': '/usr/app
 
 模块功能：音频播放，支持TTS、mp3以及AMR文件播放。
 
-注意：展锐平台、BC25PA平台不支持此模块。
+注意：BC25PA平台不支持此模块。
 
 ##### TTS 
 
@@ -10866,7 +10866,7 @@ if __name__ == '__main__':
 
 
 
-关闭预览功能
+###### 关闭预览功能
 
 **camPreview.close()**
 
