@@ -2203,7 +2203,7 @@ This function sets APN. After setting, you need to restart or switch to mode 0 a
 
 * Parameter
 
-  This API is a variable parameter function in Qualcomm/ASR_1803s/Unisoc(excluding EG915) platform, and the number of parameters is 2 or 7. The number of parameters in other platforms is fixed at 2  ：
+  This API is a variable parameter function in Qualcomm/ASR_1803s/ASR_1601/ASR_1606/Unisoc(excluding EG915) platform, and the number of parameters is 2 or 7. The number of parameters in other platforms is fixed at 2  ：
     The number of parameters is 2：net.setApn(apn, simid)
     The number of parameters is 7：net.setApn(pid, iptype, apn, usrname, password, authtype, simid)
   
@@ -2245,7 +2245,7 @@ This function obtains the current APN.
 
 * Parameter
 
-  This API is a variable parameter function in Qualcomm/ASR_1803s/Unisoc(excluding EG915) platform, and the number of parameters is 1 or 2. The number of parameters in other platforms is fixed at 1  ：
+  This API is a variable parameter function in Qualcomm/ASR_1803s/ASR_1601/ASR_1606/Unisoc(excluding EG915) platform, and the number of parameters is 1 or 2. The number of parameters in other platforms is fixed at 1  ：
     The number of parameters is 2：net.setApn(pid, simid)
     The number of parameters is 1：net.setApn(simid)
   
