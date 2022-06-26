@@ -2177,7 +2177,7 @@ sms.setCallback(cb)
 > **net.setApn(\*args)**
 
 设置APN，设置后需要重启或者通过 net.setModemFun(mode) 接口先切换到模式0，再切换到模式1才能生效。 
-  
+
 * 参数
 
   该接口在Qualcomm/ASR_1803s/Unisoc(不包括EG915)平台为可变参函数,参数个数为2或7, 其他平台参数个数固定为2：
@@ -2252,7 +2252,7 @@ sms.setCallback(cb)
 '3gnet'
 >>> net.getApn(1,0)
 (1, '3gnet', 'mia', '123', 2)
-``` 
+```
 
 
 
@@ -7638,6 +7638,103 @@ print('exit!')
   BC25PA平台不支持此方法。
 
 
+
+##### 设置PSM模式的控制时间
+
+- 仅BC25平台支持
+
+> **pm.set_psm_time(tau_uint,tau_time,act_uint,act_time)**  # 设置并启用PSM           <**模式1**>
+>
+> **pm.set_psm_time(mode)**														   # 单独设置启用或禁用    <**模式2**>
+
+
+* 参数
+
+| 参数     | 参数类型 | 参数说明                       |
+| -------- | -------- | ------------------------------ |
+| mode | int | 是否启用PSM:<br/>0 禁用PSM<br/>1 启用PSM<br/>2 禁用PSM并删除PSM的所有参数，如有默认值，则重置默认值。(注意此种模式禁用的情况下，如果要启用PSM必须用**模式1**，用**模式2**没有任何的意义,因为设置的TAU和ACT时间全部清零了)。 |
+| tau_uint | int   | tau(T3412)定时器单位 |
+| tau_time | int   | tau(T3412)定时器时间周期值 |
+| act_uint | int   | act(T3324)定时器单位 |
+| act_time | int   | act(T3324)定时器时间周期值 |
+
+* tau定时器说明
+|tau定时器单位值  | 类型 | 单位值说明                       |
+| -------- | -------- | ------------------------------|
+| 0 | int   | 10 分钟 |
+| 1 | int   | 1 小时 |
+| 2 | int   | 10 小时 |
+| 3 | int   | 2 秒 |
+| 4 | int   | 30 秒 |
+| 5 | int   | 1 分钟 |
+| 6 | int   | 320 小时 |
+| 7 | int   | 定时器被停用 |
+
+* act定时器单位说明
+|act定时器单位值  | 类型 | 单位值说明                       |
+| -------- | -------- | ------------------------------|
+| 0 | int   | 2 秒 |
+| 1 | int   | 1 分钟 |
+| 2 | int   | 6 分钟 |
+| 7 | int   | 定时器被停用 |
+
+* 返回值
+
+    True: 	成功
+    False:	失败
+
+* 注意
+   仅BC25平台支持 
+
+- 示例
+
+```python
+>>> import pm
+>>> pm.set_psm_time(1,2,1,4)  #设置tau定时器周期为 1小时 * 2 = 2小时， act定时器周期值为 1分钟 * 4 = 4分钟。
+True
+>>>
+```
+
+
+
+##### 获取PSM模式的控制时间
+
+- 仅BC25平台支持
+
+> **pm.get_psm_time()**
+
+* 参数d
+
+  无
+
+* 返回值
+
+  成功：返回值为list类型，说明如下：
+  |参数  | 类型 | 单位值说明                       |
+| -------- | -------- | ------------------------------|
+| list[0] | int   | mode说明: <br/>0-禁用PSM. <br/>1-启用PSM. <br/>2.禁用 PSM 并删除 PSM 的所有参数,若有默认值,则重置为默认值。 |
+| list[1] | int   | tau定时器单位 |
+| list[2] | int   | tau定时器时间周期值 |
+| list[3] | int   | act定时器单位 |
+| list[4] | int   | act定时器时间周期值 |
+  失败：返回None.在禁用PSM时返回失败。
+  
+* 注意
+    仅BC25平台支持
+
+- 示例
+
+
+```python
+>>> pm.get_psm_time()
+
+[1, 1, 1, 1, 2]
+
+
+```
+
+
+
 ##### 使用示例
 
 模拟测试，实际开发请根据业务场景选择使用！
@@ -11748,7 +11845,7 @@ bytearray(b'12345678')
 | -------- | ------ | ------------------------------------------------------------ |
 | data_len | int    | 期望接受的数据长度(注意此参数根据data的实际长度进行调整，按照data变量的容量和data_len的比较取最小值) |
 | data     | string | 存储接收到的数据,最大支持1024字节数据。                      |
-| type     | int    | 表示核心网释放与模块的RRC连接：0-无指示。1-指示该包上行数据后不期望有进一步的上行或者下行数据，核心网可立即释放  。2-指示该包上行数据后期望有对应回复的单个下行数据包，核心网在下发后立即释放  。 |
+| type     | int    | 表示核心网释放与模块的RRC连接：<br/>0-无指示。<br/>1-指示该包上行数据后不期望有进一步的上行或者下行数据，核心网可立即释放  。<br/>2-指示该包上行数据后期望有对应回复的单个下行数据包，核心网在下发后立即释放  。 |
 
 - 说明
 
@@ -11792,7 +11889,7 @@ True
 
 ###### 创建AEP对象
 
-> **aep=AEP(ip,port)**
+> **aep=AEP(ip,port,model,psk)**
 
 - 参数
 
@@ -11800,6 +11897,8 @@ True
 | ---- | ------ | --------------------------------------------- |
 | ip   | string | 物联网平台的服务器ip地址,最大长度16,合法ipv4. |
 | port | string | 物联网平台的服务器端口,最大长度5,范围0~65536. |
+| model | int | 0 设置接收数据模式为缓存模式，接收到新数据时无 URC 上报<br/>1 设置接收数据模式为直吐模式，接收到新数据时通过 URC 立即上报.<br/>2 设置接收数据模式为缓存模式，接收到新数据时仅上报指示 URC。可省略，默认为1. |
+| psk  | string | 十六进制字符串型。加密设备的密钥，在平台端注册加密设备时可由平台生成或自主设置，最大支持长度 256 字节.可省略 |
 
 - 示例
 
@@ -11808,24 +11907,44 @@ True
 >>> aep=AEP("221.229.214.202","5683")
 ```
 
-###### 连接AEP云平台
+###### 设置回调函数
 
-> **aep.connect()**
-
+> **aep.set_event_callcb(usrfunc)**
 - 参数
 
-无
+| 参数 | 类型   | 说明                                          |
+| ---- | ------ | --------------------------------------------- |
+| usrfunc  | func(data) | 发生事件时调用usrfunc |
+- func(data)参数说明:
+| 参数 |类型   | 说明                                          |
+| ---- | ------ | --------------------------------------------- |
+| data   | list | data[0]:event_id,事件类型><br/>data[1]:event_code,事件类型对应返回码><br/>data[2]:recv_data,数据><br/>data[3]:data_len,数据长度><br/> |
+
+- 注意
+    event_id,event_code,recv_data,data_len说明见本模块[事件说明](# 事件说明)。此函数，建议在连接之前进行注册，以防事件丢失。
+- 
+
+###### 连接AEP云平台
+
+> **aep.connect(timeout)**
+
+- 参数
+    超时时间
+
+    类型: int,超时时间,单位(ms),不输入参数则默认30s
+
+    说明: 超时失败最坏情况阻塞时长为:15s+timeout。不支持并发操作。
 
 - 返回值
 
 成功-0
 
-失败-非0
+失败-1
 
 - 示例
 
 ```python
->>> aep.connect()
+>>> aep.connect(3000)
 0
 ```
 ###### 查询待读取数据
@@ -11846,10 +11965,16 @@ True
 >>> aep.check()
 0
 ```
-
 ###### 接收数据
 
-> **aep.recv(data_len,data)**
+> **aep.recv(data_len,data，timeout)**
+
+- 使用说明,[model](#创建AEP对象)值对此函数的影响如下列表
+| model     | 说明                                                         |
+| -------- |  ------------------------------------------------------------ |
+|0|为缓存模式,云平台下发数据到模组,模组不会有任何的主动提示动作,只能主动读取。|
+|1|为直吐模式,云平台下发数据到模组,模组会把收到的数据直接吐到urc,set_event_callcb(usrfunc)设置的回调函数会直接接管收到的数据，以及数据长度。|
+|2|为缓存模式,当无缓存数据时,云平台下发数据到模组,模组会通过回调函数usrfunc上报事件,提示有缓存数据待读取(云平台下发数据到模组,模组判断缓存为空上报事件提示有数据到达,缓存数据不为空不上报事件)|
 
 - 参数
 
@@ -11857,6 +11982,7 @@ True
 | -------- | ------ | ------------------------------------------------------------ |
 | data_len | int    | 期望接受的数据长度(注意此参数根据data的实际长度进行调整，按照data变量的容量和data_len的比较取最小值),非阻塞。 |
 | data     | string | 存储接收到的数据。                                           |
+| timeout  | int | 超时时间,单位ms,不输入则默认30s。                                       |
 
 - 说明
 
@@ -11877,21 +12003,28 @@ True
 
 ###### 发送数据
 
-> **aep.send(data_len,data,type)**
+> **aep.send(data_len,data,type,timeout)**
 
+- 使用说明:
+    在超时失败状态，阻塞时长最坏情况为:5s+timeout。不支持并发操作。
 - 参数
 
 | 参数     | 类型   | 说明                                                         |
 | -------- | ------ | ------------------------------------------------------------ |
-| data_len | int    | 期望发送的数据长度(注意此参数根据data的实际长度进行调整，按照data变量的容量和data_len的比较取最小值)，非阻塞 |
+| data_len | int    | 期望发送的数据长度(注意此参数根据data的实际长度进行调整，按照data变量的容量和data_len的比较取最小值)，非阻塞。 |
 | data     | string | 待发送数据，最大支持1024字节数据。                           |
-| type     | int    | 表示核心网释放与模块的RRC连接：0-无指示。1-指示该包上行数据后不期望有进一步的上行或者下行数据，核心网可立即释放  。2-指示该包上行数据后期望有对应回复的单个下行数据包，核心网在下发后立即释放  。 |
+| type     | int    | 表示核心网释放与模块的RRC连接：<br/>0-发送 NON 数据并将模块发送数据所携带的 RAI 辅助释放标记设置为 0<br/>1-发送 NON 数据并将模块发送数据所携带的 RAI 辅助释放标记设置为 1<br/>2-发送 NON 数据并将模块发送数据所携带的 RAI 辅助释放标记设置为 2<br/>100-发送 CON 数据并将模块发送数据所携带的 RAI 辅助释放标记设置为 0<br/>101-发送 CON 数据并将模块发送数据所携带的 RAI 辅助释放标记设置为 1<br/>102-发送 CON 数据并将模块发送数据所携带的 RAI 辅助释放标记设置为 2 |
+| timeout  | int    | 超时时间,单位ms,不输入则默认30s                              |
 
+- RAI辅助释放标记说明
+|         | 说明                                                         |
+| -------------- | ------------------------------------------------------------ |
+| RAI         | RAI 标记用于指示核心网释放与模块的 RRC 连接。:<br/>RAI 为 0 时，无指示。<br/>RAI 为 1 时，指示该包上行数据后不期望有进一步的上行或者下行数据，核心网可立即释放。<br/>RAI 为 2 时，指示该包上行数据后期望有对应回复的单个下行数据包，核心网在下发后立即释放。 |
 
 
 - 说明
 
-发送数据为16进制字符串，数据长度为偶数，阻塞(超时时间3分钟),返回成功表示发送指令执行成功。
+发送数据为16进制字符串，数据长度为偶数，阻塞,返回成功表示发送指令执行成功。
 
 - 返回值
 
@@ -11907,8 +12040,33 @@ bytearray(b'313233')
 >>> aep.send(6,data,0)
 0
 ```
+###### 检查连接状态
+> **aep.connect_check()**
+- 参数
 
+  无
+- 返回值
+   返回值类型:字符串
+   含义如下表
 
+  | 返回值     | 说明   |
+  | -------- | ------ |
+  |  UNINITIALISED |未初始化状态                   |
+  |  REGISTERING |连接中                           |
+  |   REJECTED_BY_SERVER |连接请求被服务器拒接     |
+  |   TIMEOUT |连接超时                            |
+  |   REGISTERED |已连接未订阅                     |
+  |  REGISTERED_AND_OBSERVED |已连接已订阅         |
+  |  DEREGISTERED |连接断开                        |
+  |  RESUMPTION_FAILED DTLS |会话恢复失败          |
+  |  FALIED |函数执行失败          |
+  
+ - 示例
+
+```python
+>>> aep.connect_check()
+'UNINITIALISED\r\n'
+```
 
 ###### 关闭连接
 > **aep.close()**
@@ -11929,6 +12087,22 @@ bytearray(b'313233')
 True
 ```
 
+###### 事件说明
+对于本模块事件总体说明如下表:
+|event_id	|event_code	|recv_data	|data_len	|说明|
+| -------------- | ---------|----------|-------------|---------------------------- |
+|0	|0	|NULL	|0	|modem进入psm，上报此事件。此时模组不接受下发到模组的网络数据,可通过主动发送数据打破modem侧psm状态。|
+|0	|1	|NULL	|0	|modem退出psm模式，上报此事件。|
+|22	|4	|NULL	|0	|调用接口发送CON类型数据，如果发送成功上报此事件|
+|22	|5	|NULL	|0	|调用接口发送CON类型数据，如果发送失败上报此事件|
+|23	|6	|NULL	|0	|深休眠唤醒恢复连接成功，上报此事件。在调用AEP.set_event_callcb(usrfunc)时上报。|
+|23	|7	|NULL	|0	|深休眠唤醒恢复连接失败，可以采用断开连接，再重新连接。在调用AEP.set_event_callcb(usrfunc)时上报。|
+|24	|8	|NULL	|0	|云平台下发fota升级指令后，模组开始下载差分升级包时上报此事件。|
+|24	|9	|NULL	|0	|云平台下发fota升级指令时，模组fota升级结束时，上报此事件。|
+|25	|10	|NULL	|0	|收到云平台的RST数据包，主动上报此事件。此情况需要断开连接，重新连接完成订阅才能正常通信。|
+|27	|0	|data	|data_len	|收到云平台下发数据，在modem=1的情况下并调用set_event_callcb(usrfunc)设置了回调函数的情况下上报此事件。|
+|28	|0	|NULL	|0	|收到云平台下发数据，在modem=2，并且模组无缓存数据(aep.check()返回0时，即表示无缓存数据)时上报此事件。|
+|others	|0	|NULL	|0	|忽略此类事件|
 
 
 ###### 使用示例
@@ -12363,14 +12537,30 @@ dict_cmd={'数据上报':0x02,
           '下行指令固定':0x06,
           '指令响应':0x86
          }
-send_type={
-	'RAI_NONE':0,
-	'RAI_1':1,
-	'RAI_2':2
+send_type={'RAI_NONE':0,
+            'TYpe_001':1,
+            'TYpe_002':2,
+            'TYpe_100':100,
+            'TYpe_101':101,
+            'TYpe_102':102
 }
 servcei_info={
     'ip':"221.229.214.202",
     'port':"5683"
+}
+modem_type={
+    'cache_no_urc':0,
+    'no_cache':1,
+    'cache_have_urc':2
+}
+aep_event={
+    'psm_event':0,
+    'con_event':21,
+    'send_event':22,
+    'recover_event':23,
+    'rst_event':25,
+    'recv_event_data':27,
+    'recv_event_flag':28,
 }
 
 def aep_pack_cmdtype02(service_id,data_in):
@@ -12429,7 +12619,7 @@ def aep_unpack(data_in):
     else:
         print('not support')
 
-aep=AEP(servcei_info['ip'],servcei_info['port'])
+
 
 def recv():
     data=bytearray(20)	
@@ -12456,20 +12646,66 @@ def close():
     ret = aep.close()
     print('close ',ret)
     
+def deal_conn(data):
+    if data[1] == 0:
+        print('connect CtWing success!')
+    if data[1] == 3:
+        print('subscription /19/0/0 success!')
+        send()
+    if data[1] == -1 or data[1] == 1:
+        print('connect CtWing failed!')
+        aep.connect_check()
+def deal_recv(data):
+    if data[1] == 0:
+        aep_unpack(data[2])
+        print('will close')
+        close()
+    if data[1] == 5:
+        print('recv data from ctwing falied')
+        
+def deal_psm(data):
+    if data[1] == 0:
+        print('enter modem psm')
+    if data[1] == 1:
+        print('exit modem psm')
+def deal_send(data):
+    if data[1] == 4:
+        print('send data to ctwing success')
+    else:
+        print('send data to ctwing falied')
+        
+def deal_rst(data):
+    print('recv rst messge from platform')
+    close()
+def deal_recover(data):
+    print('deal_recover:',data)
+    
+def event_cb(args):
+    print('args:',args)
+    if args[0] == aep_event['con_event']:
+        deal_conn(args)
+    if args[0] == aep_event['send_event']:
+        deal_send(args)
+    if args[0] == aep_event['recv_event_data'] or args[0] == aep_event['recv_event_flag']:
+        deal_recv(args)
+    if args[0] == aep_event['rst_event']:
+        deal_rst(args)
+    if args[0] == aep_event['psm_event']:
+        deal_psm(args)
+    if args[0] == aep_event['recover_event']:
+        deal_recover(args)
+    
+def init():
+    
+    aep.set_event_callcb(event_cb)
+    connect()
+    
 loop_num = 0
 
 def do_task():
-    connect()
-    send()
-    global loop_num
-    while loop_num < 10:
-        loop_num=loop_num+1
-        utime.sleep(3)
-        ret = recv()
-        if ret == 0:
-            break
-    close()
+    init()
 
+aep=AEP(servcei_info['ip'],servcei_info['port'],modem_type['no_cache'])
 if __name__ == '__main__':
     do_task()
 
