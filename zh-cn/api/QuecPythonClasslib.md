@@ -2244,7 +2244,7 @@ sms.setCallback(cb)
 
 * 参数
 
-  该接口在Qualcomm/ASR_1803s/Unisoc(不包括EG915)平台为可变参函数,参数个数为2或7, 其他平台参数个数固定为2：
+  该接口在Qualcomm/ASR_1803s/ASR_1601/ASR_1606/Unisoc(不包括EG915)平台为可变参函数,参数个数为2或7, 其他平台参数个数固定为2：
     参数个数为2：net.setApn(apn, simid)
     参数个数为7：net.setApn(pid, iptype, apn, usrname, password, authtype, simid)
   
@@ -2287,7 +2287,7 @@ sms.setCallback(cb)
 
 * 参数
 
-  该接口在Qualcomm/ASR_1803s/Unisoc(不包括EG915)平台为可变参函数,参数个数为1或2, 其他平台参数个数固定为1：
+  该接口在Qualcomm/ASR_1803s/ASR_1601/ASR_1606/Unisoc(不包括EG915)平台为可变参函数,参数个数为1或2, 其他平台参数个数固定为1：
     参数个数为2：net.getApn(pid, simid)
     参数个数为1：net.getApn(simid)
 	
