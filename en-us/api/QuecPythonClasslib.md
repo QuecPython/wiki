@@ -5537,7 +5537,7 @@ from machine import UART
 The following two global variables are required. Users can modify the values of the following two global variables according to the actual projects.
 '''
 PROJECT_NAME = "QuecPython_UART_example"
-PROJECT_VERSION = "1.0.0"
+PROJECT_VERSION = "1.0.1"
 
 '''
  * Parameter1: Port
@@ -5558,74 +5558,56 @@ PROJECT_VERSION = "1.0.0"
 log.basicConfig(level=log.INFO)
 uart_log = log.getLogger("UART")
 
-state = 5
+class Example_uart(object):
+    def __init__(self, no=UART.UART2, bate=115200, data_bits=8, parity=0, stop_bits=1, flow_control=0):
+        self.uart = UART(no, bate, data_bits, parity, stop_bits, flow_control)
+        self.uart.set_callback(self.callback)
 
 
-def uartWrite():
-    count = 10
-    # Configure UART
-    uart = UART(UART.UART2, 115200, 8, 0, 1, 0)
-    while count:
-        write_msg = "Hello count={}".format(count)
-        # Send data
-        uart.write(write_msg)
-        uart_log.info("Write msg :{}".format(write_msg))
-        utime.sleep(1)
-        count -= 1
-    uart_log.info("uartWrite end!")
+    def callback(self, para):
+        uart_log.info("call para:{}".format(para))
+        if(0 == para[0]):
+            self.uartRead(para[2])
 
+    
+    def uartWrite(self, msg):
+        uart_log.info("write msg:{}".format(msg))
+        self.uart.write(msg)
 
-def UartRead():
-    global state
-    uart = UART(UART.UART2, 115200, 8, 0, 1, 0)
-    while 1:
-        # It returns whether the data length is readable
-        msgLen = uart.any()
-        # Read when there is data
-        if msgLen:
-            msg = uart.read(msgLen)
-            # The initial data is byte type, and encode it
-            utf8_msg = msg.decode()
-            # str
-            uart_log.info("UartRead msg: {}".format(utf8_msg))
-            state -= 1
-            if state == 0:
-                break
-        else:
-            continue
+    def uartRead(self, len):
+        msg = self.uart.read(len)
+        utf8_msg = msg.decode()
+        uart_log.info("UartRead msg: {}".format(utf8_msg))
+        return utf8_msg
 
-
-
-def run():
-    # Create a thread to listen to received UARt messages
-    _thread.start_new_thread(UartRead, ())
-
+    def uartWrite_test(self):
+        for i in range(10):
+            write_msg = "Hello count={}".format(i)
+            self.uartWrite(write_msg)
+            utime.sleep(1)
 
 if __name__ == "__main__":
-    uartWrite()
-    run()
-    while 1:
-        if state:
-            pass
-        else:
-            break
+    uart_test = Example_uart()
+    uart_test.uartWrite_test()
+    
 
-# Example of running results
+# 运行结果示例
 '''
-INFO:UART:Write msg :Hello count=8
-INFO:UART:Write msg :Hello count=7
-INFO:UART:Write msg :Hello count=6
-INFO:UART:Write msg :Hello count=5
-INFO:UART:Write msg :Hello count=4
-INFO:UART:Write msg :Hello count=3
-INFO:UART:Write msg :Hello count=2
-INFO:UART:Write msg :Hello count=1
-INFO:UART:uartWrite end!
-INFO:UART:UartRead msg: read msg 1
+INFO:UART:write msg:Hello count=0
+INFO:UART:write msg:Hello count=1
+INFO:UART:write msg:Hello count=2
+INFO:UART:write msg:Hello count=3
+INFO:UART:write msg:Hello count=4
+INFO:UART:write msg:Hello count=5
+INFO:UART:write msg:Hello count=6
+INFO:UART:write msg:Hello count=7
+INFO:UART:write msg:Hello count=8
+INFO:UART:write msg:Hello count=9
 
-INFO:UART:UartRead msg: read msg 2
+INFO:UART:call para:[0, 2, 15]
+INFO:UART:UartRead msg: my name is XXX
 
-INFO:UART:UartRead msg: read msg 3
+
 '''
 
 ```
