@@ -201,7 +201,7 @@ b'\xb3\xc9Y\x1b\xe9'
 
 
 
-##### 初始化SD卡驱动
+##### 初始化SD卡驱动(SPI接口)
 
 目前仅EC600N/EC800N平台支持。
 
@@ -254,7 +254,7 @@ b'\xb3\xc9Y\x1b\xe9'
 >>> uos.mount(cdev, '/sd')
 ```
 
-- SD卡使用示例
+- SD卡（SPI接口）使用示例
 
   目前仅EC600N/EC800N平台支持。
 
@@ -271,6 +271,112 @@ b'\xb3\xc9Y\x1b\xe9'
 ```
 
 
+
+##### 初始化SD卡驱动（SDIO接口）
+
+目前仅EC600U/EC200U平台支持。
+
+> **VfsSd(str)**
+
+初始化SD卡，使用SDIO通信方式。
+
+* 参数
+
+| 参数 | 参数类型 | 参数说明                            |
+| ---- | -------- | ----------------------------------- |
+| str  | str      | 传入"sd_fs" |
+
+* 返回值
+
+成功则返回vfs object，失败则会报错。
+
+- 引脚说明
+
+| 平台   | 引脚                                                         |
+| ------ | ------------------------------------------------------------ |
+| EC600U | CMD:引脚号48<br />DATA0:引脚号39<br />DATA1:引脚号40<br />DATA2:引脚号49<br />DATA3:引脚号50<br />CLK:引脚号132 |
+| EC200U | CMD:引脚号33<br />DATA0:引脚号31<br />DATA1:引脚号30<br />DATA2:引脚号29<br />DATA3:引脚号28<br />CLK:引脚号32 |
+
+* 示例 
+
+```python
+>>> from uos import VfsSd
+>>> udev = VfsSd("sd_fs")
+```
+
+##### 设置检测管脚
+
+> **set_det(vfs_obj.GPIOn,mode)**
+
+指定sd卡插拔卡的检测管脚和模式。
+
+* 参数
+
+| 参数          | 参数类型 | 参数说明                                                     |
+| ------------- | -------- | ------------------------------------------------------------ |
+| vfs_obj.GPIOn | int      | 用于sd卡插拔卡检测的GPIO引脚号，参照Pin模块的定义            |
+| mode          | int      | 0:sd卡插上后，检测口为低电平；sd卡取出后，检测口为高电平<br />1:sd卡插上后，检测口为高电平；sd卡取出后，检测口为低电平 |
+
+* 返回值
+
+成功返回0，失败返回-1。
+
+* 示例
+
+```python
+>>> from uos import VfsSd
+>>> udev = VfsSd("sd_fs")
+>>> uos.mount(udev, '/sd')
+>>> udev.set_det(udev.GPIO10,0)#使用GPIO10作为卡检测管脚，sd卡插上，检测口为低电平，sd卡取出，检测口为高电平（实际使用根据硬件）
+```
+
+##### 设置插拔卡回调函数
+
+> **set_callback(fun)**
+
+设定发生插拔卡事件时的用户回调函数。
+
+* 参数
+
+| 参数 | 参数类型 | 参数说明                                                     |
+| ---- | -------- | ------------------------------------------------------------ |
+| fun  | function | 插拔卡回调 [ind_type]<br />ind_type: 事件类型，0：拔卡 1：插卡 |
+
+* 返回值
+
+成功返回0，失败返回-1。
+
+
+SD卡使用示例（SDIO接口）
+
+目前仅EC600U/EC200U平台支持。
+
+```python
+from uos import VfsSd
+import ql_fs
+udev = VfsSd("sd_fs")
+uos.mount(udev, '/sd')
+udev.set_det(udev.GPIO10,0)
+#文件读写
+f = open('/sd/test.txt','w+')
+f.write('1234567890abcdefghijkl')
+f.close()
+uos.listdir('/sd')
+f = open('/sd/test.txt','r')
+f.read()
+f.close()
+#插拔卡回调函数
+def call_back(para):
+    if(para == 1):
+        print("insert")
+        print(uos.listdir('/usr'))  
+        print(ql_fs.file_copy('/usr/1.txt','/sd/test.txt'))#复制sd卡里的test.txt内容到usr下的1.txt中
+        print(uos.listdir('/usr'))
+    elif(para == 0):
+        print("plug out")   
+        
+udev.set_callback(call_back)
+```
 
 #### gc - 内存碎片回收
 
@@ -1201,6 +1307,8 @@ proto - 协议号
 
 * usocket.IPPROTO_UDP
 
+* usocket.IPPROTO_TCP_SER ：对应TCP socket 服务端套接字
+
 其他
 
 * usocket.SOL_SOCKET - 套接字选项级别，
@@ -1215,6 +1323,8 @@ import usocket
 socket = usocket.socket(usocket.AF_INET, usocket.SOCK_STREAM)
 # 创建基于UDP的数据报套接字
 socket = usocket.socket(usocket.AF_INET, usocket.SOCK_DGRAM)
+# 创建基于TCP的服务端套接字
+socket = usocket.socket(usocket.AF_INET, usocket.SOCK_STREAM, usocket.IPPROTO_TCP_SER)
 ```
 
 ##### 将主机域名（host）和端口（port）转换为用于创建套接字的5元组序列
@@ -1229,6 +1339,26 @@ socket = usocket.socket(usocket.AF_INET, usocket.SOCK_DGRAM)
 
 **socket类的方法**
 
+##### 服务端绑定指定地址address
+
+
+> **socket.bind(address)**
+
+服务端绑定指定地址address的服务器。
+
+* `address` ：包含地址和端口号的元组或列表
+
+注意：该方法在服务端套接字使用时，绑定address时会将address设为客户端可连接address。其他客户端是否可连接，需确认运营商网络是否支持。
+
+示例：
+
+```
+#绑定拨号IP为服务器地址，端口自定义
+socket.bind(("",80))
+#绑定自定义address
+socket.bind(("192.168.0.1",80))
+```
+
 ##### 允许服务端接受连接
 
 
@@ -1242,11 +1372,13 @@ socket = usocket.socket(usocket.AF_INET, usocket.SOCK_DGRAM)
 
 > **socket.accept()**
 
-接受连接请求，返回元组，包含新的套接字和客户端地址，形式为：`(conn, address)`
+接受连接请求，返回元组，包含新的套接字和客户端地址以及客户端端口，形式为：`(conn, address, port)`
 
 * `conn` ：新的套接字对象，可以用来发送和接收数据
 
 * `address` ：连接到服务器的客户端地址
+
+* `port` ：连接到服务器的客户端端口
 
 ##### 连接到指定地址address的服务器
 
@@ -1412,6 +1544,7 @@ socket.setsockopt(usocket.SOL_SOCKET, usocket.TCP_KEEPALIVE, 1)
 
 注意：
 
+BG95平台不支持该API。
 如果用户调用了 `socket.close()` 方法之后，再调用 `socket.getsocketsta()` 会返回-1，因为此时创建的对象资源等都已经被释放。
 
 
@@ -1583,7 +1716,7 @@ b'\x07\x00\x00\x00\t\x00\x00\x00'
 
 ##### 根据格式字符串fmt将值v1、v2、 …打包到从`offset`开始的缓冲区中
 
-> **ustruct.pack_info(fmt, buffer, offset, v1, v2, ...)**
+> **ustruct.pack_into(fmt, buffer, offset, v1, v2, ...)**
 
 根据格式字符串fmt将值v1、v2、 …打包到从`offset`开始的缓冲区中。从缓冲区的末尾算起，`offset`可能为负。
 
