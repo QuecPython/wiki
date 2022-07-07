@@ -201,7 +201,7 @@ b'\xb3\xc9Y\x1b\xe9'
 
 
 
-##### 初始化SD卡驱动
+##### 初始化SD卡驱动(SPI接口)
 
 目前仅EC600N/EC800N平台支持。
 
@@ -254,7 +254,7 @@ b'\xb3\xc9Y\x1b\xe9'
 >>> uos.mount(cdev, '/sd')
 ```
 
-- SD卡使用示例
+- SD卡（SPI接口）使用示例
 
   目前仅EC600N/EC800N平台支持。
 
@@ -271,6 +271,112 @@ b'\xb3\xc9Y\x1b\xe9'
 ```
 
 
+
+##### 初始化SD卡驱动（SDIO接口）
+
+目前仅EC600U/EC200U平台支持。
+
+> **VfsSd(str)**
+
+初始化SD卡，使用SDIO通信方式。
+
+* 参数
+
+| 参数 | 参数类型 | 参数说明                            |
+| ---- | -------- | ----------------------------------- |
+| str  | str      | 传入"sd_fs" |
+
+* 返回值
+
+成功则返回vfs object，失败则会报错。
+
+- 引脚说明
+
+| 平台   | 引脚                                                         |
+| ------ | ------------------------------------------------------------ |
+| EC600U | CMD:引脚号48<br />DATA0:引脚号39<br />DATA1:引脚号40<br />DATA2:引脚号49<br />DATA3:引脚号50<br />CLK:引脚号132 |
+| EC200U | CMD:引脚号33<br />DATA0:引脚号31<br />DATA1:引脚号30<br />DATA2:引脚号29<br />DATA3:引脚号28<br />CLK:引脚号32 |
+
+* 示例 
+
+```python
+>>> from uos import VfsSd
+>>> udev = VfsSd("sd_fs")
+```
+
+##### 设置检测管脚
+
+> **set_det(vfs_obj.GPIOn,mode)**
+
+指定sd卡插拔卡的检测管脚和模式。
+
+* 参数
+
+| 参数          | 参数类型 | 参数说明                                                     |
+| ------------- | -------- | ------------------------------------------------------------ |
+| vfs_obj.GPIOn | int      | 用于sd卡插拔卡检测的GPIO引脚号，参照Pin模块的定义            |
+| mode          | int      | 0:sd卡插上后，检测口为低电平；sd卡取出后，检测口为高电平<br />1:sd卡插上后，检测口为高电平；sd卡取出后，检测口为低电平 |
+
+* 返回值
+
+成功返回0，失败返回-1。
+
+* 示例
+
+```python
+>>> from uos import VfsSd
+>>> udev = VfsSd("sd_fs")
+>>> uos.mount(udev, '/sd')
+>>> udev.set_det(udev.GPIO10,0)#使用GPIO10作为卡检测管脚，sd卡插上，检测口为低电平，sd卡取出，检测口为高电平（实际使用根据硬件）
+```
+
+##### 设置插拔卡回调函数
+
+> **set_callback(fun)**
+
+设定发生插拔卡事件时的用户回调函数。
+
+* 参数
+
+| 参数 | 参数类型 | 参数说明                                                     |
+| ---- | -------- | ------------------------------------------------------------ |
+| fun  | function | 插拔卡回调 [ind_type]<br />ind_type: 事件类型，0：拔卡 1：插卡 |
+
+* 返回值
+
+成功返回0，失败返回-1。
+
+
+SD卡使用示例（SDIO接口）
+
+目前仅EC600U/EC200U平台支持。
+
+```python
+from uos import VfsSd
+import ql_fs
+udev = VfsSd("sd_fs")
+uos.mount(udev, '/sd')
+udev.set_det(udev.GPIO10,0)
+#文件读写
+f = open('/sd/test.txt','w+')
+f.write('1234567890abcdefghijkl')
+f.close()
+uos.listdir('/sd')
+f = open('/sd/test.txt','r')
+f.read()
+f.close()
+#插拔卡回调函数
+def call_back(para):
+    if(para == 1):
+        print("insert")
+        print(uos.listdir('/usr'))  
+        print(ql_fs.file_copy('/usr/1.txt','/sd/test.txt'))#复制sd卡里的test.txt内容到usr下的1.txt中
+        print(uos.listdir('/usr'))
+    elif(para == 0):
+        print("plug out")   
+        
+udev.set_callback(call_back)
+```
 
 #### gc - 内存碎片回收
 

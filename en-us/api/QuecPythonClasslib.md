@@ -1775,13 +1775,13 @@ def voice_callback(args):
 #### sms - SMS
 
 Function: Provides SMS related APIs.
-Note: The BC25PA platform does not support this module function.
+Note: The BC25PA and 600M platform does not support this module function.
 
 ##### Send the Message in TEXT Mode
 
 > **sms.sendTextMsg(phoneNumber, msg, codeMode)**
 
-This function sends the messages in TEXT mode.
+This function sends the messages in TEXT mode(Empty SMS is not supported).
 
 * Parameter
 
@@ -1813,7 +1813,7 @@ sms.sendTextMsg('18158626517', '这是一条夹杂中文与英文的测试短信
 
 > **sms.sendPduMsg(phoneNumber, msg, codeMode)**
 
-This function sends the messages in PDU mode.
+This function sends the messages in PDU mode(Empty SMS is not supported).
 
 * Parameter
 
@@ -1853,7 +1853,7 @@ This function deletes the specified messages.
 
 | Parameter | Type | Description                                                  |
 | --------- | ---- | ------------------------------------------------------------ |
-| index     | int  | The index of the short messages to be deleted.<br/>If short messages are stored in SIM card, range: 0-49.<br/>If short messages are stored in ME, range: 0-179. And only the short messages exist in the corresponding index, can the short messages be deleted successfully. |
+| index     | int  | The index of the short messages to be deleted                |
 
 * Return Value
 
@@ -1874,7 +1874,7 @@ This function deletes the specified messages.
 
 > **sms.setSaveLoc(mem1, mem2, mem3)**
 
-This function selects the memory storages, and the default is SIM message storage.
+This function selects the memory storages.
 
 * Parameter
 
@@ -1989,7 +1989,7 @@ This function reads messages in TEXT mode.
 
 | Parameter | Type | Description                                       |
 | --------- | ---- | ------------------------------------------------- |
-| index     | int  | The index of the message to be read. Range: 0 ~ 49. |
+| index     | int  | The index of the message to be read. Range:0 ~ MAX-1, MAX indicates the maximum number can be stored. |
 
 * Return Value
 
