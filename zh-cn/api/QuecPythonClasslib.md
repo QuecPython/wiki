@@ -6011,7 +6011,7 @@ from machine import UART
 下面两个全局变量是必须有的，用户可以根据自己的实际项目修改下面两个全局变量的值
 '''
 PROJECT_NAME = "QuecPython_UART_example"
-PROJECT_VERSION = "1.0.0"
+PROJECT_VERSION = "1.0.1"
 
 '''
  * 参数1：端口
@@ -6021,9 +6021,9 @@ PROJECT_VERSION = "1.0.0"
         UART2 – MAIN PORT
         UART3 – USB CDC PORT
  * 参数2：波特率
- * 参数3：data bits  （5 ~ 8）
+ * 参数3：data bits  （5~8）
  * 参数4：Parity  （0：NONE  1：EVEN  2：ODD）
- * 参数5：stop bits （1 ~ 2）
+ * 参数5：stop bits （1~2）
  * 参数6：flow control （0: FC_NONE  1：FC_HW）
 '''
 
@@ -6032,74 +6032,56 @@ PROJECT_VERSION = "1.0.0"
 log.basicConfig(level=log.INFO)
 uart_log = log.getLogger("UART")
 
-state = 5
+class Example_uart(object):
+    def __init__(self, no=UART.UART2, bate=115200, data_bits=8, parity=0, stop_bits=1, flow_control=0):
+        self.uart = UART(no, bate, data_bits, parity, stop_bits, flow_control)
+        self.uart.set_callback(self.callback)
 
 
-def uartWrite():
-    count = 10
-    # 配置uart
-    uart = UART(UART.UART2, 115200, 8, 0, 1, 0)
-    while count:
-        write_msg = "Hello count={}".format(count)
-        # 发送数据
-        uart.write(write_msg)
-        uart_log.info("Write msg :{}".format(write_msg))
-        utime.sleep(1)
-        count -= 1
-    uart_log.info("uartWrite end!")
+    def callback(self, para):
+        uart_log.info("call para:{}".format(para))
+        if(0 == para[0]):
+            self.uartRead(para[2])
 
+    
+    def uartWrite(self, msg):
+        uart_log.info("write msg:{}".format(msg))
+        self.uart.write(msg)
 
-def UartRead():
-    global state
-    uart = UART(UART.UART2, 115200, 8, 0, 1, 0)
-    while 1:
-        # 返回是否有可读取的数据长度
-        msgLen = uart.any()
-        # 当有数据时进行读取
-        if msgLen:
-            msg = uart.read(msgLen)
-            # 初始数据是字节类型（bytes）,将字节类型数据进行编码
-            utf8_msg = msg.decode()
-            # str
-            uart_log.info("UartRead msg: {}".format(utf8_msg))
-            state -= 1
-            if state == 0:
-                break
-        else:
-            continue
+    def uartRead(self, len):
+        msg = self.uart.read(len)
+        utf8_msg = msg.decode()
+        uart_log.info("UartRead msg: {}".format(utf8_msg))
+        return utf8_msg
 
-
-
-def run():
-    # 创建一个线程来监听接收uart消息
-    _thread.start_new_thread(UartRead, ())
-
+    def uartWrite_test(self):
+        for i in range(10):
+            write_msg = "Hello count={}".format(i)
+            self.uartWrite(write_msg)
+            utime.sleep(1)
 
 if __name__ == "__main__":
-    uartWrite()
-    run()
-    while 1:
-        if state:
-            pass
-        else:
-            break
+    uart_test = Example_uart()
+    uart_test.uartWrite_test()
+    
 
 # 运行结果示例
 '''
-INFO:UART:Write msg :Hello count=8
-INFO:UART:Write msg :Hello count=7
-INFO:UART:Write msg :Hello count=6
-INFO:UART:Write msg :Hello count=5
-INFO:UART:Write msg :Hello count=4
-INFO:UART:Write msg :Hello count=3
-INFO:UART:Write msg :Hello count=2
-INFO:UART:Write msg :Hello count=1
-INFO:UART:uartWrite end!
-INFO:UART:UartRead msg: read msg 1
+INFO:UART:write msg:Hello count=0
+INFO:UART:write msg:Hello count=1
+INFO:UART:write msg:Hello count=2
+INFO:UART:write msg:Hello count=3
+INFO:UART:write msg:Hello count=4
+INFO:UART:write msg:Hello count=5
+INFO:UART:write msg:Hello count=6
+INFO:UART:write msg:Hello count=7
+INFO:UART:write msg:Hello count=8
+INFO:UART:write msg:Hello count=9
 
-INFO:UART:UartRead msg: read msg 2
+INFO:UART:call para:[0, 2, 15]
+INFO:UART:UartRead msg: my name is XXX
 
-INFO:UART:UartRead msg: read msg 3
+
 '''
 
 ```
