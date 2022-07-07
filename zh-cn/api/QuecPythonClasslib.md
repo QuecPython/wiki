@@ -6403,36 +6403,10 @@ if __name__ == '__main__':
 
 ```
 
-###### 设置回调函数
-
-> **rtc.register_callback(usrFun)**
-
-当设置rtc到期时间回调函数(对于BC25PA平台,如果是从深休眠或者软件关机状态中恢复,调用此函数会立刻调用一次usrFun)。
-
-* 参数
-
-| 参数   | 参数类型 | 参数说明                                   |
-| ------ | -------- | ------------------------------------------ |
-| usrFun | function | 回调函数，当设置的RTC时间到达则调用此函数。 |
-
-注意:usrFun需要参数
-
-* 返回值
-	成功: 0
-	失败: -1
-* 示例
-
-```python
->>> def test(df):
-...     print('rtc test...',df)
-...     
-...     
-... 
->>> 
->>> rtc.register_callback(test)
-0
-```
 ###### 设置RTC到期时间
+
+支持平台EC600U/EC200U/EC600N/EC800N/BC25
+
 rtc.set_alarm(data_e)
 设置RTC到期时间,当到了到期时间就会调用注册的回调函数。
 * 参数
@@ -6460,51 +6434,6 @@ rtc.set_alarm(data_e)
 >>> rtc.set_alarm(data_e)
 0
 ```
-###### 启动/停止RTC定时器
-rtc.enable_alarm(on_off)
-只有在设置回调函数时才能启动定时器(BC25PA平台)
-* 参数
-| 参数        | 类型 | 说明                                                         |
-| ----------- | ---- | ------------------------------------------------------------ |
-| on_off        | int  | 0 - 关闭RTC定时器. 1 - 启动RTC定时器.                     |
-
-* 返回值
-	成功: 0
-	失败: -1
-* 示例
-```python
->>> rtc.enable_alarm(1)
-0
-```
-
-
-
-###### 设置RTC alarm时间
-
-支持平台EC600U/EC200U/EC600N/EC800N/BC25
-
-> rtc.set_alarm([year, month, day, week, hour, minute, second, microsecond])
-
-设置RTC alarm时间，参数week不参于设置，microsecond参数保留，暂未使用，默认是0。
-
-* 参数
-
-| 参数        | 类型 | 说明                                  |
-| ----------- | ---- | ------------------------------------- |
-| year        | int  | 年                                    |
-| month       | int  | 月，范围1 ~ 12                        |
-| day         | int  | 日，范围1 ~ 31                        |
-| week        | int  | 星期，范围0 ~ 6，该参数不起作用，保留 |
-| hour        | int  | 时，范围0 ~ 23                        |
-| minute      | int  | 分，范围0 ~ 59                        |
-| second      | int  | 秒，范围0 ~ 59                        |
-| microsecond | int  | 微秒，保留参数，暂未使用，写0即可     |
-
-* 返回值
-
-设置成功返回整型值0，设置失败返回整型值-1 。
-
-
 
 ###### 注册RTC alarm回调
 
@@ -6529,6 +6458,7 @@ rtc.enable_alarm(on_off)
 ###### 开关RTC alarm功能
 
 支持平台EC600U/EC200U/EC600N/EC800N/BC25
+注意:BC25PA平台只有设置回调函数,才能启动定时器.
 
 > rtc.enable_alarm(on_off)
 

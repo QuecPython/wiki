@@ -5935,40 +5935,9 @@ It sets and gets RTC time. When there is no parameter, it gets the time, it sets
 (2020, 3, 12, 4, 12, 12, 14, 0)
 ```
 
-###### Set callback function
-
-> **rtc.register_callback(usrFun)**
-
-When RTC expiration time callback function is set (for BC25PA platform, if it is recovered from deep sleep or software shutdown, calling this function will immediately call usrfun once)
-
-* Parameter
-
-| Parameter   | Type | Description                                   |
-| ------ | -------- | ------------------------------------------ |
-| usrFun | function | Callback function, which is called when the set RTC time arrives. |
-
-* Note
-
-  * usrFun requires parameters
-
-* Return Value
-
-  * 0	Successful execution.
-  * -1 Failed execution.
-
-* Example
-
-```python
->>> def test(df):
-...     print('rtc test...',df)
-...     
-...     
-... 
->>> 
->>> rtc.register_callback(test)
-0
-```
 ###### Set RTC expiration time
+
+Support platform ec600u/ec200u/ec600n/ec800n/bc25
 
 rtc.set_alarm(data_e)
 
@@ -6001,61 +5970,12 @@ Set the RTC expiration time. When the expiration time is reached, the registered
 >>> rtc.set_alarm(data_e)
 0
 ```
-###### Start / stop RTC timer
-
-rtc.enable_alarm(on_off)
-
-The timer can be started only when the callback function is set (bc25pa platform)
-
-* Parameter
-
-| Parameter | Type | Description                                                  |
-| ----------- | ---- | ------------------------------------------------------------ |
-| on_off        | int  | 0 - Turn off RTC timer. 1 - Start RTC timer.                     |
-
-* Return Value
-
-  * 0	Successful execution.
-  * -1 Failed execution.
-
-* Example
-```python
->>> rtc.enable_alarm(1)
-0
-```
-
-
-
-###### Set RTC alarm time
-
-Support platform ec600u/ec200u/ec600n/ec800n/bc25
-
-> rtc.set_alarm([year, month, day, week, hour, minute, second, microsecond])
-
-Set the RTC alarm time. The parameter week is not involved in the setting. The microsecond parameter is reserved and not used yet. The default is 0.
-
-* Parameter
-
-|Parameter | type | description|
-| ----------- | ---- | ------------------------------------- |
-|Year | int ||
-|Month | int | month, range 1 ~ 12|
-|Day | int | day, range 1 ~ 31|
-|Week | int | week, range 0 ~ 6, this parameter does not work, reserved|
-|When hour | int | the range is 0 ~ 23|
-|Minute | int | min, range 0 ~ 59|
-|Second | int | second, range 0 ~ 59|
-|Microsecond | int | microseconds, reserved parameters, unused temporarily, write 0|
-
-* Return Value
-
-  * The integer value 0 is returned after setting successfully, and the integer value - 1 is returned after setting fails.
-
 
 
 ###### Register RTC alarm callback
 
 Support platform ec600u/ec200u/ec600n/ec800n/bc25
+Note:When RTC expiration time callback function is set (for BC25PA platform, if it is recovered from deep sleep or software shutdown, calling this function will immediately call usrfun once)
 
 > rtc.register_callback(fun)
 
@@ -6076,6 +5996,7 @@ Register RTC alarm callback handler
 ###### Switch RTC alarm function
 
 Support platform ec600u/ec200u/ec600n/ec800n/bc25
+Note:The timer can be started only when the callback function is set (bc25pa platform)
 
 > rtc.enable_alarm(on_off)
 
