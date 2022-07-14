@@ -1355,6 +1355,70 @@ This function sets DTMF.
 
 
 
+##### Enable DTMF identification
+
+> **voiceCall.dtmfDetEnable(enable)**
+
+Enable DTMF identification. It is disabled by default.
+
+* Parameter
+
+| Parameter | Type   | Description                                                  |
+| --------- | ------ | ------------------------------------------------------------ |
+| enable    | int    | 1:Enable DTMF identification, 0:Disable DTMF identification  |
+
+* Return Value
+
+  * Returns 0 on success, -1 otherwise.
+
+* Example
+
+See the example of 'voiceCall.dtmfSetCb()'
+
+
+
+##### set the callback of DTMF identification
+
+> **voiceCall.dtmfSetCb(cb)**
+
+Set the callback of DTMF identification
+
+* Parameter
+
+| Parameter | Type     | Description                                                  |
+| --------- | ------   | ------------------------------------------------------------ |
+| cb        | function | callback function                                            |
+
+* Return Value
+
+  * Returns 0 on success, -1 otherwise.
+
+* Example
+
+```
+>>> def cb(args):
+... print(args)
+...
+...
+...
+>>> voiceCall.dtmfSetCb(cb)
+0
+>>> voiceCall.dtmfDetEnable(1)
+0
+
+>>> voiceCall.callStart('13855169092')
+
+0
+>>>
+1   //Press "1" on the phone, callback function will receive the pressed character "1".
+
+8   //Press "8" on the phone
+
+9   //Press "9" on the phone
+```
+
+
+
 ##### Set FWmode
 
 > **voiceCall.setFw(reason, fwmode, phonenum)**
@@ -1711,13 +1775,13 @@ def voice_callback(args):
 #### sms - SMS
 
 Function: Provides SMS related APIs.
-Note: The BC25PA platform does not support this module function.
+Note: The BC25PA and 600M platform does not support this module function.
 
 ##### Send the Message in TEXT Mode
 
 > **sms.sendTextMsg(phoneNumber, msg, codeMode)**
 
-This function sends the messages in TEXT mode.
+This function sends the messages in TEXT mode(Empty SMS is not supported).
 
 * Parameter
 
@@ -1749,7 +1813,7 @@ sms.sendTextMsg('18158626517', '这是一条夹杂中文与英文的测试短信
 
 > **sms.sendPduMsg(phoneNumber, msg, codeMode)**
 
-This function sends the messages in PDU mode.
+This function sends the messages in PDU mode(Empty SMS is not supported).
 
 * Parameter
 
@@ -1789,7 +1853,7 @@ This function deletes the specified messages.
 
 | Parameter | Type | Description                                                  |
 | --------- | ---- | ------------------------------------------------------------ |
-| index     | int  | The index of the short messages to be deleted.<br/>If short messages are stored in SIM card, range: 0-49.<br/>If short messages are stored in ME, range: 0-179. And only the short messages exist in the corresponding index, can the short messages be deleted successfully. |
+| index     | int  | The index of the short messages to be deleted                |
 
 * Return Value
 
@@ -1810,7 +1874,7 @@ This function deletes the specified messages.
 
 > **sms.setSaveLoc(mem1, mem2, mem3)**
 
-This function selects the memory storages, and the default is SIM message storage.
+This function selects the memory storages.
 
 * Parameter
 
@@ -1925,7 +1989,7 @@ This function reads messages in TEXT mode.
 
 | Parameter | Type | Description                                       |
 | --------- | ---- | ------------------------------------------------- |
-| index     | int  | The index of the message to be read. Range: 0 ~ 49. |
+| index     | int  | The index of the message to be read. Range:0 ~ MAX-1, MAX indicates the maximum number can be stored. |
 
 * Return Value
 
@@ -2139,7 +2203,7 @@ This function sets APN. After setting, you need to restart or switch to mode 0 a
 
 * Parameter
 
-  This API is a variable parameter function in Qualcomm/ASR_1803s/Unisoc(excluding EG915) platform, and the number of parameters is 2 or 7. The number of parameters in other platforms is fixed at 2  ：
+  This API is a variable parameter function in Qualcomm/ASR_1803s/ASR_1601/ASR_1606/Unisoc(excluding EG915) platform, and the number of parameters is 2 or 7. The number of parameters in other platforms is fixed at 2  ：
     The number of parameters is 2：net.setApn(apn, simid)
     The number of parameters is 7：net.setApn(pid, iptype, apn, usrname, password, authtype, simid)
   
@@ -2181,7 +2245,7 @@ This function obtains the current APN.
 
 * Parameter
 
-  This API is a variable parameter function in Qualcomm/ASR_1803s/Unisoc(excluding EG915) platform, and the number of parameters is 1 or 2. The number of parameters in other platforms is fixed at 1  ：
+  This API is a variable parameter function in Qualcomm/ASR_1803s/ASR_1601/ASR_1606/Unisoc(excluding EG915) platform, and the number of parameters is 1 or 2. The number of parameters in other platforms is fixed at 1  ：
     The number of parameters is 2：net.setApn(pid, simid)
     The number of parameters is 1：net.setApn(simid)
   
@@ -2195,7 +2259,7 @@ This function obtains the current APN.
   The number of parameters is 2:
     * pdp context: Successful execution
 	* -1  Failed execution
-  The number of parameters is 1:
+    The number of parameters is 1:
     * apn info: Successful execution
     * -1  Failed execution
 
@@ -3808,22 +3872,27 @@ Note: The BC25PA platform does not support this module function.
 
 > **import audio**
 >
-> **record = audio.Record()**
+> **record = audio.Record(device)**
+
+Without parameter, the handset is used for playback by default; with parameter, the playback device is set as parameter.
+
+Note: with parameter, the parameter should be the same as that set by audio.audio().
 
 * Parameter
 
-  * None	
+| Parameter | Parameter Type | Description                                                  |
+| --------- | -------------- | ------------------------------------------------------------ |
+| device    | int            | Output channel<br/>0 - handset<br/>1 - earphone<br/>2 - speaker |
 
 * Return Value
 
   * 0 Successful execution
   * -1 Failed execution
-
 * Example
 
 ```python
 import audio 
-record_test = audio.Record()
+record_test = audio.Record()#Without parameter, use the handset to play
 ```
 
 
@@ -4499,10 +4568,10 @@ Note: The BC25PA platform does not support this module function.
 
 | Constent | Description | Usage Platform                         |
 | -------- | ----------- | -------------------------------------- |
-| PWM.PWM0 | PWM0        | EC600S/EC600N/EC100Y/EC600U/EC200U |
-| PWM.PWM1 | PWM1        | EC600S/EC600N/EC100Y               |
-| PWM.PWM2 | PWM2        | EC600S/EC600N/EC100Y               |
-| PWM.PWM3 | PWM3        | EC600S/EC600N/EC100Y               |
+| PWM.PWM0 | PWM0        | EC600S/EC600N/EC100Y/EC600U/EC200U/EC800N |
+| PWM.PWM1 | PWM1        | EC600S/EC600N/EC100Y/EC800N        |
+| PWM.PWM2 | PWM2        | EC600S/EC600N/EC100Y/EC800N        |
+| PWM.PWM3 | PWM3        | EC600S/EC600N/EC100Y/EC800N       |
 
 
 
@@ -4516,7 +4585,7 @@ Note: The BC25PA platform does not support this module function.
 
 | Parameter | Type | Description                                                  |
 | --------- | ---- | ------------------------------------------------------------ |
-| PWMn      | int  | PWM Number<br/>Note: EC100Y-CN module supports PWM0–PWM3, and the corresponding pins are as follows: <br/>PWM0 – Pin No. 19<br/>PWM1 – Pin No. 18<br/>PWM2 – Pin No. 23<br/>PWM3 – Pin No. 22<br/>Note: EC600S-CN/EC600N-CN  modules support PWM0–PWM3, and the corresponding pins are as follows: <br/>PWM0 – Pin No. 52<br/>PWM1 –Pin No. 53<br/>PWM2 – Pin No. 70<br/>PWM3 – Pin No. 69<br />Note: EC200U series module supports PWM0, and the corresponding pins are as follows: <br />PWM0 – Pin No. 135<br />Note: EC600U series module supports PWM0, and the corresponding pins are as follows:<br />PWM0 – Pin No. 70<br /> |
+| PWMn      | int  | PWM Number<br/>Note: EC100Y-CN module supports PWM0–PWM3, and the corresponding pins are as follows: <br/>PWM0 – Pin No. 19<br/>PWM1 – Pin No. 18<br/>PWM2 – Pin No. 23<br/>PWM3 – Pin No. 22<br/>Note: EC600S-CN/EC600N-CN  modules support PWM0–PWM3, and the corresponding pins are as follows: <br/>PWM0 – Pin No. 52<br/>PWM1 –Pin No. 53<br/>PWM2 – Pin No. 70<br/>PWM3 – Pin No. 69<br />Note：EC800N modules support PWM0-PWM3，and the corresponding pins are as follows：<br/>PWM0 – Pin No. 79<br/>PWM1 – Pin No. 78<br/>PWM2 – Pin No. 16<br/>PWM3 – Pin No. 49<br />Note: EC200U series module supports PWM0, and the corresponding pins are as follows: <br />PWM0 – Pin No. 135<br />Note: EC600U series module supports PWM0, and the corresponding pins are as follows:<br />PWM0 – Pin No. 70<br /> |
 | ABOVE_xx  | int  | EC600SCN/EC600N/EC800N modules:<br />PWM.ABOVE_MS              Range of MS level: (0,1023]<br/>PWM.ABOVE_1US               Range of US level: (0,157]<br/>PWM.ABOVE_10US               Range of US level: (1,1575]<br/>PWM.ABOVE_BELOW_US          Range of NS level: (0,1024]<br/>EC200U/EC600U modules:<br />PWM.ABOVE_MS            Range of MS level: (0,10]<br/>PWM.ABOVE_1US             Range of US level: (0,10000]<br/>PWM.ABOVE_10US             Range of US level: (1,10000]<br/>PWM.ABOVE_BELOW_US             Range of NS level: [100,65535] |
 | highTime  | int  | In MS level, the unit is ms<br/>In US level, the unit is us<br/>In NS level: it needs to be calculated by the user<br/>               Frequency = 13Mhz / cycleTime<br/>               Duty cycle = highTime/ cycleTime |
 | cycleTime | int  | In MS level, the unit is ms<br/>In US level, the unit is us<br/>In NS level: it needs to be calculated by the user<br/>             Frequency = 13Mhz / cycleTime<br/>             Duty cycle = highTime/ cycleTime |
@@ -4610,12 +4679,12 @@ if __name__ == '__main__':
 
 ###### Constant Description
 
-| Constant | Description   | Usage Platform                            |
-| -------- | ------------- | ----------------------------------------- |
-| ADC.ADC0 | ADC Channel 0 | EC600S/EC600N/EC100Y/EC600U/EC200U/BC25PA |
-| ADC.ADC1 | ADC Channel 1 | EC600S/EC600N/EC600U/EC200U        |
-| ADC.ADC2 | ADC Channel 2 | EC600U/EC200U                      |
-| ADC.ADC3 | ADC Channel 3 | EC600U                             |
+| Constant | Description   | Usage Platform                                          |
+| -------- | ------------- | ------------------------------------------------------- |
+| ADC.ADC0 | ADC Channel 0 | EC600S/EC600N/EC100Y/EC600U/EC200U/BC25PA/BG95M3/EC200A |
+| ADC.ADC1 | ADC Channel 1 | EC600S/EC600N/EC600U/EC200U/EC200A                      |
+| ADC.ADC2 | ADC Channel 2 | EC600U/EC200U                                           |
+| ADC.ADC3 | ADC Channel 3 | EC600U                                                  |
 
 
 
@@ -4660,7 +4729,7 @@ It reads the voltage value of the specified channel. Unit: mV.
 
 | Parameter | Type | Description                                                  |
 | --------- | ---- | ------------------------------------------------------------ |
-| ADCn      | int  | ADC Channel<br/>The corresponding pins for EC100Y-CN module are as follows:<br/>ADC0 – Pin No. 39<br/>ADC1 – Pin No. 81<br/>The corresponding pins for EC600S-CN/EC600N_CN modules are as follows<br/>ADC0 – Pin No. 19<br/>The corresponding pins for EC800N/BC25PA series module are as follows<br />ADC0 – Pin No. 9<br/>The corresponding pins for EC600U series module are as follows<br />ADC0 – Pin No. 19<br/>ADC1 – Pin No. 20<br />ADC2 – Pin No. 113<br />ADC3 – Pin No. 114<br />The corresponding pins for EC200U series module are as follows<br />ADC0 – Pin No. 45<br/>ADC1 – Pin No. 44<br />ADC2 – Pin No.43<br /> |
+| ADCn      | int  | ADC Channel<br/>The corresponding pins for EC100Y-CN module are as follows:<br/>ADC0 – Pin No. 39<br/>ADC1 – Pin No. 81<br/>The corresponding pins for EC600S-CN/EC600N_CN modules are as follows<br/>ADC0 – Pin No. 19<br/>The corresponding pins for EC800N/BC25PA series module are as follows<br />ADC0 – Pin No. 9<br/>The corresponding pins for EC600U series module are as follows<br />ADC0 – Pin No. 19<br/>ADC1 – Pin No. 20<br />ADC2 – Pin No. 113<br />ADC3 – Pin No. 114<br />The corresponding pins for EC200U series module are as follows<br />ADC0 – Pin No. 45<br/>ADC1 – Pin No. 44<br />ADC2 – Pin No.43<br />The corresponding pins for EC200A series module are as follows<br/>ADC0 – Pin No. 45<br/>ADC1 – Pin No. 44<br/>The corresponding pins for BG95M3 series module are as follows<br />ADC0 – Pin No. 24 |
 
 * Return Value
 
@@ -5000,42 +5069,60 @@ Function: GPIO read and write operations.
 
 ###### Constant Description
 
-| Constant         | Applicable Platform                           | Description    |
-| ---------------- | --------------------------------------------- | -------------- |
-| Pin.GPIO1        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO1          |
-| Pin.GPIO2        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO2          |
-| Pin.GPIO3        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO3          |
-| Pin.GPIO4        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO4          |
-| Pin.GPIO5        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO5          |
-| Pin.GPIO6        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO6          |
-| Pin.GPIO7        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO7          |
-| Pin.GPIO8        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO8          |
-| Pin.GPIO9        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO9          |
-| Pin.GPIO10       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO10         |
-| Pin.GPIO11       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO11         |
-| Pin.GPIO12       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO12         |
-| Pin.GPIO13       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO13         |
-| Pin.GPIO14       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO14         |
-| Pin.GPIO15       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO15         |
-| Pin.GPIO16       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA | GPIO16         |
-| Pin.GPIO17       | EC600S / EC600N / EC100Y/BC25PA               | GPIO17         |
-| Pin.GPIO18       | EC600S / EC600N / EC100Y/BC25PA               | GPIO18         |
-| Pin.GPIO19       | EC600S / EC600N / EC100Y                      | GPIO19         |
-| Pin.GPIO20       | EC600S / EC600N                               | GPIO20         |
-| Pin.GPIO21       | EC600S / EC600N                               | GPIO21         |
-| Pin.GPIO22       | EC600S / EC600N                               | GPIO22         |
-| Pin.GPIO23       | EC600S / EC600N                               | GPIO23         |
-| Pin.GPIO24       | EC600S / EC600N                               | GPIO24         |
-| Pin.GPIO25       | EC600S / EC600N                               | GPIO25         |
-| Pin.GPIO26       | EC600S / EC600N                               | GPIO26         |
-| Pin.GPIO27       | EC600S / EC600N                               | GPIO27         |
-| Pin.GPIO28       | EC600S / EC600N                               | GPIO28         |
-| Pin.GPIO29       | EC600S / EC600N                               | GPIO29         |
-| Pin.IN           | --                                            | Input mode     |
-| Pin.OUT          | --                                            | Output mode    |
-| Pin.PULL_DISABLE | --                                            | Floating mode  |
-| Pin.PULL_PU      | --                                            | Pull-up mode   |
-| Pin.PULL_PD      | --                                            | Pull-down mode |
+| Constant         | Applicable Platform                                          | Description    |
+| ---------------- | ------------------------------------------------------------ | -------------- |
+| Pin.GPIO1        | EC600S / EC600N / EC100Y/EC600U/EC200U/EC200A/BC25PA/EC800N/BG95M3 | GPIO1          |
+| Pin.GPIO2        | EC600S / EC600N / EC100Y/EC600U/EC200U/EC200A/BC25PA/EC800N/BG95M3 | GPIO2          |
+| Pin.GPIO3        | EC600S / EC600N / EC100Y/EC600U/EC200U/EC200A/BC25PA/EC800N/BG95M3 | GPIO3          |
+| Pin.GPIO4        | EC600S / EC600N / EC100Y/EC600U/EC200U/EC200A/BC25PA/EC800N/BG95M3 | GPIO4          |
+| Pin.GPIO5        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA/EC800N/BG95M3  | GPIO5          |
+| Pin.GPIO6        | EC600S / EC600N / EC100Y/EC600U/EC200U/EC200A/BC25PA/EC800N/BG95M3 | GPIO6          |
+| Pin.GPIO7        | EC600S / EC600N / EC100Y/EC600U/EC200U/EC200A/BC25PA/EC800N/BG95M3 | GPIO7          |
+| Pin.GPIO8        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA/EC800N/BG95M3  | GPIO8          |
+| Pin.GPIO9        | EC600S / EC600N / EC100Y/EC600U/EC200U/EC200A/BC25PA/EC800N/BG95M3 | GPIO9          |
+| Pin.GPIO10       | EC600S / EC600N / EC100Y/EC600U/EC200U/EC200A/BC25PA/EC800N/BG95M3 | GPIO10         |
+| Pin.GPIO11       | EC600S / EC600N / EC100Y/EC600U/EC200U/EC200A/BC25PA/EC800N/BG95M3 | GPIO11         |
+| Pin.GPIO12       | EC600S / EC600N / EC100Y/EC600U/EC200U/EC200A/BC25PA/EC800N/BG95M3 | GPIO12         |
+| Pin.GPIO13       | EC600S / EC600N / EC100Y/EC600U/EC200U/EC200A/BC25PA/EC800N/BG95M3 | GPIO13         |
+| Pin.GPIO14       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA/EC800N/BG95M3  | GPIO14         |
+| Pin.GPIO15       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA/EC800N/BG95M3  | GPIO15         |
+| Pin.GPIO16       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA/EC800N/BG95M3  | GPIO16         |
+| Pin.GPIO17       | EC600S / EC600N / EC100Y/EC600U/EC200U/EC800N/BC25PA/BG95M3  | GPIO17         |
+| Pin.GPIO18       | EC600S / EC600N / EC100Y/EC600U/EC200U/EC200A/EC800N/BC25PA/BG95M3 | GPIO18         |
+| Pin.GPIO19       | EC600S / EC600N / EC100Y/EC600U/EC200U/EC200A/EC800N/BG95M3  | GPIO19         |
+| Pin.GPIO20       | EC600S / EC600N /EC600U/EC200U/EC200A/ EC800N / BG95M3       | GPIO20         |
+| Pin.GPIO21       | EC600S / EC600N /EC600U/EC200U/ EC800N / BG95M3              | GPIO21         |
+| Pin.GPIO22       | EC600S / EC600N/EC600U/EC200U/EC200A/EC800N                  | GPIO22         |
+| Pin.GPIO23       | EC600S / EC600N/EC600U/EC200U/EC800N                         | GPIO23         |
+| Pin.GPIO24       | EC600S / EC600N/EC600U/EC200U/EC800N                         | GPIO24         |
+| Pin.GPIO25       | EC600S / EC600N/EC600U/EC200U/EC800N                         | GPIO25         |
+| Pin.GPIO26       | EC600S / EC600N/EC600U/EC200U/EC800N                         | GPIO26         |
+| Pin.GPIO27       | EC600S / EC600N/EC600U/EC200U/EC800N                         | GPIO27         |
+| Pin.GPIO28       | EC600S / EC600N/EC600U/EC200U/EC200A/EC800N                  | GPIO28         |
+| Pin.GPIO29       | EC600S / EC600N/EC600U/EC200U/EC200A/EC800N                  | GPIO29         |
+| Pin.GPIO30       | EC600S / EC600N/EC600U/EC200U/EC200A/EC800N                  | GPIO30         |
+| Pin.GPIO31       | EC600S / EC600N/EC600U/EC200U/EC800N                         | GPIO31         |
+| Pin.GPIO32       | EC600S / EC600N/EC600U/EC200U/EC800N                         | GPIO32         |
+| Pin.GPIO33       | EC600S / EC600N/EC600U/EC200U/EC800N                         | GPIO33         |
+| Pin.GPIO34       | EC600S / EC600N/EC600U/EC200U/EC800N                         | GPIO34         |
+| Pin.GPIO35       | EC600S / EC600N/EC600U/EC200U/EC200A/EC800N                  | GPIO35         |
+| Pin.GPIO36       | EC600S / EC600N/EC600U/EC200U/EC200A/EC800N                  | GPIO36         |
+| Pin.GPIO37       | EC600S / EC600N/EC600U/EC200U/EC800N                         | GPIO37         |
+| Pin.GPIO38       | EC600S / EC600N/EC600U/EC200U                                | GPIO38         |
+| Pin.GPIO39       | EC600S / EC600N/EC600U/EC200U                                | GPIO39         |
+| Pin.GPIO40       | EC600S / EC600N/EC600U/EC200U                                | GPIO40         |
+| Pin.GPIO41       | EC600S / EC600N/EC600U/EC200U                                | GPIO41         |
+| Pin.GPIO42       | EC600U / EC200U                                              | GPIO42         |
+| Pin.GPIO43       | EC600U / EC200U/EC200A                                       | GPIO43         |
+| Pin.GPIO44       | EC600U / EC200U/EC200A                                       | GPIO44         |
+| Pin.GPIO45       | EC600U / EC200U/EC200A                                       | GPIO45         |
+| Pin.GPIO46       | EC600U / EC200U/EC200A                                       | GPIO46         |
+| Pin.GPIO47       | EC200U/EC200A                                                | GPIO47         |
+| Pin.IN           | --                                                           | Input mode     |
+| Pin.OUT          | --                                                           | Output mode    |
+| Pin.PULL_DISABLE | --                                                           | Floating mode  |
+| Pin.PULL_PU      | --                                                           | Pull-up mode   |
+| Pin.PULL_PD      | --                                                           | Pull-down mode |
 
 **Corresponding Pin Number Description of GPIO**
 
@@ -5049,7 +5136,7 @@ The GPIO pin numbers provided in this document correspond to the external pin nu
 
 | Parameter | Type | Description                                                  |
 | :-------- | :--- | ------------------------------------------------------------ |
-| GPIOn     | int  | Pin Number<br />The  corresponding pins of EC100Y-CN module are as follows (pin number is external pin number):<br />GPIO1 – Pin No. 22<br />GPIO2 – Pin No. 23<br />GPIO3 – Pin No. 38<br />GPIO4 – Pin No. 53<br />GPIO5 – Pin No. 54<br />GPIO6 – Pin No. 104<br />GPIO7 – Pin No. 105<br />GPIO8 – Pin No. 106<br />GPIO9 – Pin No. 107<br />GPIO10 – Pin No. 178<br />GPIO11 – Pin No. 195<br />GPIO12 – Pin No. 196<br />GPIO13 – Pin No. 197<br />GPIO14 – Pin No. 198<br />GPIO15 – Pin No. 199<br />GPIO16 – Pin No. 203<br />GPIO17 – Pin No. 204<br />GPIO18 – Pin No. 214<br />GPIO19 – Pin No. 215<br />The corresponding pins of EC600S-CN/EC600N-CN modules are as follows (pin number is external pin number): <br />GPIO1 – Pin No. 10<br />GPIO2 – Pin No. 11<br />GPIO3 – Pin No. 12<br />GPIO4 – Pin No. 13<br />GPIO5 – Pin No. 14<br />GPIO6 – Pin No. 15<br />GPIO7 – Pin No. 16<br />GPIO8 – Pin No. 39<br />GPIO9 – Pin No. 40<br />GPIO10 – Pin No. 48<br />GPIO11 – Pin No. 58<br />GPIO12 – Pin No. 59<br />GPIO13 – Pin No. 60<br />GPIO14 – Pin No. 61<br />GPIO15 – Pin No. 62<br/>GPIO16 – Pin No. 63<br/>GPIO17 – Pin No. 69<br/>GPIO18 – Pin No. 70<br/>GPIO19 – Pin No. 1<br/>GPIO20 – Pin No. 3<br/>GPIO21 – Pin No. 49<br/>GPIO22 – Pin No. 50<br/>GPIO23 – Pin No. 51<br/>GPIO24 – Pin No. 52<br/>GPIO25 – Pin No. 53<br/>GPIO26 – Pin No. 54<br/>GPIO27 – Pin No. 55<br/>GPIO28 – Pin No. 56<br/>GPIO29 – Pin No. 57<br />The corresponding pins of EC600U series module are as follows (pin number is external pin number): <br />GPIO1 – Pin No. 61<br />GPIO2 – Pin No. 58<br />GPIO3 – Pin No. 34<br />GPIO4 – Pin No. 60<br />GPIO5 – Pin No. 69<br />GPIO6 – Pin No. 70<br />GPIO7 – Pin No. 123<br />GPIO8 – Pin No. 118<br />GPIO9 – Pin No. 9<br />GPIO10 – Pin No. 1<br />GPIO11 – Pin No. 4<br />GPIO12 – Pin No. 3<br />GPIO13 – Pin No. 2<br />GPIO14 – Pin No. 54<br />GPIO15 – Pin No. 57<br/>GPIO16 – Pin No. 56<br/>The corresponding pins of EC200U series module are as follows (pin number is external pin number): <br />GPIO1 – Pin No. 27<br />GPIO2 – Pin No. 26<br />GPIO3 – Pin No. 24<br />GPIO4 – Pin No. 25<br />GPIO5 – Pin No. 13<br />GPIO6 – Pin No. 135<br />GPIO7 – Pin No. 136<br />GPIO8 – Pin No. 133<br />GPIO9 – Pin No. 3<br />GPIO10 – Pin No. 40<br />GPIO11 – Pin No. 37<br />GPIO12 – Pin No. 38<br />GPIO13 – Pin No. 39<br />GPIO14 – Pin No. 5<br />GPIO15 – Pin No. 141<br/>GPIO16 – Pin No. 142<br/>The pin correspondence of BC25PA platform is as follows (pin numbers are external pin numbers):<br />GPIO1 – Pin number 3<br />GPIO2 – Pin number 4<br />GPIO3 – Pin number 5<br />GPIO4 – Pin number 6<br />GPIO5 – Pin number 16<br />GPIO6 – Pin number 20<br />GPIO7 – Pin number 21<br />GPIO8 – Pin number 22<br />GPIO9 – Pin number 23<br />GPIO10 – Pin number 25<br />GPIO11 – Pin number 28<br />GPIO12 – Pin number 29<br />GPIO13 – Pin number 30<br />GPIO14 – Pin number 31<br />GPIO15 – Pin number 32<br/>GPIO16 – Pin number 33<br/>GPIO17 – Pin number 2<br/>GPIO18 – Pin number 8<br/> |
+| GPIOn     | int  | Pin Number<br />The  corresponding pins of EC100Y-CN module are as follows (pin number is external pin number):<br />GPIO1 – Pin No. 22<br />GPIO2 – Pin No. 23<br />GPIO3 – Pin No. 38<br />GPIO4 – Pin No. 53<br />GPIO5 – Pin No. 54<br />GPIO6 – Pin No. 104<br />GPIO7 – Pin No. 105<br />GPIO8 – Pin No. 106<br />GPIO9 – Pin No. 107<br />GPIO10 – Pin No. 178<br />GPIO11 – Pin No. 195<br />GPIO12 – Pin No. 196<br />GPIO13 – Pin No. 197<br />GPIO14 – Pin No. 198<br />GPIO15 – Pin No. 199<br />GPIO16 – Pin No. 203<br />GPIO17 – Pin No. 204<br />GPIO18 – Pin No. 214<br />GPIO19 – Pin No. 215<br />The corresponding pins of EC600S-CN/EC600N-CN modules are as follows (pin number is external pin number): <br />GPIO1 – Pin No. 10<br />GPIO2 – Pin No. 11<br />GPIO3 – Pin No. 12<br />GPIO4 – Pin No. 13<br />GPIO5 – Pin No. 14<br />GPIO6 – Pin No. 15<br />GPIO7 – Pin No. 16<br />GPIO8 – Pin No. 39<br />GPIO9 – Pin No. 40<br />GPIO10 – Pin No. 48<br />GPIO11 – Pin No. 58<br />GPIO12 – Pin No. 59<br />GPIO13 – Pin No. 60<br />GPIO14 – Pin No. 61<br />GPIO15 – Pin No. 62<br/>GPIO16 – Pin No. 63<br/>GPIO17 – Pin No. 69<br/>GPIO18 – Pin No. 70<br/>GPIO19 – Pin No. 1<br/>GPIO20 – Pin No. 3<br/>GPIO21 – Pin No. 49<br/>GPIO22 – Pin No. 50<br/>GPIO23 – Pin No. 51<br/>GPIO24 – Pin No. 52<br/>GPIO25 – Pin No. 53<br/>GPIO26 – Pin No. 54<br/>GPIO27 – Pin No. 55<br/>GPIO28 – Pin No. 56<br/>GPIO29 – Pin No. 57<br />GPIO30 – Pin No. 2<br />GPIO31 – Pin No. 66<br />GPIO32 – Pin No. 65<br />GPIO33 – Pin No. 67<br />GPIO34 – Pin No. 64<br />GPIO35 – Pin No. 4<br />GPIO36 – Pin No. 31<br />GPIO37 – Pin No. 32<br />GPIO38 – Pin No. 33<br />GPIO39 – Pin No. 34<br />GPIO40 – Pin No. 71<br />GPIO41 – Pin No. 72<br />The corresponding pins of EC600U series module are as follows (pin number is external pin number): <br />GPIO1 – Pin No. 61(cannot be gpio function at the same time as GPIO31)<br />GPIO2 – Pin No. 58(cannot be gpio function at the same time as GPIO32)<br />GPIO3 – Pin No. 34(cannot be gpio function at the same time as GPIO41)<br />GPIO4 – Pin No. 60(cannot be gpio function at the same time as GPIO34)<br />GPIO5 – Pin No. 69(cannot be gpio function at the same time as GPIO35)<br />GPIO6 – Pin No. 70(cannot be gpio function at the same time as GPIO36)<br />GPIO7 – Pin No. 123(cannot be gpio function at the same time as GPIO43)<br />GPIO8 – Pin No. 118<br />GPIO9 – Pin No. 9<br />GPIO10 – Pin No. 1(cannot be gpio function at the same time as GPIO37)<br />GPIO11 – Pin No. 4(cannot be gpio function at the same time as GPIO38)<br />GPIO12 – Pin No. 3(cannot be gpio function at the same time as GPIO39)<br />GPIO13 – Pin No. 2(cannot be gpio function at the same time as GPIO40)<br />GPIO14 – Pin No. 54<br />GPIO15 – Pin No. 57<br/>GPIO16 – Pin No. 56<br/>GPIO17 – Pin No. 12<br/>GPIO18 – Pin No. 33(cannot be gpio function at the same time as GPIO42)<br/>GPIO19 – Pin No. 124(cannot be gpio function at the same time as GPIO44)<br/>GPIO20 – Pin No. 122(cannot be gpio function at the same time as GPIO45)<br/>GPIO21 – Pin No. 121(cannot be gpio function at the same time as GPIO46)<br/>GPIO22 – Pin No. 48<br/>GPIO23 – Pin No. 39<br/>GPIO24 – Pin No. 40<br/>GPIO25 – Pin No. 49<br/>GPIO26 – Pin No. 50<br/>GPIO27 – Pin No. 53<br/>GPIO28 – Pin No. 52<br/>GPIO29 – Pin No. 51<br/>GPIO30 – Pin No. 59(cannot be gpio function at the same time as GPIO33)<br/>GPIO31 – Pin No. 66(cannot be gpio function at the same time as GPIO1)<br/>GPIO32 – Pin No. 63(cannot be gpio function at the same time as GPIO2)<br/>GPIO33 – Pin No. 67(cannot be gpio function at the same time as GPIO30)<br/>GPIO34 – Pin No. 65(cannot be gpio function at the same time as GPIO4)<br/>GPIO35 – Pin No. 137(cannot be gpio function at the same time as GPIO5)<br/>GPIO36 – Pin No. 62(cannot be gpio function at the same time as GPIO6)<br/>GPIO37 – Pin No. 98(cannot be gpio function at the same time as GPIO10)<br/>GPIO38 – Pin No. 95(cannot be gpio function at the same time as GPIO11)<br/>GPIO39 – Pin No. 119(cannot be gpio function at the same time as GPIO12)<br/>GPIO40 – Pin No. 100(cannot be gpio function at the same time as GPIO13)<br/>GPIO41 – Pin No. 120(cannot be gpio function at the same time as GPIO3)<br/>GPIO42 – Pin No. 16(cannot be gpio function at the same time as GPIO18)<br/>GPIO43 – Pin No. 10(cannot be gpio function at the same time as GPIO7)<br/>GPIO44 – Pin No. 14(cannot be gpio function at the same time as GPIO19)<br/>GPIO45 – Pin No. 15(cannot be gpio function at the same time as GPIO20)<br/>GPIO46 – Pin No. 13(cannot be gpio function at the same time as GPIO21)<br/>The corresponding pins of EC200U series module are as follows (pin number is external pin number): <br />GPIO1 – Pin No. 27(cannot be gpio function at the same time as GPIO31)<br />GPIO2 – Pin No. 26(cannot be gpio function at the same time as GPIO32)<br />GPIO3 – Pin No. 24(cannot be gpio function at the same time as GPIO33)<br />GPIO4 – Pin No. 25(cannot be gpio function at the same time as GPIO34)<br />GPIO5 – Pin No. 13(cannot be gpio function at the same time as GPIO17)<br />GPIO6 – Pin No. 135(cannot be gpio function at the same time as GPIO36)<br />GPIO7 – Pin No. 136(cannot be gpio function at the same time as GPIO44)<br />GPIO8 – Pin No. 133<br />GPIO9 – Pin No. 3(cannot be gpio function at the same time as GPIO37)<br />GPIO10 – Pin No. 40(cannot be gpio function at the same time as GPIO38)<br />GPIO11 – Pin No. 37(cannot be gpio function at the same time as GPIO39)<br />GPIO12 – Pin No. 38(cannot be gpio function at the same time as GPIO40)<br />GPIO13 – Pin No. 39(cannot be gpio function at the same time as GPIO41)<br />GPIO14 – Pin No. 5<br />GPIO15 – Pin No. 141<br/>GPIO16 – Pin No. 142<br/>GPIO17 – Pin No. 121(cannot be gpio function at the same time as GPIO5)<br/>GPIO18 – Pin No. 65(cannot be gpio function at the same time as GPIO42)<br/>GPIO19 – Pin No. 64(cannot be gpio function at the same time as GPIO43)<br/>GPIO20 – Pin No. 139(cannot be gpio function at the same time as GPIO45)<br/>GPIO21 – Pin No. 126(cannot be gpio function at the same time as GPIO46)<br/>GPIO22 – Pin No. 127(cannot be gpio function at the same time as GPIO47)<br/>GPIO23 – Pin No. 33<br/>GPIO24 – Pin No. 31<br/>GPIO25 – Pin No. 30<br/>GPIO26 – Pin No. 29<br/>GPIO27 – Pin No. 28<br/>GPIO28 – Pin No. 1<br/>GPIO29 – Pin No. 2<br/>GPIO30 – Pin No. 4<br/>GPIO31 – Pin No. 125(cannot be gpio function at the same time as GPIO1)<br/>GPIO32 – Pin No. 124(cannot be gpio function at the same time as GPIO2)<br/>GPIO33 – Pin No. 123(cannot be gpio function at the same time as GPIO3)<br/>GPIO34 – Pin No. 122(cannot be gpio function at the same time as GPIO4)<br/>GPIO35 – Pin No. 42<br/>GPIO36 – Pin No. 119(cannot be gpio function at the same time as GPIO6)<br/>GPIO37 – Pin No. 134(cannot be gpio function at the same time as GPIO9)<br/>GPIO38 – Pin No. 132(cannot be gpio function at the same time as GPIO10)<br/>GPIO39 – Pin No. 131(cannot be gpio function at the same time as GPIO11)<br/>GPIO40 – Pin No. 130(cannot be gpio function at the same time as GPIO12)<br/>GPIO41 – Pin No. 129(cannot be gpio function at the same time as GPIO13)<br/>GPIO42 – Pin No. 61(cannot be gpio function at the same time as GPIO18)<br/>GPIO43 – Pin No. 62(cannot be gpio function at the same time as GPIO19)<br/>GPIO44 – Pin No. 63(cannot be gpio function at the same time as GPIO7)<br/>GPIO45 – Pin No. 66(cannot be gpio function at the same time as GPIO20)<br/>GPIO46 – Pin No. 6(cannot be gpio function at the same time as GPIO21)<br/>GPIO47 – Pin No. 23(cannot be gpio function at the same time as GPIO22)<br/>The corresponding pins of EC200A series module are as follows (pin number is external pin number): <br />GPIO1 – Pin No. 27<br />GPIO2 – Pin No. 26<br />GPIO3 – Pin No.24<br />GPIO4 – Pin No.25<br />GPIO6 – Pin No.135<br />GPIO7 – Pin No.136<br />GPIO9 – Pin No. 3<br />GPIO10 – Pin No. 40<br />GPIO11 – Pin No. 37<br />GPIO12 – Pin No. 38<br />GPIO13 – Pin No. 39<br />GPIO18 – Pin No. 65<br />GPIO19 – Pin No. 64<br />GPIO20 – Pin No. 139<br />GPIO22 – Pin No. 127<br />GPIO28 – Pin No. 1<br />GPIO29 – Pin No. 2<br />GPIO30 – Pin No. 4<br />GPIO35 – Pin No. 42<br />GPIO36 – Pin No. 119<br />GPIO43 – Pin No. 62<br />GPIO44 – Pin No. 63<br />GPIO45 – Pin No. 66<br />GPIO46 – Pin No. 6<br />GPIO47 – Pin No. 23<br/>The corresponding pins of EC800NCN series module are as follows (pin number is external pin number): <br />GPIO1 – Pin No. 30<br />GPIO2 – Pin No. 31<br />GPIO3 – Pin No. 32<br />GPIO4 – Pin No. 33<br />GPIO5 – Pin No. 49<br />GPIO6 – Pin No. 50<br />GPIO7 – Pin No. 51<br />GPIO8 – Pin No. 52<br />GPIO9 – Pin No. 53<br />GPIO10 – Pin No. 54<br />GPIO11 – Pin No. 55<br />GPIO12 – Pin No. 56<br />GPIO13 – Pin No. 57<br />GPIO14 – Pin No. 58<br />GPIO15 – Pin No. 80<br/>GPIO16 – Pin No. 81<br/>GPIO17 – Pin No. 76<br/>GPIO18 – Pin No. 77<br/>GPIO19 – Pin No. 82<br/>GPIO20 – Pin No. 83<br/>GPIO21 – Pin No. 86<br/>GPIO22 – Pin No. 87<br/>GPIO23 – Pin No. 66<br/>GPIO24 – Pin No. 67<br/>GPIO25 – Pin No. 17<br/>GPIO26 – Pin No. 18<br/>GPIO27 – Pin No. 19<br/>GPIO28 – Pin No. 20<br/>GPIO29 – Pin No. 21<br />GPIO30 – Pin No. 22<br />GPIO31 – Pin No. 23<br />GPIO32 – Pin No. 28<br />GPIO33 – Pin No. 29<br />GPIO34 – Pin No. 38<br />GPIO35 – Pin No. 39<br />GPIO36 – Pin No. 16<br />GPIO37 – Pin No. 78<br />The pin correspondence of BC25PA platform is as follows (pin numbers are external pin numbers):<br />GPIO1 – Pin No. 3<br />GPIO2 – Pin No. 4<br />GPIO3 – Pin No. 5<br />GPIO4 – Pin No. 6<br />GPIO5 – Pin No. 16<br />GPIO6 – Pin No. 20<br />GPIO7 – Pin No. 21<br />GPIO8 – Pin No. 22<br />GPIO9 – Pin No. 23<br />GPIO10 – Pin No. 25<br />GPIO11 – Pin No. 28<br />GPIO12 – Pin No. 29<br />GPIO13 – Pin No. 30<br />GPIO14 – Pin No. 31<br />GPIO15 – Pin No. 32<br/>GPIO16 – Pin No. 33<br/>GPIO17 – Pin No. 2<br/>GPIO18 – Pin No. 8<br/>The pin correspondence of BG95M3 platform is as follows (pin numbers are external pin numbers):<br />GPIO1 – Pin No. 4<br />GPIO2 – Pin No. 5<br />GPIO3 – Pin No. 6<br />GPIO4 – Pin No. 7<br />GPIO5 – Pin No. 18<br />GPIO6 – Pin No. 19<br />GPIO7 – Pin No. 22<br />GPIO8 – Pin No. 23<br />GPIO9 – Pin No. 25<br />GPIO10 – Pin No. 26<br />GPIO11 – Pin No. 27<br />GPIO12 – Pin No. 28<br />GPIO13 – Pin No. 40<br />GPIO14 – Pin No. 41<br />GPIO15 – Pin No. 64<br/>GPIO16 – Pin No. 65<br/>GPIO17 – Pin No. 66<br />GPIO18 – Pin No. 85<br />GPIO19 – Pin No. 86<br />GPIO20 – Pin No. 87<br />GPIO21 – Pin No. 88 |
 | direction | int  | IN – input mode; OUT – output mode                           |
 | pullMode  | int  | PULL_DISABLE – floating mode<br />PULL_PU – pull-up mode<br />PULL_PD – pull-down mode |
 | level     | int  | 0 - Set the pin to low level; 1- Set the pin to high level   |
@@ -5270,12 +5357,25 @@ Function: UART serial data transmission
 
 | Parameter | Type | Description                                                  |
 | :-------- | :--- | ------------------------------------------------------------ |
-| UARTn     | int  | Functions of UARTn are as follows: <br />UART0 - DEBUG PORT<br />UART1 – BT PORT<br />UART2 – MAIN PORT<br />UART3 – USB CDC PORT |
+| UARTn     | int  | Functions of UARTn are as follows: <br />UART0 - DEBUG PORT<br />UART1 – BT PORT<br />UART2 – MAIN PORT<br />UART3 – USB CDC PORT(BG95M3 platform not supported) |
 | buadrate  | int  | Baud rate, common baud rates are supported, such as 4800, 9600, 19200, 38400, 57600, 115200, 230400, etc. |
 | databits  | int  | Data bit (5–8)                                               |
 | parity    | int  | Parity check (0 – NONE，1 – EVEN，2 - ODD)                   |
 | stopbits  | int  | Stop bit (1–2)                                               |
 | flowctl   | int  | Hardware control flow (0 – FC_NONE， 1 – FC_HW）             |
+
+* Pin Correspondence
+
+| platform      |                                                              |
+| ------------- | :----------------------------------------------------------- |
+| EC600U        | uart1:<br />TX: Pin number 124<br />RX: Pin number 123<br />uart2:<br />TX:Pin number 32<br />RX:Pin number 31 |
+| EC200U        | uart1:<br />TX: Pin number 138<br />RX: Pin number 137<br />uart2:<br />TX:Pin number 67<br />RX:Pin number 68 |
+| EC200A        | uart1:<br />TX: Pin number 63<br />RX: Pin number 66<br />uart2:<br />TX: Pin number 67<br />RX: Pin number 68 |
+| EC600S/EC600N | uart0:<br />TX: Pin number 71<br />RX: Pin number 72<br />uart1:<br />TX: Pin number 3<br />RX: Pin number 2<br />uart2:<br />TX:Pin number 32<br />RX:Pin number 31 |
+| EC100Y        | uart0:<br />TX: Pin number 21<br />RX:Pin number 20<br />uart1:<br />TX: Pin number 27<br />RX: Pin number 28<br />uart2:<br />TX:Pin number 50<br />RX:Pin number 49 |
+| EC800N        | uart0:<br />TX: Pin number 39<br />RX: Pin number 38<br />uart1:<br />TX: Pin number 50<br />RX: Pin number 51<br />uart2:<br />TX:Pin number 18<br />RX:Pin number 17 |
+| BC25PA        | uart1:<br />TX: Pin number 29<br />RX: Pin number 28         |
+| BG95M3        | uart0:<br />TX: Pin number 23<br />RX: Pin number 22<br />uart1:<br />TX:Pin number 27<br />RX:Pin number 28<br />uart2:<br />TX: Pin number 64<br />RX: Pin number 65 |
 
 * Example
 
@@ -5437,7 +5537,7 @@ from machine import UART
 The following two global variables are required. Users can modify the values of the following two global variables according to the actual projects.
 '''
 PROJECT_NAME = "QuecPython_UART_example"
-PROJECT_VERSION = "1.0.0"
+PROJECT_VERSION = "1.0.1"
 
 '''
  * Parameter1: Port
@@ -5458,74 +5558,56 @@ PROJECT_VERSION = "1.0.0"
 log.basicConfig(level=log.INFO)
 uart_log = log.getLogger("UART")
 
-state = 5
+class Example_uart(object):
+    def __init__(self, no=UART.UART2, bate=115200, data_bits=8, parity=0, stop_bits=1, flow_control=0):
+        self.uart = UART(no, bate, data_bits, parity, stop_bits, flow_control)
+        self.uart.set_callback(self.callback)
 
 
-def uartWrite():
-    count = 10
-    # Configure UART
-    uart = UART(UART.UART2, 115200, 8, 0, 1, 0)
-    while count:
-        write_msg = "Hello count={}".format(count)
-        # Send data
-        uart.write(write_msg)
-        uart_log.info("Write msg :{}".format(write_msg))
-        utime.sleep(1)
-        count -= 1
-    uart_log.info("uartWrite end!")
+    def callback(self, para):
+        uart_log.info("call para:{}".format(para))
+        if(0 == para[0]):
+            self.uartRead(para[2])
 
+    
+    def uartWrite(self, msg):
+        uart_log.info("write msg:{}".format(msg))
+        self.uart.write(msg)
 
-def UartRead():
-    global state
-    uart = UART(UART.UART2, 115200, 8, 0, 1, 0)
-    while 1:
-        # It returns whether the data length is readable
-        msgLen = uart.any()
-        # Read when there is data
-        if msgLen:
-            msg = uart.read(msgLen)
-            # The initial data is byte type, and encode it
-            utf8_msg = msg.decode()
-            # str
-            uart_log.info("UartRead msg: {}".format(utf8_msg))
-            state -= 1
-            if state == 0:
-                break
-        else:
-            continue
+    def uartRead(self, len):
+        msg = self.uart.read(len)
+        utf8_msg = msg.decode()
+        uart_log.info("UartRead msg: {}".format(utf8_msg))
+        return utf8_msg
 
-
-
-def run():
-    # Create a thread to listen to received UARt messages
-    _thread.start_new_thread(UartRead, ())
-
+    def uartWrite_test(self):
+        for i in range(10):
+            write_msg = "Hello count={}".format(i)
+            self.uartWrite(write_msg)
+            utime.sleep(1)
 
 if __name__ == "__main__":
-    uartWrite()
-    run()
-    while 1:
-        if state:
-            pass
-        else:
-            break
+    uart_test = Example_uart()
+    uart_test.uartWrite_test()
+    
 
-# Example of running results
+# 运行结果示例
 '''
-INFO:UART:Write msg :Hello count=8
-INFO:UART:Write msg :Hello count=7
-INFO:UART:Write msg :Hello count=6
-INFO:UART:Write msg :Hello count=5
-INFO:UART:Write msg :Hello count=4
-INFO:UART:Write msg :Hello count=3
-INFO:UART:Write msg :Hello count=2
-INFO:UART:Write msg :Hello count=1
-INFO:UART:uartWrite end!
-INFO:UART:UartRead msg: read msg 1
+INFO:UART:write msg:Hello count=0
+INFO:UART:write msg:Hello count=1
+INFO:UART:write msg:Hello count=2
+INFO:UART:write msg:Hello count=3
+INFO:UART:write msg:Hello count=4
+INFO:UART:write msg:Hello count=5
+INFO:UART:write msg:Hello count=6
+INFO:UART:write msg:Hello count=7
+INFO:UART:write msg:Hello count=8
+INFO:UART:write msg:Hello count=9
 
-INFO:UART:UartRead msg: read msg 2
+INFO:UART:call para:[0, 2, 15]
+INFO:UART:UartRead msg: my name is XXX
 
-INFO:UART:UartRead msg: read msg 3
+
 '''
 
 ```
@@ -5687,7 +5769,7 @@ Function: The module configures I/O pins to interrupt when an external event occ
 
 | Parameter | Type | Description                                                  |
 | :-------- | :--- | ------------------------------------------------------------ |
-| GPIOn     | int  | Pin number<br />The pin correspondence of EC100YCN platform is as follows (pin numbers are external pin numbers):<br />GPIO1 – Pin number 22<br />GPIO2 – Pin number 23<br />GPIO3 – Pin number 38<br />GPIO4 – Pin number 53<br />GPIO5 – Pin number 54<br />GPIO6 – Pin number 104<br />GPIO7 – Pin number 105<br />GPIO8 – Pin number 106<br />GPIO9 – Pin number 107<br />GPIO10 –Pin number 178<br />GPIO11 – Pin number 195<br />GPIO12 – Pin number 196<br />GPIO13 – Pin number 197<br />GPIO14 – Pin number 198<br />GPIO15 – Pin number 199<br />GPIO16 – Pin number 203<br />GPIO17 – Pin number 204<br />GPIO18 – Pin number 214<br />GPIO19 – Pin number 215<br />The pin correspondence of EC600SCN/EC600NCN platform is as follows (pin numbers are external pin numbers):<br />GPIO1 – Pin number 10<br />GPIO2 – Pin number 11<br />GPIO3 – Pin number 12<br />GPIO4 – Pin number 13<br />GPIO5 – Pin number 14<br />GPIO6 – Pin number 15<br />GPIO7 – Pin number 16<br />GPIO8 – Pin number 39<br />GPIO9 – Pin number 40<br />GPIO10 – Pin number 48<br />GPIO11 – Pin number 58<br />GPIO12 – Pin number 59<br />GPIO13 – Pin number60<br />GPIO14 – Pin number 61<br />GPIO15 – Pin number 62<br/>GPIO16 – Pin number 63<br/>GPIO17 – Pin number 69<br/>GPIO18 – Pin number 70<br/>GPIO19 – Pin number 1<br/>GPIO20 – Pin number 3<br/>GPIO21 – Pin number 49<br/>GPIO22 – Pin number 50<br/>GPIO23 – Pin number 51<br/>GPIO24 – Pin number 52<br/>GPIO25 – Pin number 53<br/>GPIO26 – Pin number 54<br/>GPIO27 – Pin number 55<br/>GPIO28 – Pin number 56<br/>GPIO29 – Pin number 57<br />The pin correspondence of EC600UCN platform is as follows (pin numbers are external pin numbers):<br />GPIO1 – Pin number 61<br />GPIO2 – Pin number 58<br />GPIO3 – Pin number 34<br />GPIO4 – Pin number 60<br />GPIO5 – Pin number 69<br />GPIO6 – Pin number 70<br />GPIO7 – Pin number 123<br />GPIO8 – Pin number 118<br />GPIO9 – Pin number 9<br />GPIO10 – Pin number 1<br />GPIO11 – Pin number 4<br />GPIO12 – Pin number 3<br />GPIO13 – Pin number 2<br />GPIO14 – Pin number 54<br />GPIO15 – Pin number 57<br/>GPIO16 – Pin number 56<br/>The pin correspondence of EC200UCN platform is as follows (pin numbers are external pin numbers):<br />GPIO1 – Pin number 27<br />GPIO2 – Pin number 26<br />GPIO3 – Pin number 24<br />GPIO4 – Pin number 25<br />GPIO5 – Pin number 13<br />GPIO6 – Pin number 135<br />GPIO7 – Pin number 136<br />GPIO8 – Pin number 133<br />GPIO9 – Pin number 3<br />GPIO10 – Pin number 40<br />GPIO11 – Pin number 37<br />GPIO12 – Pin number 38<br />GPIO13 – Pin number 39<br />GPIO14 – Pin number 5<br />GPIO15 – Pin number 141<br/>GPIO16 – Pin number 142<br/>The pin correspondence of BC25PA platform is as follows (pin numbers are external pin numbers):<br />GPIO1 – Pin number 3<br />GPIO2 – Pin number 4<br />GPIO3 – Pin number 5<br />GPIO4 – Pin number 6<br />GPIO5 – Pin number 16<br />GPIO6 – Pin number 20<br />GPIO7 – Pin number 21<br />GPIO8 – Pin number 22<br />GPIO9 – Pin number 23<br />GPIO10 – Pin number 25<br />GPIO11 – Pin number 28<br />GPIO12 – Pin number 29<br />GPIO13 – Pin number 30<br />GPIO14 – Pin number 31<br />GPIO15 – Pin number 32<br/>GPIO16 – Pin number 33<br/> |
+| GPIOn     | int  | The GPIO Pin number to control refer to the Pin module definition( BG95M3 platform besides)<br />The pin correspondence of BG95M3 platform is as follows (pin numbers are external pin numbers):<br />GPIO2 – Pin number 5<br />GPIO3 – Pin number 6<br />GPIO6 – Pin number 19<br />GPIO7 – Pin number 22<br />GPIO8 – Pin number 23<br />GPIO9 – Pin number 25<br />GPIO11 – Pin number 27<br />GPIO12 – Pin number 28<br />GPIO14 – Pin number 41<br />GPIO16 – Pin number 65<br/>GPIO17 – Pin number 66<br />GPIO18 – Pin number 85<br />GPIO19 – Pin number 86<br />GPIO20 – Pin number 87<br />GPIO21 – Pin number 88 |
 | mode      | int  | Set the trigger method<br /> IRQ_RISING – Rising edge trigger<br /> IRQ_FALLING – Falling edge trigger<br /> IRQ_RISING_FALLING – Rising and falling edge trigger |
 | pull      | int  | PULL_DISABLE – Floating mode<br />PULL_PU – Pull-up mode<br />PULL_PD  – Pull-down mode |
 | callback  | int  | Interrupt trigger callback function                          |
@@ -5853,40 +5935,9 @@ It sets and gets RTC time. When there is no parameter, it gets the time, it sets
 (2020, 3, 12, 4, 12, 12, 14, 0)
 ```
 
-###### Set callback function
-
-> **rtc.register_callback(usrFun)**
-
-When RTC expiration time callback function is set (for BC25PA platform, if it is recovered from deep sleep or software shutdown, calling this function will immediately call usrfun once)
-
-* Parameter
-
-| Parameter   | Type | Description                                   |
-| ------ | -------- | ------------------------------------------ |
-| usrFun | function | Callback function, which is called when the set RTC time arrives. |
-
-* Note
-
-  * usrFun requires parameters
-
-* Return Value
-
-  * 0	Successful execution.
-  * -1 Failed execution.
-
-* Example
-
-```python
->>> def test(df):
-...     print('rtc test...',df)
-...     
-...     
-... 
->>> 
->>> rtc.register_callback(test)
-0
-```
 ###### Set RTC expiration time
+
+Support platform ec600u/ec200u/ec600n/ec800n/bc25
 
 rtc.set_alarm(data_e)
 
@@ -5919,61 +5970,12 @@ Set the RTC expiration time. When the expiration time is reached, the registered
 >>> rtc.set_alarm(data_e)
 0
 ```
-###### Start / stop RTC timer
-
-rtc.enable_alarm(on_off)
-
-The timer can be started only when the callback function is set (bc25pa platform)
-
-* Parameter
-
-| Parameter | Type | Description                                                  |
-| ----------- | ---- | ------------------------------------------------------------ |
-| on_off        | int  | 0 - Turn off RTC timer. 1 - Start RTC timer.                     |
-
-* Return Value
-
-  * 0	Successful execution.
-  * -1 Failed execution.
-
-* Example
-```python
->>> rtc.enable_alarm(1)
-0
-```
-
-
-
-###### Set RTC alarm time
-
-Support platform ec600u/ec200u/ec600n/ec800n/bc25
-
-> rtc.set_alarm([year, month, day, week, hour, minute, second, microsecond])
-
-Set the RTC alarm time. The parameter week is not involved in the setting. The microsecond parameter is reserved and not used yet. The default is 0.
-
-* Parameter
-
-|Parameter | type | description|
-| ----------- | ---- | ------------------------------------- |
-|Year | int ||
-|Month | int | month, range 1 ~ 12|
-|Day | int | day, range 1 ~ 31|
-|Week | int | week, range 0 ~ 6, this parameter does not work, reserved|
-|When hour | int | the range is 0 ~ 23|
-|Minute | int | min, range 0 ~ 59|
-|Second | int | second, range 0 ~ 59|
-|Microsecond | int | microseconds, reserved parameters, unused temporarily, write 0|
-
-* Return Value
-
-  * The integer value 0 is returned after setting successfully, and the integer value - 1 is returned after setting fails.
-
 
 
 ###### Register RTC alarm callback
 
 Support platform ec600u/ec200u/ec600n/ec800n/bc25
+Note:When RTC expiration time callback function is set (for BC25PA platform, if it is recovered from deep sleep or software shutdown, calling this function will immediately call usrfun once)
 
 > rtc.register_callback(fun)
 
@@ -5994,6 +5996,7 @@ Register RTC alarm callback handler
 ###### Switch RTC alarm function
 
 Support platform ec600u/ec200u/ec600n/ec800n/bc25
+Note:The timer can be started only when the callback function is set (bc25pa platform)
 
 > rtc.enable_alarm(on_off)
 
@@ -6038,8 +6041,9 @@ Class function: A two-wire protocol used for communication between devices.
 
 | Constant          |                             | Applicable Platform         |
 | ----------------- | --------------------------- | --------------------------- |
-| I2C.I2C0          | I2C channel index number: 0 | EC100Y/EC600U/EC200U/BC25PA        |
-| I2C.I2C1          | I2C channel index number: 1 | EC600S/EC600N/EC600U/EC200U/BC25PA |
+| I2C.I2C0          | I2C channel index number: 0 | EC100Y/EC600U/EC200U/EC200A/BC25PA/EC800N/BG95M3 |
+| I2C.I2C1          | I2C channel index number: 1 | EC600S/EC600N/EC600U/EC200U/BC25PA/BG95M3 |
+| I2C.I2C2 | I2C channel index number: 2 | BG95M3 |
 | I2C.STANDARD_MODE | Standard mode               |                             |
 | I2C.FAST_MODE     | Fast mode                   |                             |
 
@@ -6055,7 +6059,7 @@ Class function: A two-wire protocol used for communication between devices.
 
 | Parameter | Type | Description                                                  |
 | --------- | ---- | ------------------------------------------------------------ |
-| I2Cn      | int  | I2C channel index number:<br />I2C.I2C0 : 0  <br />I2C.I2C1 : 1 |
+| I2Cn      | int  | I2C channel index number:<br />I2C.I2C0 : 0  <br />I2C.I2C1 : 1 <br />I2C.I2C2 : 2 |
 | MODE      | int  | I2C working mode:<br />I2C.STANDARD_MODE : 0 Standard mode<br />I2C.FAST_MODE ： 1 Fast mode |
 
 - Pin Correspondence
@@ -6064,9 +6068,12 @@ Class function: A two-wire protocol used for communication between devices.
 | ------------- | ------------------------------------------------------------ |
 | EC600U        | I2C0:<br />SCL: Pin number 11<br />SDA: Pin number 12<br />I2C1:<br />SCL: Pin number 57<br />SDA: Pin number 56 |
 | EC200U        | I2C0:<br />SCL: Pin number 41<br />SDA: Pin number 42<br />I2C1:<br />SCL:Pin number 141<br />SDA:Pin number 142 |
-| EC600S/EC600N | I2C1:<br />SCL: Pin number 57<br />SDA: Pin number 56          |
-| EC100Y        | I2C0:<br />SCL: Pin number 57<br />SDA: Pin number 56          |
+| EC200A        | I2C0:<br />SCL: Pin number 41<br />SDA: Pin number 42        |
+| EC600S/EC600N | I2C1:<br />SCL: Pin number 57<br />SDA: Pin number 56        |
+| EC100Y        | I2C0:<br />SCL: Pin number 57<br />SDA: Pin number 56        |
 | BC25PA        | I2C0:<br />SCL: Pin number 23<br />SDA: Pin number 22<br />I2C1:<br />SCL: Pin number 20<br />SDA: Pin number 21 |
+| EC800N        | I2C0:<br />SCL:Pin number 67<br />SDA:Pin number 66          |
+| BG95M3        | I2C0:<br />SCL: Pin number 18<br />SDA: Pin number 19<br />I2C1:<br />SCL:Pin number 40<br />SDA:Pin number 41<br />I2C2:<br />SCL:Pin number 26<br />SDA:Pin number 25 |
 
 - Exmaple
 
@@ -6375,21 +6382,23 @@ Class function: Serial peripheral interface bus protocol.
 | --------- | ---- | ------------------------------------------------------------ |
 | port      | int  | Channel selection[0,1]                                       |
 | mode      | int  | SPI working mode (ususally mode 0): <br />Clock polarity CPOL: When SPI is idle, the level of the clock signal SCLK (0: Low level when idle; 1: High level when idle)<br /> 0 : CPOL=0, CPHA=0<br /> 1 : CPOL=0, CPHA=1<br /> 2:  CPOL=1, CPHA=0<br /> 3:  CPOL=1, CPHA=1 |
-| clk       | int  | volume_up clock frequency<br />EC600NCN/EC600SCN/EC800NCN:<br /> 0 : 812.5kHz<br /> 1 : 1.625MHz<br /> 2 : 3.25MHz<br /> 3 : 6.5MHz<br /> 4 : 13MHz<br /> 5 :  26MHz<br /> 6：52MHz<br />EC600UCN/EC200UCN:<br />0 : 781.25KHz<br />1 : 1.5625MHz<br />2 : 3.125MHz<br />3 : 5MHz<br />4 : 6.25MHz<br />5 : 10MHz<br />6 : 12.5MHz<br />7 : 20MHz<br />8 : 25MHz<br />9 : 33.33MHz<br />BC25PA：<br />0 ： 5MHz<br />X : XMHz  (X in [1,39]) |
+| clk       | int  | volume_up clock frequency<br />EC600NCN/EC600SCN/EC800NCN/BG95M3:<br /> 0 : 812.5kHz<br /> 1 : 1.625MHz<br /> 2 : 3.25MHz<br /> 3 : 6.5MHz<br /> 4 : 13MHz<br /> 5 :  26MHz<br /> 6：52MHz<br />EC600UCN/EC200UCN:<br />0 : 781.25KHz<br />1 : 1.5625MHz<br />2 : 3.125MHz<br />3 : 5MHz<br />4 : 6.25MHz<br />5 : 10MHz<br />6 : 12.5MHz<br />7 : 20MHz<br />8 : 25MHz<br />9 : 33.33MHz<br />BC25PA：<br />0 ： 5MHz<br />X : XMHz  (X in [1,39]) |
 
 - Pin Description
 
 | Platform      | Pin                                                          |
 | ------------- | ------------------------------------------------------------ |
-| EC600U        | port0:<br />CS:Pin number 4<br />CLK:Pin number 1<br />MOSI:Pin number 3<br />MISO:Pin number 2<br />port1:<br />CS:Pin number <br />CLK:Pin number <br />MOSI:Pin number <br />MISO:Pin number 60 |
+| EC600U        | port0:<br />CS:Pin number 4<br />CLK:Pin number 1<br />MOSI:Pin number 3<br />MISO:Pin number 2<br />port1:<br />CS:Pin number 58 <br />CLK:Pin number 61 <br />MOSI:Pin number 59 <br />MISO:Pin number 60 |
 | EC200U        | port0:<br />CS:Pin number 134<br />CLK:Pin number 133<br />MOSI:Pin number 132<br />MISO:Pin number 131<br />port1:<br />CS:Pin number 26<br />CLK:Pin number 27<br />MOSI:Pin number 24<br />MISO:Pin number 25 |
 | EC600S/EC600N | port0:<br />CS:Pin number 58<br />CLK:Pin number 61<br />MOSI:Pin number 59<br />MISO:Pin number 60<br />port1:<br />CS:Pin number 4<br />CLK:Pin number 1<br />MOSI:Pin number 3<br />MISO:Pin number 2 |
 | EC100Y        | port0:<br />CS:Pin number 25<br />CLK:Pin number 26<br />MOSI:Pin number 27<br />MISO:Pin number 28<br />port1:<br />CS:Pin number 105<br />CLK:Pin number 104<br />MOSI:Pin number 107<br />MISO:Pin number 106 |
-| BC25PA        | port0:<br />CS:Pin number 6<br />CLK:Pin number 5<br />MOSI:Pin number 4<br />MISO:Pin number 3|
+| EC800N        | port0:<br />CS:Pin number 31<br />CLK:Pin number 30<br />MOSI:Pin number 32<br />MISO:Pin number 33<br />port1:<br />CS:Pin number 52<br />CLK:Pin number 53<br />MOSI:Pin number 50<br />MISO: Pin number 51 |
+| BC25PA        | port0:<br />CS:Pin number 6<br />CLK:Pin number 5<br />MOSI:Pin number 4<br />MISO:Pin number 3 |
+| BG95M3        | port0:<br />CS:Pin number 25<br />CLK:Pin number 26<br />MOSI:Pin number 27<br />MISO:Pin number 28<br />port1:<br />CS:Pin number 41<br />CLK:Pin number 40<br />MOSI:Pin number 64<br />MISO:Pin number 65 |
 
 * Note:
 
-  * Bc25pa platform does not support 1 and 2 modes.
+  * BC25PA platform does not support 1 and 2 modes.
 
 - Example
 
@@ -7024,6 +7033,8 @@ Module function:  Generate the corresponding QR code according to the input cont
 
 Note: The BC25PA platform does not support this module function.
 
+​			Before using the preview, you need to initialize LCD.
+
 > ​	qrcode.show(qrcode_str,magnification,start_x,start_y,Background_color,Foreground_color)
 
 - Parameter
@@ -7170,6 +7181,102 @@ It gets the number of locks created.
 * Note
 
   * The BC25PA platform does not support this method.
+
+##### Set the control time for PSM mode
+
+- Only supported on BC25 platform
+
+> **pm.set_psm_time(tau_uint,tau_time,act_uint,act_time)**  # Set up and enable PSM           <**Mode 1**>
+>
+> **pm.set_psm_time(mode)**														   # Individual settings enable or disable    <**Mode 2**>
+
+
+* Parameter
+
+| Parameter     | Parameter Type | Parameter Description                       |
+| -------- | -------- | ------------------------------ |
+| mode | int | Whether to enable PSM:<br/>0 Disable PSM<br/>1 Enable PSM<br/>2 Disable PSM and delete all parameters of PSM, if there is default value, reset the default value. (Note that when this mode is disabled, if you want to enable PSM, you must use **mode 1**, and **mode 2** has no meaning, because the set TAU ​​and ACT times are all cleared). |
+| tau_uint | int   | tau(T3412) timer unit |
+| tau_time | int   | tau (T3412) timer time period value |
+| act_uint | int   | act(T3324) timer unit |
+| act_time | int   | act(T3324) timer time period value |
+
+* tau timer description
+|TAU timer unit value  | Type | Unit value description                       |
+| -------- | -------- | ------------------------------|
+| 0 | int   | 10 Minute |
+| 1 | int   | 1 Hour |
+| 2 | int   | 10 Hour |
+| 3 | int   | 2 Second |
+| 4 | int   | 30 Second |
+| 5 | int   | 1 Minute |
+| 6 | int   | 320 Hour |
+| 7 | int   | Timer is disabled |
+
+* act timer description
+|ACT timer unit value  | type | Unit value description  
+| -------- | -------- | ------------------------------|
+| 0 | int   | 2 Second |
+| 1 | int   | 1 Minute |
+| 2 | int   | 6 Minute |
+| 7 | int   | Timer is disabled |
+
+* Return Value
+
+    True: 	success
+    False:	failed
+
+* Note
+   Only supported on BC25 platform
+
+- Example
+
+```python
+>>> import pm
+>>> pm.set_psm_time(1,2,1,4)  #Set the tau timer period to 1 hour * 2 = 2 hours, and the act timer period value to 1 minute * 4 = 4 minutes.
+True
+>>>
+```
+
+
+
+##### Get control time for PSM mode
+
+- Only supported on BC25 platform
+
+> **pm.get_psm_time()**
+
+* Parameter
+
+  None
+
+* Return Value
+
+  Success：The return value is of type list, as follows：
+  |Parameter  | Type | Unit value description                       |
+| -------- | -------- | ------------------------------|
+| list[0] | int   | Mode description: <br/>0-Disable PSM. <br/>1-Enable PSM. <br/>2.Disable PSM and delete all parameters of PSM, if there is default value, reset to default value. |
+| list[1] | int   | tau timer unit |
+| list[2] | int   | tau timer time period value |
+| list[3] | int   | act timer unit |
+| list[4] | int   | act timer time period value |
+  Failed：Returns None. Returns failure when PSM is disabled.
+  
+* Note
+    Only supported on BC25 platform
+
+- Example
+
+
+```python
+>>> pm.get_psm_time()
+
+[1, 1, 1, 1, 2]
+
+
+```
+
+
 
 
 ##### Example
@@ -7521,7 +7628,7 @@ True
   | timeout       | Integer type | This parameter is the timeout of upper layer application. When the application triggers timeout, it actively reports the scanned hot spot information. The application automatically reports the hot spot information if it scans all the hop spots which have been set previously or the underlying layer scan reaches the frequency sweeping timeout before the timeout of the application. <br>Range:<br/>600S: 4–255; unit: s.<br/>200U/600U: 120–5000; unit: ms. |
   | round         | Integer type | This parameter is the scanning rounds of wifi. When reaching the scanning rounds, the scan stops and the scanning results are obtained. <br/>Range:<br/>600S: 1–3; unit: round<br/>200U/600U: 1–10; unit: round |
   | max_bssid_num | Integer type | This parameter determines the maximum number of hot spots to be scanned. If the number of hot spots scanned by the underlying layer reaches the maximum, the scan stops and the scanning results are obtained. <br/>Range:<br/>600S: 4–30<br/>200U/600U: 1–300 |
-  | scan_timeout  | Integer type | This parameter is the wifi hot spot scanning timeout of underlying layer. If the underlying layer scan reaches the hot spot scanning timeout set previously,  the scan stops and the scanning results are obtained. Range: 1–255. Unit: second. 200U or 600U platforms do not support this parameter. You can set this parameter to 0. |
+  | scan_timeout  | Integer type | This parameter is the wifi hot spot scanning timeout of underlying layer. If the underlying layer scan reaches the hot spot scanning timeout set previously,  the scan stops and the scanning results are obtained. Range: 1–255.  |
   | priority      | Integer type | This parameter is the priority setting of wifi scanning service. 0 indicates that ps is preferred; 1 indicates that wifi is preferred. When ps is preferred, the wifi scan is terminated when a data service is initiated. When wifi is preferred, RRC connection is not connected when a data service is initiated. wifi scan runs normally. The RRC connection is only established after the scan completes. 200U or 600U platforms do not support this parameter. You can set this parameter to 0. |
 
 * Return Value：
@@ -10308,7 +10415,7 @@ if __name__ == '__main__':
 
 #### camera - Camera and Code Scan 
 
-Module function: Preview, camera, video recorder, code scan (currently only preview and code scan are supported.)
+Module function: Preview, camera, code scan
 
 Note: The BC25PA platform does not support this module function.
 
@@ -10332,7 +10439,7 @@ Before using the preview, you need to initialize LCD.
 | *cam_h*       | int  | *camera Vertical resolution*                                 |
 | *lcd_w*       | int  | *LCD horizontal resolution*                                  |
 | *lcd_h*       | int  | *LCD vertical resolution*                                    |
-| perview_level | int  | Preview level[1,2]. The higher the level, the smoother the image and the greater the consumption of resources. |
+| perview_level | int  | Preview level[1,2]. Level 2 only for ASR platform. The higher the level, the smoother the image and the greater the consumption of resources. |
 
 * Return Value
 
@@ -10395,10 +10502,10 @@ Before using  code scan , you need to initialize LCD.
 | Parameter     | Type | Description                                                  |
 | ------------- | ---- | ------------------------------------------------------------ |
 | model         | int  | camera model:<br />*0: gc032a spi*<br />*1: bf3901 spi*      |
-| decode_level  | int  | code scan level，The higher the level, the better the recognition result but the greater the resource consumption* |
+| decode_level  | int  | code scan level[1,2]，Level 2 only for ASR platform. The higher the level, the better the recognition result but the greater the resource consumption* |
 | cam_w         | int  | *camera horizontal resolution*                               |
 | *cam_h*       | int  | *camera vertical resolution*                                 |
-| perview_level | int  | Preview level[1,2]. The higher the level, the smoother the image and the greater the consumption of resources. |
+| perview_level | int  | Preview level[1,2]. Level 2 only for ASR platform. The higher the level, the smoother the image and the greater the consumption of resources.<br />when it is equal to 0, there is no LCD preview function. There is no need to initialize the LCD in advance. <br/> when it is equal to 1 or 2, the LCD must be initialized first |
 | *lcd_w*       | int  | *LCD horizontal resolution*                                  |
 | *lcd_h*       | int  | *LCD vertical resolution*                                    |
 
@@ -10536,7 +10643,7 @@ Camera function.
 |Model | int | camera model: <br/> * 0: gc032a spi * <br/> * 1: bf3901 spi *|
 | cam_ W | int | camera horizontal resolution|
 | *cam_ H * | int | * camera vertical resolution *|
-| perview_ Level | int | preview level [0,2]. The higher the level, the smoother the image and the greater the resource consumption<br/> when it is equal to 0, there is no LCD preview function <br/> when it is equal to 1 or 2, the LCD must be initialized first|
+| perview_ Level | int | preview level [0,2]. Level 2 only for ASR platform. The higher the level, the smoother the image and the greater the resource consumption<br/> when it is equal to 0, there is no LCD preview function. There is no need to initialize the LCD in advance.  <br/> when it is equal to 1 or 2, the LCD must be initialized first |
 | *lcd_ W * | int | LCD horizontal resolution|
 | *lcd_ H * | int | * LCD vertical resolution *|
 
@@ -11145,7 +11252,7 @@ $GNGSA,A,3,31,3
 
 Module function: the module provides a bare flash area and a special read-write interface for customers to store important information, and the information will not be lost after burning the firmware (burning the firmware without this function cannot be guaranteed not to be lost). Provide a storage and read interface, not a delete interface.
 
-At present, only ec600n and ec600s series projects are supported
+At present, only ec600n series projects are supported
 
 ##### Data storage
 
@@ -11197,10 +11304,10 @@ databuf = '\x31\x32\x33\x34\x35\x36\x37\x38'
 SecureData.Store(1, databuf, 8)
 #Define an array with a length of 20 to read the stored data
 buf = bytearray(20)
-#Read the data in the storage area with index 1 into buf, and store the length of the read data in the variable len
-len = SecureData.Read(1, buf, 20)
+#Read the data in the storage area with index 1 into buf, and store the length of the read data in the variable length
+length = SecureData.Read(1, buf, 20)
 #Output read data
-print(buf[:len])
+print(buf[:length])
 ```
 
 * implementation results
@@ -11211,8 +11318,8 @@ print(buf[:len])
 >>> SecureData.Store(1, databuf, 8)
 0
 >>> buf = bytearray(20)
->>> len = SecureData.Read(1, buf, 20)
->>> print(buf[:len])
+>>> length = SecureData.Read(1, buf, 20)
+>>> print(buf[:length])
 bytearray(b'12345678')
 >>> 
 ```
@@ -11221,7 +11328,7 @@ bytearray(b'12345678')
 
 #### NB Internet of things cloud platform
 
-Module function: Provide docking IoT cloud platform function, provide connection To IoT cloud platform. Through the communication function of the IoT cloud platform and module devices, it currently supports China Telecom lot IoT platform, China Telecom AEP IoT platform and China Mobile onenet IoT platform. The quecthing version does not include this module.
+Module function: Provide the function of connecting to the IoT cloud platform, and provide the connection to the IoT cloud platform. Through the communication function of the IoT cloud platform and module devices, it currently supports China Telecom lot IoT platform, China Telecom AEP IoT platform and China Mobile onenet IoT platform. The quecthing version does not contain this module.
 Module name: nb(lowercase)
 
 Support platform: BC25PA
@@ -11348,7 +11455,7 @@ True
 
 ###### Create AEP object
 
-> **aep=AEP(ip,port)**
+> **AEP(ip,port,model,psk)**
 
 - **Parameter**
 
@@ -11356,31 +11463,49 @@ True
 | --------- | ------ | ------------------------------------------------------------ |
 | ip        | string | The server IP address of the Internet of things platform, with a maximum length of 16. |
 | port      | string | Server port of Internet of things platform, maximum length 5. |
-
+| model | int | 0 Set the receiving data mode to buffer mode, no URC report when new data is received<br/> 1 Set the receiving data mode to direct spitting mode, when new data is received, it will be reported immediately through URC.<br/> 2 Set the receiving data mode to buffer mode, and only report the indication URC when new data is received. Can be omitted, defaults to 1. |
+| psk | string | Hexadecimal string type. The key of the encrypted device, which can be generated by the platform or set independently when the encrypted device is registered on the platform side. The maximum supported length is 256 bytes. It can be omitted |
 - Example
 
 ```python
 >>> from nb import AEP
 >>> aep=AEP("221.229.214.202","5683")
 ```
+###### set callback function
 
+> **aep.set_event_callcb(usrfunc)**
+- parameters
+
+| Parameters | Type | Description |
+| ---- | ------ | ------------------------------------- -------- |
+| usrfunc | func(data) | call usrfunc when an event occurs |
+- func(data) parameter description:
+| Parameters | Type | Description |
+| ---- | ------ | ------------------------------------- -------- |
+| data | list | data[0]:event_id,event type><br/>data[1]:event_code,event type corresponding return code><br/>data[2]:recv_data,data><br/>data [3]: data_len, data length><br/> |
+
+- Notice
+    For the description of event_id, event_code, recv_data, data_len, see [event description] (# event description) in this module. This function, it is recommended to register before connecting to prevent event loss.
+-
 ###### Connect to AEP cloud platform
 
-> **aep.connect()**
+> **aep.connect(timeout)**
 
 - Parameter
 
-  * None.
+    Type: int, timeout, unit (ms), if no parameter is entered, the default is 30s
+
+    Note: The worst-case blocking duration of timeout failure is: 15s+timeout. Concurrent operations are not supported.
 
 - Return Value
 
   * Success - 0
-  * Failed - not 0
+  * Failed - -1
 
 - Example
 
 ```python
->>> aep.connect()
+>>> aep.connect(3000)
 0
 ```
 
@@ -11407,7 +11532,14 @@ True
 
 ###### Receive data
 
-> **aep.recv(data_len,data)**
+> **aep.recv(data_len,data，timeout))**
+
+- Instructions for use, the effect of the [model](#create AEP object) value on this function is as follows
+| model | Description |
+| -------- | ---------------------------------------- -------------------- |
+|0| is the cache mode, the cloud platform sends the data to the module, the module will not have any active prompt action, but can only read it actively. |
+|1| is the direct spit mode, the cloud platform sends data to the module, the module will spit the received data directly to urc, and the callback function set by set_event_callcb(usrfunc) will directly take over the received data and the data length. |
+|2| is the cache mode. When there is no cached data, the cloud platform will send data to the module, and the module will report the event through the callback function usrfunc, indicating that there is cached data to be read (the cloud platform sends data to the module, the module The group judges that the cache is empty and reports the event to indicate that there is data arriving, and the cached data is not empty and does not report the event)|
 
 - **Parameter**
 
@@ -11415,6 +11547,7 @@ True
 | --------- | ------ | ------------------------------------------------------------ |
 | data_len  | int    | Expected accepted data length (note that this parameter is adjusted according to the actual length of data, and the minimum value is taken according to the comparison between the capacity of data variable and data_len) |
 | data      | string | Store received data                                          |
+| timeout | int | Timeout time, in ms, default 30s if not entered. |
 
 - Note
 
@@ -11434,15 +11567,24 @@ True
 
 ###### Send data
 
-> **aep.send(data_len,data,type)**
+> **aep.send(data_len,data,type,timeout)**
+
+- Instructions for use:
+    In the timeout failure state, the worst-case blocking duration is: 5s+timeout. Concurrent operations are not supported.
 
 - **Parameter**
 
 | Parameter | Type   | Description                                                  |
 | --------- | ------ | ------------------------------------------------------------ |
-| data_len  | int    | Expected Send data length (note that this parameter is adjusted according to the actual length of data, and the minimum value is taken according to the comparison between the capacity of data variable and data_len),Non blocking|
-| data      | string | Data to be sent,The maximum supported data length is 1024 bytes                                            |
-| type      | int    | Indicates that the core network releases the RRC connection with the module: 0 - no indication. 1 - indicates that no further uplink or downlink data is expected after the packet uplink data, and the core network can release it immediately. 2 - indicates that a single downlink packet with a corresponding reply is expected in the uplink data of the packet, and the core network will release it immediately after distribution. |
+| data_len | int | The length of the data expected to be sent (note that this parameter is adjusted according to the actual length of the data, and the minimum value is taken according to the comparison between the capacity of the data variable and data_len), non-blocking. |
+| data | string | Data to be sent, up to 1024 bytes of data. |
+| type | int | Indicates that the core network releases the RRC connection with the module:<br/>0-send NON data and set the RAI auxiliary release flag carried by the module to send data to 0<br/>1-send NON data and Set the RAI auxiliary release flag carried by the module to send data to 1<br/> 2- Send NON data and set the RAI auxiliary release flag carried by the module to send data to 2<br/> 100- Send CON data and the module sends The RAI auxiliary release flag carried by the data is set to 0<br/> 101- Send CON data and set the RAI auxiliary release flag carried by the module to send data to 1<br/> 102- Send CON data and send the data to the module. The carried RAI auxiliary release flag is set to 2 |
+| timeout | int | Timeout time, in ms, if not input, the default is 30s |
+
+- RAI Auxiliary Release Marker Description
+| | Description |
+| -------------- | ---------------------------------- -------------------------- |
+| RAI | The RAI flag is used to instruct the core network to release the RRC connection to the module. :<br/>When RAI is 0, there is no indication. <br/>When RAI is 1, it indicates that no further upstream or downstream data is expected after the upstream data of the packet, and the core network can release it immediately. <br/>When RAI is 2, it indicates that a single downlink data packet corresponding to the reply is expected after the uplink data of the packet, and the core network releases it immediately after sending it. |
 
 - Note
 
@@ -11461,6 +11603,34 @@ bytearray(b'313233')
 >>> aep.send(6,data,0)
 0
 ```
+###### Check connection status
+> **aep.connect_check()**
+- parameters
+
+  None
+  
+- Return value
+   Return value type: string
+   The meaning is as follows
+  
+  | Return value | Description |
+  | -------- | ------ |
+  | UNINITIALISED |Uninitialized state |
+  | REGISTERING |Connecting |
+  | REJECTED_BY_SERVER |The connection request was rejected by the server |
+  | TIMEOUT |Connection timed out |
+  | REGISTERED |Connected Not Subscribed |
+  | REGISTERED_AND_OBSERVED |Connected and subscribed |
+  | DEREGISTERED | Disconnected |
+  | RESUMPTION_FAILED DTLS |Session recovery failed |
+  | FALIED |Failed to execute the function |
+  
+ - Example
+
+````python
+>>> aep.connect_check()
+'UNINITIALISED\r\n'
+````
 
 ###### close the connection
 > **aep.close()**
@@ -11481,7 +11651,22 @@ bytearray(b'313233')
 True
 ```
 
-
+###### Event Description
+The general description of the events of this module is as follows:
+|event_id |event_code |recv_data |data_len |description|
+| -------------- | ---------|----------|------------- |---------------------------- |
+|0 |0 |NULL |0 |modem enters psm and reports this event. At this time, the module does not accept the network data sent to the module, and can break the psm state on the modem side by actively sending data. |
+|0 |1 |NULL |0 |modem exits psm mode and reports this event. |
+|22 |4 |NULL |0 |Call the interface to send CON type data, if the sending is successful, report this event|
+|22 |5 |NULL |0 |Call the interface to send CON type data, if the sending fails, report this event|
+|23 |6 |NULL |0 |The connection is successfully restored after waking up from deep sleep, and this event is reported. Reported when AEP.set_event_callcb(usrfunc) is called. |
+|23 |7 |NULL |0 |Failed to resume connection after wake-up from deep sleep, you can disconnect and reconnect. Reported when AEP.set_event_callcb(usrfunc) is called. |
+|24 |8 |NULL |0 |After the cloud platform issues the fota upgrade command, this event is reported when the module starts to download the differential upgrade package. |
+|24 |9 |NULL |0 |When the cloud platform issues the fota upgrade command, and the module fota upgrade is completed, this event is reported. |
+|25 |10 |NULL |0 |Received the RST packet from the cloud platform and actively reported this event. In this case, you need to disconnect and reconnect to complete the subscription for normal communication. |
+|27 |0 |data |data_len |Receive data from the cloud platform, report this event when modem=1 and call set_event_callcb(usrfunc) to set the callback function. |
+|28 |0 |NULL |0 |Receive data from the cloud platform and report this event when modem=2 and the module has no cached data (when aep.check() returns 0, it means that there is no cached data). |
+|others |0 |NULL |0 |Ignore such events|
 
 ###### Use example
 
@@ -11915,16 +12100,31 @@ dict_ CMD = {'data reporting': 0x02,
              'fixed downlink command': 0x06,
              'command response': 0x86
          }
-send_type={
-    'RAI_NONE':0,
-    'RAI_1':1,
-    'RAI_2':2
+send_type={'RAI_NONE':0,
+            'TYpe_001':1,
+            'TYpe_002':2,
+            'TYpe_100':100,
+            'TYpe_101':101,
+            'TYpe_102':102
 }
 servcei_info={
     'ip':"221.229.214.202",
     'port':"5683"
 }
-
+modem_type={
+    'cache_no_urc':0,
+    'no_cache':1,
+    'cache_have_urc':2
+}
+aep_event={
+    'psm_event':0,
+    'con_event':21,
+    'send_event':22,
+    'recover_event':23,
+    'rst_event':25,
+    'recv_event_data':27,
+    'recv_event_flag':28,
+}
 def aep_pack_cmdtype02(service_id,data_in):
     Data = hextostr (dict_cmd ['data reporting'], 1)
     data+=HexToStr(service_id,2)                #Convert serviceid to string
@@ -11981,8 +12181,6 @@ def aep_unpack(data_in):
     else:
         print('not support')
 
-aep=AEP(servcei_info['ip'],servcei_info['port'])
-
 def recv():
     data=bytearray(20)  
     ret=aep.recv(18,data)
@@ -12008,19 +12206,66 @@ def close():
     ret = aep.close()
     print('close ',ret)
     
+def deal_conn(data):
+    if data[1] == 0:
+        print('connect CtWing success!')
+    if data[1] == 3:
+        print('subscription /19/0/0 success!')
+        send()
+    if data[1] == -1 or data[1] == 1:
+        print('connect CtWing failed!')
+        aep.connect_check()
+def deal_recv(data):
+    if data[1] == 0:
+        aep_unpack(data[2])
+        print('will close')
+        close()
+    if data[1] == 5:
+        print('recv data from ctwing falied')
+        
+def deal_psm(data):
+    if data[1] == 0:
+        print('enter modem psm')
+    if data[1] == 1:
+        print('exit modem psm')
+def deal_send(data):
+    if data[1] == 4:
+        print('send data to ctwing success')
+    else:
+        print('send data to ctwing falied')
+        
+def deal_rst(data):
+    print('recv rst messge from platform')
+    close()
+def deal_recover(data):
+    print('deal_recover:',data)
+    
+def event_cb(args):
+    print('args:',args)
+    if args[0] == aep_event['con_event']:
+        deal_conn(args)
+    if args[0] == aep_event['send_event']:
+        deal_send(args)
+    if args[0] == aep_event['recv_event_data'] or args[0] == aep_event['recv_event_flag']:
+        deal_recv(args)
+    if args[0] == aep_event['rst_event']:
+        deal_rst(args)
+    if args[0] == aep_event['psm_event']:
+        deal_psm(args)
+    if args[0] == aep_event['recover_event']:
+        deal_recover(args)
+    
+def init():
+    
+    aep.set_event_callcb(event_cb)
+    connect()
+    
+
 loop_num = 0
 
 def do_task():
-    connect()
-    send()
-    global loop_num
-    while loop_num < 10:
-        loop_num=loop_num+1
-        utime.sleep(3)
-        ret = recv()
-        if ret == 0:
-            break
-    close()
+    init()
+aep=AEP(servcei_info['ip'],servcei_info['port'],modem_type['no_cache'])
 
 if __name__ == '__main__':
     do_task()

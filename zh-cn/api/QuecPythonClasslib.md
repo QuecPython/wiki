@@ -1386,6 +1386,70 @@ sim.setCallback(cb)
 
 
 
+##### DTMF识别使能接口
+
+> **voiceCall.dtmfDetEnable(enable)**
+
+DTMF识别使能接口，默认不开启DTMF识别
+
+* 参数
+
+| 参数     | 参数类型 | 参数说明                                                     |
+| -------- | -------- | ------------------------------------------------------------ |
+| enable   | int      | 使能开关，取值0/1,0：不开启DTMF识别，1：开启DTMF识别         |
+
+* 返回值
+
+  设置成功返回整型0，设置失败返回整型-1。
+
+* 示例
+
+见voiceCall.dtmfSetCb()接口示例
+
+
+
+##### 设置DTMF识别回调接口
+
+> **voiceCall.dtmfSetCb(cb)**
+
+设置DTMF识别回调接口
+
+* 参数
+
+| 参数     | 参数类型 | 参数说明                                                     |
+| -------- | -------- | ------------------------------------------------------------ |
+| cb       | function | 回调函数                                                     |
+
+* 返回值
+
+  设置成功返回整型0，设置失败返回整型-1。
+
+* 示例
+
+```
+>>> def cb(args):
+... print(args)
+...
+...
+...
+>>> voiceCall.dtmfSetCb(cb)
+0
+>>> voiceCall.dtmfDetEnable(1)
+0
+
+>>> voiceCall.callStart('13855169092')
+
+0
+>>>
+1   //手机端按下1，callback中会收到按下的字符“1”
+
+8   //手机端按下8
+
+9   //手机端按下9
+```
+
+
+
 ##### 设置控制呼叫转移
 
 > **voiceCall.setFw(reason, fwmode, phonenum)**
@@ -1746,13 +1810,13 @@ def voice_callback(args):
 
 模块功能：该模块提供短信功能相关接口。
 
-注意：BC25PA平台不支持此模块。
+注意：BC25PA/600M平台不支持此模块。
 
 ##### 发送TEXT类型消息
 
 > **sms.sendTextMsg(phoneNumber, msg, codeMode)**
 
-发送TEXT类型的消息。
+发送TEXT类型的消息（不支持发送空短信）。
 
 * 参数 
 
@@ -1783,7 +1847,7 @@ sms.sendTextMsg('18158626517', '这是一条夹杂中文与英文的测试短信
 
 > **sms.sendPduMsg(phoneNumber, msg, codeMode)**
 
-发送PDU类型的消息。
+发送PDU类型的消息（不支持发送空短信）。
 
 * 参数
 
@@ -1821,7 +1885,7 @@ if __name__ == '__main__':
 
 | 参数  | 参数类型 | 参数说明                                                     |
 | ----- | -------- | ------------------------------------------------------------ |
-| index | int      | 需删除短信的索引号<br/>如果设置短信存储在SIM卡，则范围0 ~ 49<br/>如果设置短信存储在ME，则范围0 ~ 179，注意，当短信存储在ME时，只有对应的index索引处有短信存在，才能删除成功，否则删除会失败 |
+| index | int      | 需删除短信的索引号                                           |
 
 * 返回值
 
@@ -1841,7 +1905,7 @@ if __name__ == '__main__':
 
 > **sms.setSaveLoc(mem1, mem2, mem3)**
 
-设置短信存储位置。开机默认存储位置为SIM卡。一般SIM卡最大可存储50条短信，用户在使用时，如果短信存储在SIM卡中，要注意及时清理历史短信，防止SIM卡存储短信满了导致收不到新的短信。
+设置短信存储位置。
 注意：ASR平台如果要改变接收消息的存储位置，需要重置MEM2 & MEM3，展锐平台只需设定MEM3即可（具体原因和平台底部的实现有关，此处不再赘述）
 
 * 参数
@@ -1941,7 +2005,7 @@ if __name__ == '__main__':
 
 | 参数  | 参数类型 | 参数说明                                                     |
 | ----- | -------- | ------------------------------------------------------------ |
-| index | int      | 需要获取短信的索引，范围0 ~ MAX-1，MAX为模块存储短信的最大数量，取决于储存在SIM卡还是其他位置。 |
+| index | int      | 需要获取短信的索引，范围0 ~ MAX-1，MAX为模块存储短信的最大数量 |
 
 * 返回值
 
@@ -1959,7 +2023,7 @@ if __name__ == '__main__':
 
 | 参数  | 参数类型 | 参数说明                     |
 | ----- | -------- | ---------------------------- |
-| index | int      | 需要获取短信的索引，范围0 ~ 49 |
+| index | int      | 需要获取短信的索引，范围0 ~ MAX-1，MAX为模块存储短信的最大数量 |
 
 * 返回值
 
@@ -2177,10 +2241,10 @@ sms.setCallback(cb)
 > **net.setApn(\*args)**
 
 设置APN，设置后需要重启或者通过 net.setModemFun(mode) 接口先切换到模式0，再切换到模式1才能生效。 
-  
+
 * 参数
 
-  该接口在Qualcomm/ASR_1803s/Unisoc(不包括EG915)平台为可变参函数,参数个数为2或7, 其他平台参数个数固定为2：
+  该接口在Qualcomm/ASR_1803s/ASR_1601/ASR_1606/Unisoc(不包括EG915)平台为可变参函数,参数个数为2或7, 其他平台参数个数固定为2：
     参数个数为2：net.setApn(apn, simid)
     参数个数为7：net.setApn(pid, iptype, apn, usrname, password, authtype, simid)
   
@@ -2223,7 +2287,7 @@ sms.setCallback(cb)
 
 * 参数
 
-  该接口在Qualcomm/ASR_1803s/Unisoc(不包括EG915)平台为可变参函数,参数个数为1或2, 其他平台参数个数固定为1：
+  该接口在Qualcomm/ASR_1803s/ASR_1601/ASR_1606/Unisoc(不包括EG915)平台为可变参函数,参数个数为1或2, 其他平台参数个数固定为1：
     参数个数为2：net.getApn(pid, simid)
     参数个数为1：net.getApn(simid)
 	
@@ -2252,7 +2316,7 @@ sms.setCallback(cb)
 '3gnet'
 >>> net.getApn(1,0)
 (1, '3gnet', 'mia', '123', 2)
-``` 
+```
 
 
 
@@ -3480,7 +3544,7 @@ download_list = [{'url': 'http://www.example.com/app.py', 'file_name': '/usr/app
 
 模块功能：音频播放，支持TTS、mp3以及AMR文件播放。
 
-注意：展锐平台、BC25PA平台不支持此模块。
+注意：BC25PA平台不支持此模块。
 
 ##### TTS 
 
@@ -4329,11 +4393,17 @@ dial_play_ec600u()
 
 > **import audio**
 >
-> **record = audio.Record()**
+> **record = audio.Record(device)**
+
+不带参数时，默认使用听筒播放；带参数时，设置播放的设备。
+
+注意：带参数时，参数应与audio.audio()设置的参数一致。
 
 * 参数
 
-  无
+| 参数   | 参数类型 | 参数说明                                        |
+| ------ | -------- | ----------------------------------------------- |
+| device | int      | 输出通道<br/>0 - 听筒<br/>1 - 耳机<br/>2 - 喇叭 |
 
 * 返回值
 
@@ -4343,7 +4413,7 @@ dial_play_ec600u()
 
 ```python
 import audio 
-record_test = audio.Record()
+record_test = audio.Record()#不传参数，使用听筒播放
 ```
 
 
@@ -4363,13 +4433,13 @@ record_test = audio.Record()
 
 * 返回值
 
-   0： 成功
+    0： 成功
 
   -1:  文件覆盖失败
 
   -2：文件打开失败
 
-  -3: 文件正在使用
+  -3： 文件正在使用
 
   -4：通道设置错误
 
@@ -4870,7 +4940,7 @@ while 1:
 
 
 
-###### 获取模块启动原因
+###### 获取模块开机原因
 
 > **Power. powerOnReason()**
 
@@ -5146,12 +5216,12 @@ if __name__ == '__main__':
 
 ###### 常量说明
 
-| 常量     | 说明     | 适用平台                                  |
-| -------- | -------- | ----------------------------------------- |
-| ADC.ADC0 | ADC通道0 | EC600S/EC600N/EC100Y/EC600U/EC200U/BC25PA/EC800N |
-| ADC.ADC1 | ADC通道1 | EC600S/EC600N/EC600U/EC200U               |
-| ADC.ADC2 | ADC通道2 | EC600U/EC200U                             |
-| ADC.ADC3 | ADC通道3 | EC600U                                    |
+| 常量     | 说明     | 适用平台                                                     |
+| -------- | -------- | ------------------------------------------------------------ |
+| ADC.ADC0 | ADC通道0 | EC600S/EC600N/EC100Y/EC600U/EC200U/BC25PA/EC800N/BG95M3/EC200A |
+| ADC.ADC1 | ADC通道1 | EC600S/EC600N/EC600U/EC200U/EC200A                           |
+| ADC.ADC2 | ADC通道2 | EC600U/EC200U                                                |
+| ADC.ADC3 | ADC通道3 | EC600U                                                       |
 
 
 
@@ -5196,7 +5266,7 @@ ADC功能初始化。
 
 | 参数 | 参数类型 | 参数说明                                                     |
 | ---- | -------- | ------------------------------------------------------------ |
-| ADCn | int      | ADC通道<br/>EC100Y平台对应引脚如下<br/>ADC0 – 引脚号39<br/>ADC1 – 引脚号81<br/>EC600S/EC600N平台对应引脚如下<br/>ADC0 – 引脚号19<br/>EC800N/BC25PA平台对应引脚如下<br/>ADC0 – 引脚号9<br/>EC600U平台对应引脚如下<br />ADC0 – 引脚号19<br/>ADC1 – 引脚号20<br />ADC2 – 引脚号113<br />ADC3 – 引脚号114<br />EC200U平台对应引脚如下<br />ADC0 – 引脚号45<br/>ADC1 – 引脚号44<br />ADC2 – 引脚号43<br /> |
+| ADCn | int      | ADC通道<br/>EC100Y平台对应引脚如下<br/>ADC0 – 引脚号39<br/>ADC1 – 引脚号81<br/>EC600S/EC600N平台对应引脚如下<br/>ADC0 – 引脚号19<br/>EC800N平台对应引脚如下<br/>ADC0 – 引脚号9<br/>EC600U平台对应引脚如下<br />ADC0 – 引脚号19<br/>ADC1 – 引脚号20<br />ADC2 – 引脚号113<br />ADC3 – 引脚号114<br />EC200U平台对应引脚如下<br />ADC0 – 引脚号45<br/>ADC1 – 引脚号44<br />ADC2 – 引脚号43<br />EC200A平台对应引脚如下<br/>ADC0 – 引脚号45<br/>ADC1 – 引脚号44<br/>BG95M3平台对应引脚如下<br/>ADC0 – 引脚号24 |
 
 * 返回值
 
@@ -5545,47 +5615,53 @@ USBNET.open()
 
 | 常量             | 适配平台                   | 说明      |
 | ---------------- | ------------------------ | -------- |
-| Pin.GPIO1        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA/EC800N | GPIO1    |
-| Pin.GPIO2        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA/EC800N | GPIO2    |
-| Pin.GPIO3        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA/EC800N | GPIO3    |
-| Pin.GPIO4        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA/EC800N | GPIO4    |
-| Pin.GPIO5        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA/EC800N | GPIO5    |
-| Pin.GPIO6        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA/EC800N | GPIO6    |
-| Pin.GPIO7        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA/EC800N | GPIO7    |
-| Pin.GPIO8        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA/EC800N | GPIO8    |
-| Pin.GPIO9        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA/EC800N | GPIO9    |
-| Pin.GPIO10       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA/EC800N | GPIO10   |
-| Pin.GPIO11       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA/EC800N | GPIO11   |
-| Pin.GPIO12       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA/EC800N | GPIO12   |
-| Pin.GPIO13       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA/EC800N | GPIO13   |
-| Pin.GPIO14       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA/EC800N | GPIO14   |
-| Pin.GPIO15       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA/EC800N | GPIO15   |
-| Pin.GPIO16       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA/EC800N | GPIO16   |
-| Pin.GPIO17       | EC600S / EC600N / EC100Y/EC800N/BC25PA | GPIO17   |
-| Pin.GPIO18       | EC600S / EC600N / EC100Y/EC800N/BC25PA | GPIO18   |
-| Pin.GPIO19       | EC600S / EC600N / EC100Y/EC800N | GPIO19   |
-| Pin.GPIO20       | EC600S / EC600N/EC800N   | GPIO20   |
-| Pin.GPIO21       | EC600S / EC600N/EC800N   | GPIO21   |
-| Pin.GPIO22       | EC600S / EC600N/EC800N   | GPIO22   |
-| Pin.GPIO23       | EC600S / EC600N/EC800N   | GPIO23   |
-| Pin.GPIO24       | EC600S / EC600N/EC800N   | GPIO24   |
-| Pin.GPIO25       | EC600S / EC600N/EC800N   | GPIO25   |
-| Pin.GPIO26       | EC600S / EC600N/EC800N   | GPIO26   |
-| Pin.GPIO27       | EC600S / EC600N/EC800N   | GPIO27   |
-| Pin.GPIO28       | EC600S / EC600N/EC800N   | GPIO28   |
-| Pin.GPIO29       | EC600S / EC600N/EC800N   | GPIO29   |
-| Pin.GPIO30 | EC600S / EC600N/EC800N | GPIO30 |
-| Pin.GPIO31 | EC600S / EC600N/EC800N | GPIO31 |
-| Pin.GPIO32 | EC600S / EC600N/EC800N | GPIO32 |
-| Pin.GPIO33 | EC600S / EC600N/EC800N | GPIO33 |
-| Pin.GPIO34 | EC600S / EC600N/EC800N | GPIO34 |
-| Pin.GPIO35 | EC600S / EC600N/EC800N | GPIO35 |
-| Pin.GPIO36 | EC600S / EC600N/EC800N | GPIO36 |
-| Pin.GPIO37 | EC600S / EC600N/EC800N | GPIO37 |
-| Pin.GPIO38 | EC600S / EC600N | GPIO38 |
-| Pin.GPIO39 | EC600S / EC600N | GPIO39 |
-| Pin.GPIO40 | EC600S / EC600N | GPIO40 |
-| Pin.GPIO41 | EC600S / EC600N | GPIO41 |
+| Pin.GPIO1        | EC600S / EC600N / EC100Y/EC600U/EC200U/EC200A/BC25PA/EC800N/BG95M3 | GPIO1    |
+| Pin.GPIO2        | EC600S / EC600N / EC100Y/EC600U/EC200U/EC200A/BC25PA/EC800N/BG95M3 | GPIO2    |
+| Pin.GPIO3        | EC600S / EC600N / EC100Y/EC600U/EC200U/EC200A/BC25PA/EC800N/BG95M3 | GPIO3    |
+| Pin.GPIO4        | EC600S / EC600N / EC100Y/EC600U/EC200U/EC200A/BC25PA/EC800N/BG95M3 | GPIO4    |
+| Pin.GPIO5        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA/EC800N/BG95M3 | GPIO5    |
+| Pin.GPIO6        | EC600S / EC600N / EC100Y/EC600U/EC200U/EC200A/BC25PA/EC800N/BG95M3 | GPIO6    |
+| Pin.GPIO7        | EC600S / EC600N / EC100Y/EC600U/EC200U/EC200A/BC25PA/EC800N/BG95M3 | GPIO7    |
+| Pin.GPIO8        | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA/EC800N/BG95M3 | GPIO8    |
+| Pin.GPIO9        | EC600S / EC600N / EC100Y/EC600U/EC200U/EC200A/BC25PA/EC800N/BG95M3 | GPIO9    |
+| Pin.GPIO10       | EC600S / EC600N / EC100Y/EC600U/EC200U/EC200A/BC25PA/EC800N/BG95M3 | GPIO10   |
+| Pin.GPIO11       | EC600S / EC600N / EC100Y/EC600U/EC200U/EC200A/BC25PA/EC800N/BG95M3 | GPIO11   |
+| Pin.GPIO12       | EC600S / EC600N / EC100Y/EC600U/EC200U/EC200A/BC25PA/EC800N/BG95M3 | GPIO12   |
+| Pin.GPIO13       | EC600S / EC600N / EC100Y/EC600U/EC200U/EC200A/BC25PA/EC800N/BG95M3 | GPIO13   |
+| Pin.GPIO14       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA/EC800N/BG95M3 | GPIO14   |
+| Pin.GPIO15       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA/EC800N/BG95M3 | GPIO15   |
+| Pin.GPIO16       | EC600S / EC600N / EC100Y/EC600U/EC200U/BC25PA/EC800N/BG95M3 | GPIO16   |
+| Pin.GPIO17       | EC600S / EC600N / EC100Y/EC600U/EC200U/EC800N/BC25PA/BG95M3 | GPIO17   |
+| Pin.GPIO18       | EC600S / EC600N / EC100Y/EC600U/EC200U/EC200A/EC800N/BC25PA/BG95M3 | GPIO18   |
+| Pin.GPIO19       | EC600S / EC600N / EC100Y/EC600U/EC200U/EC200A/EC800N/BG95M3 | GPIO19   |
+| Pin.GPIO20       | EC600S / EC600N/EC600U/EC200U/EC200A/EC800N/BG95M3 | GPIO20   |
+| Pin.GPIO21       | EC600S / EC600N/EC600U/EC200U/EC800N/BG95M3 | GPIO21   |
+| Pin.GPIO22       | EC600S / EC600N/EC600U/EC200U/EC200A/EC800N | GPIO22   |
+| Pin.GPIO23       | EC600S / EC600N/EC600U/EC200U/EC800N | GPIO23   |
+| Pin.GPIO24       | EC600S / EC600N/EC600U/EC200U/EC800N | GPIO24   |
+| Pin.GPIO25       | EC600S / EC600N/EC600U/EC200U/EC800N | GPIO25   |
+| Pin.GPIO26       | EC600S / EC600N/EC600U/EC200U/EC800N | GPIO26   |
+| Pin.GPIO27       | EC600S / EC600N/EC600U/EC200U/EC800N | GPIO27   |
+| Pin.GPIO28       | EC600S / EC600N/EC600U/EC200U/EC200A/EC800N | GPIO28   |
+| Pin.GPIO29       | EC600S / EC600N/EC600U/EC200U/EC200A/EC800N | GPIO29   |
+| Pin.GPIO30 | EC600S / EC600N/EC600U/EC200U/EC200A/EC800N | GPIO30 |
+| Pin.GPIO31 | EC600S / EC600N/EC600U/EC200U/EC800N | GPIO31 |
+| Pin.GPIO32 | EC600S / EC600N/EC600U/EC200U/EC800N | GPIO32 |
+| Pin.GPIO33 | EC600S / EC600N/EC600U/EC200U/EC800N | GPIO33 |
+| Pin.GPIO34 | EC600S / EC600N/EC600U/EC200U/EC800N | GPIO34 |
+| Pin.GPIO35 | EC600S / EC600N/EC600U/EC200U/EC200A/EC800N | GPIO35 |
+| Pin.GPIO36 | EC600S / EC600N/EC600U/EC200U/EC200A/EC800N | GPIO36 |
+| Pin.GPIO37 | EC600S / EC600N/EC600U/EC200U/EC800N | GPIO37 |
+| Pin.GPIO38 | EC600S / EC600N/EC600U/EC200U | GPIO38 |
+| Pin.GPIO39 | EC600S / EC600N/EC600U/EC200U | GPIO39 |
+| Pin.GPIO40 | EC600S / EC600N/EC600U/EC200U | GPIO40 |
+| Pin.GPIO41 | EC600S / EC600N/EC600U/EC200U | GPIO41 |
+| Pin.GPIO42 | EC600U/EC200U | GPIO42 |
+| Pin.GPIO43 | EC600U/EC200U/EC200A | GPIO43 |
+| Pin.GPIO44 | EC600U/EC200U/EC200A | GPIO44 |
+| Pin.GPIO45 | EC600U/EC200U/EC200A | GPIO45 |
+| Pin.GPIO46 | EC600U/EC200U/EC200A | GPIO46 |
+| Pin.GPIO47 | EC200U/EC200A | GPIO47 |
 | Pin.IN           | --                       | 输入模式 |
 | Pin.OUT          | --                       | 输出模式 |
 | Pin.PULL_DISABLE | --                       | 浮空模式 |
@@ -5606,7 +5682,7 @@ USBNET.open()
 
 | 参数      | 类型 | 说明                                                         |
 | :-------- | :--- | ------------------------------------------------------------ |
-| GPIOn     | int  | 引脚号<br />EC100YCN平台引脚对应关系如下（引脚号为外部引脚编号）：<br />GPIO1 – 引脚号22<br />GPIO2 – 引脚号23<br />GPIO3 – 引脚号38<br />GPIO4 – 引脚号53<br />GPIO5 – 引脚号54<br />GPIO6 – 引脚号104<br />GPIO7 – 引脚号105<br />GPIO8 – 引脚号106<br />GPIO9 – 引脚号107<br />GPIO10 – 引脚号178<br />GPIO11 – 引脚号195<br />GPIO12 – 引脚号196<br />GPIO13 – 引脚号197<br />GPIO14 – 引脚号198<br />GPIO15 – 引脚号199<br />GPIO16 – 引脚号203<br />GPIO17 – 引脚号204<br />GPIO18 – 引脚号214<br />GPIO19 – 引脚号215<br />EC600SCN/EC600NCN平台引脚对应关系如下（引脚号为模块外部引脚编号）：<br />GPIO1 – 引脚号10<br />GPIO2 – 引脚号11<br />GPIO3 – 引脚号12<br />GPIO4 – 引脚号13<br />GPIO5 – 引脚号14<br />GPIO6 – 引脚号15<br />GPIO7 – 引脚号16<br />GPIO8 – 引脚号39<br />GPIO9 – 引脚号40<br />GPIO10 – 引脚号48<br />GPIO11 – 引脚号58<br />GPIO12 – 引脚号59<br />GPIO13 – 引脚号60<br />GPIO14 – 引脚号61<br />GPIO15 – 引脚号62<br/>GPIO16 – 引脚号63<br/>GPIO17 – 引脚号69<br/>GPIO18 – 引脚号70<br/>GPIO19 – 引脚号1<br/>GPIO20 – 引脚号3<br/>GPIO21 – 引脚号49<br/>GPIO22 – 引脚号50<br/>GPIO23 – 引脚号51<br/>GPIO24 – 引脚号52<br/>GPIO25 – 引脚号53<br/>GPIO26 – 引脚号54<br/>GPIO27 – 引脚号55<br/>GPIO28 – 引脚号56<br/>GPIO29 – 引脚号57<br />GPIO30 – 引脚号2<br />GPIO31 – 引脚号66<br />GPIO32 – 引脚号65<br />GPIO33 – 引脚号67<br />GPIO34 – 引脚号64<br />GPIO35 – 引脚号4<br />GPIO36 – 引脚号31<br />GPIO37 – 引脚号32<br />GPIO38 – 引脚号33<br />GPIO39 – 引脚号34<br />GPIO40 – 引脚号71<br />GPIO41 – 引脚号72<br />EC600UCN平台引脚对应关系如下（引脚号为模块外部引脚编号）<br />GPIO1 – 引脚号61<br />GPIO2 – 引脚号58<br />GPIO3 – 引脚号34<br />GPIO4 – 引脚号60<br />GPIO5 – 引脚号69<br />GPIO6 – 引脚号70<br />GPIO7 – 引脚号123<br />GPIO8 – 引脚号118<br />GPIO9 – 引脚号9<br />GPIO10 – 引脚号1<br />GPIO11 – 引脚号4<br />GPIO12 – 引脚号3<br />GPIO13 – 引脚号2<br />GPIO14 – 引脚号54<br />GPIO15 – 引脚号57<br/>GPIO16 – 引脚号56<br/>EC200UCN平台引脚对应关系如下（引脚号为模块外部引脚编号）<br />GPIO1 – 引脚号27<br />GPIO2 – 引脚号26<br />GPIO3 – 引脚号24<br />GPIO4 – 引脚号25<br />GPIO5 – 引脚号13<br />GPIO6 – 引脚号135<br />GPIO7 – 引脚号136<br />GPIO8 – 引脚号133<br />GPIO9 – 引脚号3<br />GPIO10 – 引脚号40<br />GPIO11 – 引脚号37<br />GPIO12 – 引脚号38<br />GPIO13 – 引脚号39<br />GPIO14 – 引脚号5<br />GPIO15 – 引脚号141<br/>GPIO16 – 引脚号142<br/>EC800NCN平台引脚对应关系如下（引脚号为模块外部引脚编号）<br />GPIO1 – 引脚号30<br />GPIO2 – 引脚号31<br />GPIO3 – 引脚号32<br />GPIO4 – 引脚号33<br />GPIO5 – 引脚号49<br />GPIO6 – 引脚号50<br />GPIO7 – 引脚号51<br />GPIO8 – 引脚号52<br />GPIO9 – 引脚号53<br />GPIO10 – 引脚号54<br />GPIO11 – 引脚号55<br />GPIO12 – 引脚号56<br />GPIO13 – 引脚号57<br />GPIO14 – 引脚号58<br />GPIO15 – 引脚号80<br/>GPIO16 – 引脚号81<br/>GPIO17 – 引脚号76<br/>GPIO18 – 引脚号77<br/>GPIO19 – 引脚号82<br/>GPIO20 – 引脚号83<br/>GPIO21 – 引脚号86<br/>GPIO22 – 引脚号87<br/>GPIO23 – 引脚号66<br/>GPIO24 – 引脚号67<br/>GPIO25 – 引脚号17<br/>GPIO26 – 引脚号18<br/>GPIO27 – 引脚号19<br/>GPIO28 – 引脚号20<br/>GPIO29 – 引脚号21<br />GPIO30 – 引脚号22<br />GPIO31 – 引脚号23<br />GPIO32 – 引脚号28<br />GPIO33 – 引脚号29<br />GPIO34 – 引脚号38<br />GPIO35 – 引脚号39<br />GPIO36 – 引脚号16<br />GPIO37 – 引脚号78<br />BC25PA平台引脚对应关系如下（引脚号为模块外部引脚编号）<br />GPIO1 – 引脚号3<br />GPIO2 – 引脚号4<br />GPIO3 – 引脚号5<br />GPIO4 – 引脚号6<br />GPIO5 – 引脚号16<br />GPIO6 – 引脚号20<br />GPIO7 – 引脚号21<br />GPIO8 – 引脚号22<br />GPIO9 – 引脚号23<br />GPIO10 – 引脚号25<br />GPIO11 – 引脚号28<br />GPIO12 – 引脚号29<br />GPIO13 – 引脚号30<br />GPIO14 – 引脚号31<br />GPIO15 – 引脚号32<br/>GPIO16 – 引脚号33<br/>GPIO17 – 引脚号2<br/>GPIO18 – 引脚号8<br/> |
+| GPIOn     | int  | 引脚号<br />EC100YCN平台引脚对应关系如下（引脚号为外部引脚编号）：<br />GPIO1 – 引脚号22<br />GPIO2 – 引脚号23<br />GPIO3 – 引脚号38<br />GPIO4 – 引脚号53<br />GPIO5 – 引脚号54<br />GPIO6 – 引脚号104<br />GPIO7 – 引脚号105<br />GPIO8 – 引脚号106<br />GPIO9 – 引脚号107<br />GPIO10 – 引脚号178<br />GPIO11 – 引脚号195<br />GPIO12 – 引脚号196<br />GPIO13 – 引脚号197<br />GPIO14 – 引脚号198<br />GPIO15 – 引脚号199<br />GPIO16 – 引脚号203<br />GPIO17 – 引脚号204<br />GPIO18 – 引脚号214<br />GPIO19 – 引脚号215<br />EC600SCN/EC600NCN平台引脚对应关系如下（引脚号为模块外部引脚编号）：<br />GPIO1 – 引脚号10<br />GPIO2 – 引脚号11<br />GPIO3 – 引脚号12<br />GPIO4 – 引脚号13<br />GPIO5 – 引脚号14<br />GPIO6 – 引脚号15<br />GPIO7 – 引脚号16<br />GPIO8 – 引脚号39<br />GPIO9 – 引脚号40<br />GPIO10 – 引脚号48<br />GPIO11 – 引脚号58<br />GPIO12 – 引脚号59<br />GPIO13 – 引脚号60<br />GPIO14 – 引脚号61<br />GPIO15 – 引脚号62<br/>GPIO16 – 引脚号63<br/>GPIO17 – 引脚号69<br/>GPIO18 – 引脚号70<br/>GPIO19 – 引脚号1<br/>GPIO20 – 引脚号3<br/>GPIO21 – 引脚号49<br/>GPIO22 – 引脚号50<br/>GPIO23 – 引脚号51<br/>GPIO24 – 引脚号52<br/>GPIO25 – 引脚号53<br/>GPIO26 – 引脚号54<br/>GPIO27 – 引脚号55<br/>GPIO28 – 引脚号56<br/>GPIO29 – 引脚号57<br />GPIO30 – 引脚号2<br />GPIO31 – 引脚号66<br />GPIO32 – 引脚号65<br />GPIO33 – 引脚号67<br />GPIO34 – 引脚号64<br />GPIO35 – 引脚号4<br />GPIO36 – 引脚号31<br />GPIO37 – 引脚号32<br />GPIO38 – 引脚号33<br />GPIO39 – 引脚号34<br />GPIO40 – 引脚号71<br />GPIO41 – 引脚号72<br />EC600UCN平台引脚对应关系如下（引脚号为模块外部引脚编号）<br />GPIO1 – 引脚号61(不可与GPIO31同时为gpio)<br />GPIO2 – 引脚号58(不可与GPIO32同时为gpio)<br />GPIO3 – 引脚号34(不可与GPIO41同时为gpio)<br />GPIO4 – 引脚号60(不可与GPIO34同时为gpio)<br />GPIO5 – 引脚号69(不可与GPIO35同时为gpio)<br />GPIO6 – 引脚号70(不可与GPIO36同时为gpio)<br />GPIO7 – 引脚号123(不可与GPIO43同时为gpio)<br />GPIO8 – 引脚号118<br />GPIO9 – 引脚号9<br />GPIO10 – 引脚号1(不可与GPIO37同时为gpio)<br />GPIO11 – 引脚号4(不可与GPIO38同时为gpio)<br />GPIO12 – 引脚号3(不可与GPIO39同时为gpio)<br />GPIO13 – 引脚号2(不可与GPIO40同时为gpio)<br />GPIO14 – 引脚号54<br />GPIO15 – 引脚号57<br/>GPIO16 – 引脚号56<br/>GPIO17 – 引脚号12<br/>GPIO18 – 引脚号33(不可与GPIO42同时为gpio)<br/>GPIO19 – 引脚号124(不可与GPIO44同时为gpio)<br/>GPIO20 – 引脚号122(不可与GPIO45同时为gpio)<br/>GPIO21 – 引脚号121(不可与GPIO46同时为gpio)<br/>GPIO22 – 引脚号48<br/>GPIO23 – 引脚号39<br/>GPIO24 – 引脚号40<br/>GPIO25 – 引脚号49<br/>GPIO26 – 引脚号50<br/>GPIO27 – 引脚号53<br/>GPIO28 – 引脚号52<br/>GPIO29 – 引脚号51<br/>GPIO30 – 引脚号59(不可与GPIO33同时为gpio)<br/>GPIO31 – 引脚号66(不可与GPIO1同时为gpio)<br/>GPIO32 – 引脚号63(不可与GPIO2同时为gpio)<br/>GPIO33 – 引脚号67(不可与GPIO30同时为gpio)<br/>GPIO34 – 引脚号65(不可与GPIO4同时为gpio)<br/>GPIO35 – 引脚号137(不可与GPIO5同时为gpio)<br/>GPIO36 – 引脚号62(不可与GPIO6同时为gpio)<br/>GPIO37 – 引脚号98(不可与GPIO10同时为gpio)<br/>GPIO38 – 引脚号95(不可与GPIO11同时为gpio)<br/>GPIO39 – 引脚号119(不可与GPIO12同时为gpio)<br/>GPIO40 – 引脚号100(不可与GPIO13同时为gpio)<br/>GPIO41 – 引脚号120(不可与GPIO3同时为gpio)<br/>GPIO42 – 引脚号16(不可与GPIO18同时为gpio)<br/>GPIO43 – 引脚号10(不可与GPIO7同时为gpio)<br/>GPIO44 – 引脚号14(不可与GPIO19同时为gpio)<br/>GPIO45 – 引脚号15(不可与GPIO20同时为gpio)<br/>GPIO46 – 引脚号13(不可与GPIO21同时为gpio)<br/>EC200UCN平台引脚对应关系如下（引脚号为模块外部引脚编号）<br />GPIO1 – 引脚号27(不可与GPIO31同时为gpio)<br />GPIO2 – 引脚号26(不可与GPIO32同时为gpio)<br />GPIO3 – 引脚号24(不可与GPIO33同时为gpio)<br />GPIO4 – 引脚号25(不可与GPIO34同时为gpio)<br />GPIO5 – 引脚号13(不可与GPIO17同时为gpio)<br />GPIO6 – 引脚号135(不可与GPIO36同时为gpio)<br />GPIO7 – 引脚号136(不可与GPIO44同时为gpio)<br />GPIO8 – 引脚号133<br />GPIO9 – 引脚号3(不可与GPIO37同时为gpio)<br />GPIO10 – 引脚号40(不可与GPIO38同时为gpio)<br />GPIO11 – 引脚号37(不可与GPIO39同时为gpio)<br />GPIO12 – 引脚号38(不可与GPIO40同时为gpio)<br />GPIO13 – 引脚号39(不可与GPIO41同时为gpio)<br />GPIO14 – 引脚号5<br />GPIO15 – 引脚号141<br/>GPIO16 – 引脚号142<br/>GPIO17 – 引脚号121(不可与GPIO5同时为gpio)<br/>GPIO18 – 引脚号65(不可与GPIO42同时为gpio)<br/>GPIO19 – 引脚号64(不可与GPIO43同时为gpio)<br/>GPIO20 – 引脚号139(不可与GPIO45同时为gpio)<br/>GPIO21 – 引脚号126(不可与GPIO46同时为gpio)<br/>GPIO22 – 引脚号127(不可与GPIO47同时为gpio)<br/>GPIO23 – 引脚号33<br/>GPIO24– 引脚号31<br/>GPIO25 – 引脚号30<br/>GPIO26 – 引脚号29<br/>GPIO27 – 引脚号28<br/>GPIO28 – 引脚号1<br/>GPIO29 – 引脚号2<br/>GPIO30 – 引脚号4<br/>GPIO31 – 引脚号125(不可与GPIO1同时为gpio)<br/>GPIO32 – 引脚号124(不可与GPIO2同时为gpio)<br/>GPIO33 – 引脚号123(不可与GPIO3同时为gpio)<br/>GPIO34 – 引脚号122(不可与GPIO4同时为gpio)<br/>GPIO35 – 引脚号42<br/>GPIO36 – 引脚号119(不可与GPIO6同时为gpio)<br/>GPIO37 – 引脚号134(不可与GPIO9同时为gpio)<br/>GPIO38– 引脚号132(不可与GPIO10同时为gpio)<br/>GPIO39 – 引脚号131(不可与GPIO11同时为gpio)<br/>GPIO40 – 引脚号130(不可与GPIO12同时为gpio)<br/>GPIO41 – 引脚号129(不可与GPIO13同时为gpio)<br/>GPIO42 – 引脚号61(不可与GPIO18同时为gpio)<br/>GPIO43 – 引脚号62(不可与GPIO19同时为gpio)<br/>GPIO44 – 引脚号63(不可与GPIO7同时为gpio)<br/>GPIO45 – 引脚号66(不可与GPIO20同时为gpio)<br/>GPIO46 – 引脚号6(不可与GPIO21同时为gpio)<br/>GPIO47 – 引脚号23(不可与GPIO22同时为gpio)<br/>EC200A平台引脚对应关系如下（引脚号为模块外部引脚编号）<br/>GPIO1 – 引脚号27<br />GPIO2 – 引脚号26<br />GPIO3 – 引脚号24<br />GPIO4 – 引脚号25<br />GPIO6 – 引脚号135<br />GPIO7 – 引脚号136<br />GPIO9 – 引脚号3<br />GPIO10 – 引脚号40<br />GPIO11 – 引脚号37<br />GPIO12 – 引脚号38<br />GPIO13 – 引脚号39<br />GPIO18 – 引脚号65<br />GPIO19 – 引脚号64<br />GPIO20 – 引脚号139<br />GPIO22 – 引脚号127<br />GPIO28 – 引脚号1<br />GPIO29 – 引脚号2<br />GPIO30 – 引脚号4<br />GPIO35 – 引脚号42<br />GPIO36 – 引脚号119<br />GPIO43 – 引脚号62<br />GPIO44 – 引脚号63<br />GPIO45 – 引脚号66<br />GPIO46 – 引脚号6<br />GPIO47 – 引脚号23<br/>EC800NCN平台引脚对应关系如下（引脚号为模块外部引脚编号）<br />GPIO1 – 引脚号30<br />GPIO2 – 引脚号31<br />GPIO3 – 引脚号32<br />GPIO4 – 引脚号33<br />GPIO5 – 引脚号49<br />GPIO6 – 引脚号50<br />GPIO7 – 引脚号51<br />GPIO8 – 引脚号52<br />GPIO9 – 引脚号53<br />GPIO10 – 引脚号54<br />GPIO11 – 引脚号55<br />GPIO12 – 引脚号56<br />GPIO13 – 引脚号57<br />GPIO14 – 引脚号58<br />GPIO15 – 引脚号80<br/>GPIO16 – 引脚号81<br/>GPIO17 – 引脚号76<br/>GPIO18 – 引脚号77<br/>GPIO19 – 引脚号82<br/>GPIO20 – 引脚号83<br/>GPIO21 – 引脚号86<br/>GPIO22 – 引脚号87<br/>GPIO23 – 引脚号66<br/>GPIO24 – 引脚号67<br/>GPIO25 – 引脚号17<br/>GPIO26 – 引脚号18<br/>GPIO27 – 引脚号19<br/>GPIO28 – 引脚号20<br/>GPIO29 – 引脚号21<br />GPIO30 – 引脚号22<br />GPIO31 – 引脚号23<br />GPIO32 – 引脚号28<br />GPIO33 – 引脚号29<br />GPIO34 – 引脚号38<br />GPIO35 – 引脚号39<br />GPIO36 – 引脚号16<br />GPIO37 – 引脚号78<br />BC25PA平台引脚对应关系如下（引脚号为模块外部引脚编号）<br />GPIO1 – 引脚号3<br />GPIO2 – 引脚号4<br />GPIO3 – 引脚号5<br />GPIO4 – 引脚号6<br />GPIO5 – 引脚号16<br />GPIO6 – 引脚号20<br />GPIO7 – 引脚号21<br />GPIO8 – 引脚号22<br />GPIO9 – 引脚号23<br />GPIO10 – 引脚号25<br />GPIO11 – 引脚号28<br />GPIO12 – 引脚号29<br />GPIO13 – 引脚号30<br />GPIO14 – 引脚号31<br />GPIO15 – 引脚号32<br/>GPIO16 – 引脚号33<br/>GPIO17 – 引脚号2<br/>GPIO18 – 引脚号8<br/>BG95M3平台引脚对应关系如下（引脚号为模块外部引脚编号）<br />GPIO1 – 引脚号4<br />GPIO2 – 引脚号5<br />GPIO3 – 引脚号6<br />GPIO4 – 引脚号7<br />GPIO5 – 引脚号18<br />GPIO6 – 引脚号19<br />GPIO7 – 引脚号22<br />GPIO8 – 引脚号23<br />GPIO9 – 引脚号25<br />GPIO10 – 引脚号26<br />GPIO11 – 引脚号27<br />GPIO12 – 引脚号28<br />GPIO13 – 引脚号40<br />GPIO14 – 引脚号41<br />GPIO15 – 引脚号64<br/>GPIO16 – 引脚号65<br/>GPIO17 – 引脚号66<br />GPIO18 – 引脚号85<br />GPIO19 – 引脚号86<br />GPIO20 – 引脚号87<br />GPIO21 – 引脚号88 |
 | direction | int  | IN – 输入模式，OUT – 输出模式                                |
 | pullMode  | int  | PULL_DISABLE – 浮空模式<br />PULL_PU – 上拉模式<br />PULL_PD – 下拉模式 |
 | level     | int  | 0 - 设置引脚为低电平, 1- 设置引脚为高电平                    |
@@ -5757,7 +5833,7 @@ if __name__ == '__main__':
 
 | 参数     | 类型 | 说明                                                         |
 | :------- | :--- | ------------------------------------------------------------ |
-| UARTn    | int  | UARTn作用如下：<br />UART0 - DEBUG PORT<br />UART1 – BT PORT<br />UART2 – MAIN PORT<br />UART3 – USB CDC PORT |
+| UARTn    | int  | UARTn作用如下：<br />UART0 - DEBUG PORT<br />UART1 – BT PORT<br />UART2 – MAIN PORT<br />UART3 – USB CDC PORT (BG95M3 不支持)|
 | buadrate | int  | 波特率，常用波特率都支持，如4800、9600、19200、38400、57600、115200、230400等 |
 | databits | int  | 数据位（5 ~ 8），展锐平台当前仅支持8位                         |
 | parity   | int  | 奇偶校验（0 – NONE，1 – EVEN，2 - ODD）                      |
@@ -5770,10 +5846,12 @@ if __name__ == '__main__':
 | ------------- | ------------------------------------------------------------ |
 | EC600U        | uart1:<br />TX: 引脚号124<br />RX: 引脚号123<br />uart2:<br />TX:引脚号32<br />RX:引脚号31 |
 | EC200U        | uart1:<br />TX: 引脚号138<br />RX: 引脚号137<br />uart2:<br />TX:引脚号67<br />RX:引脚号68 |
+| EC200A        | uart1:<br />TX: 引脚号63<br />RX: 引脚号66<br />uart2:<br />TX:引脚号67<br />RX:引脚号68 |
 | EC600S/EC600N | uart0:<br />TX: 引脚号71<br />RX: 引脚号72<br />uart1:<br />TX: 引脚号3<br />RX: 引脚号2<br />uart2:<br />TX:引脚号32<br />RX:引脚号31 |
 | EC100Y        | uart0:<br />TX: 引脚号21<br />RX: 引脚号20<br />uart1:<br />TX: 引脚号27<br />RX: 引脚号28<br />uart2:<br />TX:引脚号50<br />RX:引脚号49 |
 | EC800N        | uart0:<br />TX: 引脚号39<br />RX: 引脚号38<br />uart1:<br />TX: 引脚号50<br />RX: 引脚号51<br />uart2:<br />TX:引脚号18<br />RX:引脚号17 |
-| BC25PA        | uart1:<br />TX: 引脚号29<br />RX: 引脚号28<br />             |
+| BC25PA        | uart1:<br />TX: 引脚号29<br />RX: 引脚号28                   |
+| BG95M3        | uart0:<br />TX: 引脚号23<br />RX: 引脚号22<br />uart1:<br />TX:引脚号27<br />RX:引脚号28<br />uart2:<br />TX: 引脚号64<br />RX: 引脚号65 |
 
 * 示例
 
@@ -5933,7 +6011,7 @@ from machine import UART
 下面两个全局变量是必须有的，用户可以根据自己的实际项目修改下面两个全局变量的值
 '''
 PROJECT_NAME = "QuecPython_UART_example"
-PROJECT_VERSION = "1.0.0"
+PROJECT_VERSION = "1.0.1"
 
 '''
  * 参数1：端口
@@ -5943,9 +6021,9 @@ PROJECT_VERSION = "1.0.0"
         UART2 – MAIN PORT
         UART3 – USB CDC PORT
  * 参数2：波特率
- * 参数3：data bits  （5 ~ 8）
+ * 参数3：data bits  （5~8）
  * 参数4：Parity  （0：NONE  1：EVEN  2：ODD）
- * 参数5：stop bits （1 ~ 2）
+ * 参数5：stop bits （1~2）
  * 参数6：flow control （0: FC_NONE  1：FC_HW）
 '''
 
@@ -5954,74 +6032,56 @@ PROJECT_VERSION = "1.0.0"
 log.basicConfig(level=log.INFO)
 uart_log = log.getLogger("UART")
 
-state = 5
+class Example_uart(object):
+    def __init__(self, no=UART.UART2, bate=115200, data_bits=8, parity=0, stop_bits=1, flow_control=0):
+        self.uart = UART(no, bate, data_bits, parity, stop_bits, flow_control)
+        self.uart.set_callback(self.callback)
 
 
-def uartWrite():
-    count = 10
-    # 配置uart
-    uart = UART(UART.UART2, 115200, 8, 0, 1, 0)
-    while count:
-        write_msg = "Hello count={}".format(count)
-        # 发送数据
-        uart.write(write_msg)
-        uart_log.info("Write msg :{}".format(write_msg))
-        utime.sleep(1)
-        count -= 1
-    uart_log.info("uartWrite end!")
+    def callback(self, para):
+        uart_log.info("call para:{}".format(para))
+        if(0 == para[0]):
+            self.uartRead(para[2])
 
+    
+    def uartWrite(self, msg):
+        uart_log.info("write msg:{}".format(msg))
+        self.uart.write(msg)
 
-def UartRead():
-    global state
-    uart = UART(UART.UART2, 115200, 8, 0, 1, 0)
-    while 1:
-        # 返回是否有可读取的数据长度
-        msgLen = uart.any()
-        # 当有数据时进行读取
-        if msgLen:
-            msg = uart.read(msgLen)
-            # 初始数据是字节类型（bytes）,将字节类型数据进行编码
-            utf8_msg = msg.decode()
-            # str
-            uart_log.info("UartRead msg: {}".format(utf8_msg))
-            state -= 1
-            if state == 0:
-                break
-        else:
-            continue
+    def uartRead(self, len):
+        msg = self.uart.read(len)
+        utf8_msg = msg.decode()
+        uart_log.info("UartRead msg: {}".format(utf8_msg))
+        return utf8_msg
 
-
-
-def run():
-    # 创建一个线程来监听接收uart消息
-    _thread.start_new_thread(UartRead, ())
-
+    def uartWrite_test(self):
+        for i in range(10):
+            write_msg = "Hello count={}".format(i)
+            self.uartWrite(write_msg)
+            utime.sleep(1)
 
 if __name__ == "__main__":
-    uartWrite()
-    run()
-    while 1:
-        if state:
-            pass
-        else:
-            break
+    uart_test = Example_uart()
+    uart_test.uartWrite_test()
+    
 
 # 运行结果示例
 '''
-INFO:UART:Write msg :Hello count=8
-INFO:UART:Write msg :Hello count=7
-INFO:UART:Write msg :Hello count=6
-INFO:UART:Write msg :Hello count=5
-INFO:UART:Write msg :Hello count=4
-INFO:UART:Write msg :Hello count=3
-INFO:UART:Write msg :Hello count=2
-INFO:UART:Write msg :Hello count=1
-INFO:UART:uartWrite end!
-INFO:UART:UartRead msg: read msg 1
+INFO:UART:write msg:Hello count=0
+INFO:UART:write msg:Hello count=1
+INFO:UART:write msg:Hello count=2
+INFO:UART:write msg:Hello count=3
+INFO:UART:write msg:Hello count=4
+INFO:UART:write msg:Hello count=5
+INFO:UART:write msg:Hello count=6
+INFO:UART:write msg:Hello count=7
+INFO:UART:write msg:Hello count=8
+INFO:UART:write msg:Hello count=9
 
-INFO:UART:UartRead msg: read msg 2
+INFO:UART:call para:[0, 2, 15]
+INFO:UART:UartRead msg: my name is XXX
 
-INFO:UART:UartRead msg: read msg 3
+
 '''
 
 ```
@@ -6181,7 +6241,7 @@ if __name__ == '__main__':
 
 | 参数     | 类型 | 说明                                                         |
 | :------- | :--- | ------------------------------------------------------------ |
-| GPIOn    | int  | 需要控制的GPIO引脚号，参照Pin模块的定义                      |
+| GPIOn    | int  | 需要控制的GPIO引脚号，参照Pin模块的定义(除BG95M3外) <br />BG95M3平台引脚对应关系如下（引脚号为模块外部引脚编号）<br />GPIO2 – 引脚号5<br />GPIO3 – 引脚号6<br />GPIO6 – 引脚号19<br />GPIO7 – 引脚号22<br />GPIO8 – 引脚号23<br />GPIO9 – 引脚号25<br />GPIO11 – 引脚号27<br />GPIO12 – 引脚号28<br />GPIO14 – 引脚号41<br />GPIO16 – 引脚号65<br/>GPIO17 – 引脚号66<br />GPIO18 – 引脚号85<br />GPIO19 – 引脚号86<br />GPIO20 – 引脚号87<br />GPIO21 – 引脚号88 |
 | mode     | int  | 设置触发方式<br /> IRQ_RISING – 上升沿触发<br /> IRQ_FALLING – 下降沿触发<br /> IRQ_RISING_FALLING – 上升和下降沿触发 |
 | pull     | int  | PULL_DISABLE – 浮空模式<br />PULL_PU – 上拉模式 <br />PULL_PD  – 下拉模式 |
 | callback | int  | 中断触发回调函数                                             |
@@ -6343,36 +6403,10 @@ if __name__ == '__main__':
 
 ```
 
-###### 设置回调函数
-
-> **rtc.register_callback(usrFun)**
-
-当设置rtc到期时间回调函数(对于BC25PA平台,如果是从深休眠或者软件关机状态中恢复,调用此函数会立刻调用一次usrFun)。
-
-* 参数
-
-| 参数   | 参数类型 | 参数说明                                   |
-| ------ | -------- | ------------------------------------------ |
-| usrFun | function | 回调函数，当设置的RTC时间到达则调用此函数。 |
-
-注意:usrFun需要参数
-
-* 返回值
-	成功: 0
-	失败: -1
-* 示例
-
-```python
->>> def test(df):
-...     print('rtc test...',df)
-...     
-...     
-... 
->>> 
->>> rtc.register_callback(test)
-0
-```
 ###### 设置RTC到期时间
+
+支持平台EC600U/EC200U/EC600N/EC800N/BC25
+
 rtc.set_alarm(data_e)
 设置RTC到期时间,当到了到期时间就会调用注册的回调函数。
 * 参数
@@ -6400,51 +6434,6 @@ rtc.set_alarm(data_e)
 >>> rtc.set_alarm(data_e)
 0
 ```
-###### 启动/停止RTC定时器
-rtc.enable_alarm(on_off)
-只有在设置回调函数时才能启动定时器(BC25PA平台)
-* 参数
-| 参数        | 类型 | 说明                                                         |
-| ----------- | ---- | ------------------------------------------------------------ |
-| on_off        | int  | 0 - 关闭RTC定时器. 1 - 启动RTC定时器.                     |
-
-* 返回值
-	成功: 0
-	失败: -1
-* 示例
-```python
->>> rtc.enable_alarm(1)
-0
-```
-
-
-
-###### 设置RTC alarm时间
-
-支持平台EC600U/EC200U/EC600N/EC800N/BC25
-
-> rtc.set_alarm([year, month, day, week, hour, minute, second, microsecond])
-
-设置RTC alarm时间，参数week不参于设置，microsecond参数保留，暂未使用，默认是0。
-
-* 参数
-
-| 参数        | 类型 | 说明                                  |
-| ----------- | ---- | ------------------------------------- |
-| year        | int  | 年                                    |
-| month       | int  | 月，范围1 ~ 12                        |
-| day         | int  | 日，范围1 ~ 31                        |
-| week        | int  | 星期，范围0 ~ 6，该参数不起作用，保留 |
-| hour        | int  | 时，范围0 ~ 23                        |
-| minute      | int  | 分，范围0 ~ 59                        |
-| second      | int  | 秒，范围0 ~ 59                        |
-| microsecond | int  | 微秒，保留参数，暂未使用，写0即可     |
-
-* 返回值
-
-设置成功返回整型值0，设置失败返回整型值-1 。
-
-
 
 ###### 注册RTC alarm回调
 
@@ -6469,6 +6458,7 @@ rtc.enable_alarm(on_off)
 ###### 开关RTC alarm功能
 
 支持平台EC600U/EC200U/EC600N/EC800N/BC25
+注意:BC25PA平台只有设置回调函数,才能启动定时器.
 
 > rtc.enable_alarm(on_off)
 
@@ -6511,8 +6501,9 @@ rtc.enable_alarm(1)
 
 | 常量              |                   | 适用平台                      |
 | ----------------- | ----------------- | ----------------------------- |
-| I2C.I2C0          | i2c 通路索引号: 0 | EC100Y/EC600U/EC200U/BC25PA/EC800N   |
-| I2C.I2C1          | i2c 通路索引号: 1 | EC600S/EC600N/EC600U/EC200U/BC25PA  |
+| I2C.I2C0          | i2c 通路索引号: 0 | EC100Y/EC600U/EC200U/EC200A/BC25PA/EC800N/BG95M3 |
+| I2C.I2C1          | i2c 通路索引号: 1 | EC600S/EC600N/EC600U/EC200U/BC25PA/BG95M3 |
+| I2C.I2C2          | i2c 通路索引号: 2 | BG95M3 |
 | I2C.STANDARD_MODE | 标准模式 |                  |
 | I2C.FAST_MODE | 快速模式      |                               |
 
@@ -6528,7 +6519,7 @@ rtc.enable_alarm(1)
 
 | 参数 | 类型 | 说明                                                         |
 | ---- | ---- | ------------------------------------------------------------ |
-| I2Cn | int  | i2c 通路索引号:<br />I2C.I2C0 : 0  <br />I2C.I2C1 : 1        |
+| I2Cn | int  | i2c 通路索引号:<br />I2C.I2C0 : 0  <br />I2C.I2C1 : 1<br />I2C.I2C2 : 2 |
 | MODE | int  | i2c 的工作模式:<br />I2C.STANDARD_MODE : 0 标准模式<br />I2C.FAST_MODE ： 1 快速模式 |
 
 - 引脚对应关系
@@ -6537,10 +6528,12 @@ rtc.enable_alarm(1)
 | ------------- | ------------------------------------------------------------ |
 | EC600U        | I2C0:<br />SCL: 引脚号11<br />SDA: 引脚号12<br />I2C1:<br />SCL:引脚号57<br />SDA:引脚号56 |
 | EC200U        | I2C0:<br />SCL: 引脚号41<br />SDA: 引脚号42<br />I2C1:<br />SCL:引脚号141<br />SDA:引脚号142 |
+| EC200A        | I2C0:<br />SCL: 引脚号41<br />SDA: 引脚号42                  |
 | EC600S/EC600N | I2C1:<br />SCL:引脚号57<br />SDA:引脚号56                    |
 | EC100Y        | I2C0:<br />SCL:引脚号57<br />SDA:引脚号56                    |
 | BC25PA        | I2C0:<br />SCL: 引脚号23<br />SDA: 引脚号22<br />I2C1:<br />SCL:引脚号20<br />SDA:引脚号21 |
 | EC800N        | I2C0:<br />SCL:引脚号67<br />SDA:引脚号66                    |
+| BG95M3        | I2C0:<br />SCL: 引脚号18<br />SDA: 引脚号19<br />I2C1:<br />SCL:引脚号40<br />SDA:引脚号41<br />I2C2:<br />SCL:引脚号26<br />SDA:引脚号25 |
 
 - 示例
 
@@ -6846,7 +6839,7 @@ if __name__ == "__main__":
 | ---- | ---- | ------------------------------------------------------------ |
 | port | int  | 通道选择[0,1]                                                |
 | mode | int  | SPI 的工作模式(模式0最常用):<br />时钟极性CPOL: 即SPI空闲时，时钟信号SCLK的电平（0:空闲时低电平; 1:空闲时高电平）<br /> 0 : CPOL=0, CPHA=0<br /> 1 : CPOL=0, CPHA=1<br /> 2:  CPOL=1, CPHA=0<br /> 3:  CPOL=1, CPHA=1 |
-| clk  | int  | 时钟频率<br />EC600NCN/EC600SCN/EC800NCN:<br /> 0 : 812.5kHz<br /> 1 : 1.625MHz<br /> 2 : 3.25MHz<br /> 3 : 6.5MHz<br /> 4 : 13MHz<br /> 5 :  26MHz<br /> 6：52MHz<br />EC600UCN/EC200UCN:<br />0 : 781.25KHz<br />1 : 1.5625MHz<br />2 : 3.125MHz<br />3 : 5MHz<br />4 : 6.25MHz<br />5 : 10MHz<br />6 : 12.5MHz<br />7 : 20MHz<br />8 : 25MHz<br />9 : 33.33MHz<br />BC25PA：<br />0 ： 5MHz<br />X : XMHz  (X in [1,39]) |
+| clk  | int  | 时钟频率<br />EC600NCN/EC600SCN/EC800NCN/BG95M3:<br /> 0 : 812.5kHz<br /> 1 : 1.625MHz<br /> 2 : 3.25MHz<br /> 3 : 6.5MHz<br /> 4 : 13MHz<br /> 5 :  26MHz<br /> 6：52MHz<br />EC600UCN/EC200UCN:<br />0 : 781.25KHz<br />1 : 1.5625MHz<br />2 : 3.125MHz<br />3 : 5MHz<br />4 : 6.25MHz<br />5 : 10MHz<br />6 : 12.5MHz<br />7 : 20MHz<br />8 : 25MHz<br />9 : 33.33MHz<br />BC25PA：<br />0 ： 5MHz<br />X : XMHz  (X in [1,39]) |
 
 - 引脚说明
 
@@ -6858,6 +6851,7 @@ if __name__ == "__main__":
 | EC100Y        | port0:<br />CS:引脚号25<br />CLK:引脚号26<br />MOSI:引脚号27<br />MISO:引脚号28<br />port1:<br />CS:引脚号105<br />CLK:引脚号104<br />MOSI:引脚号107<br />MISO:引脚号106 |
 | EC800N        | port0:<br />CS:引脚号31<br />CLK:引脚号30<br />MOSI:引脚号32<br />MISO:引脚号33<br />port1:<br />CS:引脚号52<br />CLK:引脚号53<br />MOSI:引脚号50<br />MISO:引脚号51 |
 | BC25PA        | port0:<br />CS:引脚号6<br />CLK:引脚号5<br />MOSI:引脚号4<br />MISO:引脚号3|
+| BG95M3        | port0:<br />CS:引脚号25<br />CLK:引脚号26<br />MOSI:引脚号27<br />MISO:引脚号28<br />port1:<br />CS:引脚号41<br />CLK:引脚号40<br />MOSI:引脚号64<br />MISO:引脚号65 |
 * 注意
   BC25PA平台不支持1、2模式。
 - 示例
@@ -7494,6 +7488,8 @@ print('exit!')
 
 * 注意
   BC25PA平台不支持此模块功能。
+  
+  使用该功能前，需要初始化LCD
 > ​	qrcode.show(qrcode_str,magnification,start_x,start_y,Background_color,Foreground_color)
 
 - 参数
@@ -7635,6 +7631,103 @@ print('exit!')
 
 * 注意
   BC25PA平台不支持此方法。
+
+
+
+##### 设置PSM模式的控制时间
+
+- 仅BC25平台支持
+
+> **pm.set_psm_time(tau_uint,tau_time,act_uint,act_time)**  # 设置并启用PSM           <**模式1**>
+>
+> **pm.set_psm_time(mode)**														   # 单独设置启用或禁用    <**模式2**>
+
+
+* 参数
+
+| 参数     | 参数类型 | 参数说明                       |
+| -------- | -------- | ------------------------------ |
+| mode | int | 是否启用PSM:<br/>0 禁用PSM<br/>1 启用PSM<br/>2 禁用PSM并删除PSM的所有参数，如有默认值，则重置默认值。(注意此种模式禁用的情况下，如果要启用PSM必须用**模式1**，用**模式2**没有任何的意义,因为设置的TAU和ACT时间全部清零了)。 |
+| tau_uint | int   | tau(T3412)定时器单位 |
+| tau_time | int   | tau(T3412)定时器时间周期值 |
+| act_uint | int   | act(T3324)定时器单位 |
+| act_time | int   | act(T3324)定时器时间周期值 |
+
+* tau定时器说明
+|tau定时器单位值  | 类型 | 单位值说明                       |
+| -------- | -------- | ------------------------------|
+| 0 | int   | 10 分钟 |
+| 1 | int   | 1 小时 |
+| 2 | int   | 10 小时 |
+| 3 | int   | 2 秒 |
+| 4 | int   | 30 秒 |
+| 5 | int   | 1 分钟 |
+| 6 | int   | 320 小时 |
+| 7 | int   | 定时器被停用 |
+
+* act定时器单位说明
+|act定时器单位值  | 类型 | 单位值说明                       |
+| -------- | -------- | ------------------------------|
+| 0 | int   | 2 秒 |
+| 1 | int   | 1 分钟 |
+| 2 | int   | 6 分钟 |
+| 7 | int   | 定时器被停用 |
+
+* 返回值
+
+    True: 	成功
+    False:	失败
+
+* 注意
+   仅BC25平台支持 
+
+- 示例
+
+```python
+>>> import pm
+>>> pm.set_psm_time(1,2,1,4)  #设置tau定时器周期为 1小时 * 2 = 2小时， act定时器周期值为 1分钟 * 4 = 4分钟。
+True
+>>>
+```
+
+
+
+##### 获取PSM模式的控制时间
+
+- 仅BC25平台支持
+
+> **pm.get_psm_time()**
+
+* 参数d
+
+  无
+
+* 返回值
+
+  成功：返回值为list类型，说明如下：
+  |参数  | 类型 | 单位值说明                       |
+| -------- | -------- | ------------------------------|
+| list[0] | int   | mode说明: <br/>0-禁用PSM. <br/>1-启用PSM. <br/>2.禁用 PSM 并删除 PSM 的所有参数,若有默认值,则重置为默认值。 |
+| list[1] | int   | tau定时器单位 |
+| list[2] | int   | tau定时器时间周期值 |
+| list[3] | int   | act定时器单位 |
+| list[4] | int   | act定时器时间周期值 |
+  失败：返回None.在禁用PSM时返回失败。
+  
+* 注意
+    仅BC25平台支持
+
+- 示例
+
+
+```python
+>>> pm.get_psm_time()
+
+[1, 1, 1, 1, 2]
+
+
+```
+
 
 
 ##### 使用示例
@@ -7984,7 +8077,7 @@ True
   | timeout       | 整型 | 该超时时间参数是上层应用的超时，当触发超时会主动上报已扫描到的热点信息，若在超时前扫描到设置的热点个数或达到底层扫频超时时间会自动上报热点信息。<br>参数范围：<br/>600S ：4-255秒<br/>200U/600U ：120-5000毫秒 |
   | round         | 整型 | 该参数是wifi扫描轮，达到扫描轮数后，会结束扫描并获取扫描结果。<br/>参数范围：<br/>600S ：1-3轮次<br/>200U/600U ：1-10轮次 |
   | max_bssid_num | 整型 | 该参数是wifi扫描热点最大个，若底层扫描热点个数达到设置的最大个数，会结束扫描并获取扫描结果。<br/>参数范围：<br/>600S ：4-30个<br/>200U/600U ：1-300个 |
-  | scan_timeout  | 整型 | 该参数是底层wifi扫描热点超时时间，若底层扫描热点时间达到设置的超时时间，会结束扫描并获取扫描结果。该参数设置范围为1-255秒。200U/600U 平台不支持该参数，设置时写0即可。 |
+  | scan_timeout  | 整型 | 该参数是底层wifi扫描热点超时时间，若底层扫描热点时间达到设置的超时时间，会结束扫描并获取扫描结果。该参数设置范围为1-255秒。 |
   | priority      | 整型 | 该参数是wifi扫描业务优先级设置，0为ps优先，1为wifi优先。ps优先时，当有数据业务发起时会中断wifi扫描。Wifi优先时，当有数据业务发起时，不会建立RRC连接，保障wifi扫描正常执行，扫描结束后才会建立RRC连接。200U/600U 平台不支持该参数，设置时写0即可。 |
 
 * 返回值：
@@ -10727,7 +10820,7 @@ if __name__ == '__main__':
 
 #### camera - 摄像扫码
 
-模块功能：实现摄像头预览，照相机，录像机，扫码功能（目前仅支持预览和扫码功能）
+模块功能：实现摄像头预览，照相机，扫码功能
 
 注意：BC25PA平台不支持模块功能。
 
@@ -10744,14 +10837,14 @@ if __name__ == '__main__':
 
 * 参数
 
-| 参数          | 参数类型 | 参数说明                                               |
-| ------------- | -------- | ------------------------------------------------------ |
-| model         | int      | camera型号：<br />*0: gc032a spi*<br />*1: bf3901 spi* |
-| cam_w         | int      | *camera水平分辨率*                                     |
-| *cam_h*       | int      | *camera垂直分辨率*                                     |
-| *lcd_w*       | int      | *LCD水平分辨率*                                        |
-| *lcd_h*       | int      | *LCD垂直分辨率*                                        |
-| perview_level | int      | 预览等级[1,2]。等级越高，图像越流畅,消耗资源越大       |
+| 参数          | 参数类型 | 参数说明                                                     |
+| ------------- | -------- | ------------------------------------------------------------ |
+| model         | int      | camera型号：<br />*0: gc032a spi*<br />*1: bf3901 spi*       |
+| cam_w         | int      | *camera水平分辨率*                                           |
+| *cam_h*       | int      | *camera垂直分辨率*                                           |
+| *lcd_w*       | int      | *LCD水平分辨率*                                              |
+| *lcd_h*       | int      | *LCD垂直分辨率*                                              |
+| perview_level | int      | 预览等级[1,2]。<br />等级2只针对ASR平台，等级越高，图像越流畅,消耗资源越大 |
 
 * 返回值
 
@@ -10784,7 +10877,7 @@ if __name__ == '__main__':
 
 
 
-关闭预览功能
+###### 关闭预览功能
 
 **camPreview.close()**
 
@@ -10804,7 +10897,7 @@ if __name__ == '__main__':
 
 ##### 扫码识别
 
-扫码识别功能。使用该功能前，需要初始化LCD。
+扫码识别功能。
 
 ###### 创建对象
 
@@ -10813,15 +10906,15 @@ if __name__ == '__main__':
 
 * 参数
 
-| 参数          | 参数类型 | 参数说明                                               |
-| ------------- | -------- | ------------------------------------------------------ |
-| model         | int      | camera型号：<br />*0: gc032a spi*<br />*1: bf3901 spi* |
-| decode_level  | int      | *解码等级[1,2]，等级越高，识别效果越好但资源消耗越大*  |
-| cam_w         | int      | *camera水平分辨率*                                     |
-| *cam_h*       | int      | *camera垂直分辨率*                                     |
-| perview_level | int      | 预览等级[1,2]。等级越高，图像越流畅,消耗资源越大       |
-| *lcd_w*       | int      | *LCD水平分辨率*                                        |
-| *lcd_h*       | int      | *LCD垂直分辨率*                                        |
+| 参数          | 参数类型 | 参数说明                                                     |
+| ------------- | -------- | ------------------------------------------------------------ |
+| model         | int      | camera型号：<br />*0: gc032a spi*<br />*1: bf3901 spi*       |
+| decode_level  | int      | *解码等级[1,2]，<br />等级2只针对ASR平台, 等级越高，识别效果越好但资源消耗越大*. |
+| cam_w         | int      | *camera水平分辨率*                                           |
+| *cam_h*       | int      | *camera垂直分辨率*                                           |
+| perview_level | int      | 预览等级[0,2]。<br />等级2只针对ASR平台, 等级越高，图像越流畅,消耗资源越大<br />等于0时，无lcd预览功能,无需提前初始化LCD<br />等于1或2时，必须先初始化lcd |
+| *lcd_w*       | int      | *LCD水平分辨率*                                              |
+| *lcd_h*       | int      | *LCD垂直分辨率*                                              |
 
 * 返回值
 
@@ -10966,7 +11059,7 @@ Scandecode.callback(callback)
 | model         | int      | camera型号：<br />*0: gc032a spi*<br />*1: bf3901 spi*       |
 | cam_w         | int      | camera水平分辨率                                             |
 | *cam_h*       | int      | *camera垂直分辨率*                                           |
-| perview_level | int      | 预览等级[0,2]。等级越高，图像越流畅,消耗资源越大。<br />等于0时，无lcd预览功能<br />等于1或2时，必须先初始化lcd |
+| perview_level | int      | 预览等级[0,2]。<br />等级2只针对ASR平台，等级越高，图像越流畅,消耗资源越大。<br />等于0时，无lcd预览功能，提前初始化LCD<br />等于1或2时，必须先初始化lcd |
 | *lcd_w*       | int      | LCD水平分辨率                                                |
 | *lcd_h*       | int      | *LCD垂直分辨率*                                              |
 
@@ -11583,7 +11676,7 @@ $GNGSA,A,3,31,3
 #### SecureData - 安全数据区
 
 模块功能：模组提供一块裸flash区域及专门的读写接口供客户存贮重要信息，且信息在烧录固件后不丢失(烧录不包含此功能的固件无法保证不丢失)。提供一个存储和读取接口，不提供删除接口。
-目前只支持EC600N、EC600S系列项目
+目前只支持EC600N系列项目
 
 ##### 数据存储
 
@@ -11635,10 +11728,10 @@ databuf = '\x31\x32\x33\x34\x35\x36\x37\x38'
 SecureData.Store(1, databuf, 8)
 # 定义一个长度为20的数组用于读取存储的数据
 buf = bytearray(20)
-# 读取index为1的存储区域中的数据至buf中,将读取到数据的长度存储在变量len中
-len = SecureData.Read(1, buf, 20)
+# 读取index为1的存储区域中的数据至buf中,将读取到数据的长度存储在变量length中
+length = SecureData.Read(1, buf, 20)
 # 输出读到的数据
-print(buf[:len])
+print(buf[:length])
 ```
 
  * 执行结果
@@ -11649,8 +11742,8 @@ print(buf[:len])
 >>> SecureData.Store(1, databuf, 8)
 0
 >>> buf = bytearray(20)
->>> len = SecureData.Read(1, buf, 20)
->>> print(buf[:len])
+>>> length = SecureData.Read(1, buf, 20)
+>>> print(buf[:length])
 bytearray(b'12345678')
 >>> 
 ```
@@ -11747,7 +11840,7 @@ bytearray(b'12345678')
 | -------- | ------ | ------------------------------------------------------------ |
 | data_len | int    | 期望接受的数据长度(注意此参数根据data的实际长度进行调整，按照data变量的容量和data_len的比较取最小值) |
 | data     | string | 存储接收到的数据,最大支持1024字节数据。                      |
-| type     | int    | 表示核心网释放与模块的RRC连接：0-无指示。1-指示该包上行数据后不期望有进一步的上行或者下行数据，核心网可立即释放  。2-指示该包上行数据后期望有对应回复的单个下行数据包，核心网在下发后立即释放  。 |
+| type     | int    | 表示核心网释放与模块的RRC连接：<br/>0-无指示。<br/>1-指示该包上行数据后不期望有进一步的上行或者下行数据，核心网可立即释放  。<br/>2-指示该包上行数据后期望有对应回复的单个下行数据包，核心网在下发后立即释放  。 |
 
 - 说明
 
@@ -11791,7 +11884,7 @@ True
 
 ###### 创建AEP对象
 
-> **aep=AEP(ip,port)**
+> **aep=AEP(ip,port,model,psk)**
 
 - 参数
 
@@ -11799,6 +11892,8 @@ True
 | ---- | ------ | --------------------------------------------- |
 | ip   | string | 物联网平台的服务器ip地址,最大长度16,合法ipv4. |
 | port | string | 物联网平台的服务器端口,最大长度5,范围0~65536. |
+| model | int | 0 设置接收数据模式为缓存模式，接收到新数据时无 URC 上报<br/>1 设置接收数据模式为直吐模式，接收到新数据时通过 URC 立即上报.<br/>2 设置接收数据模式为缓存模式，接收到新数据时仅上报指示 URC。可省略，默认为1. |
+| psk  | string | 十六进制字符串型。加密设备的密钥，在平台端注册加密设备时可由平台生成或自主设置，最大支持长度 256 字节.可省略 |
 
 - 示例
 
@@ -11807,24 +11902,44 @@ True
 >>> aep=AEP("221.229.214.202","5683")
 ```
 
-###### 连接AEP云平台
+###### 设置回调函数
 
-> **aep.connect()**
-
+> **aep.set_event_callcb(usrfunc)**
 - 参数
 
-无
+| 参数 | 类型   | 说明                                          |
+| ---- | ------ | --------------------------------------------- |
+| usrfunc  | func(data) | 发生事件时调用usrfunc |
+- func(data)参数说明:
+| 参数 |类型   | 说明                                          |
+| ---- | ------ | --------------------------------------------- |
+| data   | list | data[0]:event_id,事件类型><br/>data[1]:event_code,事件类型对应返回码><br/>data[2]:recv_data,数据><br/>data[3]:data_len,数据长度><br/> |
+
+- 注意
+    event_id,event_code,recv_data,data_len说明见本模块[事件说明](# 事件说明)。此函数，建议在连接之前进行注册，以防事件丢失。
+- 
+
+###### 连接AEP云平台
+
+> **aep.connect(timeout)**
+
+- 参数
+    超时时间
+
+    类型: int,超时时间,单位(ms),不输入参数则默认30s
+
+    说明: 超时失败最坏情况阻塞时长为:15s+timeout。不支持并发操作。
 
 - 返回值
 
 成功-0
 
-失败-非0
+失败-1
 
 - 示例
 
 ```python
->>> aep.connect()
+>>> aep.connect(3000)
 0
 ```
 ###### 查询待读取数据
@@ -11845,10 +11960,16 @@ True
 >>> aep.check()
 0
 ```
-
 ###### 接收数据
 
-> **aep.recv(data_len,data)**
+> **aep.recv(data_len,data，timeout)**
+
+- 使用说明,[model](#创建AEP对象)值对此函数的影响如下列表
+| model     | 说明                                                         |
+| -------- |  ------------------------------------------------------------ |
+|0|为缓存模式,云平台下发数据到模组,模组不会有任何的主动提示动作,只能主动读取。|
+|1|为直吐模式,云平台下发数据到模组,模组会把收到的数据直接吐到urc,set_event_callcb(usrfunc)设置的回调函数会直接接管收到的数据，以及数据长度。|
+|2|为缓存模式,当无缓存数据时,云平台下发数据到模组,模组会通过回调函数usrfunc上报事件,提示有缓存数据待读取(云平台下发数据到模组,模组判断缓存为空上报事件提示有数据到达,缓存数据不为空不上报事件)|
 
 - 参数
 
@@ -11856,6 +11977,7 @@ True
 | -------- | ------ | ------------------------------------------------------------ |
 | data_len | int    | 期望接受的数据长度(注意此参数根据data的实际长度进行调整，按照data变量的容量和data_len的比较取最小值),非阻塞。 |
 | data     | string | 存储接收到的数据。                                           |
+| timeout  | int | 超时时间,单位ms,不输入则默认30s。                                       |
 
 - 说明
 
@@ -11876,21 +11998,28 @@ True
 
 ###### 发送数据
 
-> **aep.send(data_len,data,type)**
+> **aep.send(data_len,data,type,timeout)**
 
+- 使用说明:
+    在超时失败状态，阻塞时长最坏情况为:5s+timeout。不支持并发操作。
 - 参数
 
 | 参数     | 类型   | 说明                                                         |
 | -------- | ------ | ------------------------------------------------------------ |
-| data_len | int    | 期望发送的数据长度(注意此参数根据data的实际长度进行调整，按照data变量的容量和data_len的比较取最小值)，非阻塞 |
+| data_len | int    | 期望发送的数据长度(注意此参数根据data的实际长度进行调整，按照data变量的容量和data_len的比较取最小值)，非阻塞。 |
 | data     | string | 待发送数据，最大支持1024字节数据。                           |
-| type     | int    | 表示核心网释放与模块的RRC连接：0-无指示。1-指示该包上行数据后不期望有进一步的上行或者下行数据，核心网可立即释放  。2-指示该包上行数据后期望有对应回复的单个下行数据包，核心网在下发后立即释放  。 |
+| type     | int    | 表示核心网释放与模块的RRC连接：<br/>0-发送 NON 数据并将模块发送数据所携带的 RAI 辅助释放标记设置为 0<br/>1-发送 NON 数据并将模块发送数据所携带的 RAI 辅助释放标记设置为 1<br/>2-发送 NON 数据并将模块发送数据所携带的 RAI 辅助释放标记设置为 2<br/>100-发送 CON 数据并将模块发送数据所携带的 RAI 辅助释放标记设置为 0<br/>101-发送 CON 数据并将模块发送数据所携带的 RAI 辅助释放标记设置为 1<br/>102-发送 CON 数据并将模块发送数据所携带的 RAI 辅助释放标记设置为 2 |
+| timeout  | int    | 超时时间,单位ms,不输入则默认30s                              |
 
+- RAI辅助释放标记说明
+|         | 说明                                                         |
+| -------------- | ------------------------------------------------------------ |
+| RAI         | RAI 标记用于指示核心网释放与模块的 RRC 连接。:<br/>RAI 为 0 时，无指示。<br/>RAI 为 1 时，指示该包上行数据后不期望有进一步的上行或者下行数据，核心网可立即释放。<br/>RAI 为 2 时，指示该包上行数据后期望有对应回复的单个下行数据包，核心网在下发后立即释放。 |
 
 
 - 说明
 
-发送数据为16进制字符串，数据长度为偶数，阻塞(超时时间3分钟),返回成功表示发送指令执行成功。
+发送数据为16进制字符串，数据长度为偶数，阻塞,返回成功表示发送指令执行成功。
 
 - 返回值
 
@@ -11906,8 +12035,33 @@ bytearray(b'313233')
 >>> aep.send(6,data,0)
 0
 ```
+###### 检查连接状态
+> **aep.connect_check()**
+- 参数
 
+  无
+- 返回值
+   返回值类型:字符串
+   含义如下表
 
+  | 返回值     | 说明   |
+  | -------- | ------ |
+  |  UNINITIALISED |未初始化状态                   |
+  |  REGISTERING |连接中                           |
+  |   REJECTED_BY_SERVER |连接请求被服务器拒接     |
+  |   TIMEOUT |连接超时                            |
+  |   REGISTERED |已连接未订阅                     |
+  |  REGISTERED_AND_OBSERVED |已连接已订阅         |
+  |  DEREGISTERED |连接断开                        |
+  |  RESUMPTION_FAILED DTLS |会话恢复失败          |
+  |  FALIED |函数执行失败          |
+  
+ - 示例
+
+```python
+>>> aep.connect_check()
+'UNINITIALISED\r\n'
+```
 
 ###### 关闭连接
 > **aep.close()**
@@ -11928,6 +12082,22 @@ bytearray(b'313233')
 True
 ```
 
+###### 事件说明
+对于本模块事件总体说明如下表:
+|event_id	|event_code	|recv_data	|data_len	|说明|
+| -------------- | ---------|----------|-------------|---------------------------- |
+|0	|0	|NULL	|0	|modem进入psm，上报此事件。此时模组不接受下发到模组的网络数据,可通过主动发送数据打破modem侧psm状态。|
+|0	|1	|NULL	|0	|modem退出psm模式，上报此事件。|
+|22	|4	|NULL	|0	|调用接口发送CON类型数据，如果发送成功上报此事件|
+|22	|5	|NULL	|0	|调用接口发送CON类型数据，如果发送失败上报此事件|
+|23	|6	|NULL	|0	|深休眠唤醒恢复连接成功，上报此事件。在调用AEP.set_event_callcb(usrfunc)时上报。|
+|23	|7	|NULL	|0	|深休眠唤醒恢复连接失败，可以采用断开连接，再重新连接。在调用AEP.set_event_callcb(usrfunc)时上报。|
+|24	|8	|NULL	|0	|云平台下发fota升级指令后，模组开始下载差分升级包时上报此事件。|
+|24	|9	|NULL	|0	|云平台下发fota升级指令时，模组fota升级结束时，上报此事件。|
+|25	|10	|NULL	|0	|收到云平台的RST数据包，主动上报此事件。此情况需要断开连接，重新连接完成订阅才能正常通信。|
+|27	|0	|data	|data_len	|收到云平台下发数据，在modem=1的情况下并调用set_event_callcb(usrfunc)设置了回调函数的情况下上报此事件。|
+|28	|0	|NULL	|0	|收到云平台下发数据，在modem=2，并且模组无缓存数据(aep.check()返回0时，即表示无缓存数据)时上报此事件。|
+|others	|0	|NULL	|0	|忽略此类事件|
 
 
 ###### 使用示例
@@ -12362,14 +12532,30 @@ dict_cmd={'数据上报':0x02,
           '下行指令固定':0x06,
           '指令响应':0x86
          }
-send_type={
-	'RAI_NONE':0,
-	'RAI_1':1,
-	'RAI_2':2
+send_type={'RAI_NONE':0,
+            'TYpe_001':1,
+            'TYpe_002':2,
+            'TYpe_100':100,
+            'TYpe_101':101,
+            'TYpe_102':102
 }
 servcei_info={
     'ip':"221.229.214.202",
     'port':"5683"
+}
+modem_type={
+    'cache_no_urc':0,
+    'no_cache':1,
+    'cache_have_urc':2
+}
+aep_event={
+    'psm_event':0,
+    'con_event':21,
+    'send_event':22,
+    'recover_event':23,
+    'rst_event':25,
+    'recv_event_data':27,
+    'recv_event_flag':28,
 }
 
 def aep_pack_cmdtype02(service_id,data_in):
@@ -12428,7 +12614,7 @@ def aep_unpack(data_in):
     else:
         print('not support')
 
-aep=AEP(servcei_info['ip'],servcei_info['port'])
+
 
 def recv():
     data=bytearray(20)	
@@ -12455,20 +12641,66 @@ def close():
     ret = aep.close()
     print('close ',ret)
     
+def deal_conn(data):
+    if data[1] == 0:
+        print('connect CtWing success!')
+    if data[1] == 3:
+        print('subscription /19/0/0 success!')
+        send()
+    if data[1] == -1 or data[1] == 1:
+        print('connect CtWing failed!')
+        aep.connect_check()
+def deal_recv(data):
+    if data[1] == 0:
+        aep_unpack(data[2])
+        print('will close')
+        close()
+    if data[1] == 5:
+        print('recv data from ctwing falied')
+        
+def deal_psm(data):
+    if data[1] == 0:
+        print('enter modem psm')
+    if data[1] == 1:
+        print('exit modem psm')
+def deal_send(data):
+    if data[1] == 4:
+        print('send data to ctwing success')
+    else:
+        print('send data to ctwing falied')
+        
+def deal_rst(data):
+    print('recv rst messge from platform')
+    close()
+def deal_recover(data):
+    print('deal_recover:',data)
+    
+def event_cb(args):
+    print('args:',args)
+    if args[0] == aep_event['con_event']:
+        deal_conn(args)
+    if args[0] == aep_event['send_event']:
+        deal_send(args)
+    if args[0] == aep_event['recv_event_data'] or args[0] == aep_event['recv_event_flag']:
+        deal_recv(args)
+    if args[0] == aep_event['rst_event']:
+        deal_rst(args)
+    if args[0] == aep_event['psm_event']:
+        deal_psm(args)
+    if args[0] == aep_event['recover_event']:
+        deal_recover(args)
+    
+def init():
+    
+    aep.set_event_callcb(event_cb)
+    connect()
+    
 loop_num = 0
 
 def do_task():
-    connect()
-    send()
-    global loop_num
-    while loop_num < 10:
-        loop_num=loop_num+1
-        utime.sleep(3)
-        ret = recv()
-        if ret == 0:
-            break
-    close()
+    init()
 
+aep=AEP(servcei_info['ip'],servcei_info['port'],modem_type['no_cache'])
 if __name__ == '__main__':
     do_task()
 

@@ -204,7 +204,7 @@ b'\xb3\xc9Y\x1b\xe9'
 
 
 
-##### Initialize SD card driver
+##### Initialize SD card driver（SPI mode）
 
 At present, it is only supported by ec600n / ec800n platforms.
 
@@ -257,7 +257,7 @@ Mount the underlying file system to VFS.
 >>> uos.mount(cdev, '/sd')
 ```
 
--SD card usage example
+-SD card usage example(SPI mode)
 
   At present, it is only supported by ec600n / ec800n platforms.
 
@@ -274,6 +274,111 @@ Mount the underlying file system to VFS.
 ```
 
 
+
+##### Initialize SD card driver(SDIO mode)
+
+At present,it is only supported by EC600U/EC200U platforms.
+
+> **VfsSd(str)**
+
+Initialize SD card Use SDIO interface.
+
+* Parameter
+
+| Parameter | Type | Description                            |
+| ---- | -------- | ----------------------------------- |
+| str  | str      | pass "sd_fs" |
+
+* Return Value
+Return vfs object if the execution is successful, otherwise report error.
+
+- Pin Correspondence
+
+| platform   |                                                          |
+| ------ | ------------------------------------------------------------ |
+| EC600U | CMD:Pin number 48<br />DATA0:Pin number 39<br />DATA1:Pin number 40<br />DATA2:Pin number 49<br />DATA3:Pin number 号50<br />CLK:Pin number 132 |
+| EC200U | CMD:Pin number 33<br />DATA0:Pin number 31<br />DATA1:Pin number 30<br />DATA2:Pin number 29<br />DATA3:Pin number 28<br />CLK:Pin number 32 |
+
+* Exmaple 
+
+```python
+>>> from uos import VfsSd
+>>> udev = VfsSd("sd_fs")
+```
+
+##### Set detection pin
+
+> **set_det(vfs_obj.GPIOn,mode)**
+
+Set the detection pin and mode of SD card insert and plug out detection.
+
+* Parameter
+
+| Parameter          | Type | Description                                                     |
+| ------------- | -------- | ------------------------------------------------------------ |
+| vfs_obj.GPIOn | int      | GPIO pin number for SD card insert and plug out detection, refer to the definition of Pin module |
+| mode          | int      | 0: when inserte the SD card, the detection port is at low level; when plug out the SD card, the detection port is at high level<br />1:when inserte the SD card, the detection port is at high level；when plug out the SD card, the detection port is at low level |
+
+* Return Value
+
+Return 0 if the execution is successful, otherwise return -1.
+
+* Exmaple 
+
+```python
+>>> from uos import VfsSd
+>>> udev = VfsSd("sd_fs")
+>>> uos.mount(udev, '/sd')
+>>> udev.set_det(udev.GPIO10,0)#Use gpio10 as the card detection pin, insert the SD card, the detection port is low level, plug out the SD card, the detection port is high level(the actual use depends on the hardware).
+```
+
+##### Setting the card insertion and removal callback function
+
+> **set_callback(fun)**
+
+Set the user callback function in case of card insert and plug out event.
+
+* Parameter
+
+| Parameter | Type | Description                                                     |
+| ---- | -------- | ------------------------------------------------------------ |
+| fun  | function | insertion and removal callback function [ind_type]<br />ind_type: event type，0：plug out 1：insert |
+
+* Return Value
+
+Return 0 if the execution is successful, otherwise return -1.
+
+
+SD card usage example(SDIO mode)
+
+At present,it is only supported by EC600U/EC200U platforms.
+
+```python
+from uos import VfsSd
+import ql_fs
+udev = VfsSd("sd_fs")
+uos.mount(udev, '/sd')
+udev.set_det(udev.GPIO10,0)
+#file read / write
+f = open('/sd/test.txt','w+')
+f.write('1234567890abcdefghijkl')
+f.close()
+uos.listdir('/sd')
+f = open('/sd/test.txt','r')
+f.read()
+f.close()
+#card insertion and removal callback function
+def call_back(para):
+    if(para == 1):
+        print("insert")
+        print(uos.listdir('/usr'))  
+        print(ql_fs.file_copy('/usr/1.txt','/sd/test.txt'))#copy the test.Txt under SD card to 1.txt under usr partition
+        print(uos.listdir('/usr'))
+    elif(para == 0):
+        print("plug out")   
+        
+udev.set_callback(call_back)
+```
 
 #### gc - Control the Garbage Collector
 
@@ -1199,8 +1304,8 @@ type - socket type
 proto - protocol number
 
 * usocket.IPPROTO_TCP
-
 * usocket.IPPROTO_UDP
+* usocket.IPPROTO_TCP_SER : socket for TCP Server
 
 Others
 
@@ -1216,6 +1321,8 @@ import usocket
 socket = usocket.socket(usocket.AF_INET, usocket.SOCK_STREAM)
 # Creating UDP-based Datagram Sockets
 socket = usocket.socket(usocket.AF_INET, usocket.SOCK_DGRAM)
+# Creating TCP-based server sockets
+socket = usocket.socket(usocket.AF_INET, usocket.SOCK_STREAM, usocket.IPPROTO_TCP_SER)
 ```
 
 ##### Translate the host/port argument into a sequence of 5-tuples
@@ -1230,6 +1337,25 @@ Translate the host/port argument into a sequence of 5-tuples. The resulting list
 
 #### Class Socket Methods
 
+##### Bind specified address
+
+> **socket.bind(address)**
+
+Bind the socket to address. The socket must not already be bound. (The format of address depends on the address family)
+
+* `address` : A tuple or list containing addresses and port numbers
+
+Example:
+
+```
+# Bind the datacall IP to the server address
+socket.bind(("",80))
+# Bind a custom IP to the server address
+socket.bind(("192.168.0.1",80))
+```
+
+#####
+
 ##### Enable a server to accept connections
 
 
@@ -1243,7 +1369,7 @@ Enable a server to accept connections. The maximum number of connections can be 
 
 > **socket.accept()**
 
-Accept a connection and return a tuple. The socket must be bound to an address and listening for connections. The return value is a pair `(conn, address)`
+Accept a connection and return a tuple. The socket must be bound to an address&port and listening for connections. The return value is a pair `(conn, address, port)`
 
 * `conn` : new socket object usable to send and receive data on the connection
 
@@ -1398,6 +1524,8 @@ Get socket status. The status values are described as follows:
 | 10           | TIME_WAIT   | The socket has been closed, waiting for the remote socket to close, that is, FIN, ACK, FIN, ACK are all finished, and become CLOSED state after 2MSL time. |
 
 Note:
+
+The BG95 platform does not support this API.
 
 If the user calls the ` socket.getsocketsta () ` after calling the ` socket.close () ` method, it returns-1 because the object resources and so on created at this point have been freed.
 
@@ -1567,7 +1695,7 @@ b'\x07\x00\x00\x00\t\x00\x00\x00'
 
 ##### Pack the values *v1*, *v2*, … according to the format string *fmt* into a *buffer* starting at *offset*
 
-> **ustruct.pack_info(fmt, buffer, offset, v1, v2, ...)**
+> **ustruct.pack_into(fmt, buffer, offset, v1, v2, ...)**
 
 Pack the values *v1*, *v2*, … according to the format string *fmt* into a *buffer* starting at *offset*. *offset* may be negative to count from the end of *buffer*.
 

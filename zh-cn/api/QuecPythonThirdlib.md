@@ -6,7 +6,7 @@
 
 注意：BC25PA平台不支持模块功能。
 
-> **aLiYun(productKey, productSecret, DeviceName, DeviceSecret)**
+> **aLiYun(productKey, productSecret, DeviceName, DeviceSecret, MqttServer)**
 
 配置阿里云物联网套件的产品信息和设备信息。
 
@@ -184,6 +184,8 @@ ali.error_register_cb(err_cb)
 > **aLiYun.getAliyunSta()**
 
 获取阿里云连接状态
+
+注意：BG95平台不支持该API。
 
 * 参数
 
@@ -447,6 +449,8 @@ tenxun.error_register_cb(err_cb)
 > **TXyun.getTXyunsta()**
 
 获取腾讯云连接状态
+
+注意：BG95平台不支持该API。
 
 * 参数
 
@@ -840,6 +844,42 @@ import log
 Testlog = log.getLogger("TestLog")
 ```
 
+##### 设置日志输出位置
+
+> **log.set_output(out)**
+
+设置日志输出的位置, 目前只支持uart和usys.stdout
+
+- 参数
+
+| 参数 | 类型     | 说明                      |
+| ---- | -------- | ------------------------- |
+| out  | iterator | uart类型或者是usys.stdout |
+
+- 返回值
+  - None
+- 示例
+
+```python
+import log
+log.basicConfig(level=log.INFO)
+Testlog = log.getLogger("TestLog")
+
+# 设置输出到debug口
+from machine import UART
+uart = UART(UART.UART0, 115200, 8, 0, 1, 0)
+
+log.set_output(uart)
+
+Testlog.info("this is a Test log") # 会输出带对应的uart口
+
+# 从uart口切换成交互口输出
+import usys
+log.set_output(usys.stdout)
+
+Testlog.info("this is a Test log") # 会输出到交互口
+```
+
 ##### 输出debug级别的日志
 
 > **log.debug(msg)**
@@ -1221,6 +1261,8 @@ c.error_register_cb(err_cb)
 > **MQTTClient.get_mqttsta()**
 
 获取mqtt连接状态
+
+注意：BG95平台不支持该API。
 
 PS：如果用户调用了 disconnect() 方法之后，再调用 MQTTClient.get_mqttsta() 会返回-1，因为此时创建的对象资源等都已经被释放。
 
@@ -1664,7 +1706,7 @@ if __name__ == '__main__':
 
 2、有两个参数时：
 
-表示交互保护可通过密码开启和关闭
+表示交互保护可通过密码开启和关闭(少数平台不支持密码保护功能，所以当遇到不支持的平台，输入密码会直接报错。如：BC25,600M)
 
 * 参数
 
