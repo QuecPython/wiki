@@ -3194,9 +3194,13 @@ Module function: Firmware upgrade.
 
 ##### Create a fota Object
 
+Optional parameters to select whether to automatically restart after downloading the upgrade package 
+
 > **import fota**
 >
-> **fota_obj = fota()**
+> **fota_obj = fota()**#Automatically restart after downloading
+>
+> **fota_obj = fota(reset_disable=1)**#Not restart after downloading
 
 ##### One-click Upgrade Interface
 
@@ -3209,8 +3213,8 @@ Realize the whole process of firmware download and upgrade with one interface
 | Parameter | Parameter Type | Description                                                  |
 | --------- | -------------- | ------------------------------------------------------------ |
 | url1      | str            | The url of the first stage upgrade package to be downloaded  |
-| url2      | str            | The url of the second stage upgrade package to be downloaded. Note: this parameter must be input for the minimum system upgrade because the minimum system is divided into two stages, while this parameter is forbidden to be input  for DFOTA and FullFOTA upgrade because there is only one stage for DFOTA and FullFOTA. |
-| callback  | function       | Callback function which shows downloading progress and status (Optional). Note: This callback is valid on EC600S/EC600N modules with non-minimum system upgrade mode. It is invalid on other modules. |
+| url2      | str            | The url of the second stage upgrade package to be downloaded. Note: this parameter must be input for the minimum system upgrade because the minimum system is divided into two stages, while this parameter is forbidden to be input  for DFOTA and FullFOTA upgrade because there is only one stage for DFOTA and FullFOTA. Only EC600S/EC600N modules support the minimum system upgrade mode. |
+| callback  | function       | Callback function which shows downloading progress and status (Optional). Note: This callback is valid on non-minimum system upgrade mode. |
 
 - Return Value
 
@@ -3223,7 +3227,7 @@ Realize the whole process of firmware download and upgrade with one interface
 - Example
 
 ```python
-#args[0] indicates the download status. If the download is successful, it returns an integer value: 0 or 1 or 2. If the download fails, it returns an integer value: -1. args[1] represents the download progress. When the download status shows success, it represents the percentage. When the download status shows failure, it represents error code
+#args[0] indicates the download status. If the download is successful, it returns an integer value: 0 or 1 or 2. If the download fails, it returns an integer value: values other than 0,1,2. args[1] represents the download progress. Note:on EC600S/EC600N module,when the download status shows success, it represents the percentage. When the download status shows failure, it represents error code
 def result(args):
     print('download status:',args[0],'download process:',args[1])
     
@@ -3255,7 +3259,7 @@ Write upgrade package data stream
 
 * Note
 
-  * The BC25PA platform does not support this method.
+  * Currently only EC600S/EC600N/EC800N/EC200U/EC600U platform support this method.
 
 
 ##### Interface to Upgrade Step by Step and Refresh Cached Data to Flash
@@ -3273,9 +3277,9 @@ Refresh cached data to the flash.
   * 0 	Successful execution
   * -1	Failed execution
 
-* note
+* Note
 
-  * The BC25PA platform does not support this method.
+  * Currently only EC600S/EC600N/EC800N/EC200U/EC600U platform support this method.
 
 ##### Interface to Upgrade Step by Step and Verify the Data
 
@@ -3292,9 +3296,9 @@ Refresh cached data to the flash.
   * 0 	Successful execution
   * -1	Failed execution
 
-* note
+* Note
 
-  * The BC25PA platform does not support this method.
+  * Currently only EC600S/EC600N/EC800N/EC200U/EC600U platform support this method.
 
 * Example
 
@@ -3303,13 +3307,84 @@ Refresh cached data to the flash.
 0
 ```
 
+##### Interface to set up APN for FOTA download 
 
+> fota_obj.apn_set(fota_apn=,ip_type=,fota_user=,fota_password=)
+
+Set the APN information used for FOTA download.
+
+* Parameter
+
+| Parameter     | Parameter Type | Description                                                  |
+| ------------- | -------------- | ------------------------------------------------------------ |
+| fota_apn      | str            | APN（You can choose not to pass this parameter）             |
+| ip_type       | int            | IP type：0-IPV4，1-IPV6（You can choose not to pass this parameter） |
+| fota_user     | str            | user name（You can choose not to pass this parameter）       |
+| fota_password | str            | password（You can choose not to pass this parameter）        |
+
+* Return Value
+
+  * 0 	Successful execution
+  * -1	Failed execution
+
+* Example
+
+```python
+>>> fota_obj.apn_set(fota_apn="CMNET",ip_type=0,fota_user="abc",fota_password="123")
+0
+```
+
+* Note
+
+  - Currently only BG95 platform support this method.
+
+##### Interface to cancel FOTA downloading
+
+> fota_obj.download_cancel()
+
+Cancel the FOTA download in progress.
+
+- Parameter
+
+  - None
+
+* Return Value
+
+  * 0 	Successful execution
+  * -1	Failed execution
+
+* Example
+
+```python
+import fota
+import _thread
+import utime
+
+def th_func():
+    utime.sleep(40) #Depending on the size of the package, make sure to cancel before the download is complete
+    fota_obj.download_cancel()
+
+def result(args):
+    print('download status:',args[0],'download process:',args[1])
+
+fota_obj = fota()
+_thread.start_new_thread(th_func, ())
+fota_obj.httpDownload(url1="http://www.example.com/fota.bin",callback=result)
+```
+
+* Note
+
+  - Currently only BG95 platform support this method.
+
+  
 
 ##### Example
 
 ###### One-click Upgrade Interface
 
 ```python
+#Automatically restart after downloading
+
 import fota
 import utime
 import log
@@ -3340,9 +3415,25 @@ if __name__ == '__main__':
     run()    
 ```
 
+```python
+#Not automatically restart after the download is complete (not supported on the EC600S、EC600N、EC800N platform)
+
+# EC200A/EC200U/BG95 platform：
+import fota
+from misc import Power
+fota_obj = fota(reset_disable=1)
+def result(args):
+    print('download status:',args[0],'download process:',args[1])
+fota_obj.httpDownload(url1="http://www.example.com/dfota.bin",callback=result) #expected that not restart after execution
+Power.powerRestart() #Manually restart
+```
+
 
 
 ###### Interface to Upgrade Step by Step
+
+- Note
+  - Currently only EC600S/EC600N/EC800N/EC200U/EC600U platform support this feature.
 
 ```python
 '''

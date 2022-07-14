@@ -3258,9 +3258,13 @@ if __name__ == '__main__':
 
 ##### 创建fota对象
 
+可选择传入参数以选择下载完升级包后是否自动重启
+
 > **import fota**
 >
-> **fota_obj = fota()**
+> **fota_obj = fota()** #下载完自动重启
+>
+> **fota_obj = fota(reset_disable=1)** #下载完不自动重启
 
 ##### 一键升级接口
 
@@ -3273,8 +3277,8 @@ if __name__ == '__main__':
 | 参数     | 参数类型 | 参数说明                                                     |
 | -------- | -------- | ------------------------------------------------------------ |
 | url1     | str      | 待下载的第一阶段升级包的url                                  |
-| url2     | str      | 待下载的第二阶段升级包的url，注：最小系统升级分为2个阶段，必须传入该参数，而差分升级、全包升级只有一个阶段，该参数禁止传入 |
-| callback | function | 回调函数，显示下载进度和状态，可选择传不传入，注：EC600S/EC600N平台且是非最小系统升级方式时有效，其他平台该回调没有反应 |
+| url2     | str      | 待下载的第二阶段升级包的url，注：最小系统升级分为2个阶段，必须传入该参数，而差分升级、全包升级只有一个阶段，该参数禁止传入，仅EC600S/EC600N平台支持最小系统升级方式 |
+| callback | function | 回调函数，显示下载进度和状态，可选择传不传入，注：非最小系统升级方式时有效 |
 
 - 返回值
 
@@ -3283,7 +3287,7 @@ if __name__ == '__main__':
 - 示例
 
 ```python
-#args[0]表示下载状态，下载成功返回整型值：0或1或2，下载失败返回整型值：-1，args[1]表示下载进度，当下载状态是成功时表示百分比，下载状态是失败时表示错误码
+#args[0]表示下载状态，下载成功返回整型值：0或1或2，下载失败返回整型值：非0、1、2，args[1]表示下载进度(注：EC600S/EC600N平台当下载状态是成功时表示百分比，下载状态是失败时表示错误码)
 def result(args):
     print('download status:',args[0],'download process:',args[1])
     
@@ -3314,7 +3318,7 @@ fota_obj.httpDownload(url1="http://www.example.com/fota1.bin",url2="http://www.e
 
 * 注意
 
-  BC25PA平台不支持此方法。
+  目前支持平台：EC600S/EC600N/EC800N/EC600U/EC200U。
 
 
 ##### 分步升级接口，刷新缓存数据到flash
@@ -3333,7 +3337,7 @@ fota_obj.httpDownload(url1="http://www.example.com/fota1.bin",url2="http://www.e
 
 * 注意
 
-  BC25PA平台不支持此方法。
+  目前支持平台：EC600S/EC600N/EC800N/EC600U/EC200U。
 
 
 ##### 分步升级接口，数据校验
@@ -3352,7 +3356,7 @@ fota_obj.httpDownload(url1="http://www.example.com/fota1.bin",url2="http://www.e
 
 * 注意
 
-  BC25PA平台不支持此方法。
+  目前支持平台：EC600S/EC600N/EC800N/EC600U/EC200U。
   
 * 示例
 
@@ -3361,6 +3365,73 @@ fota_obj.httpDownload(url1="http://www.example.com/fota1.bin",url2="http://www.e
 0
 ```
 
+##### 设置FOTA下载APN
+
+> fota_obj.apn_set(fota_apn=,ip_type=,fota_user=,fota_password=)
+
+设置FOTA下载使用的APN信息。
+
+* 参数
+
+| 参数          | 参数类型 | 参数说明                                       |
+| ------------- | -------- | ---------------------------------------------- |
+| fota_apn      | str      | APN（可选择传不传入该参数）                    |
+| ip_type       | int      | IP类型：0-IPV4，1-IPV6（可选择传不传入该参数） |
+| fota_user     | str      | 用户名（可选择传不传入该参数）                 |
+| fota_password | str      | 密码（可选择传不传入该参数）                   |
+
+* 返回值
+
+写入成功返回整型值0，写入失败返回值整型值-1。
+
+* 示例
+
+```python
+>>> fota_obj.apn_set(fota_apn="CMNET",ip_type=0,fota_user="abc",fota_password="123")
+0
+```
+
+* 注意
+
+  目前支持平台：BG95。
+
+##### 取消FOTA下载
+
+> fota_obj.download_cancel()
+
+取消正在进行的FOTA下载。
+
+- 参数
+
+无
+
+* 返回值
+
+取消成功返回整型值0，取消失败返回整型值-1。
+
+* 示例
+
+```python
+import fota
+import _thread
+import utime
+
+def th_func():
+    utime.sleep(40) #时间根据下载包的大小来定，确保在下载完之前取消
+    fota_obj.download_cancel()
+
+def result(args):
+    print('download status:',args[0],'download process:',args[1])
+
+fota_obj = fota()
+_thread.start_new_thread(th_func, ())
+fota_obj.httpDownload(url1="http://www.example.com/fota.bin",callback=result)
+```
+
+* 注意
+
+  目前支持平台：BG95。
+
 
 
 ##### 使用示例
@@ -3368,6 +3439,8 @@ fota_obj.httpDownload(url1="http://www.example.com/fota1.bin",url2="http://www.e
 ###### 一键升级接口
 
 ```python
+#下载完自动重启
+
 import fota
 import utime
 import log
@@ -3398,9 +3471,26 @@ if __name__ == '__main__':
     run()    
 ```
 
+```python
+# 下载完不自动重启(EC600S/EC600N/EC800N/平台不支持)
+
+# EC200A/EC200U平台/BG95平台：
+import fota
+from misc import Power
+fota_obj = fota(reset_disable=1)
+def result(args):
+    print('download status:',args[0],'download process:',args[1])
+fota_obj.httpDownload(url1="http://www.example.com/dfota.bin",callback=result) #期望下载完不重启
+Power.powerRestart() #手动重启进行升级
+```
+
 
 
 ###### 分步升级接口
+
+- 注意
+
+  目前支持平台：EC600S/EC600N/EC800N/EC600U/EC200U。
 
 ```python
 '''
