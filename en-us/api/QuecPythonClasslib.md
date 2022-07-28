@@ -1130,7 +1130,7 @@ Call this API to writes a phone number record.
 
 > **sim.setCallback(usrFun)**
 
-Call this API to registers the listening callback function. The callback function will be triggered when receiving SMS.
+Call this API to registers the listening callback function.
 
 (Only valid when the SIM card hot-plugging is enabled.)
 
