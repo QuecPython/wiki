@@ -1360,6 +1360,69 @@ sim.setCallback(cb)
 
 
 
+##### 设置来电自动挂断
+
+> **voiceCall.setAutoCancel(enable)**
+
+设置来电自动挂断（仅1803S平台支持该接口）。
+
+* 参数 
+
+| 参数        | 参数类型 | 参数说明                                                     |
+| ----------- | -------- | ------------------------------------------------------------ |
+| enable      | int      | 开启或者关闭来电自动挂断功能，1：开启，0：关闭               |
+
+* 返回值
+
+  成功返回整型0，失败返回整型-1。
+
+* 示例
+
+```python
+#手机呼叫模块，默认不会自动挂断
+>>> voiceCall.getAutoCancelStatus()
+0
+
+#设置自动挂断功能，手机呼叫模块，默认自动挂断
+>>> voiceCall.setAutoCancel(1)
+0
+>>> voiceCall.getAutoCancelStatus()
+1
+```
+
+
+
+##### 获取来电自动挂断使能状态
+
+> **voiceCall.getAutoCancelStatus()**
+
+获取来电自动挂断使能状态（仅1803S平台支持该接口）。
+
+* 参数 
+
+无
+
+* 返回值
+
+  0:默认不会自动挂断
+  1:默认自动挂断
+
+* 示例
+
+```python
+#手机呼叫模块，默认不会自动挂断
+>>> voiceCall.getAutoCancelStatus()
+0
+
+#设置自动挂断功能，手机呼叫模块，默认自动挂断
+>>> voiceCall.setAutoCancel(1)
+0
+>>> voiceCall.getAutoCancelStatus()
+1
+```
+
+
+
 ##### 设置DTMF音
 
 > **voiceCall.startDtmf(dtmf, duration)**

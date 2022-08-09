@@ -1329,6 +1329,69 @@ This function hangs up a call.
 
 
 
+##### Set the automatic call hangup function
+
+> **voiceCall.setAutoCancel(enable)**
+
+Set the automatic call hangup function(Only supported on 1803s platform)。
+
+* Parameter 
+
+| Parameter | Type   | Description       |
+| --------- | ------ | ------------------------------------------------------------ |
+| enable    | int    | Enable or disable the automatic call hangup function. 1: on, 0: off            |
+
+* Return Value
+
+  Returns 0 on success, -1 otherwise.
+
+* Example
+
+```python
+#Using the cell phone call UE, It does not automatically hang up by default
+>>> voiceCall.getAutoCancelStatus()
+0
+
+#Set the automatic hang up function, call the UE with the mobile phone, the default automatic hang up
+>>> voiceCall.setAutoCancel(1)
+0
+>>> voiceCall.getAutoCancelStatus()
+1
+```
+
+
+
+##### To obtain the status is enable or not of automatic call hangup
+
+> **voiceCall.getAutoCancelStatus()**
+
+To obtain the status is enable or not of automatic call hangup(Only supported on 1803s platform)。
+
+* Parameter 
+
+none
+
+* Return Value
+
+  0:It does not automatically hang up by default
+  1:default automatic hang up
+
+* Example
+
+```python
+#Using the cell phone call UE, It does not automatically hang up by default
+>>> voiceCall.getAutoCancelStatus()
+0
+
+#Set the automatic hang up function, call the UE with the mobile phone, the default automatic hang up
+>>> voiceCall.setAutoCancel(1)
+0
+>>> voiceCall.getAutoCancelStatus()
+1
+```
+
+
+
 ##### Set DTMF
 
 > **voiceCall.startDtmf(dtmf, duration)**
