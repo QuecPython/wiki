@@ -6685,7 +6685,7 @@ lcd = LCD()   # Create lcd object
 
 
 
-###### LCD Initialization 
+###### LCD Initialization （interface 1：LCM interface of the module）
 
 > **lcd.lcd_init(lcd_init_data, lcd_width, lcd_hight, lcd_clk, data_line, line_num, lcd_type, lcd_invalid, lcd_display_on, lcd_display_off, lcd_set_brightness)**
 
@@ -6706,6 +6706,44 @@ It initializes LCD.
 | lcd_display_on     | bytearray | Inputting configuration commands for LCD screen light.       |
 | lcd_display_off    | bytearray | Inputting configuration commands for LCD screen off.         |
 | lcd_set_brightness | bytearray | Inputting the configuration command of LCD screen brightness. Setting to None indicates that the brightness is controlled by LCD_BL_K (some screens are controlled by registers, and some are controlled by LCD_BL_K) |
+
+* Return Value
+
+  * 0  	 Successful execution.
+  * -1  	Initialized.
+  * -2  	Parameter error (empty or too large (bigger than 1000 pixels)) .
+  * -3  	Failed cache request.
+  * -5  	Configuration parameter error.
+
+
+
+###### LCD Initialization（interface 2：SPI  interface of the module）
+
+> **lcd.lcd_init(lcd_init_data, lcd_width, lcd_hight, lcd_clk, data_line, line_num, lcd_type, lcd_invalid, lcd_display_on, lcd_display_off, lcd_set_brightness, lcd_interface, spi_port, spi_mode, cs_pin, dc_pin, rst_pin)**
+
+It initializes LCD. 
+
+- Parameter
+
+| Parameter          | Type      | Description                                                  |
+| ------------------ | --------- | ------------------------------------------------------------ |
+| lcd_init_data      | bytearray | Inputting configuration commands for LCD.                    |
+| lcd_width          | int       | The width of LCD screen, not more than 500.                  |
+| lcd_hight          | int       | The height of LCD screen, not more than 500.                 |
+| lcd_clk            | int       | SPI clock. refer to the parameter description of Create SPI Object in machine SPI. |
+| data_line          | int       | Number of data lines, the parameter values are 1 and 2.      |
+| line_num           | int       | The number of lines, the parameter values are 3 and 4.       |
+| lcd_type           | int       | Screen type. 0: rgb; 1: fstn.                                |
+| lcd_invalid        | bytearray | Inputting configuration commands for LCD area settings.      |
+| lcd_display_on     | bytearray | Inputting configuration commands for LCD screen light.       |
+| lcd_display_off    | bytearray | Inputting configuration commands for LCD screen off.         |
+| lcd_set_brightness | bytearray | Inputting the configuration command of LCD screen brightness. Setting to None indicates that the brightness is controlled by LCD_BL_K (some screens are controlled by registers, and some are controlled by LCD_BL_K) |
+| lcd_interface      | int       | type of LCD interface. 0：LCM interface；1：SPI interface    |
+| spi_port           | int       | Channel selection[0,1]，refer to SPI description in machine. |
+| spi_mode           | int       | SPI working mode (ususally mode 0): <br />Clock polarity CPOL: When SPI is idle, the level of the clock signal SCLK (0: Low level when idle; 1: High level when idle)<br /> 0 : CPOL=0, CPHA=0<br /> 1 : CPOL=0, CPHA=1<br /> 2:  CPOL=1, CPHA=0<br /> 3:  CPOL=1, CPHA=1 |
+| cs_pin             | int       | CS PIN，refer to Pin Constant Description                    |
+| dc_pin             | int       | DC PIN，refer to Pin Constant Description                    |
+| rst_pin            | int       | RST PIN，refer to Pin Constant Description                   |
 
 * Return Value
 
