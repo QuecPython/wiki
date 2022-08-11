@@ -6,7 +6,7 @@ Note: The BC25PA platform does not support this module function.
 
 Function : This module provides Alibaba Cloud loT suite client function. The current product node type only supports "device" and device authentication mode supports "unique-certificate-per-device authentication" and "unique-certificate-per-product authentication".
 
-> **aLiYun(productKey, productSecret, DeviceName, DeviceSecret)**
+> **aLiYun(productKey, productSecret, DeviceName, DeviceSecret, MqttServer)**
 
 Configure the product and device information of Alibaba Cloud loT suite.
 
@@ -176,6 +176,8 @@ Send Ping Package
 > **aLiYun.getAliyunSta()**
 
 Get Alibaba Cloud connection status.
+
+Note: The BG95 platform does not support this API.
 
 * Parameter
   * None
@@ -433,7 +435,9 @@ Send Ping package.
 
 > **TXyun.getTXyunsta()**
 
-Get Tencent Cloud connection status
+Get Tencent Cloud connection status.
+
+Note: The BG95 platform does not support this API.
 
 * Parameter
 
@@ -823,6 +827,44 @@ import log
 Testlog = log.getLogger("TestLog")
 ```
 
+##### Set log output location
+
+> **log.set_output(out)**
+
+Set the log output location. Currently, only uART and usys. Stdout are supported
+
+- parameter
+
+| parameter | Type     | Description          |
+| --------- | -------- | -------------------- |
+| out       | iterator | uart or usys. stdout |
+
+- Return Value
+  - None
+- Example
+
+```python
+import log
+log.basicConfig(level=log.INFO)
+Testlog = log.getLogger("TestLog")
+
+# Set the output to the debug port
+from machine import UART
+uart = UART(UART.UART0, 115200, 8, 0, 1, 0)
+
+log.set_output(uart)
+
+Testlog.info("this is a Test log") # Output with the corresponding UART port
+
+# Switch from uART port to interactive port output
+import usys
+log.set_output(usys.stdout)
+
+Testlog.info("this is a Test log") # Output to the interface
+```
+
+##### 
+
 ##### Output Log Debug
 
 > **log.debug(tag, msg)**
@@ -1210,6 +1252,8 @@ Block waiting for server message response.
 
 Get MQTT connection status.
 
+Note: The BG95 platform does not support this API.
+
 PS: After users use the disconnect() method, and then  -1 is returned if MQTTClient.get_mqttsta() is called because the created object resources have been released at this time. 
 
 * Parameter
@@ -1543,7 +1587,7 @@ if __name__ == '__main__':
 
 Function: This module provides the interface fir time synchronization.
 
-Note: The BC25PA platform does not support this module function.
+Note: When opening the BC25PA platform telecommunications card, you need to state that the SIM card must support such services, which is generally not restricted by China Mobile Unicom (you need to confirm with the operator when opening the card).
 
 ##### Return the Current NTP Server Address
 
@@ -1637,10 +1681,10 @@ Applicable modules: EC100Y(V0009) and above; EC600S(V0002) and above.
 
 
 
-> ​	**system.replSetEnable(flag)**
+> ​	**system.replSetEnable(flag，**kw_args)**
 
 Set interactive protect. After setting to enable interactive protect, all external commands and codes cannot be executed. It is an irreversible operation. Please enable it after confirmation. The default is Disable.
-
+（The parameter [Password] is not supported in BC25 and 600M paltform）
 * Parameter
 
 | Parameter | Type | Description                       |
