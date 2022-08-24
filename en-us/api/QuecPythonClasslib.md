@@ -1130,7 +1130,7 @@ Call this API to writes a phone number record.
 
 > **sim.setCallback(usrFun)**
 
-Call this API to registers the listening callback function. The callback function will be triggered when receiving SMS.
+Call this API to registers the listening callback function.
 
 (Only valid when the SIM card hot-plugging is enabled.)
 
@@ -1325,6 +1325,69 @@ This function hangs up a call.
 ```python
 >>> voiceCall.callEnd()
 0
+```
+
+
+
+##### Set the automatic call hangup function
+
+> **voiceCall.setAutoCancel(enable)**
+
+Set the automatic call hangup function(Only supported on 1803s platform)。
+
+* Parameter 
+
+| Parameter | Type   | Description       |
+| --------- | ------ | ------------------------------------------------------------ |
+| enable    | int    | Enable or disable the automatic call hangup function. 1: on, 0: off            |
+
+* Return Value
+
+  Returns 0 on success, -1 otherwise.
+
+* Example
+
+```python
+#Using the cell phone call UE, It does not automatically hang up by default
+>>> voiceCall.getAutoCancelStatus()
+0
+
+#Set the automatic hang up function, call the UE with the mobile phone, the default automatic hang up
+>>> voiceCall.setAutoCancel(1)
+0
+>>> voiceCall.getAutoCancelStatus()
+1
+```
+
+
+
+##### To obtain the status is enable or not of automatic call hangup
+
+> **voiceCall.getAutoCancelStatus()**
+
+To obtain the status is enable or not of automatic call hangup(Only supported on 1803s platform)。
+
+* Parameter 
+
+none
+
+* Return Value
+
+  0:It does not automatically hang up by default
+  1:default automatic hang up
+
+* Example
+
+```python
+#Using the cell phone call UE, It does not automatically hang up by default
+>>> voiceCall.getAutoCancelStatus()
+0
+
+#Set the automatic hang up function, call the UE with the mobile phone, the default automatic hang up
+>>> voiceCall.setAutoCancel(1)
+0
+>>> voiceCall.getAutoCancelStatus()
+1
 ```
 
 
@@ -1775,13 +1838,13 @@ def voice_callback(args):
 #### sms - SMS
 
 Function: Provides SMS related APIs.
-Note: The BC25PA platform does not support this module function.
+Note: The BC25PA and 600M platform does not support this module function.
 
 ##### Send the Message in TEXT Mode
 
 > **sms.sendTextMsg(phoneNumber, msg, codeMode)**
 
-This function sends the messages in TEXT mode.
+This function sends the messages in TEXT mode(Empty SMS is not supported).
 
 * Parameter
 
@@ -1813,7 +1876,7 @@ sms.sendTextMsg('18158626517', '这是一条夹杂中文与英文的测试短信
 
 > **sms.sendPduMsg(phoneNumber, msg, codeMode)**
 
-This function sends the messages in PDU mode.
+This function sends the messages in PDU mode(Empty SMS is not supported).
 
 * Parameter
 
@@ -1853,7 +1916,7 @@ This function deletes the specified messages.
 
 | Parameter | Type | Description                                                  |
 | --------- | ---- | ------------------------------------------------------------ |
-| index     | int  | The index of the short messages to be deleted.<br/>If short messages are stored in SIM card, range: 0-49.<br/>If short messages are stored in ME, range: 0-179. And only the short messages exist in the corresponding index, can the short messages be deleted successfully. |
+| index     | int  | The index of the short messages to be deleted                |
 
 * Return Value
 
@@ -1874,7 +1937,7 @@ This function deletes the specified messages.
 
 > **sms.setSaveLoc(mem1, mem2, mem3)**
 
-This function selects the memory storages, and the default is SIM message storage.
+This function selects the memory storages.
 
 * Parameter
 
@@ -1989,7 +2052,7 @@ This function reads messages in TEXT mode.
 
 | Parameter | Type | Description                                       |
 | --------- | ---- | ------------------------------------------------- |
-| index     | int  | The index of the message to be read. Range: 0 ~ 49. |
+| index     | int  | The index of the message to be read. Range:0 ~ MAX-1, MAX indicates the maximum number can be stored. |
 
 * Return Value
 
@@ -3194,9 +3257,13 @@ Module function: Firmware upgrade.
 
 ##### Create a fota Object
 
+Optional parameters to select whether to automatically restart after downloading the upgrade package 
+
 > **import fota**
 >
-> **fota_obj = fota()**
+> **fota_obj = fota()**#Automatically restart after downloading
+>
+> **fota_obj = fota(reset_disable=1)**#Not restart after downloading
 
 ##### One-click Upgrade Interface
 
@@ -3209,8 +3276,8 @@ Realize the whole process of firmware download and upgrade with one interface
 | Parameter | Parameter Type | Description                                                  |
 | --------- | -------------- | ------------------------------------------------------------ |
 | url1      | str            | The url of the first stage upgrade package to be downloaded  |
-| url2      | str            | The url of the second stage upgrade package to be downloaded. Note: this parameter must be input for the minimum system upgrade because the minimum system is divided into two stages, while this parameter is forbidden to be input  for DFOTA and FullFOTA upgrade because there is only one stage for DFOTA and FullFOTA. |
-| callback  | function       | Callback function which shows downloading progress and status (Optional). Note: This callback is valid on EC600S/EC600N modules with non-minimum system upgrade mode. It is invalid on other modules. |
+| url2      | str            | The url of the second stage upgrade package to be downloaded. Note: this parameter must be input for the minimum system upgrade because the minimum system is divided into two stages, while this parameter is forbidden to be input  for DFOTA and FullFOTA upgrade because there is only one stage for DFOTA and FullFOTA. Only EC600S/EC600N modules support the minimum system upgrade mode. |
+| callback  | function       | Callback function which shows downloading progress and status (Optional). Note: This callback is valid on non-minimum system upgrade mode. |
 
 - Return Value
 
@@ -3223,7 +3290,7 @@ Realize the whole process of firmware download and upgrade with one interface
 - Example
 
 ```python
-#args[0] indicates the download status. If the download is successful, it returns an integer value: 0 or 1 or 2. If the download fails, it returns an integer value: -1. args[1] represents the download progress. When the download status shows success, it represents the percentage. When the download status shows failure, it represents error code
+#args[0] indicates the download status. If the download is successful, it returns an integer value: 0 or 1 or 2. If the download fails, it returns an integer value: values other than 0,1,2. args[1] represents the download progress. Note:on EC600S/EC600N module,when the download status shows success, it represents the percentage. When the download status shows failure, it represents error code
 def result(args):
     print('download status:',args[0],'download process:',args[1])
     
@@ -3255,7 +3322,7 @@ Write upgrade package data stream
 
 * Note
 
-  * The BC25PA platform does not support this method.
+  * Currently only EC600S/EC600N/EC800N/EC200U/EC600U platform support this method.
 
 
 ##### Interface to Upgrade Step by Step and Refresh Cached Data to Flash
@@ -3273,9 +3340,9 @@ Refresh cached data to the flash.
   * 0 	Successful execution
   * -1	Failed execution
 
-* note
+* Note
 
-  * The BC25PA platform does not support this method.
+  * Currently only EC600S/EC600N/EC800N/EC200U/EC600U platform support this method.
 
 ##### Interface to Upgrade Step by Step and Verify the Data
 
@@ -3292,9 +3359,9 @@ Refresh cached data to the flash.
   * 0 	Successful execution
   * -1	Failed execution
 
-* note
+* Note
 
-  * The BC25PA platform does not support this method.
+  * Currently only EC600S/EC600N/EC800N/EC200U/EC600U platform support this method.
 
 * Example
 
@@ -3303,13 +3370,84 @@ Refresh cached data to the flash.
 0
 ```
 
+##### Interface to set up APN for FOTA download 
 
+> fota_obj.apn_set(fota_apn=,ip_type=,fota_user=,fota_password=)
+
+Set the APN information used for FOTA download.
+
+* Parameter
+
+| Parameter     | Parameter Type | Description                                                  |
+| ------------- | -------------- | ------------------------------------------------------------ |
+| fota_apn      | str            | APN（You can choose not to pass this parameter）             |
+| ip_type       | int            | IP type：0-IPV4，1-IPV6（You can choose not to pass this parameter） |
+| fota_user     | str            | user name（You can choose not to pass this parameter）       |
+| fota_password | str            | password（You can choose not to pass this parameter）        |
+
+* Return Value
+
+  * 0 	Successful execution
+  * -1	Failed execution
+
+* Example
+
+```python
+>>> fota_obj.apn_set(fota_apn="CMNET",ip_type=0,fota_user="abc",fota_password="123")
+0
+```
+
+* Note
+
+  - Currently only BG95 platform support this method.
+
+##### Interface to cancel FOTA downloading
+
+> fota_obj.download_cancel()
+
+Cancel the FOTA download in progress.
+
+- Parameter
+
+  - None
+
+* Return Value
+
+  * 0 	Successful execution
+  * -1	Failed execution
+
+* Example
+
+```python
+import fota
+import _thread
+import utime
+
+def th_func():
+    utime.sleep(40) #Depending on the size of the package, make sure to cancel before the download is complete
+    fota_obj.download_cancel()
+
+def result(args):
+    print('download status:',args[0],'download process:',args[1])
+
+fota_obj = fota()
+_thread.start_new_thread(th_func, ())
+fota_obj.httpDownload(url1="http://www.example.com/fota.bin",callback=result)
+```
+
+* Note
+
+  - Currently only BG95 platform support this method.
+
+  
 
 ##### Example
 
 ###### One-click Upgrade Interface
 
 ```python
+#Automatically restart after downloading
+
 import fota
 import utime
 import log
@@ -3340,9 +3478,25 @@ if __name__ == '__main__':
     run()    
 ```
 
+```python
+#Not automatically restart after the download is complete (not supported on the EC600S、EC600N、EC800N platform)
+
+# EC200A/EC200U/BG95 platform：
+import fota
+from misc import Power
+fota_obj = fota(reset_disable=1)
+def result(args):
+    print('download status:',args[0],'download process:',args[1])
+fota_obj.httpDownload(url1="http://www.example.com/dfota.bin",callback=result) #expected that not restart after execution
+Power.powerRestart() #Manually restart
+```
+
 
 
 ###### Interface to Upgrade Step by Step
+
+- Note
+  - Currently only EC600S/EC600N/EC800N/EC200U/EC600U platform support this feature.
 
 ```python
 '''
@@ -5537,7 +5691,7 @@ from machine import UART
 The following two global variables are required. Users can modify the values of the following two global variables according to the actual projects.
 '''
 PROJECT_NAME = "QuecPython_UART_example"
-PROJECT_VERSION = "1.0.0"
+PROJECT_VERSION = "1.0.1"
 
 '''
  * Parameter1: Port
@@ -5558,74 +5712,56 @@ PROJECT_VERSION = "1.0.0"
 log.basicConfig(level=log.INFO)
 uart_log = log.getLogger("UART")
 
-state = 5
+class Example_uart(object):
+    def __init__(self, no=UART.UART2, bate=115200, data_bits=8, parity=0, stop_bits=1, flow_control=0):
+        self.uart = UART(no, bate, data_bits, parity, stop_bits, flow_control)
+        self.uart.set_callback(self.callback)
 
 
-def uartWrite():
-    count = 10
-    # Configure UART
-    uart = UART(UART.UART2, 115200, 8, 0, 1, 0)
-    while count:
-        write_msg = "Hello count={}".format(count)
-        # Send data
-        uart.write(write_msg)
-        uart_log.info("Write msg :{}".format(write_msg))
-        utime.sleep(1)
-        count -= 1
-    uart_log.info("uartWrite end!")
+    def callback(self, para):
+        uart_log.info("call para:{}".format(para))
+        if(0 == para[0]):
+            self.uartRead(para[2])
 
+    
+    def uartWrite(self, msg):
+        uart_log.info("write msg:{}".format(msg))
+        self.uart.write(msg)
 
-def UartRead():
-    global state
-    uart = UART(UART.UART2, 115200, 8, 0, 1, 0)
-    while 1:
-        # It returns whether the data length is readable
-        msgLen = uart.any()
-        # Read when there is data
-        if msgLen:
-            msg = uart.read(msgLen)
-            # The initial data is byte type, and encode it
-            utf8_msg = msg.decode()
-            # str
-            uart_log.info("UartRead msg: {}".format(utf8_msg))
-            state -= 1
-            if state == 0:
-                break
-        else:
-            continue
+    def uartRead(self, len):
+        msg = self.uart.read(len)
+        utf8_msg = msg.decode()
+        uart_log.info("UartRead msg: {}".format(utf8_msg))
+        return utf8_msg
 
-
-
-def run():
-    # Create a thread to listen to received UARt messages
-    _thread.start_new_thread(UartRead, ())
-
+    def uartWrite_test(self):
+        for i in range(10):
+            write_msg = "Hello count={}".format(i)
+            self.uartWrite(write_msg)
+            utime.sleep(1)
 
 if __name__ == "__main__":
-    uartWrite()
-    run()
-    while 1:
-        if state:
-            pass
-        else:
-            break
+    uart_test = Example_uart()
+    uart_test.uartWrite_test()
+    
 
-# Example of running results
+# 运行结果示例
 '''
-INFO:UART:Write msg :Hello count=8
-INFO:UART:Write msg :Hello count=7
-INFO:UART:Write msg :Hello count=6
-INFO:UART:Write msg :Hello count=5
-INFO:UART:Write msg :Hello count=4
-INFO:UART:Write msg :Hello count=3
-INFO:UART:Write msg :Hello count=2
-INFO:UART:Write msg :Hello count=1
-INFO:UART:uartWrite end!
-INFO:UART:UartRead msg: read msg 1
+INFO:UART:write msg:Hello count=0
+INFO:UART:write msg:Hello count=1
+INFO:UART:write msg:Hello count=2
+INFO:UART:write msg:Hello count=3
+INFO:UART:write msg:Hello count=4
+INFO:UART:write msg:Hello count=5
+INFO:UART:write msg:Hello count=6
+INFO:UART:write msg:Hello count=7
+INFO:UART:write msg:Hello count=8
+INFO:UART:write msg:Hello count=9
 
-INFO:UART:UartRead msg: read msg 2
+INFO:UART:call para:[0, 2, 15]
+INFO:UART:UartRead msg: my name is XXX
 
-INFO:UART:UartRead msg: read msg 3
+
 '''
 
 ```
@@ -5953,40 +6089,9 @@ It sets and gets RTC time. When there is no parameter, it gets the time, it sets
 (2020, 3, 12, 4, 12, 12, 14, 0)
 ```
 
-###### Set callback function
-
-> **rtc.register_callback(usrFun)**
-
-When RTC expiration time callback function is set (for BC25PA platform, if it is recovered from deep sleep or software shutdown, calling this function will immediately call usrfun once)
-
-* Parameter
-
-| Parameter   | Type | Description                                   |
-| ------ | -------- | ------------------------------------------ |
-| usrFun | function | Callback function, which is called when the set RTC time arrives. |
-
-* Note
-
-  * usrFun requires parameters
-
-* Return Value
-
-  * 0	Successful execution.
-  * -1 Failed execution.
-
-* Example
-
-```python
->>> def test(df):
-...     print('rtc test...',df)
-...     
-...     
-... 
->>> 
->>> rtc.register_callback(test)
-0
-```
 ###### Set RTC expiration time
+
+Support platform ec600u/ec200u/ec600n/ec800n/bc25
 
 rtc.set_alarm(data_e)
 
@@ -6019,61 +6124,12 @@ Set the RTC expiration time. When the expiration time is reached, the registered
 >>> rtc.set_alarm(data_e)
 0
 ```
-###### Start / stop RTC timer
-
-rtc.enable_alarm(on_off)
-
-The timer can be started only when the callback function is set (bc25pa platform)
-
-* Parameter
-
-| Parameter | Type | Description                                                  |
-| ----------- | ---- | ------------------------------------------------------------ |
-| on_off        | int  | 0 - Turn off RTC timer. 1 - Start RTC timer.                     |
-
-* Return Value
-
-  * 0	Successful execution.
-  * -1 Failed execution.
-
-* Example
-```python
->>> rtc.enable_alarm(1)
-0
-```
-
-
-
-###### Set RTC alarm time
-
-Support platform ec600u/ec200u/ec600n/ec800n/bc25
-
-> rtc.set_alarm([year, month, day, week, hour, minute, second, microsecond])
-
-Set the RTC alarm time. The parameter week is not involved in the setting. The microsecond parameter is reserved and not used yet. The default is 0.
-
-* Parameter
-
-|Parameter | type | description|
-| ----------- | ---- | ------------------------------------- |
-|Year | int ||
-|Month | int | month, range 1 ~ 12|
-|Day | int | day, range 1 ~ 31|
-|Week | int | week, range 0 ~ 6, this parameter does not work, reserved|
-|When hour | int | the range is 0 ~ 23|
-|Minute | int | min, range 0 ~ 59|
-|Second | int | second, range 0 ~ 59|
-|Microsecond | int | microseconds, reserved parameters, unused temporarily, write 0|
-
-* Return Value
-
-  * The integer value 0 is returned after setting successfully, and the integer value - 1 is returned after setting fails.
-
 
 
 ###### Register RTC alarm callback
 
 Support platform ec600u/ec200u/ec600n/ec800n/bc25
+Note:When RTC expiration time callback function is set (for BC25PA platform, if it is recovered from deep sleep or software shutdown, calling this function will immediately call usrfun once)
 
 > rtc.register_callback(fun)
 
@@ -6094,6 +6150,7 @@ Register RTC alarm callback handler
 ###### Switch RTC alarm function
 
 Support platform ec600u/ec200u/ec600n/ec800n/bc25
+Note:The timer can be started only when the callback function is set (bc25pa platform)
 
 > rtc.enable_alarm(on_off)
 
@@ -6628,7 +6685,7 @@ lcd = LCD()   # Create lcd object
 
 
 
-###### LCD Initialization 
+###### LCD Initialization （interface 1：LCM interface of the module）
 
 > **lcd.lcd_init(lcd_init_data, lcd_width, lcd_hight, lcd_clk, data_line, line_num, lcd_type, lcd_invalid, lcd_display_on, lcd_display_off, lcd_set_brightness)**
 
@@ -6649,6 +6706,44 @@ It initializes LCD.
 | lcd_display_on     | bytearray | Inputting configuration commands for LCD screen light.       |
 | lcd_display_off    | bytearray | Inputting configuration commands for LCD screen off.         |
 | lcd_set_brightness | bytearray | Inputting the configuration command of LCD screen brightness. Setting to None indicates that the brightness is controlled by LCD_BL_K (some screens are controlled by registers, and some are controlled by LCD_BL_K) |
+
+* Return Value
+
+  * 0  	 Successful execution.
+  * -1  	Initialized.
+  * -2  	Parameter error (empty or too large (bigger than 1000 pixels)) .
+  * -3  	Failed cache request.
+  * -5  	Configuration parameter error.
+
+
+
+###### LCD Initialization（interface 2：SPI  interface of the module）
+
+> **lcd.lcd_init(lcd_init_data, lcd_width, lcd_hight, lcd_clk, data_line, line_num, lcd_type, lcd_invalid, lcd_display_on, lcd_display_off, lcd_set_brightness, lcd_interface, spi_port, spi_mode, cs_pin, dc_pin, rst_pin)**
+
+It initializes LCD. 
+
+- Parameter
+
+| Parameter          | Type      | Description                                                  |
+| ------------------ | --------- | ------------------------------------------------------------ |
+| lcd_init_data      | bytearray | Inputting configuration commands for LCD.                    |
+| lcd_width          | int       | The width of LCD screen, not more than 500.                  |
+| lcd_hight          | int       | The height of LCD screen, not more than 500.                 |
+| lcd_clk            | int       | SPI clock. refer to the parameter description of Create SPI Object in machine SPI. |
+| data_line          | int       | Number of data lines, the parameter values are 1 and 2.      |
+| line_num           | int       | The number of lines, the parameter values are 3 and 4.       |
+| lcd_type           | int       | Screen type. 0: rgb; 1: fstn.                                |
+| lcd_invalid        | bytearray | Inputting configuration commands for LCD area settings.      |
+| lcd_display_on     | bytearray | Inputting configuration commands for LCD screen light.       |
+| lcd_display_off    | bytearray | Inputting configuration commands for LCD screen off.         |
+| lcd_set_brightness | bytearray | Inputting the configuration command of LCD screen brightness. Setting to None indicates that the brightness is controlled by LCD_BL_K (some screens are controlled by registers, and some are controlled by LCD_BL_K) |
+| lcd_interface      | int       | type of LCD interface. 0：LCM interface；1：SPI interface    |
+| spi_port           | int       | Channel selection[0,1]，refer to SPI description in machine. |
+| spi_mode           | int       | SPI working mode (ususally mode 0): <br />Clock polarity CPOL: When SPI is idle, the level of the clock signal SCLK (0: Low level when idle; 1: High level when idle)<br /> 0 : CPOL=0, CPHA=0<br /> 1 : CPOL=0, CPHA=1<br /> 2:  CPOL=1, CPHA=0<br /> 3:  CPOL=1, CPHA=1 |
+| cs_pin             | int       | CS PIN，refer to Pin Constant Description                    |
+| dc_pin             | int       | DC PIN，refer to Pin Constant Description                    |
+| rst_pin            | int       | RST PIN，refer to Pin Constant Description                   |
 
 * Return Value
 
@@ -7278,6 +7373,102 @@ It gets the number of locks created.
 * Note
 
   * The BC25PA platform does not support this method.
+
+##### Set the control time for PSM mode
+
+- Only supported on BC25 platform
+
+> **pm.set_psm_time(tau_uint,tau_time,act_uint,act_time)**  # Set up and enable PSM           <**Mode 1**>
+>
+> **pm.set_psm_time(mode)**														   # Individual settings enable or disable    <**Mode 2**>
+
+
+* Parameter
+
+| Parameter     | Parameter Type | Parameter Description                       |
+| -------- | -------- | ------------------------------ |
+| mode | int | Whether to enable PSM:<br/>0 Disable PSM<br/>1 Enable PSM<br/>2 Disable PSM and delete all parameters of PSM, if there is default value, reset the default value. (Note that when this mode is disabled, if you want to enable PSM, you must use **mode 1**, and **mode 2** has no meaning, because the set TAU ​​and ACT times are all cleared). |
+| tau_uint | int   | tau(T3412) timer unit |
+| tau_time | int   | tau (T3412) timer time period value |
+| act_uint | int   | act(T3324) timer unit |
+| act_time | int   | act(T3324) timer time period value |
+
+* tau timer description
+|TAU timer unit value  | Type | Unit value description                       |
+| -------- | -------- | ------------------------------|
+| 0 | int   | 10 Minute |
+| 1 | int   | 1 Hour |
+| 2 | int   | 10 Hour |
+| 3 | int   | 2 Second |
+| 4 | int   | 30 Second |
+| 5 | int   | 1 Minute |
+| 6 | int   | 320 Hour |
+| 7 | int   | Timer is disabled |
+
+* act timer description
+|ACT timer unit value  | type | Unit value description  
+| -------- | -------- | ------------------------------|
+| 0 | int   | 2 Second |
+| 1 | int   | 1 Minute |
+| 2 | int   | 6 Minute |
+| 7 | int   | Timer is disabled |
+
+* Return Value
+
+    True: 	success
+    False:	failed
+
+* Note
+   Only supported on BC25 platform
+
+- Example
+
+```python
+>>> import pm
+>>> pm.set_psm_time(1,2,1,4)  #Set the tau timer period to 1 hour * 2 = 2 hours, and the act timer period value to 1 minute * 4 = 4 minutes.
+True
+>>>
+```
+
+
+
+##### Get control time for PSM mode
+
+- Only supported on BC25 platform
+
+> **pm.get_psm_time()**
+
+* Parameter
+
+  None
+
+* Return Value
+
+  Success：The return value is of type list, as follows：
+  |Parameter  | Type | Unit value description                       |
+| -------- | -------- | ------------------------------|
+| list[0] | int   | Mode description: <br/>0-Disable PSM. <br/>1-Enable PSM. <br/>2.Disable PSM and delete all parameters of PSM, if there is default value, reset to default value. |
+| list[1] | int   | tau timer unit |
+| list[2] | int   | tau timer time period value |
+| list[3] | int   | act timer unit |
+| list[4] | int   | act timer time period value |
+  Failed：Returns None. Returns failure when PSM is disabled.
+  
+* Note
+    Only supported on BC25 platform
+
+- Example
+
+
+```python
+>>> pm.get_psm_time()
+
+[1, 1, 1, 1, 2]
+
+
+```
+
+
 
 
 ##### Example
@@ -11329,7 +11520,7 @@ bytearray(b'12345678')
 
 #### NB Internet of things cloud platform
 
-Module function: Provide docking IoT cloud platform function, provide connection To IoT cloud platform. Through the communication function of the IoT cloud platform and module devices, it currently supports China Telecom lot IoT platform, China Telecom AEP IoT platform and China Mobile onenet IoT platform. The quecthing version does not include this module.
+Module function: Provide the function of connecting to the IoT cloud platform, and provide the connection to the IoT cloud platform. Through the communication function of the IoT cloud platform and module devices, it currently supports China Telecom lot IoT platform, China Telecom AEP IoT platform and China Mobile onenet IoT platform. The quecthing version does not contain this module.
 Module name: nb(lowercase)
 
 Support platform: BC25PA
@@ -11456,7 +11647,7 @@ True
 
 ###### Create AEP object
 
-> **aep=AEP(ip,port)**
+> **AEP(ip,port,model,psk)**
 
 - **Parameter**
 
@@ -11464,31 +11655,49 @@ True
 | --------- | ------ | ------------------------------------------------------------ |
 | ip        | string | The server IP address of the Internet of things platform, with a maximum length of 16. |
 | port      | string | Server port of Internet of things platform, maximum length 5. |
-
+| model | int | 0 Set the receiving data mode to buffer mode, no URC report when new data is received<br/> 1 Set the receiving data mode to direct spitting mode, when new data is received, it will be reported immediately through URC.<br/> 2 Set the receiving data mode to buffer mode, and only report the indication URC when new data is received. Can be omitted, defaults to 1. |
+| psk | string | Hexadecimal string type. The key of the encrypted device, which can be generated by the platform or set independently when the encrypted device is registered on the platform side. The maximum supported length is 256 bytes. It can be omitted |
 - Example
 
 ```python
 >>> from nb import AEP
 >>> aep=AEP("221.229.214.202","5683")
 ```
+###### set callback function
 
+> **aep.set_event_callcb(usrfunc)**
+- parameters
+
+| Parameters | Type | Description |
+| ---- | ------ | ------------------------------------- -------- |
+| usrfunc | func(data) | call usrfunc when an event occurs |
+- func(data) parameter description:
+| Parameters | Type | Description |
+| ---- | ------ | ------------------------------------- -------- |
+| data | list | data[0]:event_id,event type><br/>data[1]:event_code,event type corresponding return code><br/>data[2]:recv_data,data><br/>data [3]: data_len, data length><br/> |
+
+- Notice
+    For the description of event_id, event_code, recv_data, data_len, see [event description] (# event description) in this module. This function, it is recommended to register before connecting to prevent event loss.
+-
 ###### Connect to AEP cloud platform
 
-> **aep.connect()**
+> **aep.connect(timeout)**
 
 - Parameter
 
-  * None.
+    Type: int, timeout, unit (ms), if no parameter is entered, the default is 30s
+
+    Note: The worst-case blocking duration of timeout failure is: 15s+timeout. Concurrent operations are not supported.
 
 - Return Value
 
   * Success - 0
-  * Failed - not 0
+  * Failed - -1
 
 - Example
 
 ```python
->>> aep.connect()
+>>> aep.connect(3000)
 0
 ```
 
@@ -11515,7 +11724,14 @@ True
 
 ###### Receive data
 
-> **aep.recv(data_len,data)**
+> **aep.recv(data_len,data，timeout))**
+
+- Instructions for use, the effect of the [model](#create AEP object) value on this function is as follows
+| model | Description |
+| -------- | ---------------------------------------- -------------------- |
+|0| is the cache mode, the cloud platform sends the data to the module, the module will not have any active prompt action, but can only read it actively. |
+|1| is the direct spit mode, the cloud platform sends data to the module, the module will spit the received data directly to urc, and the callback function set by set_event_callcb(usrfunc) will directly take over the received data and the data length. |
+|2| is the cache mode. When there is no cached data, the cloud platform will send data to the module, and the module will report the event through the callback function usrfunc, indicating that there is cached data to be read (the cloud platform sends data to the module, the module The group judges that the cache is empty and reports the event to indicate that there is data arriving, and the cached data is not empty and does not report the event)|
 
 - **Parameter**
 
@@ -11523,6 +11739,7 @@ True
 | --------- | ------ | ------------------------------------------------------------ |
 | data_len  | int    | Expected accepted data length (note that this parameter is adjusted according to the actual length of data, and the minimum value is taken according to the comparison between the capacity of data variable and data_len) |
 | data      | string | Store received data                                          |
+| timeout | int | Timeout time, in ms, default 30s if not entered. |
 
 - Note
 
@@ -11542,15 +11759,24 @@ True
 
 ###### Send data
 
-> **aep.send(data_len,data,type)**
+> **aep.send(data_len,data,type,timeout)**
+
+- Instructions for use:
+    In the timeout failure state, the worst-case blocking duration is: 5s+timeout. Concurrent operations are not supported.
 
 - **Parameter**
 
 | Parameter | Type   | Description                                                  |
 | --------- | ------ | ------------------------------------------------------------ |
-| data_len  | int    | Expected Send data length (note that this parameter is adjusted according to the actual length of data, and the minimum value is taken according to the comparison between the capacity of data variable and data_len),Non blocking|
-| data      | string | Data to be sent,The maximum supported data length is 1024 bytes                                            |
-| type      | int    | Indicates that the core network releases the RRC connection with the module: 0 - no indication. 1 - indicates that no further uplink or downlink data is expected after the packet uplink data, and the core network can release it immediately. 2 - indicates that a single downlink packet with a corresponding reply is expected in the uplink data of the packet, and the core network will release it immediately after distribution. |
+| data_len | int | The length of the data expected to be sent (note that this parameter is adjusted according to the actual length of the data, and the minimum value is taken according to the comparison between the capacity of the data variable and data_len), non-blocking. |
+| data | string | Data to be sent, up to 1024 bytes of data. |
+| type | int | Indicates that the core network releases the RRC connection with the module:<br/>0-send NON data and set the RAI auxiliary release flag carried by the module to send data to 0<br/>1-send NON data and Set the RAI auxiliary release flag carried by the module to send data to 1<br/> 2- Send NON data and set the RAI auxiliary release flag carried by the module to send data to 2<br/> 100- Send CON data and the module sends The RAI auxiliary release flag carried by the data is set to 0<br/> 101- Send CON data and set the RAI auxiliary release flag carried by the module to send data to 1<br/> 102- Send CON data and send the data to the module. The carried RAI auxiliary release flag is set to 2 |
+| timeout | int | Timeout time, in ms, if not input, the default is 30s |
+
+- RAI Auxiliary Release Marker Description
+| | Description |
+| -------------- | ---------------------------------- -------------------------- |
+| RAI | The RAI flag is used to instruct the core network to release the RRC connection to the module. :<br/>When RAI is 0, there is no indication. <br/>When RAI is 1, it indicates that no further upstream or downstream data is expected after the upstream data of the packet, and the core network can release it immediately. <br/>When RAI is 2, it indicates that a single downlink data packet corresponding to the reply is expected after the uplink data of the packet, and the core network releases it immediately after sending it. |
 
 - Note
 
@@ -11569,6 +11795,34 @@ bytearray(b'313233')
 >>> aep.send(6,data,0)
 0
 ```
+###### Check connection status
+> **aep.connect_check()**
+- parameters
+
+  None
+  
+- Return value
+   Return value type: string
+   The meaning is as follows
+  
+  | Return value | Description |
+  | -------- | ------ |
+  | UNINITIALISED |Uninitialized state |
+  | REGISTERING |Connecting |
+  | REJECTED_BY_SERVER |The connection request was rejected by the server |
+  | TIMEOUT |Connection timed out |
+  | REGISTERED |Connected Not Subscribed |
+  | REGISTERED_AND_OBSERVED |Connected and subscribed |
+  | DEREGISTERED | Disconnected |
+  | RESUMPTION_FAILED DTLS |Session recovery failed |
+  | FALIED |Failed to execute the function |
+  
+ - Example
+
+````python
+>>> aep.connect_check()
+'UNINITIALISED\r\n'
+````
 
 ###### close the connection
 > **aep.close()**
@@ -11589,7 +11843,22 @@ bytearray(b'313233')
 True
 ```
 
-
+###### Event Description
+The general description of the events of this module is as follows:
+|event_id |event_code |recv_data |data_len |description|
+| -------------- | ---------|----------|------------- |---------------------------- |
+|0 |0 |NULL |0 |modem enters psm and reports this event. At this time, the module does not accept the network data sent to the module, and can break the psm state on the modem side by actively sending data. |
+|0 |1 |NULL |0 |modem exits psm mode and reports this event. |
+|22 |4 |NULL |0 |Call the interface to send CON type data, if the sending is successful, report this event|
+|22 |5 |NULL |0 |Call the interface to send CON type data, if the sending fails, report this event|
+|23 |6 |NULL |0 |The connection is successfully restored after waking up from deep sleep, and this event is reported. Reported when AEP.set_event_callcb(usrfunc) is called. |
+|23 |7 |NULL |0 |Failed to resume connection after wake-up from deep sleep, you can disconnect and reconnect. Reported when AEP.set_event_callcb(usrfunc) is called. |
+|24 |8 |NULL |0 |After the cloud platform issues the fota upgrade command, this event is reported when the module starts to download the differential upgrade package. |
+|24 |9 |NULL |0 |When the cloud platform issues the fota upgrade command, and the module fota upgrade is completed, this event is reported. |
+|25 |10 |NULL |0 |Received the RST packet from the cloud platform and actively reported this event. In this case, you need to disconnect and reconnect to complete the subscription for normal communication. |
+|27 |0 |data |data_len |Receive data from the cloud platform, report this event when modem=1 and call set_event_callcb(usrfunc) to set the callback function. |
+|28 |0 |NULL |0 |Receive data from the cloud platform and report this event when modem=2 and the module has no cached data (when aep.check() returns 0, it means that there is no cached data). |
+|others |0 |NULL |0 |Ignore such events|
 
 ###### Use example
 
@@ -12023,16 +12292,31 @@ dict_ CMD = {'data reporting': 0x02,
              'fixed downlink command': 0x06,
              'command response': 0x86
          }
-send_type={
-    'RAI_NONE':0,
-    'RAI_1':1,
-    'RAI_2':2
+send_type={'RAI_NONE':0,
+            'TYpe_001':1,
+            'TYpe_002':2,
+            'TYpe_100':100,
+            'TYpe_101':101,
+            'TYpe_102':102
 }
 servcei_info={
     'ip':"221.229.214.202",
     'port':"5683"
 }
-
+modem_type={
+    'cache_no_urc':0,
+    'no_cache':1,
+    'cache_have_urc':2
+}
+aep_event={
+    'psm_event':0,
+    'con_event':21,
+    'send_event':22,
+    'recover_event':23,
+    'rst_event':25,
+    'recv_event_data':27,
+    'recv_event_flag':28,
+}
 def aep_pack_cmdtype02(service_id,data_in):
     Data = hextostr (dict_cmd ['data reporting'], 1)
     data+=HexToStr(service_id,2)                #Convert serviceid to string
@@ -12089,8 +12373,6 @@ def aep_unpack(data_in):
     else:
         print('not support')
 
-aep=AEP(servcei_info['ip'],servcei_info['port'])
-
 def recv():
     data=bytearray(20)  
     ret=aep.recv(18,data)
@@ -12116,19 +12398,66 @@ def close():
     ret = aep.close()
     print('close ',ret)
     
+def deal_conn(data):
+    if data[1] == 0:
+        print('connect CtWing success!')
+    if data[1] == 3:
+        print('subscription /19/0/0 success!')
+        send()
+    if data[1] == -1 or data[1] == 1:
+        print('connect CtWing failed!')
+        aep.connect_check()
+def deal_recv(data):
+    if data[1] == 0:
+        aep_unpack(data[2])
+        print('will close')
+        close()
+    if data[1] == 5:
+        print('recv data from ctwing falied')
+        
+def deal_psm(data):
+    if data[1] == 0:
+        print('enter modem psm')
+    if data[1] == 1:
+        print('exit modem psm')
+def deal_send(data):
+    if data[1] == 4:
+        print('send data to ctwing success')
+    else:
+        print('send data to ctwing falied')
+        
+def deal_rst(data):
+    print('recv rst messge from platform')
+    close()
+def deal_recover(data):
+    print('deal_recover:',data)
+    
+def event_cb(args):
+    print('args:',args)
+    if args[0] == aep_event['con_event']:
+        deal_conn(args)
+    if args[0] == aep_event['send_event']:
+        deal_send(args)
+    if args[0] == aep_event['recv_event_data'] or args[0] == aep_event['recv_event_flag']:
+        deal_recv(args)
+    if args[0] == aep_event['rst_event']:
+        deal_rst(args)
+    if args[0] == aep_event['psm_event']:
+        deal_psm(args)
+    if args[0] == aep_event['recover_event']:
+        deal_recover(args)
+    
+def init():
+    
+    aep.set_event_callcb(event_cb)
+    connect()
+    
+
 loop_num = 0
 
 def do_task():
-    connect()
-    send()
-    global loop_num
-    while loop_num < 10:
-        loop_num=loop_num+1
-        utime.sleep(3)
-        ret = recv()
-        if ret == 0:
-            break
-    close()
+    init()
+aep=AEP(servcei_info['ip'],servcei_info['port'],modem_type['no_cache'])
 
 if __name__ == '__main__':
     do_task()

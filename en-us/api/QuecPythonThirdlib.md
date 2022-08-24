@@ -1681,10 +1681,10 @@ Applicable modules: EC100Y(V0009) and above; EC600S(V0002) and above.
 
 
 
-> ​	**system.replSetEnable(flag)**
+> ​	**system.replSetEnable(flag，**kw_args)**
 
 Set interactive protect. After setting to enable interactive protect, all external commands and codes cannot be executed. It is an irreversible operation. Please enable it after confirmation. The default is Disable.
-
+（The parameter [Password] is not supported in BC25 and 600M paltform）
 * Parameter
 
 | Parameter | Type | Description                       |
