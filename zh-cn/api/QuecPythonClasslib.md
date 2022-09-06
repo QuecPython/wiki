@@ -2548,7 +2548,7 @@ sms.setCallback(cb)
 
 ##### 设置网络制式及漫游配置
 
-注意：BC25PA平台不支持此方法。EC200U/EC600U平台不支持漫游参数配置。
+注意：BC25PA平台不支持此方法。展锐平台不支持漫游参数配置。
 
 > **net.setConfig(mode, roaming)**
 

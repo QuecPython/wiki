@@ -2532,7 +2532,7 @@ The function sets the current RAT and the roaming configuration.
 
 * Note
 
-  The BC25PA platform does not support this module function. The EC200U/EC600U does not support roaming parameters.
+  The BC25PA platform does not support this module function. The Unisoc does not support roaming parameters.
 
 
 ##### Obtain the Network Mode
