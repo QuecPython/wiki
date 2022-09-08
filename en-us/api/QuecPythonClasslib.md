@@ -6316,9 +6316,9 @@ i2c_log = log.getLogger("I2C")
 if __name__ == '__main__':
     I2C_SLAVE_ADDR = 0x1B  # i2c device addrress
     # i2c register address, passed in as buff, take the first value and calculate the length of a value. 
-	WHO_AM_I = bytearray({0x02, 0})
+    WHO_AM_I = bytearray([0x02, 0])
 
-    data = bytearray({0x12, 0})   # Enter the corresponding command 
+    data = bytearray([0x12, 0])   # Enter the corresponding command 
     i2c_obj = I2C(I2C.I2C0, I2C.STANDARD_MODE)  # Return i2c object 
     i2c_obj.write(I2C_SLAVE_ADDR, WHO_AM_I, 1, data, 2) # Write data
 
