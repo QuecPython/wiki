@@ -12467,3 +12467,64 @@ if __name__ == '__main__':
 
 ```
 
+
+
+#### uping-(ICMP)ping包
+
+Module function: Simulate sending icmp-ping packets
+
+
+
+##### ping
+
+- Precautions
+
+There may be exceptions here, because the host address cannot resume the exception of the socket connection
+
+Periodically send Ping packet mechanism through `COUNT` and `INTERVAL` in initialization parameters
+
+> **import uping**
+>
+> **up = uping.ping(HOST, SOURCE=None, COUNT=4, INTERVAL=1000, SIZE=64, TIMEOUT=5000, quiet=False)**
+
+- parameter
+
+| parameter | type | illustrate                                                   |
+| --------- | ---- | ------------------------------------------------------------ |
+| HOST      | str  | The domain name address to be pinged, such as "baidu.com"    |
+| SOURCE    | str  | Source address, used for binding, generally does not need to be passed |
+| COUNT     | int  | The default is 4 times, send 4 ping packets                  |
+| INTERVAL  | int  | Interval time, the default is ms, the default is 1000ms      |
+| SIZE      | int  | The default packet size of each read is 64, no need to modify |
+| TIMEOUT   | int  | Timeout time, the unit is ms, the default is 5000ms or 5s    |
+| quiet     | bool | Default fasle, print output, after setting True, the printed value obtained after calling start will be converted into an object and returned, rather than displayed by printing |
+
+
+
+example of use
+
+```python
+# method one
+# printout method
+import uping
+uping.ping('baidu.com')
+
+# The following is the output of uping.start(), no return value
+#72 bytes from 49.49.48.46: icmp_seq=1, ttl=53, time=1169.909000 ms
+#72 bytes from 49.49.48.46: icmp_seq=2, ttl=53, time=92.060000 ms
+#72 bytes from 49.49.48.46: icmp_seq=3, ttl=53, time=94.818000 ms
+#72 bytes from 49.49.48.46: icmp_seq=4, ttl=53, time=114.879000 ms
+#4 packets transmitted, 4 packets received, 0 packet loss
+#round-trip min/avg/max = 92.06000000000001/367.916/1169.909 ms
+
+
+
+
+# Method 2
+# Setting quiet will get the output
+import uping
+result = uping.ping('baidu.com', quiet=True)
+# result can get the corresponding data
+# result(tx=4, rx=4, losses=0, min=76.93899999999999, avg=131.348, max=226.697)
+```
+
