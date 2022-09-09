@@ -12469,7 +12469,7 @@ if __name__ == '__main__':
 
 
 
-#### uping-(ICMP)ping包
+#### uping-(ICMP)ping
 
 Module function: Simulate sending icmp-ping packets
 
