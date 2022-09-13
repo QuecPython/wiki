@@ -789,7 +789,7 @@ bytearray(b'\r\nERROR\r\n\n
 
 将命令APDU通过modem传递给SIM卡，然会返回响应APDU。
 
-注意：当前仅ASR平台支持。
+注意：当前仅ASR-1601平台支持。
 
 * 参数
 

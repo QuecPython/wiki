@@ -764,7 +764,7 @@ Note: The prerequisite for successfully obtaining IMSI, ICCID, and phone number 
 
 Send APDU command to SIM card.
 
-Note : Currently, only the ASR platform supports this function.
+Note : Currently, only the ASR-1601 platform supports this function.
 
 * Parameter
 
