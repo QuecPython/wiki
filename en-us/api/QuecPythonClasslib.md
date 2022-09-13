@@ -4836,7 +4836,7 @@ if __name__ == '__main__':
 | Constant | Description   | Usage Platform                                               |
 | -------- | ------------- | ------------------------------------------------------------ |
 | ADC.ADC0 | ADC Channel 0 | EC600S/EC600N/EC100Y/EC600U/EC200U/BC25PA/BG95M3/EC200A/EC600M |
-| ADC.ADC1 | ADC Channel 1 | EC600S/EC600N/EC600U/EC200U/EC200A/EC600M                    |
+| ADC.ADC1 | ADC Channel 1 | EC600U/EC200U/EC200A/EC600M                                  |
 | ADC.ADC2 | ADC Channel 2 | EC600U/EC200U                                                |
 | ADC.ADC3 | ADC Channel 3 | EC600U                                                       |
 
