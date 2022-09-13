@@ -5372,7 +5372,7 @@ if __name__ == '__main__':
 | 常量     | 说明     | 适用平台                                                     |
 | -------- | -------- | ------------------------------------------------------------ |
 | ADC.ADC0 | ADC通道0 | EC600S/EC600N/EC100Y/EC600U/EC200U/BC25PA/EC800N/BG95M3/EC200A/EC600M |
-| ADC.ADC1 | ADC通道1 | EC600S/EC600N/EC600U/EC200U/EC200A/EC600M                    |
+| ADC.ADC1 | ADC通道1 | EC600U/EC200U/EC200A/EC600M                                  |
 | ADC.ADC2 | ADC通道2 | EC600U/EC200U                                                |
 | ADC.ADC3 | ADC通道3 | EC600U                                                       |
 
