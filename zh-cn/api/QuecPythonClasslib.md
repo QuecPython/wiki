@@ -6398,7 +6398,7 @@ if __name__ == '__main__':
 | GPIOn    | int  | 需要控制的GPIO引脚号，参照Pin模块的定义(除BG95M3外) <br />BG95M3平台引脚对应关系如下（引脚号为模块外部引脚编号）<br />GPIO2 – 引脚号5<br />GPIO3 – 引脚号6<br />GPIO6 – 引脚号19<br />GPIO7 – 引脚号22<br />GPIO8 – 引脚号23<br />GPIO9 – 引脚号25<br />GPIO11 – 引脚号27<br />GPIO12 – 引脚号28<br />GPIO14 – 引脚号41<br />GPIO16 – 引脚号65<br/>GPIO17 – 引脚号66<br />GPIO18 – 引脚号85<br />GPIO19 – 引脚号86<br />GPIO20 – 引脚号87<br />GPIO21 – 引脚号88 |
 | mode     | int  | 设置触发方式<br /> IRQ_RISING – 上升沿触发<br /> IRQ_FALLING – 下降沿触发<br /> IRQ_RISING_FALLING – 上升和下降沿触发 |
 | pull     | int  | PULL_DISABLE – 浮空模式<br />PULL_PU – 上拉模式 <br />PULL_PD  – 下拉模式 |
-| callback | int  | 中断触发回调函数<br />中断触发回调函数<br />返回参数为长度为2的元组<br />args[0]: gpio号<br />args[1]: 触发沿（0：上升沿 1：下降沿） |
+| callback | int  | 中断触发回调函数<br />返回参数为长度为2的元组<br />args[0]: gpio号<br />args[1]: 触发沿（0：上升沿 1：下降沿） |
 
 * 示例
 
