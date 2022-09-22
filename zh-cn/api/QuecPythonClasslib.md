@@ -4738,15 +4738,15 @@ record_test.getSize(“test.amr”)
 
 ###### 删除录音文件
 
-> **record.Delete(file_name/无参数)**
+> **record.Delete(file_name)**
 
 删除录音文件。
 
 * 参数
 
-| 参数      | 参数类型 | 参数说明                                                     |
-| --------- | -------- | ------------------------------------------------------------ |
-| file_name | str类型  | 文件名，可选参数，传入该参数表示删除指定文件名的文件，不传该参数，表示删除该对象下所有录音文件 |
+| 参数      | 参数类型 | 参数说明   |
+| --------- | -------- | ---------- |
+| file_name | str      | 录音文件名 |
 
 * 返回值
 
@@ -4760,7 +4760,6 @@ record_test.getSize(“test.amr”)
 
 ```python
 record_test.Delete(“test.amr”)
-record_test.Delete()
 ```
 
 
@@ -5975,6 +5974,7 @@ if __name__ == '__main__':
 | UART.UART1 | UART1 |
 | UART.UART2 | UART2 |
 | UART.UART3 | UART3 |
+| UART.UART4 | UART4 |
 
 
 
@@ -5986,19 +5986,19 @@ if __name__ == '__main__':
 
 | 参数     | 类型 | 说明                                                         |
 | :------- | :--- | ------------------------------------------------------------ |
-| UARTn    | int  | UARTn作用如下：<br />UART0 - DEBUG PORT<br />UART1 – BT PORT<br />UART2 – MAIN PORT<br />UART3 – USB CDC PORT (BG95M3 不支持)|
+| UARTn    | int  | UARTn作用如下：<br />UART0 - DEBUG PORT<br />UART1 – BT PORT<br />UART2 – MAIN PORT<br />UART3 – USB CDC PORT (BG95M3 不支持)<br />UART4 – STDOUT PORT (仅支持EC200U/EC600U) |
 | buadrate | int  | 波特率，常用波特率都支持，如4800、9600、19200、38400、57600、115200、230400等 |
-| databits | int  | 数据位（5 ~ 8），展锐平台当前仅支持8位                         |
+| databits | int  | 数据位（5 ~ 8），展锐平台当前仅支持8位                       |
 | parity   | int  | 奇偶校验（0 – NONE，1 – EVEN，2 - ODD）                      |
-| stopbits | int  | 停止位（1 ~ 2）                                                |
+| stopbits | int  | 停止位（1 ~ 2）                                              |
 | flowctl  | int  | 硬件控制流（0 – FC_NONE， 1 – FC_HW）                        |
 
 - 引脚对应关系
 
 | 平台          |                                                              |
 | ------------- | ------------------------------------------------------------ |
-| EC600U        | uart1:<br />TX: 引脚号124<br />RX: 引脚号123<br />uart2:<br />TX:引脚号32<br />RX:引脚号31 |
-| EC200U        | uart1:<br />TX: 引脚号138<br />RX: 引脚号137<br />uart2:<br />TX:引脚号67<br />RX:引脚号68 |
+| EC600U        | uart1:<br />TX: 引脚号124<br />RX: 引脚号123<br />uart2:<br />TX:引脚号32<br />RX:引脚号31<br />uart4:<BR />TX:引脚号103<BR />RX:引脚号104 |
+| EC200U        | uart1:<br />TX: 引脚号138<br />RX: 引脚号137<br />uart2:<br />TX:引脚号67<br />RX:引脚号68<br />uart4:<BR />TX:引脚号82<BR />RX:引脚号81 |
 | EC200A        | uart1:<br />TX: 引脚号63<br />RX: 引脚号66<br />uart2:<br />TX:引脚号67<br />RX:引脚号68 |
 | EC600S/EC600N | uart0:<br />TX: 引脚号71<br />RX: 引脚号72<br />uart1:<br />TX: 引脚号3<br />RX: 引脚号2<br />uart2:<br />TX:引脚号32<br />RX:引脚号31 |
 | EC100Y        | uart0:<br />TX: 引脚号21<br />RX: 引脚号20<br />uart1:<br />TX: 引脚号27<br />RX: 引脚号28<br />uart2:<br />TX:引脚号50<br />RX:引脚号49 |
@@ -6398,14 +6398,14 @@ if __name__ == '__main__':
 | GPIOn    | int  | 需要控制的GPIO引脚号，参照Pin模块的定义(除BG95M3外) <br />BG95M3平台引脚对应关系如下（引脚号为模块外部引脚编号）<br />GPIO2 – 引脚号5<br />GPIO3 – 引脚号6<br />GPIO6 – 引脚号19<br />GPIO7 – 引脚号22<br />GPIO8 – 引脚号23<br />GPIO9 – 引脚号25<br />GPIO11 – 引脚号27<br />GPIO12 – 引脚号28<br />GPIO14 – 引脚号41<br />GPIO16 – 引脚号65<br/>GPIO17 – 引脚号66<br />GPIO18 – 引脚号85<br />GPIO19 – 引脚号86<br />GPIO20 – 引脚号87<br />GPIO21 – 引脚号88 |
 | mode     | int  | 设置触发方式<br /> IRQ_RISING – 上升沿触发<br /> IRQ_FALLING – 下降沿触发<br /> IRQ_RISING_FALLING – 上升和下降沿触发 |
 | pull     | int  | PULL_DISABLE – 浮空模式<br />PULL_PU – 上拉模式 <br />PULL_PD  – 下拉模式 |
-| callback | int  | 中断触发回调函数                                             |
+| callback | int  | 中断触发回调函数<br />中断触发回调函数<br />返回参数为长度为2的元组<br />args[0]: gpio号<br />args[1]: 触发沿（0：上升沿 1：下降沿） |
 
 * 示例
 
 ```python
 >>> from machine import ExtInt
 >>> def fun(args):
-        print('### interrupt  {} ###'.format(args))
+        print('### interrupt  {} ###'.format(args)) # args[0]:gpio号 args[1]:上升沿或下降沿
 >>> extint = ExtInt(ExtInt.GPIO1, ExtInt.IRQ_FALLING, ExtInt.PULL_PU, fun)
 ```
 
@@ -6503,6 +6503,22 @@ if __name__ == '__main__':
 0：成功
 
 其他：失败
+
+###### 读取电平
+
+> **extint.read_level()**
+
+读取当前管脚电平。
+
+* 参数
+
+无
+
+* 返回值
+
+PIN脚电平，0-低电平，1-高电平
+
+
 
 ##### RTC
 
