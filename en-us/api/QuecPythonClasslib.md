@@ -4202,7 +4202,7 @@ record_test.getSize(“test.amr”)
 
 ###### Delete Recording File
 
-> **record.Delete(file_name/empty)**
+> **record.Delete(file_name)**
 
 Delete the recording file.
 
@@ -4214,9 +4214,9 @@ String type. The file name of the recording.
 
 Note: When the parameter is empty, delete all recording files in the object
 
-| Parameter | Parameter Type | Description                                                  |
-| --------- | -------------- | ------------------------------------------------------------ |
-| file_name | str            | File name of the recording. When the parameter is empty, delete all recording files in the object |
+| Parameter | Parameter Type | Description                |
+| --------- | -------------- | -------------------------- |
+| file_name | str            | File name of the recording |
 
 * Return Value
 
@@ -4229,7 +4229,6 @@ Note: When the parameter is empty, delete all recording files in the object
 
 ```python
 record_test.Delete(“test.amr”)
-record_test.Delete()
 ```
 
 
@@ -5500,6 +5499,7 @@ Function: UART serial data transmission
 | UART.UART1 | UART1       |
 | UART.UART2 | UART2       |
 | UART.UART3 | UART3       |
+| UART.UART4 | UART4       |
 
 
 
@@ -5511,7 +5511,7 @@ Function: UART serial data transmission
 
 | Parameter | Type | Description                                                  |
 | :-------- | :--- | ------------------------------------------------------------ |
-| UARTn     | int  | Functions of UARTn are as follows: <br />UART0 - DEBUG PORT<br />UART1 – BT PORT<br />UART2 – MAIN PORT<br />UART3 – USB CDC PORT(BG95M3 platform not supported) |
+| UARTn     | int  | Functions of UARTn are as follows: <br />UART0 - DEBUG PORT<br />UART1 – BT PORT<br />UART2 – MAIN PORT<br />UART3 – USB CDC PORT(BG95M3 platform not supported)<br />UART4 – STDOUT PORT(only supports EC200U/EC600U) |
 | buadrate  | int  | Baud rate, common baud rates are supported, such as 4800, 9600, 19200, 38400, 57600, 115200, 230400, etc. |
 | databits  | int  | Data bit (5–8)                                               |
 | parity    | int  | Parity check (0 – NONE，1 – EVEN，2 - ODD)                   |
@@ -5522,8 +5522,8 @@ Function: UART serial data transmission
 
 | platform      |                                                              |
 | ------------- | :----------------------------------------------------------- |
-| EC600U        | uart1:<br />TX: Pin number 124<br />RX: Pin number 123<br />uart2:<br />TX:Pin number 32<br />RX:Pin number 31 |
-| EC200U        | uart1:<br />TX: Pin number 138<br />RX: Pin number 137<br />uart2:<br />TX:Pin number 67<br />RX:Pin number 68 |
+| EC600U        | uart1:<br />TX: Pin number 124<br />RX: Pin number 123<br />uart2:<br />TX:Pin number 32<br />RX:Pin number 31<br />uart4:<br />TX:Pin number 103<br />RX:Pin number 104 |
+| EC200U        | uart1:<br />TX: Pin number 138<br />RX: Pin number 137<br />uart2:<br />TX:Pin number 67<br />RX:Pin number 68<br />uart4:<br />TX:Pin number 82<br />RX:Pin number 81 |
 | EC200A        | uart1:<br />TX: Pin number 63<br />RX: Pin number 66<br />uart2:<br />TX: Pin number 67<br />RX: Pin number 68 |
 | EC600S/EC600N | uart0:<br />TX: Pin number 71<br />RX: Pin number 72<br />uart1:<br />TX: Pin number 3<br />RX: Pin number 2<br />uart2:<br />TX:Pin number 32<br />RX:Pin number 31 |
 | EC100Y        | uart0:<br />TX: Pin number 21<br />RX:Pin number 20<br />uart1:<br />TX: Pin number 27<br />RX: Pin number 28<br />uart2:<br />TX:Pin number 50<br />RX:Pin number 49 |
@@ -5927,14 +5927,14 @@ Function: The module configures I/O pins to interrupt when an external event occ
 | GPIOn     | int  | The GPIO Pin number to control refer to the Pin module definition( BG95M3 platform besides)<br />The pin correspondence of BG95M3 platform is as follows (pin numbers are external pin numbers):<br />GPIO2 – Pin number 5<br />GPIO3 – Pin number 6<br />GPIO6 – Pin number 19<br />GPIO7 – Pin number 22<br />GPIO8 – Pin number 23<br />GPIO9 – Pin number 25<br />GPIO11 – Pin number 27<br />GPIO12 – Pin number 28<br />GPIO14 – Pin number 41<br />GPIO16 – Pin number 65<br/>GPIO17 – Pin number 66<br />GPIO18 – Pin number 85<br />GPIO19 – Pin number 86<br />GPIO20 – Pin number 87<br />GPIO21 – Pin number 88 |
 | mode      | int  | Set the trigger method<br /> IRQ_RISING – Rising edge trigger<br /> IRQ_FALLING – Falling edge trigger<br /> IRQ_RISING_FALLING – Rising and falling edge trigger |
 | pull      | int  | PULL_DISABLE – Floating mode<br />PULL_PU – Pull-up mode<br />PULL_PD  – Pull-down mode |
-| callback  | int  | Interrupt trigger callback function                          |
+| callback  | int  | Interrupt trigger callback function<br />The return parameter is a tuple of length 2<br />Args[0]: GPIO number<br />Args[1]: trigger edge (0: rising edge 1: falling edge) |
 
 * Example
 
 ```python
 >>> from machine import ExtInt
 >>> def fun(args):
-        print('### interrupt  {} ###'.format(args))
+        print('### interrupt  {} ###'.format(args)) #Args[0]: GPIO number args[1]: rising edge or falling edge
 >>> extint = ExtInt(ExtInt.GPIO1, ExtInt.IRQ_FALLING, ExtInt.PULL_PU, fun)
 ```
 
@@ -6034,7 +6034,19 @@ Number of times to clear the trigger interrupt.
   * 0: successful
   * Other: failed
 
+###### Get Pin Level
 
+> **extint.read_level()**
+
+It gets pin level.
+
+* Parameter
+
+  * None
+
+* Return Value
+
+  * Pin level. 0 indicates low level; 1 indicates high level
 
 ##### RTC
 
