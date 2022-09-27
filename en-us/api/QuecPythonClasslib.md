@@ -10829,7 +10829,7 @@ Camera function.
 
 > **import camera**
 >
-> **cap= camera.camCaputre(model,cam_w,cam_h,perview_level,lcd_w,lcd_h)**
+> **cap= camera.camCapture(model,cam_w,cam_h,perview_level,lcd_w,lcd_h)**
 
 * Parameter
 
@@ -10850,7 +10850,7 @@ Camera function.
 
 ###### Turn on the camera
 
-> **camCaputre.open()**
+> **camCapture.open()**
 
 * Parameter
 
@@ -10865,7 +10865,7 @@ Camera function.
 
 ###### Turn off the camera
 
-> **camCaputre.close()**
+> **camCapture.close()**
 
 * Parameter
 
@@ -10882,7 +10882,7 @@ Camera function.
 
 The photo format is JPEG
 
-> **camCaputre.start(width, height, pic_name)**
+> **camCapture.start(width, height, pic_name)**
 
 * Parameter
 
@@ -10900,7 +10900,7 @@ The photo format is JPEG
 
 ###### Set camera callback
 
-> **camCaputre.callback(callback)**
+> **camCapture.callback(callback)**
 
 * Parameter
 
@@ -10919,7 +10919,7 @@ The photo format is JPEG
 def callback(para):
     print(para)     #Para [0] photographing results      0: success others: failure
                     #Para [1] name of the saved picture
-camCaputre.callback(callback) 
+camCapture.callback(callback) 
 ```
 
 
