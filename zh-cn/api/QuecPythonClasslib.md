@@ -3689,7 +3689,7 @@ download_list = [{'url': 'http://www.example.com/app.py', 'file_name': '/usr/app
 > 设置完成升级标志后，调用重启接口，重启后即可启动升级工作。
 > 升级完成后会直接进入应用程序。
 
-> 重启接口参考链接：http://qpy.quectel.com/wiki/#/zh-cn/api/?id=power
+> 重启接口参考链接：https://python.quectel.com/wiki/#/zh-cn/api/QuecPythonClasslib?id=%e6%a8%a1%e5%9d%97%e9%87%8d%e5%90%af
 
 
 
@@ -11265,7 +11265,7 @@ Scandecode.callback(callback)
 ###### 创建对象
 
 **import camera**
-**cap= camera.camCaputre(model,cam_w,cam_h,perview_level,lcd_w,lcd_h)**
+**cap= camera.camCapture(model,cam_w,cam_h,perview_level,lcd_w,lcd_h)**
 
 * 参数
 
@@ -11286,7 +11286,7 @@ Scandecode.callback(callback)
 
 ###### 打开摄像头
 
-**camCaputre.open()**
+**camCapture.open()**
 
 * 参数
 
@@ -11302,7 +11302,7 @@ Scandecode.callback(callback)
 
 ###### 关闭摄像头
 
-**camCaputre.close()**
+**camCapture.close()**
 
 * 参数
 
@@ -11320,7 +11320,7 @@ Scandecode.callback(callback)
 
 拍照格式为jpeg
 
-**camCaputre.start(width,  height, pic_name)**
+**camCapture.start(width,  height, pic_name)**
 
 * 参数
 
@@ -11338,7 +11338,7 @@ Scandecode.callback(callback)
 
 ###### 设置拍照回调
 
-**camCaputre.callback(callback)**
+**camCapture.callback(callback)**
 
 * 参数
 
@@ -11358,7 +11358,7 @@ Scandecode.callback(callback)
 def callback(para):
     print(para)		#para[0] 拍照结果 	0：成功 其它：失败
     				#para[1] 保存图片的名称	
-camCaputre.callback(callback) 
+camCapture.callback(callback) 
 ```
 
 
