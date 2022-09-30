@@ -2536,6 +2536,14 @@ sms.setCallback(cb)
 | 22   | GSM_CATNB,        BG95 supported                             |
 | 23   | CATM_CATNB,       BG95 supported                             |
 | 24   | GSM_CATM_CATNB,   BG95 supported                             |
+| 25   | CATM_GSM,         BG95 supported                             |
+| 26   | CATNB_GSM,        BG95 supported                             |
+| 27   | CATNB_CATM,       BG95 supported                             |
+| 28   | GSM_CATNB_CATM,   BG95 supported                             |
+| 29   | CATM_GSM_CATNB,   BG95 supported                             |
+| 30   | CATM_CATNB_GSM,   BG95 supported                             |
+| 31   | CATNB_GSM_CATM,   BG95 supported                             |
+| 32   | CATNB_CATM_GSM,   BG95 supported                             |
 
 * 示例
 
