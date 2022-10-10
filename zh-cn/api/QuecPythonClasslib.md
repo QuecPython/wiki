@@ -4468,7 +4468,6 @@ aud.play(1, 0, 'U:/test.mp3')
                   break
               audio_test.playStream(format, b)
               utime.sleep_ms(20)
-          f.close()
   
   
   play_from_fs()

@@ -1628,13 +1628,15 @@ if __name__ == '__main__':
 
 ##### 同步ntp时间
 
-> **ntptime.settime()**
+> **ntptime.settime(timezone=0)**
 
 同步ntp时间。
 
 * 参数
 
-无
+| 参数     | 类型   | 说明          |
+| :------- | :----- | ------------- |
+| timezone | int    | 默认为0, 范围 (-12~12) |
 
 * 返回值
 
