@@ -1613,13 +1613,15 @@ Set the NTP Server.
 
 ##### Synchronize NTP Time
 
-> **ntptime.settime()**
+> **ntptime.settime(timezone=0)**
 
 Synchronize NTP time.
 
 * Parameter
 
-  * None
+| Parameter | Type   | Description        |
+| --------- | ------ | ------------------ |
+| timezone  | int    | Default: 0, Range: -12 ~ 12 |
 
 * Return Value
 

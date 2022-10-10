@@ -3947,7 +3947,6 @@ Stop audio streaming
                   break
               audio_test.playStream(format, b)
               utime.sleep_ms(20)
-          f.close()
   
   
   play_from_fs()
