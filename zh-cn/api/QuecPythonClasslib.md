@@ -6584,7 +6584,8 @@ PIN脚电平，0-低电平，1-高电平
 
 支持平台EC600U/EC200U/EC600N/EC800N/BC25
 
-rtc.set_alarm(data_e)
+> **rtc.set_alarm(data_e)**
+
 设置RTC到期时间,当到了到期时间就会调用注册的回调函数。
 * 参数
 | 参数        | 类型 | 说明                                                         |

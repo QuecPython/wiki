@@ -6113,7 +6113,7 @@ It sets and gets RTC time. When there is no parameter, it gets the time, it sets
 
 Support platform ec600u/ec200u/ec600n/ec800n/bc25
 
-rtc.set_alarm(data_e)
+> **rtc.set_alarm(data_e)**
 
 Set the RTC expiration time. When the expiration time is reached, the registered callback function will be called
 
