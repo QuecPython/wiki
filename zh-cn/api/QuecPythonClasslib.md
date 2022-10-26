@@ -1154,7 +1154,7 @@ sim卡解锁。当多次错误输入 PIN/PIN2 码后，SIM 卡状态为请求 PU
 
 
 
-##### 注册监听回调函数
+##### 热插拔注册监听回调函数
 
 > **sim.setCallback(usrFun)**
 
@@ -1251,6 +1251,108 @@ sim.setCallback(cb)
 ```python
 >>> sim.getSimDet()
 (1, 0)
+```
+
+
+
+##### sim卡获取当前卡接口
+
+> **sim.getCurSimid()**
+
+sim卡获取当前卡接口。（仅1606平台支持）
+
+* 参数
+
+  无
+
+* 返回值
+
+  获取成功，返回当前simid(0:卡1,1:卡2)
+  
+  获取失败，返回整形-1
+
+* 示例
+
+```python
+>>> sim.getCurSimid() //获取当前卡，当前是卡1
+0
+```
+
+
+
+##### sim卡切卡接口
+
+> **sim.switchCard(simid)**
+
+sim卡切卡接口。（仅1606平台支持）
+
+* 参数
+
+  | 参数   | 参数类型 | 参数说明                        |
+  | ------ | -------- | ------------------------------- |
+  | simid  | int      | 0:卡1  1:卡2                    |
+
+* 返回值
+
+  切卡动作发起成功返回整形0，切换动作发起失败返回整形-1
+
+* 示例
+
+```python
+>>> sim.getCurSimid() //获取当前卡，当前是卡1
+0
+>>> sim.switchCard(1) //切到卡2
+0
+>>> sim.getCurSimid() //获取当前卡，成功切到卡2
+1
+```
+
+
+
+##### SIM卡切卡注册监听回调函数
+
+> **sim.setSwitchcardCallback(usrFun)**
+
+注册监听回调函数。响应SIM卡切卡动作。（仅1606平台支持）
+
+* 参数
+
+| 参数   | 参数类型 | 参数说明                               |
+| ------ | -------- | -------------------------------------- |
+| usrFun | function | 监听回调函数，回调具体形式及用法见示例 |
+
+* 返回值
+
+  注册成功返回整型0，失败返回整型-1。
+
+* 示例
+
+```python
+
+//切卡状态枚举值，目前给到python侧的数据只有：
+HELIOS_SIM_SWITCH_CURRSIM_PSDC_UP（切卡成功）
+HELIOS_SIM_SWITCH_ERROR（切卡失败）
+
+typedef enum
+{
+	HELIOS_SIM_SWITCH_INIT = 0,
+	HELIOS_SIM_SWITCH_START,
+	HELIOS_SIM_SWITCH_PRESIM_PDP_DOWN,
+	HELIOS_SIM_SWITCH_PRESIM_IMS_DOWN,
+	HELIOS_SIM_SWITCH_PRESIM_PSDC_DOWN,
+	HELIOS_SIM_SWITCH_CURRSIM_PDP_UP,
+    HELIOS_SIM_SWITCH_PRESIM_IMS_UP,
+	HELIOS_SIM_SWITCH_CURRSIM_PSDC_UP,
+	HELIOS_SIM_SWITCH_ERROR
+}HELIOS_SIM_SWITCH_STATE;
+
+import sim
+
+def cb(args):
+    switchcard_state = args
+    print('sim switchcard states:{}'.format(switchcard_state))
+    
+sim.setCallback(cb)
 ```
 
 
@@ -5638,6 +5740,42 @@ from misc import USBNET
 
 #work on RNDIS mode
 USBNET.open()
+```
+
+
+
+##### 单双天线配置接口
+
+> **misc.antennaSecRXOffCtrl(\*args)**
+
+单双天线配置、查询接口。（仅1803S平台支持该接口）
+
+* 参数
+
+  该接口为可变参形式：
+    参数个数为0,表示获取单双天线配置：misc.antennaSecRXOffCtrl()
+    参数个数为1，表示设置单双天线：misc.antennaSecRXOffCtrl(SecRXOff_set)
+	
+  |     参数      | 参数类型 | 参数说明                                              |
+  |    ------     | -------- | ----------------------------------------------------- |
+  | SecRXOff_set  | int      | 范围0/1, 0:forceSecRXOffDisable 1:forceSecRXOffEnable |
+
+* 返回值
+
+  失败返回整型值-1，成功返回整形0
+
+* 示例
+
+```python
+import misc
+
+misc.antennaSecRXOffCtrl()
+0
+misc.antennaSecRXOffCtrl(1)
+0
+misc.antennaSecRXOffCtrl()
+1
+
 ```
 
 

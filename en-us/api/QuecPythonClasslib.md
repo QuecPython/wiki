@@ -1226,6 +1226,104 @@ This function obtains the SIM card hot-plugging related configuration.
 
 
 
+##### get the current simid
+
+> **sim.getCurSimid()**
+
+get the current simid.（just supported on the 1606 platform）
+
+* Parameter
+
+  * None
+
+* Return Value
+
+  * Returns the current simid, or returns -1 if failed.
+
+* Example
+
+```python
+>>> sim.getCurSimid() //current simid is sim0
+0
+```
+
+
+
+##### switchcard api
+
+> **sim.switchCard(simid)**
+
+switchcard api.（just supported on the 1606 platform）
+
+* Parameter
+
+  | Parameter    | Type | Description                                                  |
+  | ------------ | ---- | ------------------------------------------------------------ |
+  | simid        | int  | simid,  0:sim1  1:sim2                                       |
+
+* Return Value
+
+  * rerurn 0 if switchcard action is successful, else return -1;
+
+* Example
+
+```python
+>>> sim.getCurSimid() //current simid is sim0
+0
+>>> sim.switchCard(1) //switchcard from sim0 to sim1
+0
+>>> sim.getCurSimid() //current simid is sim1
+1
+```
+
+
+
+##### Register Callback Function for switchcard
+
+> **sim.setSwitchcardCallback(usrFun)**
+
+Call this API to registers the listening callback function.(just supported on the 1606 platform)
+
+* Parameter
+
+| Parameter | Type     | Description                                                |
+| --------- | -------- | ---------------------------------------------------------- |
+| usrFun    | function | Listening callback function. See example for more details. |
+
+* Return Value
+
+  * Returns 0 on success, -1 otherwise.
+
+* Example
+
+```python
+HELIOS_SIM_SWITCH_CURRSIM_PSDC_UP（switchcard succeeded）
+HELIOS_SIM_SWITCH_ERROR（switchcard failed）
+
+typedef enum
+{
+	HELIOS_SIM_SWITCH_INIT = 0,
+	HELIOS_SIM_SWITCH_START,
+	HELIOS_SIM_SWITCH_PRESIM_PDP_DOWN,
+	HELIOS_SIM_SWITCH_PRESIM_IMS_DOWN,
+	HELIOS_SIM_SWITCH_PRESIM_PSDC_DOWN,
+	HELIOS_SIM_SWITCH_CURRSIM_PDP_UP,
+    HELIOS_SIM_SWITCH_PRESIM_IMS_UP,
+	HELIOS_SIM_SWITCH_CURRSIM_PSDC_UP,
+	HELIOS_SIM_SWITCH_ERROR
+}HELIOS_SIM_SWITCH_STATE;
+
+import sim
+
+def cb(args):
+    switchcard_state = args
+    print('sim switchcard states:{}'.format(switchcard_state))
+    
+sim.setCallback(cb)
+```
+
+
+
 #### voiceCall - Call Related
 
 Function: Provides call related APIs.
@@ -5097,6 +5195,42 @@ from misc import USBNET
 
 #work on RNDIS mode
 USBNET.open()
+```
+
+
+
+##### single and dual antenna configuration and query API
+
+> **misc.antennaSecRXOffCtrl(\*args)**
+
+single and dual antenna configuration and query API(just supported on the 1803s platform)
+
+* parameter
+
+  This API is a variable parameter function ,and the number of parameters is 0 or 1：
+    The number of parameters is 0(query)：misc.antennaSecRXOffCtrl()
+    The number of parameters is 1(set)：misc.antennaSecRXOffCtrl(SecRXOff_set)
+  
+  |   Parameter   | Type     | Description                                  |
+  |   --------    | -------- | ----------------------------------------------------- |
+  | SecRXOff_set  | int      | range:0/1, 0:forceSecRXOffDisable 1:forceSecRXOffEnable |
+
+* Return Value
+
+  * query: Return 0/1 if successful, otherwise return -1
+  
+  * set: Return 0 if successful, otherwise return -1
+
+* Example
+
+```python
+import misc
+misc.antennaSecRXOffCtrl() //get
+0
+misc.antennaSecRXOffCtrl(1) //set
+0
+misc.antennaSecRXOffCtrl() //get
+1
 ```
 
 
