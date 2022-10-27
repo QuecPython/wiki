@@ -11369,6 +11369,8 @@ if __name__ == '__main__':
 
 ###### 继续扫码识别功能
 
+**camScandecode.resume()**
+
 * 参数
 
 无
