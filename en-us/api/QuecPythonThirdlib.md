@@ -1613,13 +1613,15 @@ Set the NTP Server.
 
 ##### Synchronize NTP Time
 
-> **ntptime.settime()**
+> **ntptime.settime(timezone=0)**
 
 Synchronize NTP time.
 
 * Parameter
 
-  * None
+| Parameter | Type   | Description        |
+| --------- | ------ | ------------------ |
+| timezone  | int    | Default: 0, Range: -12 ~ 12 |
 
 * Return Value
 
@@ -2245,6 +2247,108 @@ sys_bus.unsubscribe("test")
 #### Uasyncio collaboration
 
 [uasyncio document center](https://python.quectel.com/doc/doc/Advanced_development/zh/QuecPythonThird/asyncio.html)
+
+
+
+#### uwebsocket use
+
+Module: Mainly used for websocket connection use
+
+
+
+##### Client connection
+
+> **import uwebsocket**
+>
+> **ws_client = uwebsocket.Client.connect(uri, headers=None, debug=False)**
+
+- paramter
+
+| parameter | type | illustrate                                                   |
+| --------- | ---- | ------------------------------------------------------------ |
+| uri       | str  | The connection address of websocket, generally exists in the form of "ws://xxx/" or "wss://xxx/" |
+| headers   | dict | Additional headers that need to be added are used to allow users to pass additional headers in addition to the standard headers |
+| debug     | bool | The default is False, when it is True, the log will be output |
+
+
+
+##### send data
+
+> **ws_client.send(msg)**
+
+- paramter
+
+| parameter | type | illustrate   |
+| --------- | ---- | ------------ |
+| msg       | str  | data to send |
+
+- return value
+
+None
+
+
+
+##### recv data
+
+> **ws_client.recv()**
+
+- paramter
+
+None
+
+- return value
+
+| return value | type | illustrate                                                   |
+| ------------ | ---- | ------------------------------------------------------------ |
+| result       | str  | The returned result is the result of recv. When a null value or None is accepted, the connection is closed. |
+
+
+
+##### close connect
+
+> **ws_client.close()**
+
+- paramter
+
+None
+
+- return Value
+
+None
+
+
+
+##### Example of use
+
+```python
+from usr import uwebsocket
+import _thread
+
+
+def recv(cli):
+    while True:
+        # Infinite loop to receive data
+        recv_data = cli.recv()
+        print("recv_data = {}".format(recv_data))
+        if not recv_data:
+            # The server closes the connection or the client closes the connection
+            print("cli close")
+            client.close()
+            break
+
+
+# Create a client, debug=True to output logs, ip and port need to be filled in by yourself, or a domain name
+client = uwebsocket.Client.connect('ws://xxx/', debug=True)
+
+# Thread receives data
+_thread.start_new_thread(recv, (client,))
+
+# send data
+client.send("this is a test msg")
+
+```
+
+
 
 
 
