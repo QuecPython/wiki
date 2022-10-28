@@ -10937,9 +10937,9 @@ Before using  code scan , you need to initialize LCD.
   * 0: Successful execution.
   * Other values: Failed execution.
 
-
-
 ###### Resume Code Scan
+
+> **camScandecode.resume()**
 
 * Return Value
 
