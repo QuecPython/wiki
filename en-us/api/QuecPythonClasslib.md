@@ -5199,11 +5199,11 @@ USBNET.open()
 
 
 
-##### single and dual antenna configuration and query API
+##### Diversity antenna configuration API
 
 > **misc.antennaSecRXOffCtrl(\*args)**
 
-single and dual antenna configuration and query API(just supported on the 1803s platform)
+Diversity antenna configuration and query API(just supported on the 1803s platform)
 
 * parameter
 
@@ -5211,9 +5211,9 @@ single and dual antenna configuration and query API(just supported on the 1803s 
     The number of parameters is 0(query)：misc.antennaSecRXOffCtrl()
     The number of parameters is 1(set)：misc.antennaSecRXOffCtrl(SecRXOff_set)
   
-  |   Parameter   | Type     | Description                                  |
+  |   Parameter   | Type     | Description                                           |
   |   --------    | -------- | ----------------------------------------------------- |
-  | SecRXOff_set  | int      | range:0/1, 0:forceSecRXOffDisable 1:forceSecRXOffEnable |
+  | SecRXOff_set  | int      | range:0/1, 0:The diversity antenna is not turned off  1:Turn off the diversity antenna |
 
 * Return Value
 

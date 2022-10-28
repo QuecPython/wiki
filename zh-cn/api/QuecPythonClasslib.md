@@ -5744,25 +5744,27 @@ USBNET.open()
 
 
 
-##### 单双天线配置接口
+##### 分集天线配置接口
 
 > **misc.antennaSecRXOffCtrl(\*args)**
 
-单双天线配置、查询接口。（仅1803S平台支持该接口）
+分集天线配置、查询接口。（仅1803S平台支持该接口）
 
 * 参数
 
   该接口为可变参形式：
-    参数个数为0,表示获取单双天线配置：misc.antennaSecRXOffCtrl()
-    参数个数为1，表示设置单双天线：misc.antennaSecRXOffCtrl(SecRXOff_set)
+    参数个数为0,查询：misc.antennaSecRXOffCtrl()
+    参数个数为1，配置：misc.antennaSecRXOffCtrl(SecRXOff_set)
 	
   |     参数      | 参数类型 | 参数说明                                              |
   |    ------     | -------- | ----------------------------------------------------- |
-  | SecRXOff_set  | int      | 范围0/1, 0:forceSecRXOffDisable 1:forceSecRXOffEnable |
+  | SecRXOff_set  | int      | 范围0/1, 0:不关闭分集天线 1:关闭分集天线              |
 
 * 返回值
 
-  失败返回整型值-1，成功返回整形0
+  查询：成功返回分集天线配置，失败返回整形值-1
+
+  设置：成功返回整形0,失败返回整型值-1
 
 * 示例
 
