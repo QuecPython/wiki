@@ -10765,7 +10765,7 @@ if __name__ == '__main__':
 
 Module function: Preview, camera, code scan
 
-Note: The BC25PA platform does not support this module function.
+Note: At present, the following modules support the camera function: EC200U series,EC600U series,EC600N series,EC600S series,EC800N series.
 
 
 ##### Preview
