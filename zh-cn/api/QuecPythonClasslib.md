@@ -2122,6 +2122,8 @@ if __name__ == '__main__':
   `current_nums` - 当前空间已有短信数量
 
   `max_nums` - 当前空间最大短信存储数量
+  
+  失败返回整形-1
 
 * 示例
 
@@ -2409,7 +2411,7 @@ sms.setCallback(cb)
 
 * 参数
 
-  该接口在Qualcomm/ASR_1803s/ASR_1601/ASR_1606/Unisoc(不包括EG915)平台为可变参函数,参数个数为2或7, 其他平台参数个数固定为2：
+  该接口在Qualcomm/ASR_1803s/ASR_1601/ASR_1606/Unisoc平台为可变参函数,参数个数为2或7, 其他平台参数个数固定为7：
     参数个数为2：net.setApn(apn, simid)
     参数个数为7：net.setApn(pid, iptype, apn, usrname, password, authtype, simid)
   
@@ -2452,7 +2454,7 @@ sms.setCallback(cb)
 
 * 参数
 
-  该接口在Qualcomm/ASR_1803s/ASR_1601/ASR_1606/Unisoc(不包括EG915)平台为可变参函数,参数个数为1或2, 其他平台参数个数固定为1：
+  该接口在Qualcomm/ASR_1803s/ASR_1601/ASR_1606/Unisoc平台为可变参函数,参数个数为1或2, 其他平台参数个数固定为2：
     参数个数为2：net.getApn(pid, simid)
     参数个数为1：net.getApn(simid)
 	
@@ -2519,7 +2521,7 @@ sms.setCallback(cb)
 
 * 参数
 
-  该接口在BC25平台为可变参函数,参数个数为0或1, 其他平台参数个数固定为0：
+  该接口在BC25平台和移芯小内存方案为可变参函数,参数个数为0或1, 其他平台参数个数固定为0：
     参数个数为0：net.getCellInfo()
     参数个数为1：net.getCellInfo(sinr_enable)
 	
@@ -2573,7 +2575,7 @@ sms.setCallback(cb)
 | earfcn | 无线频道编号，范围 0 ~ 65535                                 |
 | rssi   | 接收的信号强度，在LTE网络下，表示RSRP质量（负值），是根据RSRP测量报告值换算而来，换算关系如下：<br>RSRP质量（负数）= RSRP测量报告值 - 140，单位dBm，范围 -140 ~ -44 dBm |
 | rsrq  |(Reference Signal Receiving Quality):LTE参考信号接收质量(仅ASR平台数据有意义，其余平台默认0)，范围 -20 ~ -3  注：理论上rsrq的范围应该是-19.5 ~ -3，但由于计算方法问题，目前能给出的是-20 ~ -3|
-| sinr   |信噪比(目前仅BC25平台支持获取该参数，非服务小区默认写0, 范围-30 ~ 30)       |
+| sinr   |信噪比(目前仅BC25和移芯小内存平台支持获取该参数，范围-30 ~ 30)       |
 
 * 示例
 
@@ -2595,7 +2597,7 @@ sms.setCallback(cb)
 
 ##### 获取网络制式及漫游配置
 
-注意：BC25PA平台不支持此方法。EC200U/EC600U平台不支持漫游参数配置。
+注意：BC25PA平台不支持此方法。展锐平台不支持漫游参数配置。移芯平台仅支持LTE ONLY.
 
 > **net.getConfig()**
 
@@ -2658,7 +2660,7 @@ sms.setCallback(cb)
 
 ##### 设置网络制式及漫游配置
 
-注意：BC25PA平台不支持此方法。展锐平台不支持漫游参数配置。
+注意：BC25PA平台不支持此方法。展锐平台不支持漫游参数配置。移芯平台仅支持LTE ONLY.
 
 > **net.setConfig(mode, roaming)**
 
@@ -2749,7 +2751,7 @@ sms.setCallback(cb)
 
 * 参数
 
-  该接口在1803s/qualcomm/unisoc(不包括EG915)平台为可变参函数,参数个数为0或1, 其他平台参数个数固定为0：
+  该接口在非RDA平台为可变参函数,参数个数为0或1, RDA平台参数个数固定为0：
     参数个数为0：net.getSignal()
     参数个数为1：net.getSignal(sinr_enable)
 	
@@ -2785,7 +2787,7 @@ sms.setCallback(cb)
 
   `cqi` ：信道质量
   
-  `sinr`: 信噪比(目前仅1803s/qualcomm/unisoc平台支持获取该参数)
+  `sinr`: 信噪比(RDA平台不支持获取该参数)
 
 * 示例
 

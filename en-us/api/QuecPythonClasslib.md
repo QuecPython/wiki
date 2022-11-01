@@ -2083,6 +2083,8 @@ This function obtains the current information in the message storage.
   * `loc3` - The memory storage where the Received messages stored in;
   * `current_nums` - The current number of messages in the storage.
   * `max_nums` - The maximum number of messages can be stored in the storage.
+  
+  * -1  Failed execution.
 
 * Example
 
@@ -2364,7 +2366,7 @@ This function sets APN. After setting, you need to restart or switch to mode 0 a
 
 * Parameter
 
-  This API is a variable parameter function in Qualcomm/ASR_1803s/ASR_1601/ASR_1606/Unisoc(excluding EG915) platform, and the number of parameters is 2 or 7. The number of parameters in other platforms is fixed at 2  ：
+  This API is a variable parameter function in Qualcomm/ASR_1803s/ASR_1601/ASR_1606/Unisoc platform, and the number of parameters is 2 or 7. The number of parameters in other platforms is fixed at 7  ：
     The number of parameters is 2：net.setApn(apn, simid)
     The number of parameters is 7：net.setApn(pid, iptype, apn, usrname, password, authtype, simid)
   
@@ -2406,7 +2408,7 @@ This function obtains the current APN.
 
 * Parameter
 
-  This API is a variable parameter function in Qualcomm/ASR_1803s/ASR_1601/ASR_1606/Unisoc(excluding EG915) platform, and the number of parameters is 1 or 2. The number of parameters in other platforms is fixed at 1  ：
+  This API is a variable parameter function in Qualcomm/ASR_1803s/ASR_1601/ASR_1606/Unisoc platform, and the number of parameters is 1 or 2. The number of parameters in other platforms is fixed at 2  ：
     The number of parameters is 2：net.setApn(pid, simid)
     The number of parameters is 1：net.setApn(simid)
   
@@ -2481,7 +2483,7 @@ case with one Parameter:
 
 * Parameter
 
-  This API is a variable parameter function in BC25 platform, and the number of parameters is 0 or 1. The number of parameters in other platforms is fixed at 0  ：
+  This API is a variable parameter function in BC25/EIGEN platform, and the number of parameters is 0 or 1. The number of parameters in other platforms is fixed at 0  ：
     The number of parameters is 0：net.getCellInfo()
     The number of parameters is 1：net.getCellInfo(sinr_enable)
   
@@ -2534,7 +2536,7 @@ case with one Parameter:
 | tac       | Tracing area code,  range : 0 ~ 65535                        |
 | earfcn    | Extended Absolute Radio Frequency Channel Number, range : 0-65535. |
 | rssi      | Received Signal Strength Indication. In LTE network, denotes RSRP quality (negative value), which is converted according to RSRP measurement report value, and the conversion relationship is as follows<br>RSRP quality = RSRP measurement report value - 140, unit : dBm, range : -140 ~ -44 dBm |
-| sinr      | Signal to Noise Ratio(supported in BC25，range : -30 ~ 30)   |
+| sinr      | Signal to Noise Ratio(supported in BC25/EIGEN，range : -30 ~ 30)   |
 
 * Example
 
@@ -2719,7 +2721,7 @@ case with one Parameter:
 
 * Parameter
 
-  This API is a variable parameter function in BC25 platform, and the number of parameters is 0 or 1. The number of parameters in other platforms is fixed at 0  ：
+  This API is a variable parameter function except BC25 platform, and the number of parameters is 0 or 1. The number of parameters in other platforms is fixed at 0  ：
     The number of parameters is 0：net.getCellInfo()
     The number of parameters is 1：net.getCellInfo(sinr_enable)
   
@@ -2750,7 +2752,7 @@ case with one Parameter:
       `rsrp` : Reference Signal Receiving Power, range : -141 ~ -44 dBm, 99 indicates unknown or undetected signal <br/>
       `rsrq` : Reference Signal Receiving Quality, range : -20 ~ -3 dBm, A larger value indicates better signal reception quality <br/>
       `cqi` : Channel Quality
-	  `sinr`: Signal to Noise Ratio(supported in 1803s/qualcomm/unisoc，range : -30 ~ 30)
+	  `sinr`: Signal to Noise Ratio(supported except RDA platform，range : -30 ~ 30)
 * Example
 
 ```python
