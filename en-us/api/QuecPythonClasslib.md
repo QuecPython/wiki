@@ -2083,6 +2083,8 @@ This function obtains the current information in the message storage.
   * `loc3` - The memory storage where the Received messages stored in;
   * `current_nums` - The current number of messages in the storage.
   * `max_nums` - The maximum number of messages can be stored in the storage.
+  
+  * -1  Failed execution.
 
 * Example
 
@@ -2364,7 +2366,7 @@ This function sets APN. After setting, you need to restart or switch to mode 0 a
 
 * Parameter
 
-  This API is a variable parameter function in Qualcomm/ASR_1803s/ASR_1601/ASR_1606/Unisoc(excluding EG915) platform, and the number of parameters is 2 or 7. The number of parameters in other platforms is fixed at 2  ：
+  This API is a variable parameter function in Qualcomm/ASR_1803s/ASR_1601/ASR_1606/Unisoc platform, and the number of parameters is 2 or 7. The number of parameters in other platforms is fixed at 7  ：
     The number of parameters is 2：net.setApn(apn, simid)
     The number of parameters is 7：net.setApn(pid, iptype, apn, usrname, password, authtype, simid)
   
@@ -2406,7 +2408,7 @@ This function obtains the current APN.
 
 * Parameter
 
-  This API is a variable parameter function in Qualcomm/ASR_1803s/ASR_1601/ASR_1606/Unisoc(excluding EG915) platform, and the number of parameters is 1 or 2. The number of parameters in other platforms is fixed at 1  ：
+  This API is a variable parameter function in Qualcomm/ASR_1803s/ASR_1601/ASR_1606/Unisoc platform, and the number of parameters is 1 or 2. The number of parameters in other platforms is fixed at 2  ：
     The number of parameters is 2：net.setApn(pid, simid)
     The number of parameters is 1：net.setApn(simid)
   
@@ -2481,7 +2483,7 @@ case with one Parameter:
 
 * Parameter
 
-  This API is a variable parameter function in BC25 platform, and the number of parameters is 0 or 1. The number of parameters in other platforms is fixed at 0  ：
+  This API is a variable parameter function in BC25/EIGEN platform, and the number of parameters is 0 or 1. The number of parameters in other platforms is fixed at 0  ：
     The number of parameters is 0：net.getCellInfo()
     The number of parameters is 1：net.getCellInfo(sinr_enable)
   
@@ -2534,7 +2536,7 @@ case with one Parameter:
 | tac       | Tracing area code,  range : 0 ~ 65535                        |
 | earfcn    | Extended Absolute Radio Frequency Channel Number, range : 0-65535. |
 | rssi      | Received Signal Strength Indication. In LTE network, denotes RSRP quality (negative value), which is converted according to RSRP measurement report value, and the conversion relationship is as follows<br>RSRP quality = RSRP measurement report value - 140, unit : dBm, range : -140 ~ -44 dBm |
-| sinr      | Signal to Noise Ratio(supported in BC25，range : -30 ~ 30)   |
+| sinr      | Signal to Noise Ratio(supported in BC25/EIGEN，range : -30 ~ 30)   |
 
 * Example
 
@@ -2719,7 +2721,7 @@ case with one Parameter:
 
 * Parameter
 
-  This API is a variable parameter function in BC25 platform, and the number of parameters is 0 or 1. The number of parameters in other platforms is fixed at 0  ：
+  This API is a variable parameter function except BC25 platform, and the number of parameters is 0 or 1. The number of parameters in other platforms is fixed at 0  ：
     The number of parameters is 0：net.getCellInfo()
     The number of parameters is 1：net.getCellInfo(sinr_enable)
   
@@ -2750,7 +2752,7 @@ case with one Parameter:
       `rsrp` : Reference Signal Receiving Power, range : -141 ~ -44 dBm, 99 indicates unknown or undetected signal <br/>
       `rsrq` : Reference Signal Receiving Quality, range : -20 ~ -3 dBm, A larger value indicates better signal reception quality <br/>
       `cqi` : Channel Quality
-	  `sinr`: Signal to Noise Ratio(supported in 1803s/qualcomm/unisoc，range : -30 ~ 30)
+	  `sinr`: Signal to Noise Ratio(supported except RDA platform，range : -30 ~ 30)
 * Example
 
 ```python
@@ -7838,7 +7840,7 @@ print(r.group(0))
 
 ####  wifiScan
 
-Note: The BC25PA platform does not support this module function.
+Note: wifiscan supports the platforms: 1603/1606(except:600MCN_LC/800MCN_GC/800MCN_LC)/8910/8850.
 
 ##### Determine whether wifiScan is supported
 
@@ -7946,10 +7948,10 @@ True
 
   | Return Value  | Type         | Description                                                  |
   | ------------- | ------------ | ------------------------------------------------------------ |
-  | timeout       | Integer type | This parameter is the timeout of upper layer application. When the application triggers timeout, it actively reports the scanned hot spot information. The application automatically reports the hot spot information if it scans all the hop spots which have been set previously or the underlying layer scan reaches the frequency sweeping timeout before the timeout of the application. Range: 4–255. Unit: second. |
-  | round         | Integer type | This parameter is the scanning rounds of wifi. When reaching the scanning rounds, the scan stops and the scanning results are obtained. Range: 1–3. Unit: round. |
-  | max_bssid_num | Integer type | This parameter determines the maximum number of hot spots to be scanned. If the number of hot spots scanned by the underlying layer reaches the maximum, the scan stops and the scanning results are obtained. Range: 4–30. |
-  | scan_timeout  | Integer type | This parameter is the wifi hot spot scanning timeout of underlying layer. If the underlying layer scan reaches the hot spot scanning timeout set previously,  the scan stops and the scanning results are obtained. Range: 1–255. Unit: second. |
+  | timeout       | Integer type | This parameter is the timeout of upper layer application. When the application triggers timeout, it actively reports the scanned hot spot information. The application automatically reports the hot spot information if it scans all the hop spots which have been set previously or the underlying layer scan reaches the frequency sweeping timeout before the timeout of the application. |
+  | round         | Integer type | This parameter is the scanning rounds of wifi. When reaching the scanning rounds, the scan stops and the scanning results are obtained. |
+  | max_bssid_num | Integer type | This parameter determines the maximum number of hot spots to be scanned. If the number of hot spots scanned by the underlying layer reaches the maximum, the scan stops and the scanning results are obtained. |
+  | scan_timeout  | Integer type | This parameter is the wifi hot spot scanning timeout of underlying layer. If the underlying layer scan reaches the hot spot scanning timeout set previously,  the scan stops and the scanning results are obtained. |
   | priority      | Integer type | This parameter is the priority setting of wifi scanning service. 0 indicates that ps is preferred; 1 indicates that wifi is preferred. When ps is preferred,  the wifi scan is terminated when a data service is initiated. When wifi is preferred, RRC connection is not connected when a data service is initiated. wifi scan runs normally. The RRC connection is only established after the scan completes. |
 
 * Example：
@@ -7973,11 +7975,11 @@ True
 
   | Parameter     | Type         | Description                                                  |
   | ------------- | ------------ | ------------------------------------------------------------ |
-  | timeout       | Integer type | This parameter is the timeout of upper layer application. When the application triggers timeout, it actively reports the scanned hot spot information. The application automatically reports the hot spot information if it scans all the hop spots which have been set previously or the underlying layer scan reaches the frequency sweeping timeout before the timeout of the application. <br>Range:<br/>600S: 4–255; unit: s.<br/>200U/600U: 120–5000; unit: ms. |
-  | round         | Integer type | This parameter is the scanning rounds of wifi. When reaching the scanning rounds, the scan stops and the scanning results are obtained. <br/>Range:<br/>600S: 1–3; unit: round<br/>200U/600U: 1–10; unit: round |
-  | max_bssid_num | Integer type | This parameter determines the maximum number of hot spots to be scanned. If the number of hot spots scanned by the underlying layer reaches the maximum, the scan stops and the scanning results are obtained. <br/>Range:<br/>600S: 4–30<br/>200U/600U: 1–300 |
+  | timeout       | Integer type | This parameter is the timeout of upper layer application. When the application triggers timeout, it actively reports the scanned hot spot information. The application automatically reports the hot spot information if it scans all the hop spots which have been set previously or the underlying layer scan reaches the frequency sweeping timeout before the timeout of the application. <br>Range:<br/>1603/1606 platforms: 4–255; unit: s.<br/>8850/8910 platfroms: 120–5000; unit: ms. |
+  | round         | Integer type | This parameter is the scanning rounds of wifi. When reaching the scanning rounds, the scan stops and the scanning results are obtained. <br/>Range:<br/>1603/1606 platforms: 1–3; unit: round<br/>8850/8910 platforms: 1–10; unit: round |
+  | max_bssid_num | Integer type | This parameter determines the maximum number of hot spots to be scanned. If the number of hot spots scanned by the underlying layer reaches the maximum, the scan stops and the scanning results are obtained. <br/>Range:<br/>1603/1606 platforms: 4–30<br/>8850/8910 platforms: 1–300 |
   | scan_timeout  | Integer type | This parameter is the wifi hot spot scanning timeout of underlying layer. If the underlying layer scan reaches the hot spot scanning timeout set previously,  the scan stops and the scanning results are obtained. Range: 1–255.  |
-  | priority      | Integer type | This parameter is the priority setting of wifi scanning service. 0 indicates that ps is preferred; 1 indicates that wifi is preferred. When ps is preferred, the wifi scan is terminated when a data service is initiated. When wifi is preferred, RRC connection is not connected when a data service is initiated. wifi scan runs normally. The RRC connection is only established after the scan completes. 200U or 600U platforms do not support this parameter. You can set this parameter to 0. |
+  | priority      | Integer type | This parameter is the priority setting of wifi scanning service. 0 indicates that ps is preferred; 1 indicates that wifi is preferred. When ps is preferred, the wifi scan is terminated when a data service is initiated. When wifi is preferred, RRC connection is not connected when a data service is initiated. wifi scan runs normally. The RRC connection is only established after the scan completes. 8850/8910 platforms do not support this parameter. You can set this parameter to 0. |
 
 * Return Value：
 
