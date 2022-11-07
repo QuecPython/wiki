@@ -10765,7 +10765,7 @@ if __name__ == '__main__':
 
 Module function: Preview, camera, code scan
 
-Note: The BC25PA platform does not support this module function.
+Note: At present, the following modules support the camera function: EC200U series,EC600U series,EC600N series,EC600S series,EC800N series.
 
 
 ##### Preview
@@ -10783,15 +10783,15 @@ Before using the preview, you need to initialize LCD.
 | Parameter     | Type | Description                                                  |
 | ------------- | ---- | ------------------------------------------------------------ |
 | model         | int  | camera model:<br />*0: gc032a spi*<br />*1: bf3901 spi*      |
-| cam_w         | int  | *camera Horizontal resolution*                               |
-| *cam_h*       | int  | *camera Vertical resolution*                                 |
-| *lcd_w*       | int  | *LCD horizontal resolution*                                  |
-| *lcd_h*       | int  | *LCD vertical resolution*                                    |
+| cam_w         | int  | camera Horizontal resolution                                 |
+| cam_h         | int  | camera Vertical resolution                                   |
+| lcd_w         | int  | LCD horizontal resolution                                    |
+| lcd_h         | int  | LCD vertical resolution                                      |
 | perview_level | int  | Preview level[1,2]. Level 2 only for ASR platform. The higher the level, the smoother the image and the greater the consumption of resources. |
 
 * Return Value
 
-  * *-1*: Initialization failure.
+  * -1: Initialization failure.
   * If the object is returned, it means the creation is successful.
 
 * Example
@@ -10851,15 +10851,15 @@ Before using  code scan , you need to initialize LCD.
 | ------------- | ---- | ------------------------------------------------------------ |
 | model         | int  | camera model:<br />*0: gc032a spi*<br />*1: bf3901 spi*      |
 | decode_level  | int  | code scan level[1,2]，Level 2 only for ASR platform. The higher the level, the better the recognition result but the greater the resource consumption* |
-| cam_w         | int  | *camera horizontal resolution*                               |
-| *cam_h*       | int  | *camera vertical resolution*                                 |
+| cam_w         | int  | camera horizontal resolution                                 |
+| cam_h         | int  | camera vertical resolution                                   |
 | perview_level | int  | Preview level[1,2]. Level 2 only for ASR platform. The higher the level, the smoother the image and the greater the consumption of resources.<br />when it is equal to 0, there is no LCD preview function. There is no need to initialize the LCD in advance. <br/> when it is equal to 1 or 2, the LCD must be initialized first |
-| *lcd_w*       | int  | *LCD horizontal resolution*                                  |
-| *lcd_h*       | int  | *LCD vertical resolution*                                    |
+| lcd_w         | int  | LCD horizontal resolution                                    |
+| lcd_h         | int  | LCD vertical resolution                                      |
 
 * Return Value
 
-  * *-1*: Failed execution.
+  * -1: Failed execution.
   * If the object is returned, it means the creation is successful.
 
 
@@ -10988,12 +10988,12 @@ Camera function.
 
 |Parameter | parameter type | parameter description|
 | ------------- | -------- | ------------------------------------------------------------ |
-|Model | int | camera model: <br/> * 0: gc032a spi * <br/> * 1: bf3901 spi *|
+|Model | int | camera model: <br/> *0: gc032a spi* <br/> *1: bf3901 spi* |
 | cam_ W | int | camera horizontal resolution|
-| *cam_ H * | int | * camera vertical resolution *|
+| cam_ H | int | camera vertical resolution |
 | perview_ Level | int | preview level [0,2]. Level 2 only for ASR platform. The higher the level, the smoother the image and the greater the resource consumption<br/> when it is equal to 0, there is no LCD preview function. There is no need to initialize the LCD in advance.  <br/> when it is equal to 1 or 2, the LCD must be initialized first |
-| *lcd_ W * | int | LCD horizontal resolution|
-| *lcd_ H * | int | * LCD vertical resolution *|
+| lcd_ W | int | LCD horizontal resolution|
+| lcd_ H | int | LCD vertical resolution |
 
 * Return Value
 

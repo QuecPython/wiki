@@ -11185,7 +11185,7 @@ if __name__ == '__main__':
 
 模块功能：实现摄像头预览，照相机，扫码功能
 
-注意：BC25PA平台不支持模块功能。
+注意：目前以下模块支持camera功能：EC200U系列、EC600U系列、EC600N系列，EC600S系列，EC800N系列。
 
 
 
@@ -11196,6 +11196,7 @@ if __name__ == '__main__':
 ###### 创建预览对象
 
 > **import camera**
+>
 > **preview = camera.camPreview(model,cam_w,cam_h,lcd_w,lcd_h,perview_level)**
 
 * 参数
@@ -11203,15 +11204,15 @@ if __name__ == '__main__':
 | 参数          | 参数类型 | 参数说明                                                     |
 | ------------- | -------- | ------------------------------------------------------------ |
 | model         | int      | camera型号：<br />*0: gc032a spi*<br />*1: bf3901 spi*       |
-| cam_w         | int      | *camera水平分辨率*                                           |
-| *cam_h*       | int      | *camera垂直分辨率*                                           |
-| *lcd_w*       | int      | *LCD水平分辨率*                                              |
-| *lcd_h*       | int      | *LCD垂直分辨率*                                              |
+| cam_w         | int      | camera水平分辨率                                             |
+| cam_h         | int      | camera垂直分辨率                                             |
+| lcd_w         | int      | LCD水平分辨率                                                |
+| lcd_h         | int      | LCD垂直分辨率                                                |
 | perview_level | int      | 预览等级[1,2]。<br />等级2只针对ASR平台，等级越高，图像越流畅,消耗资源越大 |
 
 * 返回值
 
-*-1*；初始化失败
+-1；初始化失败
 
 若返回对象，则表示创建成功
 
@@ -11265,6 +11266,7 @@ if __name__ == '__main__':
 ###### 创建对象
 
 **import camera**
+
 **scan= camera.camScandecode(model,decode_level,cam_w,cam_h,perview_level,lcd_w,lcd_h)**
 
 * 参数
@@ -11272,16 +11274,16 @@ if __name__ == '__main__':
 | 参数          | 参数类型 | 参数说明                                                     |
 | ------------- | -------- | ------------------------------------------------------------ |
 | model         | int      | camera型号：<br />*0: gc032a spi*<br />*1: bf3901 spi*       |
-| decode_level  | int      | *解码等级[1,2]，<br />等级2只针对ASR平台, 等级越高，识别效果越好但资源消耗越大*. |
-| cam_w         | int      | *camera水平分辨率*                                           |
-| *cam_h*       | int      | *camera垂直分辨率*                                           |
+| decode_level  | int      | 解码等级[1,2]，<br />等级2只针对ASR平台, 等级越高，识别效果越好但资源消耗越大. |
+| cam_w         | int      | camera水平分辨率                                             |
+| cam_h         | int      | camera垂直分辨率                                             |
 | perview_level | int      | 预览等级[0,2]。<br />等级2只针对ASR平台, 等级越高，图像越流畅,消耗资源越大<br />等于0时，无lcd预览功能,无需提前初始化LCD<br />等于1或2时，必须先初始化lcd |
-| *lcd_w*       | int      | *LCD水平分辨率*                                              |
-| *lcd_h*       | int      | *LCD垂直分辨率*                                              |
+| lcd_w         | int      | LCD水平分辨率                                                |
+| lcd_h         | int      | LCD垂直分辨率                                                |
 
 * 返回值
 
-*-1*；失败
+-1；失败
 
 若返回对象，则表示创建成功
 
@@ -11415,6 +11417,7 @@ Scandecode.callback(callback)
 ###### 创建对象
 
 **import camera**
+
 **cap= camera.camCapture(model,cam_w,cam_h,perview_level,lcd_w,lcd_h)**
 
 * 参数
@@ -11423,10 +11426,10 @@ Scandecode.callback(callback)
 | ------------- | -------- | ------------------------------------------------------------ |
 | model         | int      | camera型号：<br />*0: gc032a spi*<br />*1: bf3901 spi*       |
 | cam_w         | int      | camera水平分辨率                                             |
-| *cam_h*       | int      | *camera垂直分辨率*                                           |
-| perview_level | int      | 预览等级[0,2]。<br />等级2只针对ASR平台，等级越高，图像越流畅,消耗资源越大。<br />等于0时，无lcd预览功能，提前初始化LCD<br />等于1或2时，必须先初始化lcd |
-| *lcd_w*       | int      | LCD水平分辨率                                                |
-| *lcd_h*       | int      | *LCD垂直分辨率*                                              |
+| cam_h         | int      | camera垂直分辨率                                             |
+| perview_level | int      | 预览等级[0,2]。<br />等级2只针对ASR平台，等级越高，图像越流畅,消耗资源越大。<br />等于0时，无lcd预览功能，无须提前初始化LCD<br />等于1或2时，必须先初始化lcd |
+| lcd_w         | int      | LCD水平分辨率                                                |
+| lcd_h         | int      | LCD垂直分辨率                                                |
 
 * 返回值
 
