@@ -1255,11 +1255,11 @@ sim.setCallback(cb)
 
 
 
-##### sim卡获取当前卡接口
+##### 获取当前卡的SimId
 
 > **sim.getCurSimid()**
 
-sim卡获取当前卡接口。（仅1606平台支持）
+获取当前卡的SimId。（仅1606平台支持）
 
 * 参数
 
@@ -1280,7 +1280,7 @@ sim卡获取当前卡接口。（仅1606平台支持）
 
 
 
-##### sim卡切卡接口
+##### 切卡接口
 
 > **sim.switchCard(simid)**
 
@@ -1309,11 +1309,20 @@ sim卡切卡接口。（仅1606平台支持）
 
 
 
-##### SIM卡切卡注册监听回调函数
+##### 注册监听SIM卡切卡状态回调函数
 
 > **sim.setSwitchcardCallback(usrFun)**
 
 注册监听回调函数。响应SIM卡切卡动作。（仅1606平台支持）
+
+*注意
+
+不是所有的切卡失败都会通过回调返回：
+1、目标卡不存在或者目标卡状态异常
+2、目标卡是当前卡
+以上情况切卡接口直接返回-1，不会走到实际切卡的流程，也就不会触发回调
+
+如果满足切卡条件，切卡接口返回0，底层建立task走切卡流程，这个时候切卡失败或者成功，会通过callback返回
 
 * 参数
 
@@ -1330,8 +1339,8 @@ sim卡切卡接口。（仅1606平台支持）
 ```python
 
 //切卡状态枚举值，目前给到python侧的数据只有：
-HELIOS_SIM_SWITCH_CURRSIM_PSDC_UP（切卡成功）
-HELIOS_SIM_SWITCH_ERROR（切卡失败）
+HELIOS_SIM_SWITCH_CURRSIM_PSDC_UP（切卡成功:7）
+HELIOS_SIM_SWITCH_ERROR（切卡失败:8）
 
 typedef enum
 {
@@ -1352,7 +1361,7 @@ def cb(args):
     switchcard_state = args
     print('sim switchcard states:{}'.format(switchcard_state))
     
-sim.setCallback(cb)
+sim.setSwitchcardCallback(cb)
 ```
 
 

@@ -1284,6 +1284,16 @@ switchcard api.（just supported on the 1606 platform）
 
 Call this API to registers the listening callback function.(just supported on the 1606 platform)
 
+* Note
+
+Not all switchcard failures are returned via callbacks:
+1.  The target card does not exist or is abnormal
+2.   The target card is the current card
+In the preceding cases, the card switching interface directly returns -1 and does not enter the actual card switching process.   Therefore, the callback is not triggered
+
+If the card switching condition is met, the card switching interface returns 0, and the underlying task is created to perform the card switching process.
+If the card switching fails or succeeds, the system returns the result through callback
+
 * Parameter
 
 | Parameter | Type     | Description                                                |
@@ -1297,8 +1307,8 @@ Call this API to registers the listening callback function.(just supported on th
 * Example
 
 ```python
-HELIOS_SIM_SWITCH_CURRSIM_PSDC_UP（switchcard succeeded）
-HELIOS_SIM_SWITCH_ERROR（switchcard failed）
+HELIOS_SIM_SWITCH_CURRSIM_PSDC_UP（switchcard succeeded：7）
+HELIOS_SIM_SWITCH_ERROR（switchcard failed: 8）
 
 typedef enum
 {
@@ -1319,7 +1329,7 @@ def cb(args):
     switchcard_state = args
     print('sim switchcard states:{}'.format(switchcard_state))
     
-sim.setCallback(cb)
+sim.setSwitchcardCallback(cb)
 ```
 
 
