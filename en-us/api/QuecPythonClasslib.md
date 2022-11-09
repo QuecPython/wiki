@@ -7783,55 +7783,6 @@ It  matches the string of the entire expression.
   * It returns the string of the matched entire expression. 
 
 
-
-##### Match Multiple Strings 
-
-> ​	**match.groups()**
-
-It  matches the string of the entire expression.
-
-- Parameter
-
-  * None
-
-* Return Value
-
-  * It returns a tuple containing all substrings of the matching group. 
-
-
-
-##### Get Start Index 
-
-> ​	**match.start(index)**
-
-It returns the index of the starting original string of the matched substring group. 
-
-- Parameter
-
-| Parameter | Type | Description                                                  |
-| --------- | ---- | ------------------------------------------------------------ |
-| index     | int  | Index defaults to the entire group, otherwise a group is selected. |
-
-* Return Value
-
-  * It returns the index of the starting original string of the matched substring group. 
-
-##### Get End Index 
-
-> ​	**match.end(index)**
-
-It returns the index of the ending original string of the matched substring group. 
-
-- Parameter
-
-| Parameter | Type | Description                                                  |
-| --------- | ---- | ------------------------------------------------------------ |
-| index     | int  | Index defaults to the entire group, otherwise a group is selected. |
-
-* Return Value
-
-  * It returns the index of the ending original string of the matched substring group. 
-
 ##### Example
 
 ```python
