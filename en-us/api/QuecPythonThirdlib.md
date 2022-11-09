@@ -1851,7 +1851,7 @@ Returns the folder path where files and folders are located
 ```python
 import ql_fs
 ret = ql_fs.path_dirname("/usr/bin")
-print("ret")
+print(ret)
 
 #The printing results are as follows
 # /usr

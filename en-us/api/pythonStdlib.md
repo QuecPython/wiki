@@ -1893,7 +1893,7 @@ Measure ticks difference between values returned from [`ticks_ms()`](https://doc
 import utime
 start = utime.ticks_us()
 while pin.value() == 0:
-    if utime.ticks_diff(time.ticks_us(), start) > 500:
+    if utime.ticks_diff(utime.ticks_us(), start) > 500:
         raise TimeoutError
 ```
 

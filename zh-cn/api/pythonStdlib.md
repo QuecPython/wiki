@@ -1920,7 +1920,7 @@ utime 模块用于获取当前时间和日期、测量时间间隔和延迟。�
 import utime
 start = utime.ticks_us()
 while pin.value() == 0:
-    if utime.ticks_diff(time.ticks_us(), start) > 500:
+    if utime.ticks_diff(utime.ticks_us(), start) > 500:
         raise TimeoutError
 ```
 

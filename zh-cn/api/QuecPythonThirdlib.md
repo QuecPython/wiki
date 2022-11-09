@@ -1880,7 +1880,7 @@ print(ret)
 ```python
 import ql_fs
 ret = ql_fs.path_dirname("/usr/bin")
-print("ret")
+print(ret)
 
 # 打印结果如下
 # /usr
