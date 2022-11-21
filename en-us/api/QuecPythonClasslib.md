@@ -5211,6 +5211,65 @@ USBNET.open()
 
 
 
+###### get the status of NAT enablement
+
+> **USBNET.getNat(simid, pid)**
+
+get the status of NAT enablement(Whether IPV6 is supported)(supported only on 8910)
+
+* Parameter
+
+|   Parameter   | Type     | Description                                           |
+|   --------    | -------- | ----------------------------------------------------- |
+|   simid       | int      | simid，value：0/1 ，(only SIM0 is supported now)      |
+|    pid        | int      | PDP context index ,range:1-7                          |
+
+* Return Value
+
+success：return the status of NAT enablement
+0：enabled，means:IPV6 is supported
+1：disabled，means:IPV6 is not supported
+
+failed： return -1
+
+* Example
+
+```python
+from misc import USBNET
+USBNET.getNat(0, 1)
+0
+```
+
+
+
+###### set NAT
+
+> **USBNET.setNat(simid, pid, Nat)**
+
+set NAT，Restart takes effect (supported only on 8910)
+(8910 platform: Usbnet.set_worktype () API will make the corresponding Nat value set to 1, so that the pid cannot dial up IPV6, so after close USBnet, you can use this interface to disable NAT and make IPV6 function normal)
+
+* Parameter
+
+|   Parameter   | Type     | Description                                           |
+|   --------    | -------- | ----------------------------------------------------- |
+|   simid       | int      | simid，value：0/1 ，(only SIM0 is supported now)      |
+|    pid        | int      | PDP context index ,range:1-7                          |
+|    Nat        | int      | Nat，value：0/1；0：IPV6 is supported；1：IPV6 is not supported |
+
+* Return Value
+
+Return 0 if successful, otherwise return -1
+
+* Example
+
+```python
+USBNET.setNat(0, 1, 0)
+0
+```
+
+
+
 ##### Diversity antenna configuration API
 
 > **misc.antennaSecRXOffCtrl(\*args)**
