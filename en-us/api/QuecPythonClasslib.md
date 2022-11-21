@@ -6243,7 +6243,7 @@ Class function: A two-wire protocol used for communication between devices.
 | EC800N        | I2C0:<br />SCL:Pin number 67<br />SDA:Pin number 66          |
 | BG95M3        | I2C0:<br />SCL: Pin number 18<br />SDA: Pin number 19<br />I2C1:<br />SCL:Pin number 40<br />SDA:Pin number 41<br />I2C2:<br />SCL:Pin number 26<br />SDA:Pin number 25 |
 | EC600M        | I2C0:<br />SCL: Pin number 9<br />SDA: Pin number 64<br />I2C1:<br />SCL:Pin number 57<br />SDA:Pin number 56<br />I2C2:<br />SCL:Pin number 67<br />SDA:Pin number 65 |
-| EG915U        | I2C0:<br />SCL: Pin number 103<br />SDA: Pin number 104<br />I2C1:<br />SCL:Pin number 40<br />SDA:Pin number 41 |
+| EG915U        | I2C0:<br />SCL: Pin number 103<br />SDA: Pin number 114<br />I2C1:<br />SCL:Pin number 40<br />SDA:Pin number 41 |
 
 - Exmaple
 
