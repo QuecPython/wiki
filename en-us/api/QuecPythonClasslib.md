@@ -5222,7 +5222,7 @@ get the status of NAT enablement(Whether IPV6 is supported)(supported only on 89
 |   Parameter   | Type     | Description                                           |
 |   --------    | -------- | ----------------------------------------------------- |
 |   simid       | int      | simid，value：0/1 ，(only SIM0 is supported now)      |
-|    pid        | int      | PDP context index ,range:1-8                          |
+|    pid        | int      | PDP context index ,range:1-7                          |
 
 * Return Value
 
@@ -5254,7 +5254,7 @@ set NAT，Restart takes effect (supported only on 8910)
 |   Parameter   | Type     | Description                                           |
 |   --------    | -------- | ----------------------------------------------------- |
 |   simid       | int      | simid，value：0/1 ，(only SIM0 is supported now)      |
-|    pid        | int      | PDP context index ,range:1-8                          |
+|    pid        | int      | PDP context index ,range:1-7                          |
 |    Nat        | int      | Nat，value：0/1；0：IPV6 is supported；1：IPV6 is not supported |
 
 * Return Value
