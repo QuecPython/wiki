@@ -204,7 +204,7 @@ b'\xb3\xc9Y\x1b\xe9'
 
 
 
-##### Initialize SD card driver（SPI mode）
+##### Register storage device - SPI - SD card
 
 At present, it is only supported by ec600n / ec800n platforms.
 
@@ -233,49 +233,7 @@ Initialize SD card and communicate with SD card. Use SPI communication mode.
 
 
 
-##### Mount file system
-
-> **uos.mount(vfs_obj, path)**
-
-Mount the underlying file system to VFS.
-
-* Parameters
-
-|Parameter | parameter type | parameter description|
-| ------- | ---------- | ---------------- |
-| vfs_ Obj | VFS object | file system object|
-|Path | str | root directory of file system|
-
-* Return Value
-
-  * None
-
-* Example
-
-```python
->>> cdev = uos.VfsFat(1, 0, 4, 1)
->>> uos.mount(cdev, '/sd')
-```
-
--SD card usage example(SPI mode)
-
-  At present, it is only supported by ec600n / ec800n platforms.
-
-```python
->>> cdev = uos.VfsFat(1, 0, 4, 1)
->>> uos.mount(cdev, '/sd')
->>> f = open('/sd/test.txt','w+')
->>> f.write('0123456')
->>> f.close()
->>> uos.listdir('/sd')
->>> f = open('/sd/test.txt','r')
->>> f.read()
->>> f.close()
-```
-
-
-
-##### Initialize SD card driver(SDIO mode)
+##### Register storage device - SDIO - SD card 
 
 At present,it is only supported by EC600U/EC200U platforms.
 
@@ -306,7 +264,7 @@ Return vfs object if the execution is successful, otherwise report error.
 >>> udev = VfsSd("sd_fs")
 ```
 
-##### Set detection pin
+###### Set detection pin
 
 > **set_det(vfs_obj.GPIOn,mode)**
 
@@ -332,7 +290,7 @@ Return 0 if the execution is successful, otherwise return -1.
 >>> udev.set_det(udev.GPIO10,0)#Use gpio10 as the card detection pin, insert the SD card, the detection port is low level, plug out the SD card, the detection port is high level(the actual use depends on the hardware).
 ```
 
-##### Setting the card insertion and removal callback function
+###### Setting the card insertion and removal callback function
 
 > **set_callback(fun)**
 
@@ -379,6 +337,93 @@ def call_back(para):
         
 udev.set_callback(call_back)
 ```
+
+
+
+##### **Register storage device - SPI NOR FLASH**
+
+At present,it is only supported by EG915U platforms.
+
+> uos.VfsLfs1(readsize,progsize,lookahead,pname,spi_port,spi_clk)
+
+Initialize spi nor flash and Plug-in nor flash communication. Use SPI communication mode.
+
+* Parameter
+
+| Parameter | Type | Description                                                  |
+| --------- | ---- | ------------------------------------------------------------ |
+| readsize  | int  | Reserved, not used yet                                       |
+| progsize  | int  | Reserved, not used yet                                       |
+| lookahead | int  | Reserved, not used yet                                       |
+| pname     | str  | Fixed to "ext_fs". Subsequent expansion                      |
+| spi_port  | int  | Supported ports refer to the SPI chapter description         |
+| spi_clk   | int  | clock frequency：<br />EG915U：0：6.25M 1:12.5M  2:25M  3:50M  4:3.125M 5:1.5625M  6:781.25K |
+
+* Return value
+
+  VfsLfs1 object will be returned if successful, and OSError 19 will be returned if failed.
+
+* Example
+
+  ```python
+  >>>ldev = uos.VfsLfs1(32, 32, 32, "ext_fs",1,0)
+  >>>uos.mount(ldev,'/ext')
+  >>>f = open('/ext/test.txt','w+')
+  >>>f.write('hello world!!!')
+  >>>f.close()
+  
+  >>>uos.listdir('ext')
+  
+  >>>f = open('/ext/test.txt','r')
+  >>>f.read()
+  >>>f.close()
+  
+  ```
+
+  
+
+
+##### Mount file system
+
+> **uos.mount(vfs_obj, path)**
+
+Mount the underlying file system to VFS.
+
+* Parameters
+
+| Parameter | parameter type | parameter description         |
+| --------- | -------------- | ----------------------------- |
+| vfs_ Obj  | VFS object     | file system object            |
+| Path      | str            | root directory of file system |
+
+* Return Value
+
+  * None
+
+* Example
+
+```python
+>>> cdev = uos.VfsFat(1, 0, 4, 1)
+>>> uos.mount(cdev, '/sd')
+```
+
+-SD card usage example(SPI mode)
+
+  At present, it is only supported by ec600n / ec800n platforms.
+
+```python
+>>> cdev = uos.VfsFat(1, 0, 4, 1)
+>>> uos.mount(cdev, '/sd')
+>>> f = open('/sd/test.txt','w+')
+>>> f.write('0123456')
+>>> f.close()
+>>> uos.listdir('/sd')
+>>> f = open('/sd/test.txt','r')
+>>> f.read()
+>>> f.close()
+```
+
+
 
 #### gc - Control the Garbage Collector
 
