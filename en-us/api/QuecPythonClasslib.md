@@ -379,7 +379,7 @@ Manually modify DNS information, you can check whether the modification is succe
 | Parameter  | Type   | Description                                                  |
 | ---------- | ------ | ------------------------------------------------------------ |
 | profileIdx | int    | PPDP context index. Range: 1-8 [volte version with the largest default PID is used to register IMS, please do not repeat the operation]. It is generally set to 1, if set as 2-8, the private APN and password may be required. |
-| sim_id     | int    | simid, range：0/1, default 0.                                |
+| sim_id     | int    | simid, range：0/1, default 0，only SIM0 is supported now。   |
 | priDns     | string | Primary DNS                                                  |
 | secDns     | string | Secondary DNS                                                |
 
@@ -411,7 +411,7 @@ Get APN Information of user. If only simID is specified, the default APN is obta
 
 | Parameter  | Type | Description                                                     |
 | ---------- | -------- | ------------------------------------------------------------ |
-| simid      | int      | simid, range：0/1 |
+| simid      | int      | simid, range：0/1；Only 1606 platform supports 0 or 1, other platforms can only be 0. |
 | profileIdx | int      | PDP context index. Range for ASR : 1-8,range for unisoc : 1-7 |
 
 * Return Value
@@ -764,13 +764,13 @@ Note: The prerequisite for successfully obtaining IMSI, ICCID, and phone number 
 
 Send APDU command to SIM card.
 
-Note : Currently, only the ASR-1601 platform supports this function.
+Note : Currently, only the ASR-1603 platform supports this function.
 
 * Parameter
 
 | Parameter | Type   | Description                                                  |
 | --------- | ------ | ------------------------------------------------------------ |
-| simId     | int    | SIM card id, range : 0 or 1                                  |
+| simId     | int    | SIM card id, range : 0 or 1;only SIM0 is supported now       |
 | cmd       | string | command passed on by the MT to the SIM in the format as described in GSM 51.011 |
 
 * Return Value
@@ -2380,15 +2380,15 @@ This function sets APN. After setting, you need to restart or switch to mode 0 a
     The number of parameters is 2：net.setApn(apn, simid)
     The number of parameters is 7：net.setApn(pid, iptype, apn, usrname, password, authtype, simid)
   
-| Parameter | Type     | Description                                  |
-| -----     | -------- | -------------------------------------------- |
-| pid       | int      | PDP context index.                           |
-| iptype    | int      | IP type. 0-IPV4, 1-IPV6, 2-IPV4 and IPV6.    |
-| apn       | string   | apn name, The maximum length is 63 bytes.    |
-| usrname   | string   | user name, The maximum length is 63 bytes.   |
-| password  | string   | password, The maximum length is 63 bytes.    |
-| authtype  | int      | Authentication type,0-No authentication, 1-PAP, 2-CHAP, 3-PAP AND CHAP(just for CATM Platform)|
-| simid     | int      | simid<br>0 : SIM card 1<br/>1 :  SIM card 2  |
+| Parameter | Type   | Description                                                  |
+| --------- | ------ | ------------------------------------------------------------ |
+| pid       | int    | PDP context index.                                           |
+| iptype    | int    | IP type. 0-IPV4, 1-IPV6, 2-IPV4 and IPV6.                    |
+| apn       | string | apn name, The maximum length is 63 bytes.                    |
+| usrname   | string | user name, The maximum length is 63 bytes.                   |
+| password  | string | password, The maximum length is 63 bytes.                    |
+| authtype  | int    | Authentication type,0-No authentication, 1-PAP, 2-CHAP, 3-PAP AND CHAP(just for CATM Platform) |
+| simid     | int    | simid,（Only 1606 platform supports 0 or 1, other platforms can only be 0）<br>0 : SIM card 1<br/>1 :  SIM card 2 |
 
 * Return Value
 
@@ -2422,10 +2422,10 @@ This function obtains the current APN.
     The number of parameters is 2：net.setApn(pid, simid)
     The number of parameters is 1：net.setApn(simid)
   
-| Parameter | Type     | Description                                  |
-| -----     | -------- | -------------------------------------------- |
-| pid       | int      | PDP context index.                           |
-| simid     | int      | simid<br>0 : SIM card 1<br/>1 :  SIM card 2  |
+| Parameter | Type | Description                                                  |
+| --------- | ---- | ------------------------------------------------------------ |
+| pid       | int  | PDP context index.                                           |
+| simid     | int  | simid, (Only 1606 platform supports 0 or 1, other platforms can only be 0)<br>0 : SIM card 1<br/>1 :  SIM card 2 |
 
 * Return Value
 
