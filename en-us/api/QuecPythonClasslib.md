@@ -2170,7 +2170,7 @@ This function sets APN. After setting, you need to restart or switch to mode 0 a
 >>> net.setApn(1,1,'3gnet','mia','123',2,0)
 0  
 ```
-  
+
 
 
 ##### Obtain the Current  APN
@@ -2210,7 +2210,7 @@ This function obtains the current APN.
 '3gnet'
 >>> net.getApn(1,0)
 (1, '3gnet', 'mia', '123', 2)
-``` 
+```
 
   
 
@@ -10303,6 +10303,1986 @@ def main():
 if __name__ == '__main__':
     main()
 
+```
+
+
+
+#### BT - Classic Bluetooth
+
+Features: The module provides the related features of classic Bluetooth, and supports HFP, A2DP, AVRCP and SPP.
+
+##### Initialize Bluetooth 
+
+> **bt.init(user_cb)**
+
+* Feature
+
+This function initializes Bluetooth and registers callback function.
+
+* Parameter
+
+| Parameter | Type     | Description       |
+| --------- | -------- | ----------------- |
+| user_cb   | function | Callback function |
+
+* Return Value
+
+​        0       Successful execution.
+
+​        -1      Failed execution.
+
+Description:
+
+a) The form of the callback function
+
+```python
+def bt_callback(args):
+	event_id = args[0]  # The first parameter is fixed at event_id
+	status = args[1] # The second parameter is fixed at status, indicating whether the execution result of an operation is successful or not.
+	......
+```
+
+b) The description of callback function parameters 
+
+args[0]  is fixed at event_id, args[1]  is fixed at status, 0 indicates success, other values indicate failure. The number of parameters of the callback function is not fixed at 2, but is determined by the first parameter args[0]. The following table lists the number of parameters and descriptions corresponding to different event IDs.
+
+| event_id | Number of Parameters | Description of Parameters                                    |
+| :------: | :------------------: | ------------------------------------------------------------ |
+|    0     |          2           | args[0]: event_id, indicating BT/BLE start event.<br>args[1]: status, indicating the status of the operation. 0 indicates success, other values indicate failure. |
+|    1     |          2           | args[0]: event_id, indicating BT/BLE stop event.<br/>args[1]: status, indicating the status of the operation. 0 indicates success, other values indicate failure. |
+|    6     |          6           | args[0]: event_id, indicating BT inquiry event.<br/>args[1]: status, indicating the status of the operation. 0 indicates success, other values indicate failure.<br/>args[2]: rssi, indicating the signal strength of the searched device.<br/>args[3]: device_class <br/>args[4]: device_name, string type, indicating the device name.<br/>args[5]: addr, indicating the MAC address of searched Bluetooth device. |
+|    7     |          3           | args[0]: event_id, indicating BT inquiry end event.<br/>args[1]: status, indicating the status of the operation. 0 indicates success, other values indicate failure.<br/>args[2]: end_status, 0 indicates ending the search normally, 8 indicates ending the search forcefully. |
+|    14    |          4           | args[0]: event_id, indicating BT SPP receiving event.<br/>args[1]: status, indicating the status of the operation. 0 indicates success, other values indicate failure.<br/>args[2]: data_len, indicating the length of received data.<br/>args[3]: data, bytearray type, indicating the received data. |
+|    40    |          4           | args[0]: event_id, indicating BT HFP connection event.<br/>args[1]: status, indicating the status of the operation. 0 indicates success, other values indicate failure.<br/>args[2]: hfp_connect_status, indicating the connection status of HFP.<br/>               0 - Disconnected<br/>               1 - Connecting<br/>               2 - Connected<br/>               3 - Disconnecting<br/>args[3]: addr, bytearray type, indicating the address of Bluetooth master device. |
+|    41    |          4           | args[0]: event_id, indicating BT HFP disconnection event.<br/>args[1]: status, indicating the status of the operation. 0 indicates success, other values indicate failure.<br/>args[2]: hfp_connect_status, indicating the connection status of HFP.<br/>               0 - Disconnected<br/>               1 - Connecting<br/>               2 - Connected<br/>               3 - Disconnecting<br/>args[3]: addr, bytearray type, indicating the address of Bluetooth master device. |
+|    42    |          4           | args[0]: event_id, indicating BT HFP call status event.<br/>args[1]: status, indicating the status of the operation. 0 indicates success, other values indicate failure.<br/>args[2]: hfp_call_status. Indicates the call status of HFP.<br/>               0 - No calls (held or active)<br/>               1 - Call is present (active or held)<br/> args[3]: addr, bytearray type, indicating the address of Bluetooth master device. |
+|    43    |          4           | args[0]: event_id, indicating BT HFP call setup status event.<br/>args[1]: status, indicating the status of the operation. 0 indicates success, other values indicate failure.<br/>args[2]: hfp_call_setup_status, indicating the call setup status of HFP.<br/>               0 - No call setup in progress<br/>               1 - Incoming call setup in progress<br/>               2 - Outgoing call setup in dialing state<br/>               3 - Outgoing call setup in alerting state<br/>T args[3]: addr, bytearray type, indicating the address of Bluetooth master device. |
+|    44    |          4           | args[0]: event_id, indicating BT HFP network status event.<br/>args[1]: status, indicating the status of the operation. 0 indicates success, other values indicate failure.<br/>args[2]: hfp_network_status, indicating the network status of AG.<br/>               0 - Network is unavailable<br/>               1 - Network is normal<br/>args[3]: addr, bytearray type, indicating the address of Bluetooth master device. |
+|    45    |          4           | args[0]: event_id, indicating BT HFP network signal event.<br/>args[1]: status, indicating the status of the operation. 0 indicates success, other values indicate failure.<br/>args[2]: hfp_network_signal, indicating the signal of AG. Range: 0–5.<br/>args[3]: addr, bytearray type, indicating the address of Bluetooth master device. |
+|    46    |          4           | args[0]: event_id, indicating BT HFP battery level event.<br/>args[1]: status, indicating the status of the operation. 0 indicates success, other values indicate failure.<br/>args[2]: hfp_battery_level, indicating the battery level of AG. Range: 0–5.<br/>args[3]: addr, bytearray type, indicating the address of Bluetooth master device. |
+|    47    |          4           | args[0]: event_id, indicating BT HFP call held status event.<br/>args[1]: status, indicating the status of the operation. 0 indicates success, other values indicate failure.<br/>args[2]: hfp_call_held_status, indicating the call held status of HFP.<br/>               0 - No calls held<br/>               1 - Call is placed on hold or active/held calls swapped<br/>               2 - Call on hold, no active call<br/>args[3]: addr, bytearray type, indicating the address of Bluetooth master device. |
+|    48    |          4           | args[0]: event_id, indicating BT HFP audio status event.<br/>args[1]: status, indicating the status of the operation. 0 indicates success, other values indicate failure.<br/>args[2]: hfp_audio_status, indicating the connection status of audio.<br/>                 0 - Audio is disconnected<br/>                 1 - Audio is connecting<br/>                 2 - Audio is connected<br/>                 3 - Audio is disconnecting<br>args[3]: addr, bytearray type, indicating the address of Bluetooth master device. |
+|    49    |          4           | args[0]: event_id, indicating BT HFP volume type event.<br/>args[1]: status, indicating the status of the operation. 0 indicates success, other values indicate failure.<br/>args[2]: hfp_volume_type<br/>               0 - The volume type is speaker<br/>               1 - The volume type is microphone<br/>args[3]: addr, bytearray type, indicating the address of Bluetooth master device. |
+|    50    |          4           | args[0]: event_id, indicating BT HFP service type event.<br/>args[1]: status, indicating the status of the operation. 0 indicates success, other values indicate failure.<br/>args[2]: hfp_service_type, indicating the network service mode of AG.<br/>                 0 - AG is currently in normal network mode<br/>                 1 - AG is currently in roaming mode<br/>args[3]: addr, bytearray type, indicating the address of Bluetooth master device. |
+|    51    |          4           | args[0]: event_id, indicating the BT HFP ring event, that is, the ring event when there is an incoming call<br/>args[1]: status, indicating the status of the operation. 0 indicates success, other values indicate failure.<br/>args[2]: Currently moot, reserved.<br/>args[3]: addr, bytearray type, indicating the address of Bluetooth master device. |
+|    52    |          4           | args[0]: event_id, indicating the BT HFP codec type event, that is, the codec mode.<br/>args[1]: status, indicating the status of the operation. 0 indicates success, other values indicate failure.<br/>args[2]: hfp_codec_type, indicating which codec mode is currently used;<br/>                 1 - CVDS with 8 KHz sampling rate<br/>                 2 - mSBC with 16 KHz sampling rate<br/>args[3]: addr, bytearray type, indicating the address of Bluetooth master device. |
+|    61    |          4           | args[0]: event_id, indicating BT SPP connection event.<br/>args[1]: status, indicating the status of the operation. 0 indicates success, other values indicate failure.<br/>args[2]: spp_connect_status, indicating the connection status of SPP.<br/>                 0 - Disconnected<br/>                 1 - Connecting<br/>                 2 - Connected<br/>                 3 - Disconnecting<br/> args[3]: addr, bytearray type, indicating the MAC address of the peer device. |
+|    62    |          4           | args[0]: event_id, indicating BT SPP disconnection event.<br/>args[1]: status, indicating the status of the operation. 0 indicates success, other values indicate failure.<br/>args[2]: spp_connect_status, indicating the connection status of SPP.<br/>               0 - Disconnected<br/>               1 - Connecting<br/>               2 - Connected<br/>               3 - Disconnecting<br/> args[3]: addr, bytearray type, indicating the MAC address of the peer device. |
+
+* Example
+
+```python 
+
+```
+
+
+
+##### Release Bluetooth Resources
+
+> **bt.release()**
+
+* Feature
+
+  This function releases Bluetooth resources.
+
+* Parameter
+
+  None
+
+* Return Value
+
+  0       Successful execution.
+
+  -1      Failed execution.
+
+* Example
+
+```python
+
+```
+
+
+
+##### Enable Bluetooth
+
+> **bt.start()**
+
+* Feature
+
+  This function enables Bluetooth.
+
+* Parameter
+
+  None
+
+* Return Value
+
+  0       Successful execution.
+
+  -1      Failed execution.
+
+
+
+
+##### Disable Bluetooth
+
+> **bt.stop()**
+
+* Feature
+
+  This function disables Bluetooth.
+
+* Parameter
+
+  None
+
+* Return Value
+
+  0       Successful execution.
+
+  -1      Failed execution.
+
+
+
+
+##### Get Bluetooth Device Status
+
+> **bt.getStatus()**
+
+* Feature
+
+  This function gets Bluetooth device status.
+
+* Parameter
+
+  None
+
+* Return Value
+
+  | Return Value | Type | Description                          |
+  | ------------ | ---- | ------------------------------------ |
+  | -1           | int  | Fails to get Bluetooth device status |
+  | 0            | int  | Bluetooth device is stopped          |
+  | 1            | int  | Bluetooth device is working          |
+
+  
+
+##### Get Bluebooth Device Address
+
+> **bt.getLocalAddr()**
+
+* Feature
+
+  This function gets Bluetooth device address. This function can only be called after the Bluetooth is initialized and enabled successfully, for example, after receiving an event whose event_id is 0 in the callback function, that is, after *bt.start()* is successfully executed.
+
+* Parameter
+
+  None
+
+* Return Value
+
+  If the execution is successful, it returns a 6-byte Bluetooth device address of bytearray type. If the execution fails, it returns -1.
+
+* Example
+
+```python
+>>> addr = bt.getLocalAddr()
+>>> print(addr)
+b'\xc7\xa13\xf8\xbf\x1a'
+>>> mac = '{:02x}:{:02x}:{:02x}:{:02x}:{:02x}:{:02x}'.format(addr[5], addr[4], addr[3], addr[2], addr[1], addr[0])
+>>> print('mac = [{}]'.format(mac))
+mac = [1a:bf:f8:33:a1:c7]
+```
+
+
+
+##### Set Bluetooth Device Name
+
+> **bt.setLocalName(code, name)**
+
+* Feature
+
+  This function sets Bluetooth device name.
+
+* Parameter
+
+  | Parameter | Type   | Description                                                |
+  | --------- | ------ | ---------------------------------------------------------- |
+  | code      | int    | Coding mode<br/>0 - UTF8<br/>1 - GBK                       |
+  | name      | string | Bluetooth device name, and the maximum length is 22 bytes. |
+
+* Return Value
+
+  0       Successful execution.
+
+  -1      Failed execution.
+
+* Example
+
+```python
+>>> bt.setLocalName(0, 'QuecPython-BT')
+0
+```
+
+
+
+##### Get Bluetooth Device Name
+
+> **bt.getLocalName()**
+
+* Feature
+
+  This function gets Bluetooth device name.
+
+* Parameter
+
+  None
+
+* Return Value
+
+  If the execution is successful, it returns a tuple with the format (code, name) , including the name encoding mode and the Bluetooth device name. If the execution fails, it returns -1.
+
+* Example
+
+```python
+>>> bt.getLocalName()
+(0, 'QuecPython-BT')
+```
+
+
+
+##### Set Visibility of Bluetooth Device
+
+> **bt.setVisibleMode(mode)**
+
+* Feature
+
+  This function sets the visibility of Bluetooth device, that is, whether the Bluetooth device is visible and connectable when it is scanned and acts as a slave device.</font>
+
+* Parameter
+
+  | Parameter | Type | Description                                                  |
+  | --------- | ---- | ------------------------------------------------------------ |
+  | mode      | int  | 0 - Bluetooth device cannot be searched or connected<br>1 - Bluetooth device can be searched but cannot be connected<br>2 - Bluetooth device cannot be searched but can be connected<br>3 - Bluetooth device can be searched and connected |
+
+* Return Value
+
+  0       Successful execution.
+
+  -1      Failed execution.
+
+* Example
+
+```python
+>>> bt.setVisibleMode(3)
+0
+```
+
+
+
+##### Get Visibility of Bluetooth Device
+
+> **bt.getVisibleMode()**
+
+* Feature
+
+  This function sets the visibility of Bluetooth device.
+
+* Parameter
+
+  None
+
+* Return Value
+
+  If the execution is successful, it returns the visibility value of Bluetooth device. If the execution fails, it returns -1.
+
+* Example
+
+```python
+>>> bt.getVisibleMode()
+3
+```
+
+
+
+##### Start Searching for Bluebooth Device
+
+> **bt.startInquiry(mode)**
+
+* Feature
+
+  This function starts searching for nearby Bluetooth devices.
+
+* Parameter
+
+  | Parameter | Type | Description                                                  |
+  | --------- | ---- | ------------------------------------------------------------ |
+  | mode      | int  | Indicates the Bluetooth device type to be queried. Currently it is set to 15 which means searching all Bluetooth devices.<br /> |
+
+* Return Value
+
+  0       Successful execution.
+
+  -1      Failed execution.
+
+* Example
+
+```python
+bt.startInquiry(15)
+```
+
+
+
+##### Stop Searching for Bluebooth Device
+
+> **bt.cancelInquiry()**
+
+* Feature
+
+  This function stops searching for Bluetooth devices.
+
+* Parameter
+
+  None
+
+* Return Value
+
+  0       Successful execution.
+
+  -1      Failed execution.
+
+* Example
+
+```python
+
+```
+
+
+
+##### Set Audio Output Channel
+
+> **bt.setChannel(channel)**
+
+* Feature
+
+  This function sets audio output channel when answering a call or playing audio through Bluetooth.
+
+* Parameter
+
+  | Parameter | Type | Description                               |
+  | --------- | ---- | ----------------------------------------- |
+  | channel   | int  | 0 - Handset<br>1 - Headset<br>2 - Speaker |
+
+* Return Value
+
+  0       Successful execution.
+
+  -1      Failed execution.
+
+* Example
+
+```python
+
+```
+
+
+
+##### Initialize HFP 
+
+> **bt.hfpInit()**
+
+* Feature
+
+​        This function initializes HFP.
+
+* Parameter
+
+  None
+
+* Return Value
+
+​        0       Successful execution.
+
+​        -1      Failed execution.
+
+* Example
+
+```python 
+
+```
+
+
+
+##### Release HFP Resources
+
+> **bt.hfpRelease()**
+
+* Feature
+
+  This function releases HFP resources.
+
+* Parameter
+
+  None
+
+* Return Value
+
+  0       Successful execution.
+
+  -1      Failed execution.
+
+* Example
+
+```python
+
+```
+
+
+
+##### Establish HFP Connection 
+
+> **bt.hfpConnect(addr)**
+
+* Feature
+
+  This function establishes an HFP connection and connects to AG.
+
+* Parameter
+
+  | Parameter | Type  | Description                            |
+  | --------- | ----- | -------------------------------------- |
+  | addr      | array | 6-byte Bluetooth device address of AG. |
+
+* Return Value
+
+  0       Successful execution.
+
+  -1      Failed execution.
+
+* Example
+
+```python
+
+```
+
+
+
+##### Disconnect HFP Connection
+
+> **bt.hfpDisonnect(addr)**
+
+* Feature
+
+  This function disconnects the HFP connection.
+
+* Parameter
+
+  | Parameter | Type  | Description                            |
+  | --------- | ----- | -------------------------------------- |
+  | addr      | array | 6-byte Bluetooth device address of AG. |
+
+* Return Value
+
+  0       Successful execution.
+
+  -1      Failed execution.
+
+* Example
+
+```python
+
+```
+
+
+
+##### HFP Set In-call Volume
+
+> **bt.hfpSetVolume(addr, vol)**
+
+* Feature
+
+  This function sets in-call volume through Bluetooth.
+
+* Parameter
+
+  | Parameter | Type  | Description                            |
+  | --------- | ----- | -------------------------------------- |
+  | addr      | array | 6-byte Bluetooth device address of AG. |
+  | vol       | Int   | In-call volume. Range: 1–15.           |
+
+* Return Value
+
+  0       Successful execution.
+
+  -1      Failed execution.
+
+* Example
+
+```python
+
+```
+
+
+
+##### HFP Hang Up the Phone
+
+> **bt.hfpRejectAfterAnswer(addr)**
+
+* Feature
+
+  This function hangs up the connected phone.
+
+* Parameter
+
+  | Parameter | Type  | Description                            |
+  | --------- | ----- | -------------------------------------- |
+  | addr      | array | 6-byte Bluetooth device address of AG. |
+
+* Return Value
+
+  0       Successful execution.
+
+  -1      Failed execution.
+
+* Example
+
+```python
+
+```
+
+
+
+##### HFP Reject the Call
+
+> **bt.hfpRejectCall(addr)**
+
+* Feature
+
+  This function rejects the call.
+
+* Parameter
+
+  | Parameter | Type  | Description                            |
+  | --------- | ----- | -------------------------------------- |
+  | addr      | array | 6-byte Bluetooth device address of AG. |
+
+* Return Value
+
+  0       Successful execution.
+
+  -1      Failed execution.
+
+* Example
+
+```python
+
+```
+
+
+
+##### HFP Answer the Call
+
+> **bt.hfpAnswerCall(addr)**
+
+* Feature
+
+  This function answers the call.
+
+* Parameter
+
+  | Parameter | Type  | Description                            |
+  | --------- | ----- | -------------------------------------- |
+  | addr      | array | 6-byte Bluetooth device address of AG. |
+
+* Return Value
+
+  0       Successful execution.
+
+  -1      Failed execution.
+
+* Example
+
+```python
+
+```
+
+
+
+##### HFP Enable Voice Assistant
+
+> **bt.hfpEnableVR(addr)**
+
+* Feature
+
+  This function enables voice assistant.
+
+* Parameter
+
+  | Parameter | Type  | Description                            |
+  | --------- | ----- | -------------------------------------- |
+  | addr      | array | 6-byte Bluetooth device address of AG. |
+
+* Return Value
+
+  0       Successful execution.
+
+  -1      Failed execution.
+
+* Example
+
+```python
+
+```
+
+
+
+##### HFP Disable Voice Assistant
+
+> **bt.hfpDisableVR(addr)**
+
+* Feature
+
+  This function disables voice assistant.
+
+* Parameter
+
+  | Parameter | Type  | Description                            |
+  | --------- | ----- | -------------------------------------- |
+  | addr      | array | 6-byte Bluetooth device address of AG. |
+
+* Return Value
+
+  0       Successful execution.
+
+  -1      Failed execution.
+
+* Example
+
+```python
+
+```
+
+
+
+##### HFP Control Three-way Calling
+
+> **bt.hfpDisableVR(addr, cmd)**
+
+* Feature
+
+  This function controls three-way calling.
+
+* Parameter
+
+  | Parameter | Type  | Description                            |
+  | --------- | ----- | -------------------------------------- |
+  | addr      | array | 6-byte Bluetooth device address of AG. |
+  | cmd       | int   | Control command                        |
+
+* Return Value
+
+  0       Successful execution.
+
+  -1      Failed execution.
+
+* Example
+
+```python
+
+```
+
+
+
+##### HFP Demo
+
+```python
+# -*- coding: UTF-8 -*-
+
+"""
+Description: This demo describes answering calls automatically through HFP.
+Platform: EC600UCN_LB Uranium EVB
+After running this demo, search for the Bluetooth device name and connect it on the phone A , then make a call from phone B to phone A. When phone A starts ringing and vibrating, the Bluetooth device automatically answers the call.
+"""
+import bt
+import utime
+import _thread
+from queue import Queue
+from machine import Pin
+
+# If the corresponding playback channel has an external PA, and PA needs to be enabled by the pin, the following steps are required.
+# The GPIO to be used depends on the actual pin used.
+gpio11 = Pin(Pin.GPIO11, Pin.OUT, Pin.PULL_DISABLE, 0)
+gpio11.write(1)
+
+BT_NAME = 'QuecPython-hfp'
+
+BT_EVENT = {
+    'BT_START_STATUS_IND': 0,           # bt/ble start
+    'BT_STOP_STATUS_IND': 1,            # bt/ble stop
+    'BT_HFP_CONNECT_IND': 40,           # bt hfp connected
+    'BT_HFP_DISCONNECT_IND': 41,        # bt hfp disconnected
+    'BT_HFP_CALL_IND': 42,              # bt hfp call state
+    'BT_HFP_CALL_SETUP_IND': 43,        # bt hfp call setup state
+    'BT_HFP_NETWORK_IND': 44,           # bt hfp network state
+    'BT_HFP_NETWORK_SIGNAL_IND': 45,    # bt hfp network signal
+    'BT_HFP_BATTERY_IND': 46,           # bt hfp battery level
+    'BT_HFP_CALLHELD_IND': 47,          # bt hfp callheld state
+    'BT_HFP_AUDIO_IND': 48,             # bt hfp audio state
+    'BT_HFP_VOLUME_IND': 49,            # bt hfp volume type
+    'BT_HFP_NETWORK_TYPE': 50,          # bt hfp network type
+    'BT_HFP_RING_IND': 51,              # bt hfp ring indication
+    'BT_HFP_CODEC_IND': 52,             # bt hfp codec type
+}
+
+HFP_CONN_STATUS = 0
+HFP_CONN_STATUS_DICT = {
+    'HFP_DISCONNECTED': 0,
+    'HFP_CONNECTING': 1,
+    'HFP_CONNECTED': 2,
+    'HFP_DISCONNECTING': 3,
+}
+HFP_CALL_STATUS = 0
+HFP_CALL_STATUS_DICT = {
+    'HFP_NO_CALL_IN_PROGRESS': 0,
+    'HFP_CALL_IN_PROGRESS': 1,
+}
+
+BT_IS_RUN = 0
+
+msg_queue = Queue(30)
+
+
+def get_key_by_value(val, d):
+    for key, value in d.items():
+        if val == value:
+            return key
+    return None
+
+def bt_callback(args):
+    global msg_queue
+    msg_queue.put(args)
+
+def bt_event_proc_task():
+    global msg_queue
+    global BT_IS_RUN
+    global BT_EVENT
+    global HFP_CONN_STATUS
+    global HFP_CONN_STATUS_DICT
+    global HFP_CALL_STATUS
+    global HFP_CALL_STATUS_DICT
+
+    while True:
+        print('wait msg...')
+        msg = msg_queue.get()  # Blocks here when there is no message
+        event_id = msg[0]
+        status = msg[1]
+
+        if event_id == BT_EVENT['BT_START_STATUS_IND']:
+            print('event: BT_START_STATUS_IND')
+            if status == 0:
+                print('BT start successfully.')
+                BT_IS_RUN = 1
+                bt_status = bt.getStatus()
+                if bt_status == 1:
+                    print('BT status is 1, normal status.')
+                else:
+                    print('BT status is {}, abnormal status.'.format(bt_status))
+                    bt.stop()
+                    break
+
+                retval = bt.getLocalName()
+                if retval != -1:
+                    print('The current BT name is : {}'.format(retval[1]))
+                else:
+                    print('Failed to get BT name.')
+                    bt.stop()
+                    break
+
+                print('Set BT name to {}'.format(BT_NAME))
+                retval = bt.setLocalName(0, BT_NAME)
+                if retval != -1:
+                    print('BT name set successfully.')
+                else:
+                    print('BT name set failed.')
+                    bt.stop()
+                    break
+
+                retval = bt.getLocalName()
+                if retval != -1:
+                    print('The new BT name is : {}'.format(retval[1]))
+                else:
+                    print('Failed to get new BT name.')
+                    bt.stop()
+                    break
+
+                # Set the visibility of Bluetooth device to searchable and connectable.
+                retval = bt.setVisibleMode(3)
+                if retval == 0:
+                    mode = bt.getVisibleMode()
+                    if mode == 3:
+                        print('BT visible mode set successfully.')
+                    else:
+                        print('BT visible mode set failed.')
+                        bt.stop()
+                        break
+                else:
+                    print('BT visible mode set failed.')
+                    bt.stop()
+                    break
+            else:
+                print('BT start failed.')
+                bt.stop()
+                break
+        elif event_id == BT_EVENT['BT_STOP_STATUS_IND']:
+            print('event: BT_STOP_STATUS_IND')
+            if status == 0:
+                BT_IS_RUN = 0
+                print('BT stop successfully.')
+            else:
+                print('BT stop failed.')
+            break
+        elif event_id == BT_EVENT['BT_HFP_CONNECT_IND']:
+            HFP_CONN_STATUS = msg[2]
+            addr = msg[3]  # MAC address of Bluetooth master device
+            mac = '{:02x}:{:02x}:{:02x}:{:02x}:{:02x}:{:02x}'.format(addr[5], addr[4], addr[3], addr[2], addr[1], addr[0])
+            print('BT_HFP_CONNECT_IND, {}, hfp_conn_status:{}, mac:{}'.format(status, get_key_by_value(msg[2], HFP_CONN_STATUS_DICT), mac))
+            if status != 0:
+                print('BT HFP connect failed.')
+                bt.stop()
+                continue
+        elif event_id == BT_EVENT['BT_HFP_DISCONNECT_IND']:
+            HFP_CONN_STATUS = msg[2]
+            addr = msg[3]  # MAC address of Bluetooth master device
+            mac = '{:02x}:{:02x}:{:02x}:{:02x}:{:02x}:{:02x}'.format(addr[5], addr[4], addr[3], addr[2], addr[1], addr[0])
+            print('BT_HFP_DISCONNECT_IND, {}, hfp_conn_status:{}, mac:{}'.format(status, get_key_by_value(msg[2], HFP_CONN_STATUS_DICT), mac))
+            if status != 0:
+                print('BT HFP disconnect failed.')
+            bt.stop()
+        elif event_id == BT_EVENT['BT_HFP_CALL_IND']:
+            call_sta = msg[2]
+            addr = msg[3]  # MAC address of Bluetooth master device
+            mac = '{:02x}:{:02x}:{:02x}:{:02x}:{:02x}:{:02x}'.format(addr[5], addr[4], addr[3], addr[2], addr[1], addr[0])
+            print('BT_HFP_CALL_IND, {}, hfp_call_status:{}, mac:{}'.format(status, get_key_by_value(msg[2], HFP_CALL_STATUS_DICT), mac))
+            if status != 0:
+                print('BT HFP call failed.')
+                bt.stop()
+                continue
+
+            if call_sta == HFP_CALL_STATUS_DICT['HFP_NO_CALL_IN_PROGRESS']:
+                if HFP_CALL_STATUS == HFP_CALL_STATUS_DICT['HFP_CALL_IN_PROGRESS']:
+                    HFP_CALL_STATUS = call_sta
+                    if HFP_CONN_STATUS == HFP_CONN_STATUS_DICT['HFP_CONNECTED']:
+                        print('call ended, ready to disconnect hfp.')
+                        retval = bt.hfpDisconnect(addr)
+                        if retval == 0:
+                            HFP_CONN_STATUS = HFP_CONN_STATUS_DICT['HFP_DISCONNECTING']
+                        else:
+                            print('Failed to disconnect hfp connection.')
+                            bt.stop()
+                            continue
+            else:
+                if HFP_CALL_STATUS == HFP_CALL_STATUS_DICT['HFP_NO_CALL_IN_PROGRESS']:
+                    HFP_CALL_STATUS = call_sta
+                    print('set audio output channel to 2.')
+                    bt.setChannel(2)
+                    print('set volume to 7.')
+                    retval = bt.hfpSetVolume(addr, 7)
+                    if retval != 0:
+                        print('set volume failed.')
+        elif event_id == BT_EVENT['BT_HFP_CALL_SETUP_IND']:
+            call_setup_status = msg[2]
+            addr = msg[3]  # MAC address of Bluetooth master device
+            mac = '{:02x}:{:02x}:{:02x}:{:02x}:{:02x}:{:02x}'.format(addr[5], addr[4], addr[3], addr[2], addr[1], addr[0])
+            print('BT_HFP_CALL_SETUP_IND, {}, hfp_call_setup_status:{}, mac:{}'.format(status, call_setup_status, mac))
+            if status != 0:
+                print('BT HFP call setup failed.')
+                bt.stop()
+                continue
+        elif event_id == BT_EVENT['BT_HFP_CALLHELD_IND']:
+            callheld_status = msg[2]
+            addr = msg[3]  # MAC address of Bluetooth master device
+            mac = '{:02x}:{:02x}:{:02x}:{:02x}:{:02x}:{:02x}'.format(addr[5], addr[4], addr[3], addr[2], addr[1], addr[0])
+            print('BT_HFP_CALLHELD_IND, {}, callheld_status:{}, mac:{}'.format(status, callheld_status, mac))
+            if status != 0:
+                print('BT HFP callheld failed.')
+                bt.stop()
+                continue
+        elif event_id == BT_EVENT['BT_HFP_NETWORK_IND']:
+            network_status = msg[2]
+            addr = msg[3]  # MAC address of Bluetooth master device
+            mac = '{:02x}:{:02x}:{:02x}:{:02x}:{:02x}:{:02x}'.format(addr[5], addr[4], addr[3], addr[2], addr[1], addr[0])
+            print('BT_HFP_NETWORK_IND, {}, network_status:{}, mac:{}'.format(status, network_status, mac))
+            if status != 0:
+                print('BT HFP network status failed.')
+                bt.stop()
+                continue
+        elif event_id == BT_EVENT['BT_HFP_NETWORK_SIGNAL_IND']:
+            network_signal = msg[2]
+            addr = msg[3]  # MAC address of Bluetooth master device
+            mac = '{:02x}:{:02x}:{:02x}:{:02x}:{:02x}:{:02x}'.format(addr[5], addr[4], addr[3], addr[2], addr[1], addr[0])
+            print('BT_HFP_NETWORK_SIGNAL_IND, {}, signal:{}, mac:{}'.format(status, network_signal, mac))
+            if status != 0:
+                print('BT HFP network signal failed.')
+                bt.stop()
+                continue
+        elif event_id == BT_EVENT['BT_HFP_BATTERY_IND']:
+            battery_level = msg[2]
+            addr = msg[3]  # MAC address of Bluetooth master device
+            mac = '{:02x}:{:02x}:{:02x}:{:02x}:{:02x}:{:02x}'.format(addr[5], addr[4], addr[3], addr[2], addr[1], addr[0])
+            print('BT_HFP_BATTERY_IND, {}, battery_level:{}, mac:{}'.format(status, battery_level, mac))
+            if status != 0:
+                print('BT HFP battery level failed.')
+                bt.stop()
+                continue
+        elif event_id == BT_EVENT['BT_HFP_AUDIO_IND']:
+            audio_status = msg[2]
+            addr = msg[3]  # MAC address of Bluetooth master device
+            mac = '{:02x}:{:02x}:{:02x}:{:02x}:{:02x}:{:02x}'.format(addr[5], addr[4], addr[3], addr[2], addr[1], addr[0])
+            print('BT_HFP_AUDIO_IND, {}, audio_status:{}, mac:{}'.format(status, audio_status, mac))
+            if status != 0:
+                print('BT HFP audio failed.')
+                bt.stop()
+                continue
+        elif event_id == BT_EVENT['BT_HFP_VOLUME_IND']:
+            volume_type = msg[2]
+            addr = msg[3]  # MAC address of Bluetooth master device
+            mac = '{:02x}:{:02x}:{:02x}:{:02x}:{:02x}:{:02x}'.format(addr[5], addr[4], addr[3], addr[2], addr[1], addr[0])
+            print('BT_HFP_VOLUME_IND, {}, volume_type:{}, mac:{}'.format(status, volume_type, mac))
+            if status != 0:
+                print('BT HFP volume failed.')
+                bt.stop()
+                continue
+        elif event_id == BT_EVENT['BT_HFP_NETWORK_TYPE']:
+            service_type = msg[2]
+            addr = msg[3]  # MAC address of Bluetooth master device
+            mac = '{:02x}:{:02x}:{:02x}:{:02x}:{:02x}:{:02x}'.format(addr[5], addr[4], addr[3], addr[2], addr[1], addr[0])
+            print('BT_HFP_NETWORK_TYPE, {}, service_type:{}, mac:{}'.format(status, service_type, mac))
+            if status != 0:
+                print('BT HFP network service type failed.')
+                bt.stop()
+                continue
+        elif event_id == BT_EVENT['BT_HFP_RING_IND']:
+            addr = msg[3]  # MAC address of Bluetooth master device
+            mac = '{:02x}:{:02x}:{:02x}:{:02x}:{:02x}:{:02x}'.format(addr[5], addr[4], addr[3], addr[2], addr[1], addr[0])
+            print('BT_HFP_RING_IND, {}, mac:{}'.format(status, mac))
+            if status != 0:
+                print('BT HFP ring failed.')
+                bt.stop()
+                continue
+            retval = bt.hfpAnswerCall(addr)
+            if retval == 0:
+                print('The call was answered successfully.')
+            else:
+                print('Failed to answer the call.')
+                bt.stop()
+                continue
+        elif event_id == BT_EVENT['BT_HFP_CODEC_IND']:
+            codec_type = msg[2]
+            addr = msg[3]  # MAC address of Bluetooth master device
+            mac = '{:02x}:{:02x}:{:02x}:{:02x}:{:02x}:{:02x}'.format(addr[5], addr[4], addr[3], addr[2], addr[1], addr[0])
+            print('BT_HFP_CODEC_IND, {}, codec_type:{}, mac:{}'.format(status, codec_type, mac))
+            if status != 0:
+                print('BT HFP codec failed.')
+                bt.stop()
+                continue
+    print('Ready to release hfp.')
+    bt.hfpRelease()
+    bt.release()
+
+
+def main():
+    global BT_IS_RUN
+
+    _thread.start_new_thread(bt_event_proc_task, ())
+
+    retval = bt.init(bt_callback)
+    if retval == 0:
+        print('BT init successful.')
+    else:
+        print('BT init failed.')
+        return -1
+    retval = bt.hfpInit()
+    if retval == 0:
+        print('HFP init successful.')
+    else:
+        print('HFP init failed.')
+        return -1
+    retval = bt.start()
+    if retval == 0:
+        print('BT start successful.')
+    else:
+        print('BT start failed.')
+        retval = bt.hfpRelease()
+        if retval == 0:
+            print('HFP release successful.')
+        else:
+            print('HFP release failed.')
+        retval = bt.release()
+        if retval == 0:
+            print('BT release successful.')
+        else:
+            print('BT release failed.')
+        return -1
+
+    count = 0
+    while True:
+        utime.sleep(1)
+        count += 1
+        cur_time = utime.localtime()
+        timestamp = "{:02d}:{:02d}:{:02d}".format(cur_time[3], cur_time[4], cur_time[5])
+
+        if count % 5 == 0:
+            if BT_IS_RUN == 1:
+                print('[{}] BT HFP is running, count = {}......'.format(timestamp, count))
+                print('')
+            else:
+                print('BT HFP has stopped running, ready to exit.')
+                break
+
+
+if __name__ == '__main__':
+    main()
+
+```
+
+
+
+##### Initialize A2DP/AVRCP 
+
+> **bt.a2dpavrcpInit()**
+
+* Feature
+
+  This function initializes A2DP and AVRCP.
+
+* Parameter
+
+  None
+
+* Return Value
+
+  0       Successful execution.
+
+  -1      Failed execution.
+
+* Example
+
+```python
+
+```
+
+
+
+##### Release A2DP/AVRCP Resources
+
+> **bt.a2dpavrcpRelease()**
+
+* Feature
+
+  This function releases A2DP and AVRCP resources.
+
+* Parameter
+
+  None
+
+* Return Value
+
+  0       Successful execution.
+
+  -1      Failed execution.
+
+* Example
+
+```python
+
+```
+
+
+
+##### Disconnect A2DP  Connection
+
+> **bt.a2dpDisconnect(addr)**
+
+* Feature
+
+  This function disconnects A2DP connection.
+
+* Parameter
+
+  | Parameter | Type  | Description                                    |
+  | --------- | ----- | ---------------------------------------------- |
+  | addr      | array | 6-byte address of A2DP Bluetooth master device |
+
+* Return Value
+
+  0       Successful execution.
+
+  -1      Failed execution.
+
+* Example
+
+```python
+
+```
+
+
+
+##### Get Address of A2DP Bluetooth  Master Device
+
+> **bt.a2dpGetAddr()**
+
+* Feature
+
+  This function gets address of A2DP Bluetooth master device.
+
+* Parameter
+
+  None
+
+* Return Value
+
+  If the execution is successful, it returns a 6-byte address of A2DP Bluetooth master device in bytearray type. If the execution fails, it returns -1.
+
+* Example
+
+```python
+
+```
+
+
+
+##### Get A2DP Connection Status
+
+> **bt.a2dpGetConnStatus()**
+
+* Feature
+
+  This function gets A2DP connection status.
+
+* Parameter
+
+  None
+
+* Return Value
+
+  | Return Value | Type | Description                         |
+  | ------------ | ---- | ----------------------------------- |
+  | -1           | int  | Fails to get A2DP connection status |
+  | 0            | int  | Disconnected                        |
+  | 1            | int  | Connecting                          |
+  | 2            | int  | Connected                           |
+  | 3            | int  | Disconnecting                       |
+
+* Example
+
+```python
+1
+```
+
+
+
+##### AVRCP Set Bluetooth Master Device to Start Playing
+
+> **bt.avrcpStart()**
+
+* Feature
+
+  This function sets Bluetooth master device to start playing.
+
+* Parameter
+
+  None
+
+* Return Value
+
+  0       Successful execution.
+
+  -1      Failed execution.
+
+* Example
+
+```python
+
+```
+
+
+
+##### AVRCP Set Bluetooth Master Device to Stop Playing
+
+> **bt.avrcpPause()**
+
+* Feature
+
+  This function sets Bluetooth master device to stop playing.
+
+* Parameter
+
+  None
+
+* Return Value
+
+  0       Successful execution.
+
+  -1      Failed execution.
+
+* Example
+
+```python
+
+```
+
+
+
+##### AVRCP Set Bluetooth Master Device to Play the Previous Track
+
+> **bt.avrcpPrev()**
+
+* Feature
+
+  This function sets Bluetooth master device to play the previous track.
+
+* Parameter
+
+  None
+
+* Return Value
+
+  0       Successful execution.
+
+  -1      Failed execution.
+
+* Example
+
+```python
+
+```
+
+
+
+##### AVRCP Set Bluetooth Master Device to Play the Next Track
+
+> **bt.avrcpNext()**
+
+* Feature
+
+  This function sets Bluetooth master device to play the next track.
+
+* Parameter
+
+  None
+
+* Return Value
+
+  0       Successful execution.
+
+  -1      Failed execution.
+
+* Example
+
+```python
+
+```
+
+
+
+##### AVRCP Set Volume of Bluetooth Master Device
+
+> **bt.avrcpSetVolume(vol)**
+
+* Feature
+
+  This function sets the volume of Bluetooth master device.
+
+* Parameter
+
+  | Parameter | Type | Description          |
+  | --------- | ---- | -------------------- |
+  | vol       | int  | Volume. Range: 0–11. |
+
+* Return Value
+
+  0       Successful execution.
+
+  -1      Failed execution.
+
+* Example
+
+```python
+
+```
+
+
+
+##### AVRCP Get Volume of Bluetooth Master Device
+
+> **bt.avrcpGetVolume()**
+
+* Feature
+
+  This function gets the volume of Bluetooth master device.
+
+* Parameter
+
+  None
+
+* Return Value
+
+  An integer volume value           Successful execution.
+
+  -1                                                   Failed execution.
+
+* Example
+
+```python
+
+```
+
+
+
+##### AVRCP Get Play Status of Bluetooth Master Device
+
+> **bt.avrcpGetPlayStatus()**
+
+* Feature
+
+  This  function gets play status of Bluetooth master device.
+
+* Parameter
+
+  None
+
+* Return Value
+
+  | Return Value | Type | Description                     |
+  | ------------ | ---- | ------------------------------- |
+  | -1           | int  | Fails to get play status        |
+  | 0            | int  | Not play                        |
+  | 1            | int  | playing                         |
+  | 2            | int  | Play paused                     |
+  | 3            | int  | Switching to the previous track |
+  | 4            | int  | Switching to the next track     |
+
+* Example
+
+```python
+
+```
+
+
+
+##### AVRCP Get Connection Status of Bluetooth Master Device
+
+> **bt.avrcpGetConnStatus()**
+
+* Feature
+
+  This function gets connection status of Bluetooth master device through AVRCP protocol.
+
+* Parameter
+
+  None
+
+* Return Value
+
+  | Return Value | Type | Description                    |
+  | ------------ | ---- | ------------------------------ |
+  | -1           | int  | Fails to get connection status |
+  | 0            | int  | Disconnected                   |
+  | 1            | int  | Connecting                     |
+  | 2            | int  | Connected                      |
+  | 3            | int  | Disconnecting                  |
+
+* Example
+
+```python
+
+```
+
+
+
+##### A2DP/AVRCP Demo 
+
+```python
+# -*- coding: UTF-8 -*-
+
+"""
+Description: This demo describes a simple Bluetooth music playback operation through A2DP/AVRCP.
+After running this demo, search for Bluetooth device name and connect it on the mobile phone, then open the music player on the mobile phone. Then return to the demo running interface, and call the corresponding functions according to the prompt menu to perform the music playback, pause, previous track, next track and the volume setting. 
+"""
+import bt
+import utime
+import _thread
+from queue import Queue
+from machine import Pin
+
+BT_STATUS_DICT = {
+    'BT_NOT_RUNNING': 0,
+    'BT_IS_RUNNING': 1
+}
+
+A2DP_AVRCP_CONNECT_STATUS = {
+    'DISCONNECTED': 0,
+    'CONNECTING': 1,
+    'CONNECTED': 2,
+    'DISCONNECTING': 3
+}
+
+host_addr = 0
+msg_queue = Queue(10)
+
+# If the corresponding playback channel has an external PA, and PA needs to be enabled by the pin, the following steps are required.
+# Which GPIO to be used depends on the actual pin used.
+gpio11 = Pin(Pin.GPIO11, Pin.OUT, Pin.PULL_DISABLE, 0)
+gpio11.write(1)
+
+
+def cmd_proc(cmd):
+    cmds = ('1', '2', '3', '4', '5')
+    vols = ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11')
+
+    if cmd in cmds:
+        if cmd == '5':
+            while True:
+                tmp = input('Please input volume: ')
+                if len(tmp) != 1:
+                    vol = tmp.split('Please input volume: ')[1]
+                else:
+                    vol = tmp
+                if vol in vols:
+                    return cmd, int(vol)
+                else:
+                    print('Volume should be in [0,11], try again.')
+        else:
+            return cmd, 0
+    else:
+        print('Command {} is not supported!'.format(cmd))
+        return -1
+
+def avrcp_play(args):
+    return bt.avrcpStart()
+
+def avrcp_pause(args):
+    return bt.avrcpPause()
+
+def avrcp_prev(args):
+    return bt.avrcpPrev()
+
+def avrcp_next(args):
+    return bt.avrcpNext()
+
+def avrcp_set_volume(vol):
+    return bt.avrcpSetVolume(vol)
+
+def bt_callback(args):
+    pass
+
+def bt_a2dp_avrcp_proc_task():
+    global msg_queue
+
+    cmd_handler = {
+        '1': avrcp_play,
+        '2': avrcp_pause,
+        '3': avrcp_prev,
+        '4': avrcp_next,
+        '5': avrcp_set_volume,
+    }
+    while True:
+        # print('wait msg...')
+        msg = msg_queue.get()
+        print('recv msg: {}'.format(msg))
+        cmd_handler.get(msg[0])(msg[1])
+
+
+def main():
+    global host_addr
+    global msg_queue
+
+    _thread.start_new_thread(bt_a2dp_avrcp_proc_task, ())
+    bt.init(bt_callback)
+    bt.setChannel(2)
+    retval = bt.a2dpavrcpInit()
+    if retval == 0:
+        print('BT A2DP/AVRCP initialization succeeded.')
+    else:
+        print('BT A2DP/AVRCP initialization failed.')
+        return -1
+
+    retval = bt.start()
+    if retval != 0:
+        print('BT start failed.')
+        return -1
+
+    utime.sleep_ms(1500)
+
+    old_name = bt.getLocalName()
+    if old_name == -1:
+        print('Get BT name error.')
+        return -1
+    print('The current BT name is {}'.format(old_name[1]))
+    new_name = 'QuecPython-a2dp'
+    print('Set new BT name to {}'.format(new_name))
+    retval = bt.setLocalName(0, new_name)
+    if retval == -1:
+        print('Set BT name failed.')
+        return -1
+    cur_name = bt.getLocalName()
+    if cur_name == -1:
+        print('Get new BT name error.')
+        return -1
+    else:
+        if cur_name[1] == new_name:
+            print('BT name changed successfully.')
+        else:
+            print('BT name changed failed.')
+
+    visible_mode = bt.getVisibleMode()
+    if visible_mode != -1:
+        print('The current BT visible mode is {}'.format(visible_mode))
+    else:
+        print('Get BT visible mode error.')
+        return -1
+
+    print('Set BT visible mode to 3.')
+    retval = bt.setVisibleMode(3)
+    if retval == -1:
+        print('Set BT visible mode error.')
+        return -1
+    count = 0
+    while True:
+        count += 1
+        if count % 5 == 0:
+            print('waiting to be connected...')
+        if count >= 10000:
+            count = 0
+        a2dp_status = bt.a2dpGetConnStatus()
+        avrcp_status = bt.avrcpGetConnStatus()
+        if a2dp_status == A2DP_AVRCP_CONNECT_STATUS['CONNECTED'] and avrcp_status == A2DP_AVRCP_CONNECT_STATUS['CONNECTED']:
+            print('========== BT connected! =========')
+            addr = bt.a2dpGetAddr()
+            if addr != -1:
+                mac = '{:02x}:{:02x}:{:02x}:{:02x}:{:02x}:{:02x}'.format(addr[5], addr[4], addr[3], addr[2], addr[1], addr[0])
+                print('The BT address on the host side: {}'.format(mac))
+                host_addr = addr
+            else:
+                print('Get BT addr error.')
+                return -1
+            print('Please open the music player software on your phone first.')
+            print('Please enter the following options to select a function:')
+            print('========================================================')
+            print('1 : play')
+            print('2 : pause')
+            print('3 : prev')
+            print('4 : next')
+            print('5 : set volume')
+            print('6 : exit')
+            print('========================================================')
+            while True:
+                tmp = input('> ')
+                if len(tmp) != 1:
+                    cmd = tmp.split('> ')[1]
+                else:
+                    cmd = tmp
+                if cmd == '6':
+                    break
+                retval = cmd_proc(cmd)
+                if retval != -1:
+                    msg_queue.put(retval)
+            break
+        else:
+            utime.sleep_ms(1000)
+    print('Ready to disconnect a2dp.')
+    retval = bt.a2dpDisconnect(host_addr)
+    if retval == 0:
+        print('a2dp connection disconnected successfully')
+    else:
+        print('Disconnect a2dp error.')
+    print('Ready to stop BT.')
+    retval = bt.stop()
+    if retval == 0:
+        print('BT has stopped.')
+    else:
+        print('BT stop error.')
+    bt.a2dpavrcpRelease()
+    bt.release()
+
+
+if __name__ == '__main__':
+    main()
+```
+
+
+
+##### Initialize SPP 
+
+> **bt.sppInit()**
+
+* Feature
+
+  This function initializes SPP.
+
+* Parameter
+
+  None
+
+* Return Value
+
+  0       Successful execution.
+
+  -1      Failed execution.
+
+* Example
+
+```python
+
+```
+
+
+
+##### Release SPP Resources
+
+> **bt.sppRelease()**
+
+* Feature
+
+  This function releases SPP resources.
+
+* Parameter
+
+  None
+
+* Return Value
+
+  0       Successful execution.
+
+  -1      Failed execution.
+
+* Example
+
+```python
+
+```
+
+
+
+##### Establish SPP Connection
+
+> **bt.sppConnect(addr)**
+
+* Feature
+
+  This function established an SPP connection.
+
+* Parameter
+
+  | Parameter | Type  | Description                     |
+  | --------- | ----- | ------------------------------- |
+  | addr      | array | 6-byte Bluetooth device address |
+
+* Return Value
+
+  0       Successful execution.
+
+  -1      Failed execution.
+
+* Example
+
+```python
+
+```
+
+
+
+##### Disconnect SPP  Connection
+
+> **bt.sppDisconnect()**
+
+* Feature
+
+  This function disconnects SPP connection.
+
+* Parameter
+
+  None
+
+* Return Value
+
+  0       Successful execution.
+
+  -1      Failed execution.
+
+* Example
+
+```python
+
+```
+
+
+
+##### SPP Send Data
+
+> **bt.sppSend(data)**
+
+* Feature
+
+  This function sends data through SPP.
+
+* Parameter
+
+  | Parameter | Type  | Description     |
+  | --------- | ----- | --------------- |
+  | data      | array | Data to be sent |
+
+* Return Value
+
+  0       Successful execution.
+
+  -1      Failed execution.
+
+* Example
+
+```python
+
+```
+
+
+
+##### SPP Demo
+
+```python
+# -*- coding: UTF-8 -*-
+
+"""
+Description: This demo describes the data transmission with the mobile phone through SPP.
+1) Before running the demo, you need to install a Bluetooth serial port application on the mobile phone (Android), such as BlueSPP, and then open this application;
+2) Change the Bluetooth name of the target device in this demo, that is, change the value of DST_DEVICE_INFO['dev_name'] to the Bluetooth name of the mobile phone that the user wants to connect to;
+3) When running the demo, first search for nearby Bluetooth devices. If the target device is found, the search will end, and then an SPP connection request will be sent to the target device;
+4) The user should check whether the interface of the Bluetooth pairing request pops up on the mobile phone. When it appears, click to pair;
+5) After the Bluetooth devices are successfully paired, the user can enter the Bluetooth serial port interface and send data to the device. After receiving the data, the device will reply "I have received the data you sent."
+6) Click to disconnect in the application of the mobile phone to end the demo.
+"""
+import bt
+import utime
+import _thread
+from queue import Queue
+
+
+BT_NAME = 'QuecPython-SPP'
+
+BT_EVENT = {
+    'BT_START_STATUS_IND': 0,          # bt/ble start
+    'BT_STOP_STATUS_IND': 1,           # bt/ble stop
+    'BT_SPP_INQUIRY_IND': 6,           # bt spp inquiry ind
+    'BT_SPP_INQUIRY_END_IND': 7,       # bt spp inquiry end ind
+    'BT_SPP_RECV_DATA_IND': 14,        # bt spp recv data ind
+    'BT_SPP_CONNECT_IND': 61,          # bt spp connect ind
+    'BT_SPP_DISCONNECT_IND': 62,       # bt spp disconnect ind
+}
+
+DST_DEVICE_INFO = {
+    'dev_name': 'HUAWEI Mate40 Pro', # The name of the Bluetooth device to be connected
+    'bt_addr': None
+}
+
+BT_IS_RUN = 0
+msg_queue = Queue(30)
+
+
+def bt_callback(args):
+    global msg_queue
+    msg_queue.put(args)
+
+
+def bt_event_proc_task():
+    global msg_queue
+    global BT_IS_RUN
+    global DST_DEVICE_INFO
+
+    while True:
+        print('wait msg...')
+        msg = msg_queue.get()  # Blocks here when there is no message
+        event_id = msg[0]
+        status = msg[1]
+
+        if event_id == BT_EVENT['BT_START_STATUS_IND']:
+            print('event: BT_START_STATUS_IND')
+            if status == 0:
+                print('BT start successfully.')
+                BT_IS_RUN = 1
+
+                print('Set BT name to {}'.format(BT_NAME))
+                retval = bt.setLocalName(0, BT_NAME)
+                if retval != -1:
+                    print('BT name set successfully.')
+                else:
+                    print('BT name set failed.')
+                    bt.stop()
+                    continue
+
+                retval = bt.setVisibleMode(3)
+                if retval == 0:
+                    mode = bt.getVisibleMode()
+                    if mode == 3:
+                        print('BT visible mode set successfully.')
+                    else:
+                        print('BT visible mode set failed.')
+                        bt.stop()
+                        continue
+                else:
+                    print('BT visible mode set failed.')
+                    bt.stop()
+                    continue
+
+                retval = bt.startInquiry(15)
+                if retval != 0:
+                    print('Inquiry error.')
+                    bt.stop()
+                    continue
+            else:
+                print('BT start failed.')
+                bt.stop()
+                continue
+        elif event_id == BT_EVENT['BT_STOP_STATUS_IND']:
+            print('event: BT_STOP_STATUS_IND')
+            if status == 0:
+                BT_IS_RUN = 0
+                print('BT stop successfully.')
+            else:
+                print('BT stop failed.')
+
+            retval = bt.sppRelease()
+            if retval == 0:
+                print('SPP release successfully.')
+            else:
+                print('SPP release failed.')
+            retval = bt.release()
+            if retval == 0:
+                print('BT release successfully.')
+            else:
+                print('BT release failed.')
+            break
+        elif event_id == BT_EVENT['BT_SPP_INQUIRY_IND']:
+            print('event: BT_SPP_INQUIRY_IND')
+            if status == 0:
+                rssi = msg[2]
+                name = msg[4]
+                addr = msg[5]
+                mac = '{:02x}:{:02x}:{:02x}:{:02x}:{:02x}:{:02x}'.format(addr[5], addr[4], addr[3], addr[2], addr[1], addr[0])
+                print('name: {}, addr: {}, rssi: {}'.format(name, mac, rssi))
+
+                if name == DST_DEVICE_INFO['dev_name']:
+                    print('The target device is found, device name {}'.format(name))
+                    DST_DEVICE_INFO['bt_addr'] = addr
+                    retval = bt.cancelInquiry()
+                    if retval != 0:
+                        print('cancel inquiry failed.')
+                        continue
+            else:
+                print('BT inquiry failed.')
+                bt.stop()
+                continue
+        elif event_id == BT_EVENT['BT_SPP_INQUIRY_END_IND']:
+            print('event: BT_SPP_INQUIRY_END_IND')
+            if status == 0:
+                print('BT inquiry has ended.')
+                inquiry_sta = msg[2]
+                if inquiry_sta == 0:
+                    if DST_DEVICE_INFO['bt_addr'] is not None:
+                        print('Ready to connect to the target device : {}'.format(DST_DEVICE_INFO['dev_name']))
+                        retval = bt.sppConnect(DST_DEVICE_INFO['bt_addr'])
+                        if retval != 0:
+                            print('SPP connect failed.')
+                            bt.stop()
+                            continue
+                    else:
+                        print('Not found device [{}], continue to inquiry.'.format(DST_DEVICE_INFO['dev_name']))
+                        bt.cancelInquiry()
+                        bt.startInquiry(15)
+            else:
+                print('Inquiry end failed.')
+                bt.stop()
+                continue
+        elif event_id == BT_EVENT['BT_SPP_RECV_DATA_IND']:
+            print('event: BT_SPP_RECV_DATA_IND')
+            if status == 0:
+                datalen = msg[2]
+                data = msg[3]
+                print('recv {} bytes data: {}'.format(datalen, data))
+                send_data = 'I have received the data you sent.'
+                print('send data: {}'.format(send_data))
+                retval = bt.sppSend(send_data)
+                if retval != 0:
+                    print('send data faied.')
+            else:
+                print('Recv data failed.')
+                bt.stop()
+                continue
+        elif event_id == BT_EVENT['BT_SPP_CONNECT_IND']:
+            print('event: BT_SPP_CONNECT_IND')
+            if status == 0:
+                conn_sta = msg[2]
+                addr = msg[3]
+                mac = '{:02x}:{:02x}:{:02x}:{:02x}:{:02x}:{:02x}'.format(addr[5], addr[4], addr[3], addr[2], addr[1], addr[0])
+                print('SPP connect successful, conn_sta = {}, addr {}'.format(conn_sta, mac))
+            else:
+                print('Connect failed.')
+                bt.stop()
+                continue
+        elif event_id == BT_EVENT['BT_SPP_DISCONNECT_IND']:
+            print('event: BT_SPP_DISCONNECT_IND')
+            conn_sta = msg[2]
+            addr = msg[3]
+            mac = '{:02x}:{:02x}:{:02x}:{:02x}:{:02x}:{:02x}'.format(addr[5], addr[4], addr[3], addr[2], addr[1], addr[0])
+            print('SPP disconnect successful, conn_sta = {}, addr {}'.format(conn_sta, mac))
+            bt.stop()
+            continue
+
+
+def main():
+    global BT_IS_RUN
+
+    _thread.start_new_thread(bt_event_proc_task, ())
+    retval = bt.init(bt_callback)
+    if retval == 0:
+        print('BT init successful.')
+    else:
+        print('BT init failed.')
+        return -1
+    retval = bt.sppInit()
+    if retval == 0:
+        print('SPP init successful.')
+    else:
+        print('SPP init failed.')
+        return -1
+    retval = bt.start()
+    if retval == 0:
+        print('BT start successful.')
+    else:
+        print('BT start failed.')
+        retval = bt.sppRelease()
+        if retval == 0:
+            print('SPP release successful.')
+        else:
+            print('SPP release failed.')
+        return -1
+
+    count = 0
+    while True:
+        utime.sleep(1)
+        count += 1
+        cur_time = utime.localtime()
+        timestamp = "{:02d}:{:02d}:{:02d}".format(cur_time[3], cur_time[4], cur_time[5])
+
+        if count % 5 == 0:
+            if BT_IS_RUN == 1:
+                print('[{}] BT SPP is running, count = {}......'.format(timestamp, count))
+                print('')
+            else:
+                print('BT SPP has stopped running, ready to exit.')
+                break
+
+
+if __name__ == '__main__':
+    main()
 ```
 
 
