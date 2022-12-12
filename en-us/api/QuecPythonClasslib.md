@@ -411,7 +411,7 @@ Get APN Information of user. If only simID is specified, the default APN is obta
 
 | Parameter  | Type | Description                                                     |
 | ---------- | -------- | ------------------------------------------------------------ |
-| simid      | int      | simid, range：0/1；Only 1606 platform supports 0 or 1, other platforms can only be 0. |
+| simid      | int      | simid, range：0/1；only SIM0 is supported now. |
 | profileIdx | int      | PDP context index. Range for ASR : 1-8,range for unisoc : 1-7 |
 
 * Return Value
@@ -2388,7 +2388,7 @@ This function sets APN. After setting, you need to restart or switch to mode 0 a
 | usrname   | string | user name, The maximum length is 63 bytes.                   |
 | password  | string | password, The maximum length is 63 bytes.                    |
 | authtype  | int    | Authentication type,0-No authentication, 1-PAP, 2-CHAP, 3-PAP AND CHAP(just for CATM Platform) |
-| simid     | int    | simid,（Only 1606 platform supports 0 or 1, other platforms can only be 0）<br>0 : SIM card 1<br/>1 :  SIM card 2 |
+| simid     | int    | simid,（only SIM0 is supported now）<br>0 : SIM card 1<br/>1 :  SIM card 2 |
 
 * Return Value
 
@@ -2425,7 +2425,7 @@ This function obtains the current APN.
 | Parameter | Type | Description                                                  |
 | --------- | ---- | ------------------------------------------------------------ |
 | pid       | int  | PDP context index.                                           |
-| simid     | int  | simid, (Only 1606 platform supports 0 or 1, other platforms can only be 0)<br>0 : SIM card 1<br/>1 :  SIM card 2 |
+| simid     | int  | simid, (only SIM0 is supported now)<br>0 : SIM card 1<br/>1 :  SIM card 2 |
 
 * Return Value
 
