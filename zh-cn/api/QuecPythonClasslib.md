@@ -3227,6 +3227,222 @@ sms.setCallback(cb)
 
 
 
+##### band设置与获取
+
+##### band值对照表
+
+| 网络制式        | band值                                                       |
+| --------------- | ------------------------------------------------------------ |
+| EGPRS(GSM)      | EGSM900 - 0x1<br/>DCS1800 - 0x2<br/>GSM850 - 0x4<br/>PCS1900 - 0x8 |
+| LTE/eMTC/NB-IoT | BAND1 - 0x1<br/>BAND2 - 0x2<br/>BAND3 - 0x4<br/>BAND4 - 0x8<br/>BAND5 - 0x10<br/>BAND8 - 0x80<br/>BAND12 - 0x800<br/>BAND13 - 0x1000<br/>BAND18 - 0x20000<br/>BAND19 - 0x40000<br/>BAND20 - 0x80000<br/>BAND25 - 0x1000000<br/>BAND26 - 0x2000000<br/>BAND27 - 0x4000000<br/>BAND28 - 0x8000000<br/>BAND31 - 0x40000000<br/>BAND66 - 0x20000000000000000<br/>BAND71 - 0x400000000000000000<br/>BAND72 - 0x800000000000000000<br/>BAND73 - 0x1000000000000000000<br/>BAND85 - 0x1000000000000000000000<br/> |
+
+##### BG95M3模组band支持表
+
+| 网络制式 | 支持的BAND                                                   |
+| -------- | ------------------------------------------------------------ |
+| eMTC     | B1/B2/B3/B4/B5/B8/B12/B13/B18/B19/B20/B25/B26/B27/B28/B66/B85 |
+| NB-IoT   | B1/B2/B3/B4/B5/B8/B12/B13/B18/B19/B20/B25/B28/B66/B71/B85    |
+| EGPRS    | GSM850/EGSM900/DCS1800/PCS1900                               |
+
+##### EG912NENAA模组band支持表
+
+| 网络制式 | 支持的BAND                           |
+| -------- | ------------------------------------ |
+| LTE      | B1/B3/B5/B7/B8/B20/B28/B31/B72       |
+| EGPRS    | EGSM900/DCS1800                      |
+
+
+
+##### band设置
+
+> **net.setBand(net_rat, gsm_band, band_tuple)**
+
+* 功能
+
+  设置需要的band，即在模组支持的前提下，锁定用户指定的band。 (当前可支持平台：CATM/EG912NENAA)
+
+* 参数
+
+| 参数       | 类型  | 说明                                                         |
+| ---------- | ----- | ------------------------------------------------------------ |
+| net_rat    | int   | 指定要设置的是哪种网络模式下的band<br>0 - 设置GSM网络的band<br>1 - 设置LTE网络的band<br>2 - 设置CATM网络的band<br>3 - 设置NB网络的band<br>注意：CATM平台不支持上述模式1，即LTE网络的band<br/>EG912NENAA仅支持上述模式0和模式1 |
+| gsm_band   | int   | GSM网络的band值<br/>0x01 - GSM_EGSM900<br/>0x02 - GSM_DCS1800<br>0x04 - GSM_GSM850<br/>0x08 - GSM_PCS1900 |
+| band_tuple | tuple | 设置GSM网络之外的其他网络模式的band值，是一个包含4个元素的元组，每个成员最大不能超过4字节，形式如下：<br>(band_hh, band_hl, band_lh, band_ll)<br>每个元素说明如下：<br>band_hh - band值的高8字节的高4字节<br>band_hl  - band值的高8字节的低4字节<br/>band_lh  - band值的低8字节的高4字节<br/>band_ll   - band值的低8字节的低4字节<br/>如果用户最终要设置的band值为band_value，那么计算方式如下：<br>band_hh = (band_value & 0xFFFFFFFF000000000000000000000000) >> 96 <br/>band_hl = (band_value & 0x00000000FFFFFFFF0000000000000000) >> 64 <br/>band_lh = (band_value & 0x0000000000000000FFFFFFFF00000000) >> 32 <br/>band_ll = (band_value & 0x000000000000000000000000FFFFFFFF) |
+
+* 返回值
+
+  设置成功返回整形0，失败返回整形-1。
+
+* 示例
+
+```python
+import net
+import utime
+
+'''
+用户可直接使用下面两个接口来设置band和获取band
+'''
+def set_band(net_rat, band_value):
+    if net_rat == 0:
+        retval = net.setBand(0, band_value, (0, 0, 0, 0))
+    else:
+        band_hh = (band_value & 0xFFFFFFFF000000000000000000000000) >> 96
+        band_hl = (band_value & 0x00000000FFFFFFFF0000000000000000) >> 64
+        band_lh = (band_value & 0x0000000000000000FFFFFFFF00000000) >> 32
+        band_ll = (band_value & 0x000000000000000000000000FFFFFFFF)
+        retval = net.setBand(net_rat, 0, (band_hh, band_hl, band_lh, band_ll))
+    return retval
+
+
+def get_band(net_rat):
+    return net.getBand(net_rat)
+
+#======================================================================================================
+
+'''
+设置GSM网络band为0xa，即 DCS1800 + PCS1900
+0xa = 0x2(DCS1800) + 0x8(PCS1900)
+'''
+def set_gsm_band_example():
+    print('Set GSM band to 0xa example:')
+    gsm_band = get_band(0)
+    print('GSM band value before setting:{}'.format(gsm_band))
+    ret = set_band(0, 0xa)
+    if ret == 0:
+        print('Set GSM band successfully.')
+    else:
+        print('Set GSM band failed.')
+    utime.sleep(1) # 设置band需要一定时间，延时一段时间再获取新的结果
+    gsm_band = get_band(0)
+    print('GSM band value after setting:{}'.format(gsm_band))
+    return ret
+
+
+'''
+设置eMTC网络band为0x15，即设置 BAND1+BAND3+BAND5
+0x15 = 0x1(BAND1) + 0x4(BAND3) + 0x10(BAND5)
+'''
+def set_camt_band_example():
+    print('Set CATM band to 0x15 example:')
+    catm_band = get_band(2)
+    print('CATM band value before setting:{}'.format(catm_band))
+    ret = set_band(2, 0x15)
+    if ret == 0:
+        print('Set CATM band successfully.')
+    else:
+        print('Set CATM band failed.')
+    utime.sleep(1) # 设置band需要一定时间，延时一段时间再获取新的结果
+    catm_band = get_band(2)
+    print('CATM band value after setting:{}'.format(catm_band))
+    return ret
+
+
+'''
+设置NB-IoT网络band为0x1000800000000000020011，即设置 BAND1+BAND5+BAND18+BAND71+BAND85
+0x1000400000000000020011 = 0x1 + 0x10 + 0x20000 + 0x400000000000000000 + 0x1000000000000000000000
+'''
+def set_nb_band_example():
+    print('Set NB band to 0x1000400000000000020011 example:')
+    nb_band = get_band(3)
+    print('NB band value before setting:{}'.format(nb_band))
+    ret = set_band(3, 0x1000400000000000020011)
+    if ret == 0:
+        print('Set NB band successfully.')
+    else:
+        print('Set NB band failed.')
+    utime.sleep(1) # 设置band需要一定时间，延时一段时间再获取新的结果
+    nb_band = get_band(3)
+    print('NB band value after setting:{}'.format(nb_band))
+    return ret
+
+
+def main():
+    set_gsm_band_example()
+    utime.sleep(1)
+    set_camt_band_example()
+    utime.sleep(1)
+    set_nb_band_example()
+
+
+if __name__ == '__main__':
+    main()
+    
+
+#===================================================================================================
+#运行结果
+Set GSM band to 0xa example:
+GSM band value before setting:0xf
+Set GSM band successfully.
+GSM band value after setting:0xa
+
+Set CATM band to 0x15 example:
+CATM band value before setting:0x10000200000000090e189f
+Set CATM band successfully.
+CATM band value after setting:0x15
+
+Set NB band to 0x1000400000000000020011 example:
+NB band value before setting:0x10004200000000090e189f
+Set NB band successfully.
+NB band value after setting:0x1000400000000000020011
+
+```
+
+
+
+##### band获取
+
+> **net.getBand(net_rat)**
+
+* 功能
+
+获取当前某个网络制式下的band设置值。(当前可支持平台：CATM/EG912NENAA)
+
+* 参数
+
+| 参数    | 类型 | 说明                                                         |
+| ------- | ---- | ------------------------------------------------------------ |
+| net_rat | int  | 指定要设置的是哪种网络模式下的band<br/>0 - 设置GSM网络的band<br/>1 - 设置LTE网络的band<br/>2 - 设置CATM网络的band<br/>3 - 设置NB网络的band<br/>注意：CATM平台不支持上述模式1，即LTE网络的band<br/>EG912NENAA仅支持上述模式0和模式1 |
+
+* 返回值
+
+返回十六进制字符串形式的band值。
+
+* 示例
+
+```python
+net.getBand(2)
+'0x10000200000000090e189f'  # 这是字符串，用户如果需要int型，可通过int(data)来自行转换
+```
+
+
+
+#### band恢复初始值
+
+> **net.bandRst()**
+
+* 功能
+
+恢复band初始设定值。(当前可支持平台：EG912NENAA)
+
+* 参数
+
+无
+
+* 返回值
+
+成功返回整形0，失败返回整形-1。
+
+* 示例
+
+```python
+#先设置成其他band，调用该接口，看是否成功恢复成初始值
+#EG912NENAA平台初始值：gsm_band:0x3(EGSM900/DCS1800 )  lte_band:0x8000000000480800D5(B1/B3/B5/B7/B8/B20/B28/B31/B72 )
+net.bandRst()
+0
+```
+
+
+
 #### checkNet - 等待网络就绪
 
 模块功能：checkNet模块主要用于【开机自动运行】的用户脚本程序，该模块提供API用来阻塞等待网络就绪，如果超时或者其他异常退出会返回错误码，所以如果用户的程序中有涉及网络相关的操作，那么在用户程序的开始应该调用 checkNet 模块中的方法以等待网络就绪。当然，用户也可以自己实现这个模块的功能。

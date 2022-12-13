@@ -3173,6 +3173,218 @@ This function sets the current modem functionality.
 
 
 
+##### band Setting and obtaining
+
+##### band value comparison table
+
+| NET MODE        | BAND VALUE                                                       |
+| --------------- | ------------------------------------------------------------ |
+| EGPRS(GSM)      | EGSM900 - 0x1<br/>DCS1800 - 0x2<br/>GSM850 - 0x4<br/>PCS1900 - 0x8 |
+| LTE/eMTC/NB-IoT | BAND1 - 0x1<br/>BAND2 - 0x2<br/>BAND3 - 0x4<br/>BAND4 - 0x8<br/>BAND5 - 0x10<br/>BAND8 - 0x80<br/>BAND12 - 0x800<br/>BAND13 - 0x1000<br/>BAND18 - 0x20000<br/>BAND19 - 0x40000<br/>BAND20 - 0x80000<br/>BAND25 - 0x1000000<br/>BAND26 - 0x2000000<br/>BAND27 - 0x4000000<br/>BAND28 - 0x8000000<br/>BAND31 - 0x40000000<br/>BAND66 - 0x20000000000000000<br/>BAND71 - 0x400000000000000000<br/>BAND72 - 0x800000000000000000<br/>BAND73 - 0x1000000000000000000<br/>BAND85 - 0x1000000000000000000000<br/> |
+
+##### band of BG95M3
+
+| NET MODE | BAND VALUE                                                  |
+| -------- | ------------------------------------------------------------ |
+| eMTC     | B1/B2/B3/B4/B5/B8/B12/B13/B18/B19/B20/B25/B26/B27/B28/B66/B85 |
+| NB-IoT   | B1/B2/B3/B4/B5/B8/B12/B13/B18/B19/B20/B25/B28/B66/B71/B85    |
+| EGPRS    | GSM850/EGSM900/DCS1800/PCS1900                               |
+
+##### band of EG912NENAA
+
+| NET MODE | BAND VALUE                           |
+| -------- | ------------------------------------ |
+| LTE      | B1/B3/B5/B7/B8/B20/B28/B31/B72       |
+| EGPRS    | EGSM900/DCS1800                      |
+
+
+
+##### band Setting
+
+> **net.setBand(net_rat, gsm_band, band_tuple)**
+
+  Set required bands, that is, lock the bands specified by the user if the module supports them。 (Platforms are currently supported：CATM/EG912NENAA)
+
+* Parameter
+
+| Parameter  | Type  | Description                                                  |
+| ---------- | ----- | ------------------------------------------------------------ |
+| net_rat    | int   | Specify which net mode band is to be set<br>0 - GSM<br>1 - LTE<br>2 - CATM<br>3 - NB<br>note：The CATM platform does not support LTE<br/>The EG912NENAA platform just support GSM and LTE |
+| gsm_band   | int   | gsm band value<br/>0x01 - GSM_EGSM900<br/>0x02 - GSM_DCS1800<br>0x04 - GSM_GSM850<br/>0x08 - GSM_PCS1900 |
+| band_tuple | tuple | band value of other network modes，Is a tuple of four elements, each of which cannot exceed 4 bytes. The format is as follows：<br>(band_hh, band_hl, band_lh, band_ll)|
+
+* Return Value
+
+  * 0  Successful execution.
+  * -1  Failed execution.
+
+* Example
+
+```python
+import net
+import utime
+
+'''
+You can use the following two interfaces to set and obtain bands
+'''
+def set_band(net_rat, band_value):
+    if net_rat == 0:
+        retval = net.setBand(0, band_value, (0, 0, 0, 0))
+    else:
+        band_hh = (band_value & 0xFFFFFFFF000000000000000000000000) >> 96
+        band_hl = (band_value & 0x00000000FFFFFFFF0000000000000000) >> 64
+        band_lh = (band_value & 0x0000000000000000FFFFFFFF00000000) >> 32
+        band_ll = (band_value & 0x000000000000000000000000FFFFFFFF)
+        retval = net.setBand(net_rat, 0, (band_hh, band_hl, band_lh, band_ll))
+    return retval
+
+
+def get_band(net_rat):
+    return net.getBand(net_rat)
+
+#======================================================================================================
+
+'''
+Set the band of the GSM network to 0xa, that is, DCS1800 + PCS1900
+0xa = 0x2(DCS1800) + 0x8(PCS1900)
+'''
+def set_gsm_band_example():
+    print('Set GSM band to 0xa example:')
+    gsm_band = get_band(0)
+    print('GSM band value before setting:{}'.format(gsm_band))
+    ret = set_band(0, 0xa)
+    if ret == 0:
+        print('Set GSM band successfully.')
+    else:
+        print('Set GSM band failed.')
+    utime.sleep(1) # It takes a certain period of time to set the band. After a delay period, you can obtain the new result
+    gsm_band = get_band(0)
+    print('GSM band value after setting:{}'.format(gsm_band))
+    return ret
+
+
+'''
+Set the eMTC network band to 0x15, that is, set BAND1+BAND3+BAND5
+0x15 = 0x1(BAND1) + 0x4(BAND3) + 0x10(BAND5)
+'''
+def set_camt_band_example():
+    print('Set CATM band to 0x15 example:')
+    catm_band = get_band(2)
+    print('CATM band value before setting:{}'.format(catm_band))
+    ret = set_band(2, 0x15)
+    if ret == 0:
+        print('Set CATM band successfully.')
+    else:
+        print('Set CATM band failed.')
+    utime.sleep(1)
+    catm_band = get_band(2)
+    print('CATM band value after setting:{}'.format(catm_band))
+    return ret
+
+
+'''
+Set the eMTC network band to 0x1000800000000000020011，that is, set BAND1+BAND5+BAND18+BAND71+BAND85
+0x1000400000000000020011 = 0x1 + 0x10 + 0x20000 + 0x400000000000000000 + 0x1000000000000000000000
+'''
+def set_nb_band_example():
+    print('Set NB band to 0x1000400000000000020011 example:')
+    nb_band = get_band(3)
+    print('NB band value before setting:{}'.format(nb_band))
+    ret = set_band(3, 0x1000400000000000020011)
+    if ret == 0:
+        print('Set NB band successfully.')
+    else:
+        print('Set NB band failed.')
+    utime.sleep(1)
+    nb_band = get_band(3)
+    print('NB band value after setting:{}'.format(nb_band))
+    return ret
+
+
+def main():
+    set_gsm_band_example()
+    utime.sleep(1)
+    set_camt_band_example()
+    utime.sleep(1)
+    set_nb_band_example()
+
+
+if __name__ == '__main__':
+    main()
+    
+
+#===================================================================================================
+#result
+Set GSM band to 0xa example:
+GSM band value before setting:0xf
+Set GSM band successfully.
+GSM band value after setting:0xa
+
+Set CATM band to 0x15 example:
+CATM band value before setting:0x10000200000000090e189f
+Set CATM band successfully.
+CATM band value after setting:0x15
+
+Set NB band to 0x1000400000000000020011 example:
+NB band value before setting:0x10004200000000090e189f
+Set NB band successfully.
+NB band value after setting:0x1000400000000000020011
+
+```
+
+
+
+##### band obtaining
+
+> **net.getBand(net_rat)**
+
+Band obtaining。(Platforms are currently supported：CATM/EG912NENAA)
+
+* Parameter
+
+| Parameter | Type  | Description                                                  |
+| -------   | ----  | ------------------------------------------------------------ |
+| net_rat   | int   | Specify which net mode band is to be get<br>0 - GSM<br>1 - LTE<br>2 - CATM<br>3 - NB<br>note：The CATM platform does not support LTE<br/>The EG912NENAA platform just support GSM and LTE |
+
+* Return Value
+
+Return the band value as a hexadecimal string.
+
+* example
+
+```python
+net.getBand(2)
+'0x10000200000000090e189f'
+```
+
+
+
+##### band Restores the initial value
+
+> **net.bandRst()**
+
+band Restores the initial value。(Platforms are currently supported：EG912NENAA)
+
+* Parameter
+
+ * NA
+
+* Return Value
+
+  * 0  Successful execution.
+  * -1  Failed execution.
+
+* Example
+
+```python
+#Set it to another band and call the interface to check whether the interface is successfully restored to the initial value
+#EG912NENAA platform initial value：gsm_band:0x3(EGSM900/DCS1800 )  lte_band:0x8000000000480800D5(B1/B3/B5/B7/B8/B20/B28/B31/B72 )
+net.bandRst()
+0
+```
+
+
+
 #### checkNet - Wait for Network to be Ready
 
 Function: The checkNet module is mainly used for the script programs [auto-startup], and provides APIs to wait for the network to be ready. If it times out or exits abnormally, the program returns an error code. Therefore, if there are network-related operations in the your program, the method in the checkNet module should be called at the beginning of the user program to wait for the network to be ready. Of course, you can also implement the functions of this module by yourselves. 
