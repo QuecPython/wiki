@@ -7126,7 +7126,7 @@ if __name__ == '__main__':
 ```
 ##### KeyPad
 
-Module function: provide matrix keyboard interface and support platform EC600SCN_LB/EC800N_CN_LA/EC600NCN_LC/EC200U_CN_LB/EC600U_CN_LB/EC800M_CN_LA/EC800M_CN_GA/EG912N_ENAA
+Module function: provide matrix keyboard interface and support platform EC600SCN_LB/EC800N_CN_LA/EC600NCN_LC/EC200U_CN_LB/EC600U_CN_LB/EC600M_CN_LA/EC800M_CN_LA/EC800M_CN_GA/EG912N_ENAA
 EC200U supports 4x3 at most and EC600U supports 6x6 at most.
 
 ###### Create keypad object
@@ -7150,8 +7150,19 @@ EC200U supports 4x3 at most and EC600U supports 6x6 at most.
 | EC600S | 5 | 5 |
 | EC200U | 4 | 3 |
 | EC600U | 6 | 6 |
+| EC600M | 5 | 5 |
 | EC800M | 5 | 5 |
 | EG912N | 3 | 3 |
+
+- Pin Description
+
+Note: When only some pins are used, the wiring should be done in  descending order of row and column numbers. For example, when EC600M  uses a 2x2 matrix keyboard, the hardware uses pins 49, 51 and 48, 50.
+
+| Platform | Pin                                                          |
+| -------- | ------------------------------------------------------------ |
+| EC600M   | The row number (output) corresponds to the following pins:<br/>Row No.0 – Pin number 49<br/>Row No.1 – Pin number 51<br/>Row No.2 – Pin number 53<br/>Row No.3 – Pin number 55<br/>Row No.4 – Pin number 56<br/>The column number (input) corresponds to the following pins:<br/>Col No.0 – Pin number 48<br/>Col No.1 – Pin number 50<br/>Col No.2 – Pin number 52<br/>Col No.3 – Pin number 54<br />Col No.4 – Pin number 57 |
+| EC800M   | The row number (output) corresponds to the following pins:<br/>Row No.0 – Pin number 86<br/>Row No.1 – Pin number 76<br/>Row No.2 – Pin number 85<br/>Row No.3 – Pin number 82<br/>Row No.4 – Pin number 74<br/>The column number (input) corresponds to the following pins:<br/>Col No.0 – Pin number 87<br/>Col No.1 – Pin number 77<br/>Col No.2 – Pin number 84<br/>Col No.3 – Pin number 83<br />Col No.4 – Pin number 75 |
+| EG912N   | The row number (output) corresponds to the following pins:<br/>Row No.1 – Pin number 20<br/>Row No.2 – Pin number 16<br/>Row No.3 – Pin number 116<br/>The column number (input) corresponds to the following pins:<br/>Col No.2 – Pin number 105<br/>Col No.3 – Pin number 21<br />Col No.4 – Pin number 1 |
 
 * Example:
 >
