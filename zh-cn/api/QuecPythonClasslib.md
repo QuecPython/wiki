@@ -3416,7 +3416,7 @@ net.getBand(2)
 
 
 
-#### band恢复初始值
+##### band恢复初始值
 
 > **net.bandRst()**
 
