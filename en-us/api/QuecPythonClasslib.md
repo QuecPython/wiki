@@ -5427,7 +5427,7 @@ USBNET.open()
 
 > **USBNET.getNat(simid, pid)**
 
-get the status of NAT enablement(Whether IPV6 is supported)(supported only on 8910)
+get the status of NAT enablement(Whether IPV6 is supported)(supported only on EC200U/EC600U)
 
 * Parameter
 
@@ -5458,8 +5458,8 @@ USBNET.getNat(0, 1)
 
 > **USBNET.setNat(simid, pid, Nat)**
 
-set NAT，Restart takes effect (supported only on 8910)
-(8910 platform: Usbnet.set_worktype () API will make the corresponding Nat value set to 1, so that the pid cannot dial up IPV6, so after close USBnet, you can use this interface to disable NAT and make IPV6 function normal)
+set NAT，Restart takes effect (supported only on EC200U/EC600U)
+( Usbnet.set_worktype () API will make the corresponding Nat value set to 1, so that the pid cannot dial up IPV6, so after close USBnet, you can use this interface to disable NAT and make IPV6 function normal)
 
 * Parameter
 
