@@ -5975,7 +5975,9 @@ USBNET.open()
 
 > **USBNET.getNat(simid, pid)**
 
-获取某一路网卡的Nat使能情况（是否支持ipv6拨号）（仅在8910平台支持）
+获取某一路网卡的Nat使能情况（是否支持ipv6拨号）
+
+（仅在EC200U/EC600U平台支持）
 
 * 参数
 
@@ -6004,8 +6006,8 @@ USBNET.getNat(0, 1)
 
 > **USBNET.setNat(simid, pid, Nat)**
 
-Nat设置，设置成功后重启生效（仅在8910平台支持）
-（8910平台USBNET.set_worktype()接口调用的时候会使对应的Nat值变为1，使得该pid无法IPV6拨号，所以在close USBnet后，可以使用该接口关闭NAT,使IPV6功能正常）
+Nat设置，设置成功后重启生效（仅在EC200U/EC600U平台支持）
+（USBNET.set_worktype()接口调用的时候会使对应的Nat值变为1，使得该pid无法IPV6拨号，所以在close USBnet后，可以使用该接口关闭NAT,使IPV6功能正常）
 
 * 参数
 
