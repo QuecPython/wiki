@@ -14243,8 +14243,6 @@ The general description of the events of this module is as follows:
 | -------------- | ---------|----------|------------- |---------------------------- |
 |0 |0 |NULL |0 |modem enters psm and reports this event. At this time, the module does not accept the network data sent to the module, and can break the psm state on the modem side by actively sending data. |
 |0 |1 |NULL |0 |modem exits psm mode and reports this event. |
-|22 |4 |NULL |0 |Call the interface to send CON type data, if the sending is successful, report this event|
-|22 |5 |NULL |0 |Call the interface to send CON type data, if the sending fails, report this event|
 |23 |6 |NULL |0 |The connection is successfully restored after waking up from deep sleep, and this event is reported. Reported when AEP.set_event_callcb(usrfunc) is called. |
 |23 |7 |NULL |0 |Failed to resume connection after wake-up from deep sleep, you can disconnect and reconnect. Reported when AEP.set_event_callcb(usrfunc) is called. |
 |24 |8 |NULL |0 |After the cloud platform issues the fota upgrade command, this event is reported when the module starts to download the differential upgrade package. |
