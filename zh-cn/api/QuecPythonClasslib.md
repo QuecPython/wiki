@@ -7011,7 +7011,7 @@ PIN脚电平，0-低电平，1-高电平
 
 ###### 设置RTC到期时间
 
-支持平台EC600U/EC200U/EC600N/EC800N/BC25
+支持平台ECX00U/ECX00N/ECX00M/ECX00G/ECX00E/BC25
 
 > **rtc.set_alarm(data_e)**
 
@@ -7044,7 +7044,7 @@ PIN脚电平，0-低电平，1-高电平
 
 ###### 注册RTC alarm回调
 
-支持平台EC600U/EC200U/EC600N/EC800N/BC25
+支持平台ECX00U/ECX00N/ECX00M/ECX00G/ECX00E/BC25
 
 > rtc.register_callback(fun)
 
@@ -7064,7 +7064,7 @@ PIN脚电平，0-低电平，1-高电平
 
 ###### 开关RTC alarm功能
 
-支持平台EC600U/EC200U/EC600N/EC800N/BC25
+支持平台ECX00U/ECX00N/ECX00M/ECX00G/ECX00E/BC25
 注意:BC25PA平台只有设置回调函数,才能启动定时器.
 
 > rtc.enable_alarm(on_off)
@@ -7096,7 +7096,11 @@ rtc.set_alarm([2021, 7, 9, 5, 12, 30, 0, 0])
 rtc.enable_alarm(1)
 ```
 
-注：EC600U/EC200U平台支持自动开机，即设置alarm功能之后将模块关机，alarm时间到了之后可以自动开机。其他平台不支持该特性。
+注：
+
+1.ECX00U/ECX00M/ECX00G/BC25平台支持自动开机，即设置alarm功能之后将模块关机，alarm时间到了之后可以自动开机。其他平台不支持该特性。
+
+2.其中BC25平台支持alarm开机时触发回调（alarm到时开机后注册回调，此回调将立即执行）。
 
 
 
@@ -14059,7 +14063,7 @@ gnss.getSpeed()
 
 #### quecgnss - 内置GNSS
 
-说明：当前仅 EC200UCNAA/EC200UCNLA/EC200UEUAA 型号支持该功能。
+说明：当前仅 EC200UCNAA/EC200UCNLA/EC200UEUAA/EC800MCNGA/EC800GCNGA 型号支持该功能。
 
 ##### GNSS 功能初始化
 
