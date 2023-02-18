@@ -7011,7 +7011,7 @@ PIN脚电平，0-低电平，1-高电平
 
 ###### 设置RTC到期时间
 
-支持平台EC600U/EC200U/EC600N/EC800N/BC25
+支持平台ECX00U/ECX00N/ECX00M/ECX00G/ECX00E/BC25
 
 > **rtc.set_alarm(data_e)**
 
@@ -7044,7 +7044,7 @@ PIN脚电平，0-低电平，1-高电平
 
 ###### 注册RTC alarm回调
 
-支持平台EC600U/EC200U/EC600N/EC800N/BC25
+支持平台ECX00U/ECX00N/ECX00M/ECX00G/ECX00E/BC25
 
 > rtc.register_callback(fun)
 
@@ -7064,7 +7064,7 @@ PIN脚电平，0-低电平，1-高电平
 
 ###### 开关RTC alarm功能
 
-支持平台EC600U/EC200U/EC600N/EC800N/BC25
+支持平台ECX00U/ECX00N/ECX00M/ECX00G/ECX00E/BC25
 注意:BC25PA平台只有设置回调函数,才能启动定时器.
 
 > rtc.enable_alarm(on_off)
@@ -7096,7 +7096,11 @@ rtc.set_alarm([2021, 7, 9, 5, 12, 30, 0, 0])
 rtc.enable_alarm(1)
 ```
 
-注：EC600U/EC200U平台支持自动开机，即设置alarm功能之后将模块关机，alarm时间到了之后可以自动开机。其他平台不支持该特性。
+注：
+
+1.ECX00U/ECX00M/ECX00G/BC25平台支持自动开机，即设置alarm功能之后将模块关机，alarm时间到了之后可以自动开机。其他平台不支持该特性。
+
+2.其中BC25平台支持alarm开机时触发回调（alarm到时开机后注册回调，此回调将立即执行）。
 
 
 
@@ -8306,7 +8310,7 @@ print('exit!')
 
 ##### 设置PSM模式的控制时间
 
-- 仅BC25平台支持
+- 仅BC25/ECX00U/ECX00E平台支持
 
 > **pm.set_psm_time(tau_uint,tau_time,act_uint,act_time)**  # 设置并启用PSM           <**模式1**>
 >
@@ -8317,7 +8321,7 @@ print('exit!')
 
 | 参数     | 参数类型 | 参数说明                       |
 | -------- | -------- | ------------------------------ |
-| mode | int | 是否启用PSM:<br/>0 禁用PSM<br/>1 启用PSM<br/>2 禁用PSM并删除PSM的所有参数，如有默认值，则重置默认值。(注意此种模式禁用的情况下，如果要启用PSM必须用**模式1**，用**模式2**没有任何的意义,因为设置的TAU和ACT时间全部清零了)。 |
+| mode | int | 是否启用PSM:<br/>0 禁用PSM<br/>1 启用PSM<br/>2 (仅BC25平台)禁用PSM并删除PSM的所有参数，如有默认值，则重置默认值。(注意此种模式禁用的情况下，如果要启用PSM必须用**模式1**，用**模式2**没有任何的意义,因为设置的TAU和ACT时间全部清零了)。 |
 | tau_uint | int   | tau(T3412)定时器单位 |
 | tau_time | int   | tau(T3412)定时器时间周期值 |
 | act_uint | int   | act(T3324)定时器单位 |
@@ -8349,7 +8353,7 @@ print('exit!')
     False:	失败
 
 * 注意
-   仅BC25平台支持 
+   仅BC25/ECX00U/ECX00E支持
 
 - 示例
 
@@ -8364,7 +8368,7 @@ True
 
 ##### 获取PSM模式的控制时间
 
-- 仅BC25平台支持
+- 仅BC25/ECX00U/ECX00E平台支持
 
 > **pm.get_psm_time()**
 
@@ -8377,7 +8381,7 @@ True
   成功：返回值为list类型，说明如下：
   |参数  | 类型 | 单位值说明                       |
 | -------- | -------- | ------------------------------|
-| list[0] | int   | mode说明: <br/>0-禁用PSM. <br/>1-启用PSM. <br/>2.禁用 PSM 并删除 PSM 的所有参数,若有默认值,则重置为默认值。 |
+| list[0] | int   | mode说明: <br/>0-禁用PSM. <br/>1-启用PSM. <br/>2-(仅BC25平台)禁用 PSM 并删除 PSM 的所有参数,若有默认值,则重置为默认值。 |
 | list[1] | int   | tau定时器单位 |
 | list[2] | int   | tau定时器时间周期值 |
 | list[3] | int   | act定时器单位 |
@@ -8385,7 +8389,7 @@ True
   失败：返回None.在禁用PSM时返回失败。
   
 * 注意
-    仅BC25平台支持
+    仅BC25/ECX00U/ECX00E平台支持
 
 - 示例
 
@@ -14059,7 +14063,7 @@ gnss.getSpeed()
 
 #### quecgnss - 内置GNSS
 
-说明：当前仅 EC200UCNAA/EC200UCNLA/EC200UEUAA 型号支持该功能。
+说明：当前仅 EC200UCNAA/EC200UCNLA/EC200UEUAA/EC800MCNGA/EC800GCNGA 型号支持该功能。
 
 ##### GNSS 功能初始化
 
@@ -14217,7 +14221,7 @@ $GNGSA,A,3,31,3
 #### SecureData - 安全数据区
 
 模块功能：模组提供一块裸flash区域及专门的读写接口供客户存贮重要信息，且信息在烧录固件后不丢失(烧录不包含此功能的固件无法保证不丢失)。提供一个存储和读取接口，不提供删除接口。
-目前只支持EC600N系列项目
+目前除BC25/BG95/EC200A系列外，其余平台均支持本功能
 
 ##### 数据存储
 
